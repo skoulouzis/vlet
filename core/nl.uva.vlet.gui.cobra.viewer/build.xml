@@ -116,7 +116,8 @@
 		<javac srcdir="${cobra.src}" destdir="${cobra.classes}"
 		       compiler="${javac.compiler}"
 			   debug="${javac.debug}"
-			   target="${javac.target}" >
+			   source="${javac.source}" 
+			   target="${javac.target}">
 				
 			<classpath>
 				<fileset dir="${viewer.dist}/lib/auxlib">

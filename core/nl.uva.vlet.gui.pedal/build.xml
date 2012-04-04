@@ -73,9 +73,10 @@
 		
 		<!-- Compile the java code from the srcdir into destdir -->
 		<javac srcdir="${viewer.src}" destdir="${viewer.build}"
-			   compiler="${javac.compiler}"
-	           debug="${javac.debug}"
-	    	   target="${javac.target}" >
+		       compiler="${javac.compiler}"
+			   debug="${javac.debug}"
+			   source="${javac.source}" 
+			   target="${javac.target}">
 			<classpath refid="viewer.classpath"/>
 		</javac> 
 			
