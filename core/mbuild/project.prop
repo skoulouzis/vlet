@@ -99,10 +99,11 @@ project.tests.logdir=${project.tests.vardir}/log
 project.flatten=true
 
 ###
-# Java Compiler options : Explicitly use java 1.5 
+# Java Compiler options : Explicitly use java 1.7 
 javac.debug=true
-javac.target=1.5
-javac.compiler=javac1.5
+javac.target=1.6
+javac.source=1.6
+javac.compiler=javac1.6
 
 ###
 ### default CVS settings 
