@@ -1,0 +1,167 @@
+###
+## File : VLET_INSTALL/etc/vletrc.prop
+## Info: 
+##    Default VLET/VBrowserinstallation settings. 
+## Notes: 
+##    - Syntax must be a Java parsable properties file. 
+##    - Variables between '@' are tokens. 
+##    - all options can be shadowed in the Users' ~/.vletrc/vletrc.prop
+##      allowing for user configurable settings. 
+
+###
+## Versioning information:
+##
+#
+vlet.version=@VLET_VERSION@
+vlet.build_date=@DATE@
+
+### 
+## Allowed incoming firewall portrange:  
+## If not set, system will check for: GLOBUS_TCP_PORT_RANGE
+## if set, this setting overrides GLOBUS_TCP_PORT_RANGE
+## This setting is also used for the SRB firewallport range. 
+##
+## Specify portrange which on which incoming connections are alllowed.
+## Set passiveMode to false to allow incoming connections:   
+#
+#firewall.incoming.portrange=50000,50099
+
+##
+#TCP connection setup time in MILLI seconds. If supported by protocol!
+#Currently supported (and tested) by: SRM, LFC   
+#tcp.connection.timeout=60000
+tcp.connection.timeout=30000
+
+
+##
+# http/https proxy settings. 
+# Works ONLY for plain http and NOT for Globus GSI connections! 
+# these settings are similar to Java's http.proxyHost and http.proxyPort. 
+# Plain (Axis) webservices are under investigation 
+#http.proxy.host=elab.science.uva.nl
+#http.proxy.port=3128 
+
+###
+## Global Passive mode 
+## if set to true, firewall portranges will be ignored !
+#
+#passiveMode=true
+
+###
+## Additional globus client libs, use custom globus_location 
+##  If the location is prefixed with 'lib' this will be replaced by ${vlet.install.libdir} 
+##  if this property is set. 
+#
+globus.location=lib/auxlib/gt4.1.0
+
+###
+## Optional fixed user home. (USB Stick Option)
+##  To be able to use the toolkit from for example a memory stick 
+##  and use personal settings stored in the removable device
+##  a fixed user home can be specified. 
+##  This location can be relative to the vlet installation ${vlet.install}.
+##  To use a relative path, just omit the '/' 
+##
+##  WHEN CHANGING THIS SETTING ALL USERS WILL SHARE THIS LOCATION.  
+##
+## For example: 
+##  user.home=../MyUsbConfig
+# 
+#user.home=../piter.usb
+
+###
+## Alternative Grid Proxy location.  (USB Stick Option)
+##  To be able to use the toolkit from for example a memory stick 
+##  and use personal settings stored in the removable device
+##  a fixed grid proxy location can be specified. 
+##  This location can be relative to the user HOME ${user.home} ! 
+##  To use a relative path, just omit the '/' 
+##
+##  This property can also be overriden in the $HOME/.vletrc/vletrc.prop
+##
+## For example: 
+##  grid.proxy.location=./.globus/myproxy.x509
+# 
+#grid.proxy.location=proxy.x509
+
+####
+## Optional binary installation paths. 
+## These will be configured when performing a binary installation: 
+
+# Current project install directories:
+#vlet.install=/opt/vlet
+#vlet.install.bindir=/opt/bin/vlet
+#vlet.install.libdir=/opt/lib/vlet
+#vlet.install.sysconfdir=/opt/etc/vlet
+#vlet.install.docdir=/opt/doc/vlet
+
+###
+## VRS plugins (VDrivers) which are NOT in ./lib/plugins 
+## must be specified here (use commas as seperator). 
+## By default the lib/plugins directory will be scanned for VRS or VFS implementations. 
+## To add other adaptors or vdrivers add them seperated with a comma: 
+#vlet.vrs.vdrivers=
+
+##
+## Intialize default VRS Implementations (VDrivers): SFTP,GFTP,LFC,SRM,etc.
+## Default value is true. 
+## You can customize which VDrivers are loaded by setting this value to false
+## and specify 'vlet.vrs.vdrivers' whith the vdrivers you want to be loaded. 
+#
+#vlet.vrs.initDefaultVDrivers=true
+
+###
+## Default SRB Settings for the SRB host at SARA. 
+## This is the installation wide setting. 
+## Do NOT specify a username here ! 
+# 
+
+# Default SRB host at SARA :
+srb.hostname=srb.grid.sara.nl
+srb.path=/VLENL/home
+srb.port=50000
+srb.mdasCollectionHome=/VLENL/home
+srb.mdasDomainHome=vlenl
+srb.mdasDomainName=vlenl
+srb.defaultResource=vleGridStore
+#srb.username=
+srb.mcatZone=VLENL
+# set to true when behind a firewall (Default)
+# if incoming connection are allowed set to 'false'
+srb.passiveMode=true
+#this string MUST match the Enum Value for 'GSI_AUTH'
+srb.AUTH_SCHEME=GSI_AUTH
+
+###
+## Default LFC Server settings: 
+## 
+# Default LFC hostname: Specify empty field for the user to fill in. 
+#lfc.hostname=lfc.grid.sara.nl
+lfc.hostname=<LFCHOST>
+# Default port: 
+lfc.port=5010
+## Example of preconfigured Storage Elements:
+#lfc.listPreferredSEs=srm.grid.sara.nl,tbn18.nikhef.nl
+lfc.replicaNrOfTries=5
+## Replica selection mode (reading). 
+## One of: Preferred, PrefferedRandom, AllSequential, AllRandom
+#lfc.replicaSelectionMode=Preferred
+## Replica creation mode (writing) 
+## One of:  Preferred, PrefferedRandom, DefaultVORandom
+#lfc.replicaCreationMode=Preferred
+## replica naming policy. One of: Similar,Random 
+#lfc.replicaNamePolicy=Similar
+
+###
+## BDII or LCG_GFAL_INFOSYS 
+## 
+## Default BDII Service if environment variable LCG_GFAL_INFOSYS is NOT set.  
+## (User specific settings are saved in ~/.vletrc/vletrc.prop) 
+#
+bdii.hostname=bdii.grid.sara.nl
+#port is  already default: 
+bdii.port=2170
+
+###
+# JGridStart Location:
+vlet.jgridstart.location=http://ca.dutchgrid.nl/start/jgridstart.jnlp

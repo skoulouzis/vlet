@@ -1,0 +1,30 @@
+===============================================================================
+  RELEASE NOTES 
+===============================================================================
+Project: VLET LFC
+Package: org.glite.lfc
+Version: 1.0.0
+
+Authors:
+ - Piter T. de Boer 
+ - Spiros Koulouzis 
+
+
+Relase Notes 
+============
+ This distribution contains the release of the pure Java implementation
+ of the LFC API as used by VLET. 
+ This code is from refactored g-Eclipse code so the Eclipse License applies 
+ to this release. See LICENCE.txt 
+
+
+Version 1.0.0: 
+===  
+ - Updated logging and error messages.
+ - Upgraded version to mature. Version is now 1.0.0. 
+ 
+Contact: 
+Piter T. de Boer 
+email: ptdeboer [curlythingy] pccuva [dot] nl.  
+PCC UVA BV/NIKHEF. 
+

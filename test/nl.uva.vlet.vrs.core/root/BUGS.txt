@@ -1,0 +1,56 @@
+#
+#    Copyright 2006-2011 The Virtual Laboratory for e-Science (VL-e) 
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License").  
+#  You may not use this file except in compliance with the License. 
+#  You can obtain the Apache Licence at the following location: 
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software 
+#  distributed under the License is distributed on an "AS IS" BASIS, 
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+#  See the License for the specific language governing permissions and 
+#  limitations under the License.
+# 
+#  See: http://www.vl-e.nl/vbrowser
+# 
+###
+# Version : @VLET_VERSION@
+# Date    : @DATE@
+#
+# Known bugs and unimplemented features 
+
+
+Unimplemented features 
+=== 
+- Dragging a file from a remote location (SRB/GFTP) onto the Windows desktop 
+  (or another Windows/KDE location) fails (The URI is pasted as text). 
+  This is because Java DnD (Drag and Drop) to the native windows environment
+  only accepts files which exist on the local filesystem. 
+  How to intercept this DnD operation is currently unknown. 
+  Dropping a local file onto a remote location works and is similar to an 'upload'
+  to that remote location. 
+
+   
+Known Bugs - All platforms: 
+===    
+- When creating two resources with the same server URI: <scheme>://host:port 
+  they will share the same server configuration settings. 
+  This because the VBrowser is URI oriented can can not distinguish between two
+  different server configurations for the same Server Location (or URI).
+  The VFS API does support multiple server configurations. 
+
+
+Known Bugs - Windows: 
+===    
+- "No disk in drive error" when starting the VBrowser. 
+  When scanning for the filesystem roots, java creates this error. 
+  Just press cancel in the message dialog. 
+  
+  Current Workaround: 
+  
+  There is now an option in the MyVLe resource to skip the floppy 
+  scan. Right-click on MyVle, select 'Properties' and set
+  the property 'skipFloppyScan' to 'true'.
+  This is default set to 'true'. 
+

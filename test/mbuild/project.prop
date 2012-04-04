@@ -1,0 +1,203 @@
+##############################################################################
+# Project   : VLe Toolkit (VLeT) 
+# Component : mbuild
+# Author    : P.T. de Boer 
+# File      : default project properties. 
+#
+# Info      : 
+#     This file defines the default project environment for the components. 
+#     Note that these defaults can be overriden by build.xml + 
+#     configuration.xml when a custom ant target is invoked.
+#  
+#     You can modify this file so that the default 'ant' command will comply to
+#     your project environment, changing cvs settings and source+dist 
+#     directories. 
+#     For host specific configuration (location of 3rd party tools etc). use
+#     the file 'build.prop' 
+#
+#     Example:  
+#     To make the default behaviour to auto-checkout and build your project in 
+#     the local directory './current' and use ./current/source as source directory, 
+#     specify the following parameters: 
+#           
+#         project.dist=${project.root}/current
+#         project.sourcedir=${project.dist}/source
+#		  cvs.checkout=true
+#         cvs.version=""
+#
+#    Now you can type ant ant the project will be checked out and build. 
+#
+# *** Important: Beware of spaces after property values 
+#
+##
+
+# project properties have been read -> used as assertion in component build file. 
+project.env.ok=true 
+
+### 
+### Project Structure
+###
+
+##
+# The default parent directory is the same as the root (or parent) directory
+# as mbuild. This makes the default build compatible  with eclipse where 
+# components are siblings projects! 
+# This is not the case when checking out the complete structure 'as-is' from CVS. 
+# 
+# Important: if cvs.checkout=true then new components will be checked out also as
+# sibling components to mbuild. 
+
+project.sourceroot=${project.root}/..
+
+##
+# develop environment 
+# default project structure: 
+project.dist=${project.root}/dist
+# var is used during build to write logs to 
+project.var=${project.dist}/var
+# configure files/etc:
+project.conf=${project.var}/conf
+project.lib=${project.dist}/lib
+project.etc=${project.dist}/etc
+project.bin=${project.dist}/bin
+project.doc=${project.dist}/doc
+# Gar Files ! 
+project.gars=${project.dist}/gars
+# for applets/servlets and web sites (No WSRF Web Services !) 
+project.webdir=${project.dist}/web
+project.license=${project.etc}/license
+project.auxlib=${project.lib}/auxlib
+#project.zipdir=${project.dist}/zips
+project.py=${project.dist}/py
+
+project.javadoc=${project.dist}/doc/api
+# default place to install (optional) auxtools:
+project.auxtools=${project.dist}/auxtools
+# chicken'n egg problem when defining project.packs here. See distributions.xml
+#project.packs=${project.root}/vletpacks
+
+##
+#test environment: 
+project.tests=${project.dist}/tests
+project.tests.libdir=${project.tests}
+project.tests.bindir=${project.tests}
+project.tests.vardir=${project.var}/tests
+project.tests.logdir=${project.tests.vardir}/log
+
+#auto-configured mbuild settings (project.prop and component.prop might move to the following file !) 
+#project.mbuild.conf=${project.dist}/var/mbuild.conf
+
+###
+# CVS vs Eclipse structure. 
+# Whether all the components are in one source directory (eclipse's workspace) or
+# whether the location is the default CVS structure. 
+# See for the "cvs.path" part the configuration.xml file which holds the project structures. 
+# When flatten=false, the path to module source is: ${project.sourceroot}/{$cvs.path}/<MODULE> 
+# When flatten=true, the path to module source is: ${project.sourceroot}/<MODULE>  
+
+#project.flatten=false
+project.flatten=true
+
+###
+# Java Compiler options : Explicitly use java 1.5 
+javac.debug=true
+javac.target=1.5
+javac.compiler=javac1.5
+
+###
+### default CVS settings 
+###
+#
+# if component already exist do a cvs update 
+cvs.root=/cvsroot/vlet
+cvs.module=vlet
+cvs.update=false
+#cvs.update=true
+# overwrite if component already exists ? (implemented yet) 
+cvs.overwrite=false
+
+#default version: moved to distributions.xml  
+#cvs.version=-r vlet-1-3-2
+#cvs.version=-r HEAD
+cvs.version=
+# CVS checkout dir and CVS cache:
+cvs.host=gforge.vl-e.nl
+cvs.port=2401
+#variable user.name is defined by ant 
+#cvs.user=${user.name}
+# use autobuilder account:
+cvs.user=ptdeboer
+
+
+###
+# Optional build targets (imported from configured build.prop with prefix="project")
+#  
+#project.build.doc.userguide=yes
+#project.build.module.jython=yes
+
+###
+### Installation directories (binary installation) 
+### 
+
+# Set to empty (is only used for alternative installations, like rpm builds) 
+# destdir is an extra prefix were to build the rpm 
+project.destdir=
+
+# Default prefix/install directories for the binary installment. 
+project.install=/opt/vlet
+project.install.execdir=${project.install}
+project.install.libdir=${project.install.execdir}/lib
+project.install.sysconfdir=${project.install}/etc
+project.install.bindir=${project.install.execdir}/bin
+project.install.var=${project.install}/var
+project.install.docdir=${project.install}/doc
+
+###
+### External Tools/System Tools 
+###
+
+#most developpers use 'gnu make' syntax without knowing it. Do not use obsolete 'make'
+tools.gmake=gmake
+tools.make=${tools.gmake} 
+
+# other tools and/or commands can be defined as follows:
+#tools.sed=sed 
+#tools.tar=tar
+
+#javacc
+#tools.javacc.location=${project.auxtools}/javacc
+
+###
+# Auxiliairy Tool Locations 
+#
+# Important note: 
+#   the ${tool}.location properties are also use to INSTALL the 
+#   apropriate tool (or package) into that location when 
+#   the the component is asked to be build by mbuild ! 
+
+
+### GLOBUS
+# Same for GLOBUS_LOCATION environment variable. 
+# Set this variable if GLOBUS_LOCATION is not set or incorrect 
+#globus.install=${project.dist}/globus
+#globus.location=/opt/globus-4.2.1
+
+# use project settings (only if configured) 
+#globus.location=${project.globus.location}
+
+### SWIG 
+#Swig installation (if other than default installed should be used) 
+#You can also change this by defining the SWIG_INSTALL environment variable
+#swig on fs2: 
+#swig.location=/usr/share/local/package/swig-1.3.20
+
+### Java Home
+# not that this variable might already be set by ant !
+#java.home=/usr/java/j2sdk1.4.2_04
+
+### Jre Environment 
+#Java Runtime Environment:
+#jre.home=${java.home}/jre
+
+
+

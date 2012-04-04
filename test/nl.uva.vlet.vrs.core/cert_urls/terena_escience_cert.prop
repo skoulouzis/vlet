@@ -1,0 +1,7 @@
+name="TERNAME eScience Certificate"
+hash=157753a5
+#Not used!
+#base_url=http://certificate.nikhef.nl/medium/package/
+#Note .pem format equals the .0 format: 
+cert_url=http://www.terena.org/activities/tcs/repository/AddTrust_External_CA_Root.pem
+cert_filename=157753a5.0

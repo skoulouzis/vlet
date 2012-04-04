@@ -1,0 +1,232 @@
+<project name="doTool" default="auxdirs" basedir=".">
+	<description>
+		Project	  : VL-e Toolkit (VLET) 
+		Component : auxTools
+				
+	
+   	</description>
+	
+	
+	<target name="auxdirs">
+		<mkdir dir="${component.auxlib}"/>		
+		<mkdir dir="${component.auxtools}"/>		
+	</target>	
+			
+	<target name="import-tool-properties" depends="auxdirs" >
+		<!-- prepend properties in file with "tool." -->
+		<property prefix="tool" file="${tool.propertyfile}"/> 
+		
+		<property name="tool.root" value="${component.build}/${tool.name}/${tool.topleveldir}"/>
+			
+		<!-- check if zipfile is already in local zipcache: -->
+		<available property="zipfile.available" file="${zipdir}/${tool.zipfile}"/> 
+
+	    <!-- 
+	    	Build logic: currently not that easy to do in ant: 
+	    --> 
+	    
+	    <condition property="dotool.unzip">
+	      <and>
+		       <not>
+		    	   <isset property="source_dist"/> 
+		       </not>
+		       <not>
+		    	   <isset property="tool.isjar"/> 
+		       </not>
+	          
+	      </and>
+	    </condition>
+	    
+	    <condition property="dotool.build">
+	        <not>
+	            <or> 
+	                <isset property="source_dist"/> 
+	                <isset property="tool.nosource"/> 
+	            </or>
+	       </not>
+	     </condition>
+	    
+	    <condition property="dotool.copyauxlibs">
+	        <and>
+	           <istrue  value="${tool.isauxlib}"/>
+	           <isfalse value="${source_dist}"/> 
+		    </and>
+	     </condition>
+	    
+	    <condition property="dotool.copyjaronly">
+	        <and>
+		        <istrue value="${tool.isjar}"/>
+	            <isfalse value="${source_dist}"/> 
+		    </and>
+	     </condition>
+	        
+	    <condition property="dotool.copyauxtool">
+	        <and>
+	  	        <istrue value="${tool.isauxtool}"/>
+	            <isfalse value="${source_dist}"/> 
+		    </and>
+  	     </condition>
+	  	   
+		<echo>
+ === Importing: ${tool.name} ===
+ tool.property.file=${tool.propertyfile}
+ tool.name=${tool.name}
+ tool.version=${tool.version}
+ tool.zipfile=${tool.zipfile}
+ tool.topleveldir=${tool.topleveldir}
+ tool.isjar=${tool.isjar}
+ tool.isbin=${tool.isbin}
+ tool.isauxtool=${tool.isauxtool}
+ ---
+ tool.root=${tool.root}
+ zipfile.available=${zipfile.available}
+ source_dist=${source_dist}
+ dotool.build=${dotool.build}
+ dotool.copyjaronly=${dotool.copyjaronly}
+ dotool.copyauxlibs=${dotool.copyauxlibs}
+ dotool.copyauxtool=${dotool.copyauxtool}
+ dotool.build=${dotool.build}
+ dotool.unzip=${dotool.unzip}
+		    
+		</echo>
+	    <mkdir dir="${project.conf}"/>
+		<echo file="${project.conf}/${tool.name}-${tool.version}" message="auxTool:${tool.name}-${tool.version}"/>
+	    
+	</target> 
+
+	<!--
+		since the classpath will be expanded dynamically with built jar files, 
+	    the <classpath> settings have been moved
+	  --> 
+     	
+	<!-- 
+		Target		: doWget
+		Parameters	:
+			file
+			destdir 
+		-->
+				
+	<target name="doWget" >
+		<mkdir dir="${zipdir}"/>
+		  
+		<get src="${gvlam.tool.repository}/${tool.zipfile}"
+		     dest="${destdir}/${file}" /> 
+		
+	</target> 
+		
+	<!--
+	*	Target: doTool
+	*		unzips, calls build file, copy jars into dist/lib
+    -->
+	
+	<target name="getTool" depends="import-tool-properties" unless="zipfile.available" >
+			
+		<antcall target="doWget"> 
+		   <param name="file" value="${tool.zipfile}"/> 
+		   <param name="destdir" value="${zipdir}/"/>
+		</antcall> 
+	</target>
+
+	<!-- unzip tool --> 
+	<target name="unzipTool" depends="getTool" if="dotool.unzip"> 
+		<!-- unpack -->
+		<unzip src="${zipdir}/${tool.zipfile}" dest="${component.build}/${tool.name}" /> 
+	</target>
+					
+	<!-- autobuild source distribution --> 
+	<target name="buildTool" depends="getTool,unzipTool" if="dotool.build"> 
+		
+		<fail message="*** Error: property 'tool.srcdir' not defined.Cannot find/compile source" unless="tool.srcdir"/> 
+		
+		<!-- set default value to "", if not specified --> 
+		<property name="tool.excludes" value=""/>
+		
+		
+		<echo>
+        === Building: ${tool.name} ===
+		tool.toplveldir=${tool.topleveldir}
+		tool.root=${tool.root}
+		tool.srcdir=${tool.srcdir}
+		tool.excludes=${tool.excludes}
+		tool.javac.options=${tool.javac.options}
+		</echo> 
+		
+		<!-- compile -->		
+			
+		<mkdir dir="build/${tool.name}"/>
+			
+		<!-- default value if not specified !--> 
+		<property name="tool.javac.options" value=""/> 
+			
+		<javac srcdir="${tool.root}/${tool.srcdir}" destdir="build/${tool.name}"
+			excludes="${tool.excludes}" > 
+			<!-- (re)scan library directory -->
+			<classpath >
+				<fileset dir="${component.dist}/auxlib">
+				    <include name="**/*.jar" />
+				</fileset> 
+			</classpath> 
+				
+			<compilerarg line="${tool.javac.options}"/> 
+			
+		</javac>
+			
+		<!-- Jar -->		
+		
+	</target> 
+				
+	<!-- target: if zipfile is already a jarfile, copy jar file only --> 		
+	<target name="copyJarOnly" depends="getTool" if="dotool.copyjaronly">
+		<!-- tool comes in prejarred file: --> 
+		<echo message="copying jarfile only"/> 
+
+		<copy file="${zipdir}/${tool.zipfile}" todir="${component.dist}/auxlib"/> 
+	</target>
+					
+	<!-- target: copy complete binary distribution --> 
+	<target name="copyAuxlibs" depends="getTool,unzipTool" if="dotool.copyauxlibs">
+	    
+	    <!-- set optional sub indir in aublix/ if not set -->
+	    <property name="tool.auxlib.subdir" value="" />
+	    
+		<echo message="copying to auxlib"/> 
+		<copy todir="${component.auxlib}/${tool.auxlib.subdir}" >
+		    <fileset dir="${tool.root}" /> 
+		</copy> 
+	</target>
+			
+	<!-- target: copy complete auxtool distribution --> 
+	<target name="copyAuxtool" depends="getTool" if="dotool.copyauxtool">
+		<echo message="copying distribution to auxtools"/> 
+			
+		<!-- copy/install binary distribution  --> 
+							
+		<mkdir dir="${component.dist}/auxtools/${tool.name}"/>
+		
+		<copy todir="${component.dist}/auxtools/${tool.name}" >
+		    <fileset dir="${tool.root}" /> 
+		</copy> 
+			
+		</target>
+	
+    
+	<target name="fullTool" depends="buildTool,copyJarOnly,copyAuxlibs,copyAuxtool" unless="source_dist">
+				
+	</target> 
+    
+	<target name="sourceTool" depends="getTool" if="source_dist">
+				
+	</target> 
+    
+	<!-- 
+	     target doTool executes target 
+	     by specifying them in the 'depends=...' field> 
+	  -->
+	     
+	<target name="doTool" depends="sourceTool,fullTool">
+				
+	</target> 
+
+	
+</project>
+	

@@ -1,0 +1,13 @@
+void error(const char *format,const char *arg); 
+unsigned int Slength(const char *str);
+char *Salloc(int size);
+void Sfree(char *str);
+int Scompare(const char*s1,const char *s2);
+char *Sduplicate(const char *str);
+int Ssplit(const char *source,const char sepC, char **left,char**right);
+char *Ssubstring(const char *str,int begin,int end);
+char *Sappend(const char *s1,const char *s2);
+int existsfile(char *filepath);
+char *readline(FILE *fp);
+char *readfile(const char *filepath);
+char *SstripQuotes(char *str);

@@ -1,0 +1,213 @@
+<project name="lfcj" default="dist" basedir=".">
+    <description>
+        Project   : VLET/LFCJ
+        Component : Pure LFC Java package 
+                
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+                
+    </description>
+
+    <!-- defaults for eclipse build -->
+    <property environment="env"/>
+    <property file="build.prop"/> 
+    <!-- VLET project settings (if available) 
+         Will overide default settings 
+      --> 
+    <property file="${project.root}/project.prop"/> 
+
+    <property name="dist"  value="dist"/> 
+    <property name="build" value="build"/> 
+    <property name="src"   value="src"/>
+	<property name="root"   location="." /> <!-- resolve ./ -->
+    
+    <!-- derived properties --> 
+    <property name="dist.package.dir" location="${dist}/${lfcj.name}"/> 
+    <property name="dist.package.doc" location="${dist}/${lfcj.name}/doc"/> 
+    <property name="dist.package.lib" location="${dist}/${lfcj.name}/lib"/> 
+	<property name="dist.package.jar" location="${dist}/${lfcj.name}/lib/${lfcj.package}-${lfcj.version}.jar"/> 
+
+    <!-- Target: init --> 
+    
+    <target name="init" >
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${dist.package.dir}" /> 
+        <mkdir dir="${dist.package.lib}" />
+        <mkdir dir="${dist.package.doc}" />
+        
+        <echo message=" lfcj.package     =${lfcj.package} ${line.separator}"/> 
+        <echo message=" lfcj.version     =${lfcj.version} ${line.separator}"/>
+        <echo message=" dist.package.dir =${dist.package.dir} ${line.separator}"/> 
+        <echo message=" dist.package.jar =${dist.package.jar} ${line.separator}"/> 
+        
+    </target>
+        
+    <!-- Target: Config (configure this component) -->
+    <target name="config" >
+    </target> 
+
+    <!--
+         Target: source-dist (Only needed when creating source distributions) 
+      -->
+    <target name="source-dist" >
+        <!-- this is already a source distribution ... --> 
+    </target> 
+       
+    
+    <path id="classpath">
+        <!-- include project libraries--> 
+        <fileset dir="lib">
+             <include name="**/*.jar" />
+         </fileset> 
+            
+        <!-- add local paths settings --> 
+    </path>
+                
+            
+    <!--
+        Target = Compilation 
+    -->
+               
+    <target name="build" depends="init" description="compile the source ">
+        <!-- Compile the java code from the ${src} into ${build} -->
+        
+         <javac srcdir="src" destdir="${build}"
+               compiler="${javac.compiler}"
+               debug="${javac.debug}"
+               target="${javac.target}">
+               <classpath refid="classpath" />
+        </javac>
+    </target>
+   
+     <!-- Build Jar including source ! --> 
+    <target name="jar" depends="build" >
+        <!-- Create application JAR file -->
+        <jar jarfile="${dist.package.jar}"
+            basedir="${build}"
+            includes="org/glite/lfc/**,eu/geclipse/**"
+            excludes="nl/uva/vlet/**">
+                
+               <!-- Add Source --> 
+            <fileset dir="src"/>
+                
+            <manifest>
+            <attribute name="Built-By" value="UvA/g-Eclipse" />
+                   <attribute name="Main-Class" value="org.glite.lfc.main.Lfcls" />
+                   <section name="common">
+                    <attribute name="Specification-Title" value="UvA/g-Eclipse LFC implementation" />
+                         <attribute name="Specification-Version" value="${lfcj.version}" />
+                         <attribute name="Specification-Vendor" value="www.vl-e.nl/www.geclipse.org" />
+                         <attribute name="Implementation-Title" value="lfc for java" />
+                     <attribute name="Implementation-Version" value="${lfcj.version}" />
+                     <attribute name="Implementation-Vendor" value="www.vl-e.nl/www.geclipse.org" />
+                   </section>
+            </manifest>
+         </jar> 
+    </target>
+
+	<target name="javadoc" depends="init" description="documentation">
+			<mkdir dir="${dist.package.doc}/api" />
+			<javadoc  use="true"
+	             private="false"
+	            destdir="${dist.package.doc}/api"
+	            author="false"
+	            version="false"
+	            windowtitle="VL-e Toolkit"
+	            packagenames="vlet.*">
+				<!-- include all java source found in the 'src' directory of this component -->
+				<fileset dir="${src}" defaultexcludes="yes">
+					<include name="**/*.java" />
+				</fileset>
+			</javadoc>
+		</target>
+	
+    <target name="dist" depends="build,javadoc,jar" >
+        
+       <!-- copy extra libs --> 
+       <copy todir="${dist.package.dir}/lib">
+            <fileset dir="lib/" />
+       </copy>
+
+       <!-- copy extra files to the root distribution directory --> 
+       <copy todir="${dist.package.dir}" file="ReleaseNotes.txt"/>
+                
+       <!-- extra run script --> 
+       <copy todir="${dist.package.dir}">
+           <fileset dir="bin/" />
+       </copy>
+        
+       <!-- update permission of lfc* scrips --> 
+        
+       <chmod perm="ugo+rx" >
+           <fileset dir="${dist.package.dir}">
+               <filename name="lfc*"/> 
+           </fileset>
+       </chmod>
+    </target> 
+    
+    <!--
+    *    Target: dist-install
+    *    Info:
+    *          Only used when component is part of the main project. 
+    *        
+    -->
+    
+    <target name="dist-install" depends="dist" description="install lfcj into VLET distribution">
+        <fail message="*** Error: property VLET 'project.root' not defined or could not find project environment.${line.separator}. Please start with '-Dproject.root=&lt;path&gt;' argument. " 
+              unless="project.env.ok"/>         
+
+    	
+        <!-- install lfcj.jar only -->
+        <mkdir dir="${project.lib}/vdrivers" />
+ 	    <copy todir="${project.lib}/vdrivers"
+               file="${dist.package.jar}"  />
+        
+    </target>
+        
+    <target name="clean" description="clean">
+        <delete dir="${dist}"/>
+        <delete dir="${build}"/>
+    </target>
+	
+	<target name="source-zip" depends="source-dist" description="create source zipfile">
+		
+	        <mkdir dir="${dist}" />
+		
+	        <!-- create zip file from dist/* to vlet-<Version>  -->
+			<zip destfile="${dist}/${lfcj.name}-src-${lfcj.version}.zip">
+	            <!-- create zipfile with some standard exlcludes --> 
+			    <zipfileset dir="${root}" 
+			        filemode="644" prefix="${lfcj.name}-${lfcj.version}" 
+					excludes="dist/**,build/**,**/*.class,testsrc/**" />
+				
+			    	<!-- excludes="configure,*.ac,*.m4,**/dist,**/build,**/*.class"  -->
+	                <!-- add shell scrips with x permissions ! -->
+			        <!-- <zipfileset dir="${project.topleveldir}/bin" filemode="755" prefix="${vlet.source.prefix}/bin" />
+			          -->
+			 </zip>
+	</target>
+	
+	<target name="dist-zip" depends="dist" description="create distro zipfile">
+		
+  		<!-- create zip file from dist/* to vlet-<Version>  -->
+		<zip destfile="${dist}/${lfcj.name}-${lfcj.version}.zip">
+				
+		    <!-- create zipfile with some standard exlcludes --> 
+	    	<zipfileset dir="${dist}/${lfcj.name}"
+		        filemode="644"  prefix="${lfcj.name}-${lfcj.version}" 
+				excludes="dist/**,build/**,**/*.class,testsrc/**" />
+					
+	    	<!-- excludes="configure,*.ac,*.m4,**/dist,**/build,**/*.class"  -->
+            <!-- add shell scrips with x permissions ! -->
+	        <!-- <zipfileset dir="${project.topleveldir}/bin" filemode="755" prefix="${vlet.source.prefix}/bin" />
+             -->
+		 </zip>
+		
+	</target>
+
+</project>
+    
+

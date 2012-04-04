@@ -1,0 +1,103 @@
+#
+#    Copyright 2006-2011 The Virtual Laboratory for e-Science (VL-e) 
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License").  
+#  You may not use this file except in compliance with the License. 
+#  You can obtain the Apache Licence at the following location: 
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software 
+#  distributed under the License is distributed on an "AS IS" BASIS, 
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+#  See the License for the specific language governing permissions and 
+#  limitations under the License.
+# 
+#  See: http://www.vl-e.nl/ 
+# 
+##
+# Version : @VLET_VERSION@
+# Date    : @DATE@
+#
+# Quick Install guide for the VL-e Toolkit (VLET) 
+#
+
+How to install:
+==== 
+ 1) unpack or unzip (you probably already did this) 
+  
+ 2) Run the following command:
+   
+    - Windows: start bin/vbrowser.exe 
+   
+    - Linux/Unix: start bin/vbrowser.sh for any UNIX
+    
+    - Other: You can start the vbrowser jar directly by using the command:
+     
+        java -jar vbrowser.jar
+ 
+Installation requirements: 
+===
+ - Java Requirements: Java 1.6 (or compatible) is needed to run the toolkit. 
+   
+   For java downloads see: 
+	  http://www.java.com/en/download/manual.jsp 
+  
+   If you don't know which java version to download, select 'Jre 1.6'
+   
+ - Java compatibility issues: 
+   Only SUN Java is supported. Other Java versions like 'gcj' and 
+   'OpenJDK' are known to have numerous bugs regarding UI Applications. 
+  
+ - You need a grid certificate to contact grid servers 
+   See: http://certificate.nikhef.nl/request/
+  
+  For more descriptive installation instructions see the UserGuide
+  in the 'doc' directory of this installation.
+ 
+  
+Configuring your certificate environment: 
+===
+ - Make sure your personal certificate is in your HOME environment: 
+   For linux, this location is: 
+  
+      $HOME/.globus 
+      
+   For windows XP this location could be: 
+  
+      c:\WINNT\profiles\(Your User Name)\.globus
+
+   You can also use the VBrowser to check the location of
+   your HOME on windows. Just start the VBrowser, and look for the folder
+   which has a mini house (home) icon in it. 
+   It should be the first or one of the first folder icons under the MyVle
+   icon.
+   You can create a new directory ".globus" and copy your grid certificate
+   to that directory. After that you can create a Grid Proxy by clicking on 
+   the keys icon in the VBrowser. The VBrowser doesn't have to be restarted. 
+   
+     
+Adding host certificates or 'root CA' certificates 
+=== 
+ - Currently the host and root CA certificates in VLET_INSTALL/etc/certificates 
+   are loaded when starting the browser. 
+   These are not visible in the COG certificates configuration wizard as this 
+   tool configures the global COG environment and not the VBrowser.
+   
+ - For NIKHEF/DutchGrid hosts, nothing has to be done, but if you want
+   to access other Grid servers which have different CAs, add the (root) 
+   CA certificates to the etc/certificates directory of this installation. 
+   These will be loaded automatically at startup.
+ 
+ - You can add custom CA certificates to either VLET_INSTALL/etc/certificates 
+   or to $HOME/.vletrc/certificates 
+    
+    
+Configuring a new Resource
+===
+ - If no Storage Locations are present in the "MyVLe" icon, right-click on MyVle,
+   and select: New-> <Type> Location, where <Type> is any supported file protocol. 
+
+ - To configure this new Resource, right click on the Server icon
+   and select "Properties". 
+   Fill in the appropriate values at the "Server Configuration" tab. 
+

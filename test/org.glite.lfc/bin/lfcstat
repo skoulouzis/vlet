@@ -1,0 +1,17 @@
+#!/bin/bash
+##
+# info   : lfcfs example
+# author : Piter T. de Boer 
+#
+
+# get install path: 
+DIR=`dirname $0`
+LIBDIR="$DIR/lib" 
+
+for f in `ls ${LIBDIR}/*.jar` ; do 
+   CP="$CP:$f"
+done
+
+echo "CLASSPATH =$CP" 
+java -cp $CP org.glite.lfc.main.LfcStat $@
+

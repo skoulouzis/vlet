@@ -1,0 +1,30 @@
+###
+#Project    : VLeT
+#Component  : Gui Utils 
+#Maintainer : P.T. de Boer 
+#
+
+Info
+=== 
+This component contains the utility classes of the GUI. 
+Helper classes/viewers and/or other reusable source is 
+placed in this component. 
+Most components can be used as 'standalone' GUI components
+or other conveniant GUI building blocks.
+
+Some usefull components are, for example: 
+
+- AttributeEditorForm   for VAttributes
+- AuthenticationDialog  for ServerInfo
+- FontToolBar           for FontInfo 
+- GridProxyDialog       for grid proxies 
+- Serveral standard viewers in the viewers.* package 
+
+Component Structure: 
+===
+    src/                Source
+    testsrc/            Source for testing purposes 
+    build.xml           Main build file
+    build.prop	        Local property settings for this component
+    NOTES               this notes file 
+	icons				Default icons for the menus   

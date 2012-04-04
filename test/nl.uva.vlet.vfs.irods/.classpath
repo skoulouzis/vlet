@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
+	<classpathentry kind="lib" path="lib/commons-exec-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/gsi-classes.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.7.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/maven-ant-tasks-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-all-1.8.4.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/jargon-2.4.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.grid.globus"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

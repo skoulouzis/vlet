@@ -1,0 +1,28 @@
+##########################################################################
+# Project: VLET
+# Author:  P.T. de Boer
+#
+# Info:
+#    property file specified the default layout and settings 
+#    of the used components. 
+
+##
+#mandatory component properties (one for all) 
+
+component.build=${component.root}/build
+component.src=${component.root}/src
+component.idl=${component.root}/idl
+component.gensrc=${component.root}/gensrc
+component.doc=${component.dist}/doc
+component.schema=${component.dist}/schema
+
+##
+# dist structure:
+component.dist=${component.root}/dist
+component.dist.lib=${component.root}/dist/lib
+component.dist.bin=${component.root}/dist/bin
+component.dist.doc=${component.root}/dist/doc
+
+
+
+

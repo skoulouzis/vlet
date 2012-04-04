@@ -1,0 +1,136 @@
+<project name="vlet" default="dist" basedir=".">
+    <description>
+        Project        : VLET
+        Component      : vletTests
+        Eclipse target : dist
+                
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+                
+    </description>
+
+    <!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set component.root to the location if this component 
+      4) Read local components properties from: build.prop 
+    --> 
+    <property environment="env"/>
+    <property name="component.root" location="." />
+    <property name="project.root" value="../mbuild/"/> <!-- default to eclipse environment -->     
+    <property file="${project.root}/project.prop"/> 
+    <property file="build.prop"/> 
+
+    <property name="tests.dist" value="${component.dist}/tests" />
+    <property name="tests.dist.lib" value="${tests.dist}" />
+
+     <!-- default properties if not set by mbuild !-->  
+    
+    <!-- Target: init --> 
+    
+    <target name="init" >
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${component.build}" />
+        <mkdir dir="${component.dist}" />
+        <mkdir dir="${tests.dist}" />
+        <mkdir dir="${tests.dist.lib}" />
+    </target>
+        
+    <target name="config" >
+    </target> 
+    
+    <target name="generate" >
+    </target> 
+    
+    <path id="component.classpath">
+	    <fileset dir="lib">
+           <include name="**/*.jar" />
+    	</fileset> 
+    	
+        <!-- include project libraries--> 
+        <fileset dir="${project.lib}">
+            <include name="**/*.jar" />
+        </fileset> 
+    	
+    	<!-- add executable jars ! --> 
+    	<fileset dir="${project.bin}">
+    		 <include name="**/*.jar" />
+    	</fileset> 
+    	        
+        <!-- add local paths settings --> 
+        <pathelement location="${component.build}" />
+        <pathelement location="${component.src}" />
+            
+    </path>
+    
+    <!-- source distribution: nothing to do --> 
+    <target name="source-dist"/>    
+                
+            
+    <!--
+        Target = Compilation 
+    -->
+               
+    <target name="build" depends="init" description="compile the source ">
+        <!-- Compile the java code from the srclist } into ${build} -->
+        <javac srcdir="${component.src}" destdir="${component.build}">
+            <classpath refid="component.classpath" />
+        </javac>
+    </target>
+    
+    <target name="jar" depends="build" >
+        <!-- Create application JAR file -->
+        <jar jarfile="${tests.dist.lib}/${component.name}.jar"
+             basedir="${component.build}"/>
+    </target>
+
+    <!-- <target name="dist" depends="build,jar,javadoc" > --> 
+    <target name="dist" depends="build,jar" >
+    </target> 
+
+    <target name="check-install" depends="">
+    	<!--
+          Tests can only be run against a proper installation 
+    	  run the tests from $VLET_INSTALL/tests or ${project.dist}/tests
+    	 --> 
+    	
+    </target> 
+
+    <!--
+        Target: dist-install
+    -->
+    
+    <target name="dist-install" depends="dist" description="install libraries">
+        <fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/>         
+        <mkdir dir="${project.tests.bindir}" />
+        <mkdir dir="${project.tests.libdir}" />
+         
+        <!-- Copy all-in-one package lib into project lib dir --> 
+        <copy todir="${project.tests}/">
+            <fileset dir="${tests.dist}" />
+        </copy>
+        <copy todir="${project.tests.bindir}/">
+            <fileset dir="bin" />
+        </copy>
+        
+        <copy todir="${project.tests.libdir}/">
+            <fileset dir="lib" />
+        </copy>
+                
+    	<chmod dir="${project.tests.bindir}" 
+    		perm="ugo+x" 
+    		includes="**/*.sh,**/bin/*" />
+    	 
+
+    </target>
+        
+    <target name="clean" description="clean">
+        <delete dir="${component.dist}"/>
+        <delete dir="${component.build}"/>
+    </target>
+    
+</project>
+    
+

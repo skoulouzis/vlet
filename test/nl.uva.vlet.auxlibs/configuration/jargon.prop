@@ -1,0 +1,35 @@
+##
+# auxtool: jargon
+# 
+# Info:
+#    SRB java client 
+#
+
+## package properties
+#
+###
+## Version: v1.4.17
+##name=jargon
+#version=1.4.17
+#zipfile=jargon_v1.4.17.jar
+#
+#
+###
+## Version: v1.4.16
+##package_name=jargon_v1.4.16
+##zipfile=jargon_v1.4.16.jar
+#
+###
+## Use POC compatible one
+##package_name=jargon
+##zipfile=jargon.jar
+#
+## shortcut to inform tool installer it is already a jar
+#isjar=true
+#nosource=true
+#topleveldir=
+#
+##url to use when not in binary tool repository
+#url=http://www.sdsc.edu/srb/jargon/jargon_v1.4.17.jar
+#
+#

@@ -1,0 +1,30 @@
+###
+# File      : build.prop
+# Component : LFC for Java
+# 
+# Info: 
+#
+#   Build properties. Holds customizable properties 
+#   
+
+###
+# *** IMPORTANT *** 
+# Do not add spaces to the end of the values ! 
+
+##
+# Component properties: 
+# - The property  "driver.root" is set in the main build file. 
+
+##
+# lfc package properties. 
+
+lfcj.package=org.glite.lfc
+# name for distribution to use 
+lfcj.name=vlet_lfc
+lfcj.version=1.0.0
+
+###
+# Java Compiler options : Explicitly use java 1.5
+javac.debug=true
+javac.target=1.5
+javac.compiler=javac1.5

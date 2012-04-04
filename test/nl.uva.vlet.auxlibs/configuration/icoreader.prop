@@ -1,0 +1,26 @@
+###
+# auxtool: iconreader  
+# 
+# Info:
+#    .ico file reader API.  
+#
+
+###
+# Tool properties: 
+
+name=icoreader
+version=1.04
+zipfile=ICOReader-1.04.jar
+
+# toplevel directory which is create when unzipping the archive: 
+# Some zipfile contain a toplevel directory, some don't 
+topleveldir=
+
+###
+# unpack,compile and install properties:
+
+#nothing to compile 
+nosource=true
+# copy jar file 
+isjar=true
+

@@ -1,0 +1,9 @@
+###
+# Add custom mimetype icons here. 
+#
+# mimetypes are translated to icons by replacing a slash ('/') with a dash ('-').  
+# For example mimetype "image/vlemed-nifti" becomes "image-vlemed-nifti.png".
+#
+# added here custom mimetypes which are not found in 'gnome' 
+
+

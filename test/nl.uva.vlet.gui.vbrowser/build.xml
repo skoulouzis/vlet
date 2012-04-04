@@ -1,0 +1,195 @@
+<project name="VBrowser" default="dist" basedir=".">
+	<description>
+		Project	  : VLeT
+		Component : VBrowser
+        Eclipse target : dist
+            	
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+            	
+    </description>
+
+    <!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set component.root to the location if this component 
+      4) Read local components properties from: build.prop 
+    --> 
+    
+    <property name="project.root" location="../mbuild" />
+    <property file="${project.root}/project.prop"/> 
+    <property environment="env"/>
+    <property name="component.root" location="." />
+    <property file="build.prop"/> 
+	<!-- Target: init --> 
+	
+	<target name="init" >
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${component.build}" />
+		<mkdir dir="${component.dist}" />
+		<mkdir dir="${component.dist}/lib" />
+		<mkdir dir="${component.dist}/etc" />
+	</target>
+		
+	<target name="config" >
+	</target> 
+	
+	<target name="generate" >
+	</target> 
+	
+	<path id="component.classpath">
+			<!-- include project libraries--> 
+			<fileset dir="${project.lib}">
+			    <include name="**/*.jar" />
+			</fileset>
+			<!-- add local paths settings --> 
+    </path>
+				
+			
+	<!--
+		Target = Compilation 
+	-->
+	   		
+	<target name="build" depends="init" description="compile the source ">
+		<!-- Compile the java code from the srclist } into ${build} -->
+		<javac srcdir="${component.src}" destdir="${component.build}"
+			   compiler="${javac.compiler}"
+	           debug="${javac.debug}"
+	    	   target="${javac.target}">
+			<classpath refid="component.classpath" />
+		</javac>
+	</target>
+	    
+    <target name="jar" depends="build" >
+        <!-- Create application JAR file -->
+    	<jar jarfile="${component.dist}/lib/${component.name}.jar"
+         basedir="${component.build}"/>
+    	
+    	<!-- creat jar file out of icons -->
+    	<jar jarfile="${component.dist}/lib/icons.jar"
+         basedir="${component.root}/icons"/>
+    	
+		
+	</target>
+
+    <!-- source distribution: nothing to do --> 
+    <target name="source-dist"/>
+        
+
+	<target name="javadoc" depends="init" description="documentation" >
+		<mkdir dir="${component.dist}/doc/api" />
+		<javadoc  use="true"
+             private="false"
+             destdir="${component.dist}/doc/api"
+             author="false"
+             version="false"
+             windowtitle="VL-e Toolkit"
+             packagenames="vlet.*">
+			 <!-- include all java source found in the 'src' directory of this component -->
+			 <fileset dir="${component.src}" defaultexcludes="yes">
+				<include name="**/*.java" />
+				<exclude name="vdriver/**/*" /> 
+			</fileset>
+		</javadoc>
+	</target>
+					
+	<!-- <target name="dist" depends="build,jar,javadoc" > --> 
+    <target name="dist" depends="build,jar" >
+		    
+		<!-- <copy todir="${component.dist}/lib/icons">
+			<fileset dir="${component.root}/icons" /> 
+		</copy>-->
+		
+		<!-- <copy todir="${component.dist}/etc">
+			<fileset dir="${component.root}/etc" /> 
+		</copy> --> 
+			
+	</target> 
+
+	<!--
+	*	Target: web-install, copy component jars, etc into project web directory 
+    -->
+
+	    
+    <target name="applet-install" depends="dist" description="install libraries">
+    	<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+    	<mkdir dir="${project.doc}" />
+    	
+    	<property name="applet.installdir" value="${project.webdir}/vbrowser_applet" /> 
+    	
+		<mkdir dir="${applet.installdir}" />
+		<mkdir dir="${applet.installdir}/lib" />
+		
+        <copy todir="${applet.installdir}" 
+      		  file="${component.dist}/lib/${component.name}.jar"/>
+    	
+        <copy todir="${applet.installdir}/lib">
+    		  <fileset file="${project.lib}/*.jar"/>
+       		  <fileset file="${project.lib}/auxlib/*.jar"/>
+	   		  <fileset file="${project.lib}/auxlib/gt4.1/lib/*.jar"/>
+   			  <fileset file="${project.lib}/auxlib/gt4.1/lib/common/*.jar"/>
+         </copy> 
+    	
+         
+        <copy todir="${applet.installdir}" 
+      		  file="${component.dist}/lib/icons.jar"/>
+        
+        <copy todir="${applet.installdir}"> 
+      		  <fileset dir="${component.root}/html"/>
+        	
+		<!-- todo copy libraries -->
+        	
+        </copy>
+    </target> 
+        
+            
+	<!--
+	*	Target: dist-install, copy component jars, etc into project directory 
+    -->
+	
+	<target name="dist-install" depends="dist" description="install libraries">
+		<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+		<mkdir dir="${project.doc}" />
+		
+		<!-- create system directories for vbrowser -->
+		<mkdir dir="${project.lib}" />
+		<mkdir dir="${project.lib}/viewers" />
+		<mkdir dir="${project.lib}/applets" />
+		<mkdir dir="${project.lib}/icons" />
+		
+	    <!-- lib --> 
+		<copy todir="${project.lib}">
+		    <fileset file="${component.dist}/lib/${component.name}.jar"/>  
+		</copy>
+				
+	    <!-- icons --> 
+		<copy todir="${project.lib}/icons">
+		    <fileset file="${component.dist}/lib/icons.jar"/>  
+		</copy>
+
+        
+        <!-- etc --> 
+		<!-- <mkdir dir="${project.dist}/etc" />
+		<copy todir="${project.dist}/etc">
+			<fileset dir="${component.root}/etc" /> 
+		</copy> -->
+
+        <!-- bin  
+		<mkdir dir="${project.dist}/bin" />
+		<copy todir="${project.dist}/bin">
+			<fileset dir="${component.root}/bin" /> 
+		</copy>
+		-->
+		
+	</target>
+		
+	<target name="clean" description="clean">
+		<delete dir="${component.dist}"/>
+		<delete dir="${component.build}"/>
+	</target>
+	
+</project>
+	
+

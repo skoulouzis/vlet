@@ -1,0 +1,36 @@
+###
+# File      : build.prop
+# Component : auxTools 
+# 
+# Info: 
+#
+#   build properties. 
+
+###
+# Component defaults (property component.root is set in the main build file)
+
+component.name=auxTools
+component.dist=${component.root}/dist
+component.auxlib=${component.dist}/auxlib
+component.auxtools=${component.dist}/auxtools
+component.build=${component.root}/build
+#component.src=${component.root}/src
+component.dist.lib=${component.root}/dist/libs
+# set if not already set by project environment:
+project.conf=${component.dist}/var/conf
+# if not already specified by project environment:
+project.zipdir=${component.root}/zips
+#disabled global project zipdir. Zips are now included in component
+#zipdir=${project.zipdir}
+zipdir=${component.root}/zips
+
+# tool binary repository: 
+
+gvlam.tool.repository=http://staff.science.uva.nl/~gvlam/pub/tools
+
+# To use VLAM_INSTALL as project.root uncomment the following: 
+# (This does not overide an already set project.root!) 
+#project.root=${env.VLAM_INSTALL} 
+
+#Installed project libraries: 
+#project.auxlib=${project.root}/lib/auxlib

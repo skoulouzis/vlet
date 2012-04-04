@@ -1,0 +1,442 @@
+%
+% VBrowser
+%
+
+\chapter{Other Tools}
+\label{chap:other_tools}
+
+\section{Application and Tools} 
+
+Other applications currently available in the VL-e Toolkit are:
+
+\begin{itemize}
+  \item \Bold{GridProxyDialog}: for creating and managing Grid Proxies. 
+  \item \Bold{VLTerm}:		    simple vt100 emulator with some
+  xterm extensions.  
+  \item \Bold{uricopy.sh,urils.sh}:		URI copy and list script. 
+  \item \Bold{jython.sh}:		Jython startup script. 
+\end{itemize}
+
+\section{GUI utils}
+
+\subsection{GridProxyDialog}
+
+Some part of the \vbrowser\ can be used stand alone. 
+The Grid Proxy Init dialog can be called by running the
+\Path{GridProxyDialog.jar} as follows:\\
+
+	\tab \Code{java -jar \$VLET\_INSTALL/bin/GridProxyDialog.jar}\\
+
+Or double click on the jar file in the \Path{VLET\_INSTALL/bin} directory:\\
+
+	\tab \Path{VLET\_INSTALL/bin/GridProxyDialog.jar}\\
+	
+You cannot move this file out of the installation, but you can create a shortcut
+to the jar file instead. 
+
+\subsection{VLTerm}
+\label{section:vlterm}
+
+The VL-e Toolkit has an beta version of a VT100 terminal emulation program.
+This terminal emulator can be used as a backup if there is no standard xterm or SSH
+terminal program available on the user's host.\\
+Most VT100 and some XTERM control codes are supported. For basic remote
+command execution this terminal application can be used.\\
+To start the \Code{VLTerm} application use the command line as follows:\\
+
+	\tab \Code{java -jar \$VLET\_INSTALL/bin/vlterm.jar}\\
+
+Or double click on the jar file at the following path:\\
+
+	\tab \Path{VLET\_INSTALL/bin/vlterm.jar}\\
+
+You cannot move this file out of the installation, but you can create a
+shortcut to the jar file instead. \\ 
+
+ \begin{figure}[htbp]
+ \centerline{\includegraphics[scale=0.75]{vlterm}}
+ \caption{VLTerm at SARA}
+ \label{fig:vlterm}
+ \end{figure}
+
+\section{Command line tools}
+
+\subsection{URI copy script: uricopy.sh}
+
+At this moment there is only one script interface to the Virtual Resource System
+(VRS). This script is the URI copy script: \Path{uricopy.sh}\\
+
+The location is: \Path{VLETINSTALL/bin/uricopy.sh} and the syntax is as
+follows: 
+
+\tab \Path{uricopy.sh [options] \lt source URI\gt\ \lt destination URI\gt\
+	[-D\lt PROPERTY\gt =\lt VALUE \gt]*}
+
+Command line argument are: 
+\begin{itemize}
+  \item \Path{  \lt source URI\gt\ } : source file or directory.
+  \item \Path{  \lt dest URI\gt\ } : parent directory to copy to. The source
+        file  or directory is always created as child of this parent
+        directory.
+  \item \Path{ [options] } can be: 
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+ -r,-dir    ; perform a recursive copy of the source location (for copying 
+              directories). 
+ -v [-v]    ; be verbose. provide option twice to be even more verbose. 
+ -f, -force ; overwrite (optional) existing target location. 
+ -move      ; move resource and delete source URI after copy command.
+ -mkdirs    ; create target directory path 
+ -result    ; print resulting destination URI as follows: "result=...".
+ -debug     ; enable debug output.
+\end{verbatim}
+\end{minipage}
+\end{itemize}
+
+The properties which can be specified are depending on the source and
+destination URIs. Most VLET settings can be specified as command line options 
+using the \Code{-D\lt NAME\gt =\lt VALUE\gt} syntax. \\
+\\
+An overview of relevant properties are:\\
+\\
+\EmphBold{Global properties}:\\
+\\
+\tab \Code{-DpassiveMode=true} always use passive mode for all file transfers.\\
+\\ 
+\EmphBold{General usage:}\\
+\\
+The source and destination URIs are mandatory. Options can be both specified
+before and after the URIs. The source URI must be an existing file or directory
+and the target URI \Emph{must} be an existing directory! This is to
+avoid ambiguity between destination files and directories. The new file or
+directory will always be created as a child entry in the target directory.\\
+\\
+\EmphBold{Copying directories:}\\
+\\
+To copy a directory specify the \Code{-r} option (for recursive copy).\\
+The uricopy command will create the new destination directory which
+always will be a child (subdirectory) of the destination URI.\\
+\\
+\EmphBold{Moving files or directories:}\\
+\\
+To move a file or a directory specify the \Code{-move} option. The source will
+be deleted after and \Emph{only} after a successful copy. \\
+\\
+
+\subsection{Examples} 
+
+\subsubsection{LFC uricopy example}
+
+Below an example how to use uricopy to upload a file to an LFC server. 
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+$VLET_INSTALL/bin/uricopy.sh file:/home/ptdeboer/hello.txt \
+	lfn://lfc.grid.sara.nl/grid/pvier/piter
+\end{verbatim}
+\end{minipage}
+
+Options or server settings can be provided as either a Java property or a URI
+attribute. \\
+For example to specify the preferred Storage Elements provide the
+\Emph{lfc.listPreferredSEs} option to the uricopy script:\\
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+$VLET_INSTALL/bin/uricopy.sh file:/home/ptdeboer/hello.txt \
+	lfn://lfc.grid.sara.nl/grid/pvier/piter\
+	-Dlfc.listPreferredSEs=srm.grid.sara.nl,tbn18.nikhef.nl
+\end{verbatim}
+\end{minipage}
+
+The above command will try to register the file at the first Storage Element in
+the list, if that fail it will try the second storage element. 
+
+Optional LFC properties can be: \\
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+-Dlfc.listPreferredSEs=SEHost1,SEHost2 ; list of preferred Storage Elements
+-Dlfc.replicaNrOfTries=5               ; number of retries when reading/creating
+                                         a replica. 
+-Dlfc.replicaCreationMode=Preferred    ; one of: Preferred, PreferredRandom,
+                                         DefaultVO, DefaultVORandom 
+-Dlfc.replicaSelectionMode=Preferred   ; one of: Preferred,PreferredRandom,
+                                         AllSequential, AllRandom
+\end{verbatim}
+\end{minipage}\\
+
+% \subsubsection{SRB uricopy example}
+% 
+% An example how to upload files to the SRB server goes as follows:
+% 
+% \hspace*{10mm}\begin{minipage}{170mm}
+% \begin{verbatim}
+% $VLET_INSTALL/bin/uricopy.sh file:/home/ptdeboer/hello.txt \
+%    srb://srb.grid.sara.nl:50000/VLENL/home/piter.de.boer.vlenl \
+%    -Dsrb.defaultResource=vleGridStore \
+%    -Dsrb.username=piter.de.boer \
+%    -Dsrb.msdasDomainName=vlenl
+% \end{verbatim}
+% \end{minipage}
+% 
+% Optional SRB properties can be: \\
+% 
+% \hspace*{10mm}\begin{minipage}{170mm}
+% \begin{verbatim}
+% -Dsrb.username=USERNAME               ; username for the SRB server.
+% -Dsrb.defaultResource=vleMatrixStore  ; specify resource to store new file/directories.
+% -Dsrb.mdasCollectionHome=/VLENL/home  ; specify default home.
+% -Dsrb.mdasDomainName=vlenl            ; specify DomainName.
+% -Dsrb.hostname=srb.grid.sara.nl       ; hostname of SRB server.
+% -Dsrb.port=50000                      ; port of SRB server.
+% \end{verbatim}
+% \end{minipage}\\
+% 
+% If you specify any of the above as command line options, you can omit them in the
+% URI. \\
+% The option:\\
+% \\
+% \tab \Code{-Dsrb.defaultResource=vleGridStore}\\
+% \\
+% may be omitted if the default resource of the SRB server
+% (\Code{(srb.defaultResource}) equals the one specified in srb settings file:
+% \Path{VLETINSTALL/etc/srbsettings.prop.}\\
+% If this option is not or incorrectly set the SRB server might return an error as
+% follows:\\
+% \\
+% \hspace*{10mm}\begin{minipage}{170mm}
+% \begin{verbatim}
+% 	OBJ_ERR_RES_NOT_REG resource has not been registered -2400
+% \end{verbatim}
+% \end{minipage}
+% 
+% This means the SRB server could not 'register' the file at the default 'storage'
+% location.\\
+% \\
+% \EmphBold{SRB upload example using URI attributes}:\\
+% \\
+% Used URIs can have (URI) attributes which allow Server Properties and Settings
+% to be specified as part of the URI.\\
+% Check the implementation details, or see in the appendices, which property is
+% supported as URI attribute.\\
+% An example is as follows:\\
+% \\
+% \hspace*{10mm}\begin{minipage}{170mm}
+% \begin{verbatim}
+% $VLET_INSTALL/bin/uricopy.sh file:///home/ptdeboer/hello.txt
+%    srb://srb.grid.sara.nl:50000/home/piter.de.boer.vlenl\
+%    ?srb.defaultResource=vleGridStore\
+%    &srb.username=piter.de.boer\
+%    &srb.mdasDomanName=vlenl
+% \end{verbatim}
+% \end{minipage}\\
+% \\ 
+% \\
+% The difference is that the defaultResource property is now specified as URI
+% attribute using the \path{?srb.defaultResource=vleGridStore} syntax. \\
+% \\
+\subsection{Customized uricopy script}
+
+You can use the uricopy.sh as an example and modify it to your liking. Make sure 
+the \VLETINSTALL environment variable is set so the script can find the
+installation as follows: \\
+\\
+\hspace*{5mm}\begin{boxedminipage}{165mm}
+\begin{verbatim}
+
+#!/bin/bash 
+##
+# File   : Example modified uricopy.sh script 
+# Version: VLET 1.1
+# --- 
+
+# Default installation: 
+export VLET_INSTALL=/opt/vlet
+export VLET_SYSCONFDIR=$VLET_INSTALL/etc
+# Configuration files on PoC R3: 
+#export VLET_SYSCONFDIR=/etc/vlet
+
+# set base directory 
+BASE_DIR=$VLET_INSTALL
+
+# my options: 
+OPTIONS="-DpassiveMode=true -Dsrb.username=piter.de.boer -r -force"
+
+# source vlet settings: 
+source $VLET_SYSCONFDIR/vletenv.sh 
+
+##
+# VLET java class to start: VFSCopy 
+CLASS=nl.uva.vlet.vfs.VFSCopy
+
+# JVM options: 
+JVMOPTS="-Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $BASE_DIR/bin/bootstrapper.jar"
+
+# Start bootstrapper which does the rest 
+echo "Command:" $JAVA $JVMOPTS $CLASS $OPTIONS $@
+$JAVA $JVMOPTS $CLASS $OPTIONS $@
+# keep return value: 
+RETVAL=$? 
+
+#return exit code from VFSCopy
+exit $RETVAL; 
+
+\end{verbatim}
+\end{boxedminipage}
+
+\section{Jython}
+
+\subsection{Jython start script: jython.sh}
+
+Since Jython is a pure java implementation of Python, Jython can be used 
+to access to full VLET API. To run  a Jython script, call the Jython 
+bootstrap script from the VLET installation. \\
+The location of this bootstrap script is: \Path{VLETINSTALL/bin/jython.sh} and
+the syntax is as follows: \\
+\\
+\tab \Path{jython.sh [-i] \lt jython file\gt\ }\\
+\\
+Where option \Path{-i} starts the Jython interpreter in interactive mode (leave
+out the file when starting the Jython interpreter in this mode). \\
+Jython examples can be seen in: \Path{VLETINSTALL/py}. 
+\\
+The documentation for the VLET API can be found at: 
+\Path{VLETINSTALL/doc/api/index-all.html}. \\ 
+\\ 
+Below an example how to use the VFS interface from VLET in a Jython 
+script:
+
+\hspace*{5mm}\begin{boxedminipage}{165mm}
+\begin{verbatim}
+#!/opt/vlet/bin/jython.sh
+##
+# VFSClient jython interface example
+# (C) www.vl-e.nl 
+##
+# File         : vfsclient.py 
+# Vlet version : 1.1
+# Author       : Piter T. de Boer 
+#
+# Info :  
+#    VLET vfs jython interface example.
+#    To start execute this jython file, use:
+#        $VLET_INSTALL/bin/jython.sh <jython.file> 
+##
+import sys
+#import VRS objects + VFS Client: 
+from nl.uva.vlet.vrl import VRL
+from nl.uva.vlet.vfs import VFile,VDir,VFSClient
+
+### Helper methods
+def boolstr(value):
+  if value == True: 
+     return "true" 
+  else:
+     return "false" 
+     
+# creat new VFSClient
+vfs=VFSClient()
+
+# get Virtual File object: 
+dir=vfs.getDir("lfn://lfc.grid.sara.nl:5010/grid/pvier/"); 
+print "Remote LFC directory = "+dir.toString()
+print "--- Directory Attributes ---" 
+print " Directory modification time  =",dir.getModificationTime()
+print " Directory access permissions = \""+dir.getPermissionsString()+"\"" 
+
+#get contents of remote Directory 
+contents=dir.list()
+
+# array acces: 
+print "First file = ",contents [0];
+
+# define print function: 
+def PrintNode(prefix,node):
+  print prefix+"["+node.getType()+"] "+node.toString();
+
+# apply MyPrint on contents array
+print "--- contents of remote directory ---"
+[PrintNode(" - ", file) for file in contents]
+print "--- ---"
+
+# get local home 
+home=vfs.getDir("file:///~"); 
+print "Local home=",home; 
+\end{verbatim}
+\end{boxedminipage}
+
+
+\hspace*{5mm}\begin{boxedminipage}{165mm}
+\begin{verbatim}
+### remote navigation 
+# get remote file:
+fileVRL="lfn://lfc.grid.sara.nl:5010/grid/pvier/piter/test.txt"; 
+vrlObject=VRL(fileVRL) 
+
+# dissect VRL (=URI)
+print "-- VRL object ---"
+print " VRL String    =",fileVRL; 
+print " VRL Object    =",vrlObject; 
+print " VRL Hostname  =",vrlObject.getHostname(); 
+print " VRL Port      =",vrlObject.getPort()
+print " VRL Path      =",vrlObject.getPath(); 
+print " VRL Extension =",vrlObject.getExtension(); 
+print "---"
+
+if (vfs.existsFile(fileVRL) is True):
+  print "File exists:"+fileVRL; 
+else:
+  print "*** Error: Remote file does not exists:"+fileVRL; 
+
+# get/create Virtual File object of remote file
+remoteFile=vfs.getFile(fileVRL); 
+print "--- File Attributes ---" 
+print " modification time  =",remoteFile.getModificationTime()
+print " length             =",remoteFile.getLength()
+print " access permissions = \""+remoteFile.getPermissionsString()+"\"" 
+print " isReadable         =",boolstr(remoteFile.isReadable()) 
+print " isWritable         =",boolstr(remoteFile.isWritable()) 
+print " mimetype           =",remoteFile.getMimeType()
+
+#get contents of remote Directory 
+
+# getContents() returns byte array, getContentsAsString returns String object 
+text=remoteFile.getContentsAsString(); 
+print "Contents of remote file = "+text; 
+
+# Navigating example:  "cd .."  
+remoteParent=remoteFile.getParent(); 
+print "Remote parent = ", remoteParent; 
+
+# example "VDir.hasFile()" (hasDir/hasChild)
+if (remoteParent.hasFile(remoteFile.getBasename()) is True): 
+   print "Remote parent reports that is has the remote file as child" 
+else:
+   print "***Error: Parent directory of remote file reports is doesn't have the Child!" 
+
+# copy to local home directory, overwrite existing: 
+resultFile=remoteFile.copyTo(home);
+print "Copied remote file to:",resultFile; 
+print "Check whether file is local:",resultFile.isLocal();
+print "Local path of file is:",resultFile.getPath(); 
+\end{verbatim}
+\end{boxedminipage}
+
+
+\hspace*{5mm}\begin{boxedminipage}{165mm}
+\begin{verbatim}
+# get system temp dir: 
+print "tempdir'=",vfs.getTempDir(); 
+
+# create Unique Temp Dir() on local home:
+tmpdir=vfs.createUniqueTempDir(); 
+print "unique tempdir =",tmpdir;
+
+print "end."
+sys.exit(0); 
+\end{verbatim}
+\end{boxedminipage}
+
+See the examples directory \path{VLET_INSTALL/py/*} for more jython scripts. 

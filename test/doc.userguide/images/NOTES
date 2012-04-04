@@ -1,0 +1,23 @@
+About this directory 
+===
+Images from this directory are converted by the rules specified in the toplevel Makefile. 
+Currently autoconverted images are: .gif and .png. 
+The converted images are located in the build directory. 
+
+
+How to include images in your tex document 
+=== 
+To include images into your tex document, do not specify a suffix to it in the \includegraphics command. 
+LaTeX is smart enough to get the right suffix. Also pdflatex needs .pdf images and latex
+itself needs .eps images.  
+
+A typical include statement in your latex document is: 
+
+ \begin{figure}[htbp]
+ \centerline{\includegraphics[scale=0.5]{image_name}}
+ \caption{My Image}
+ \label{fig:my_image}
+ \end{figure}
+
+ 
+

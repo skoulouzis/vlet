@@ -1,0 +1,6 @@
+name="Dutchgrid Medium Certificate"
+hash=16da7552
+#Not used: 
+#base_url=http://certificate.nikhef.nl/medium/package/
+cert_url=http://certificate.nikhef.nl/medium/package/16da7552.0
+cert_filename=16da7552.0

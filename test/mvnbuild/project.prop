@@ -1,0 +1,8 @@
+<!-- 
+ file: project.prop
+
+ Toplevel project properties. 
+  
+ --> 
+ 
+helloworld=helloworld

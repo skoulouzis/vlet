@@ -1,0 +1,136 @@
+<project name="grid.globus" default="dist" basedir=".">
+	<description>
+		Project	  : VLeT
+		Component : Grid Globus bindings
+        Eclipse target : dist
+            	
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+            	
+    </description>
+
+    <!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set component.root to the location if this component 
+      4) Read local components properties from: build.prop 
+    --> 
+    
+    <property name="project.root" location="../mbuild" />
+    <property file="${project.root}/project.prop"/> 
+    <property environment="env"/>
+    <property name="component.root" location="." />
+    <property file="build.prop"/> 
+	
+	<!-- Target: init --> 
+	
+	<target name="init" >
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${component.build}" />
+		<mkdir dir="${component.dist}" />
+		<mkdir dir="${component.dist}/lib" />
+	</target>
+		
+	<target name="config" >
+	</target> 
+	
+	<target name="generate" >
+	</target> 
+	
+    <!-- source distribution: nothing to do --> 
+    <target name="source-dist"/>
+    
+	<path id="component.classpath">
+		<!-- include project libraries--> 
+		<fileset dir="${project.lib}">
+			<include name="**/*.jar" />
+		</fileset> 
+	
+		 <!-- add globus+glite jars --> 
+	    <!-- <fileset dir="lib">
+	       <include name="**/*.jar" />
+		</fileset> -->
+		
+		<!-- add local paths settings --> 
+		<pathelement location="${component.build}" />
+		<pathelement location="${component.src}" />
+			
+	</path>
+				
+			
+	<!--
+		Target = Compilation 
+	-->
+	   		
+	<target name="build" depends="init" description="compile the source ">
+		
+		<!-- Compile legacy globus 4.1 code -->
+		<!-- <javac srcdir="globus_src" destdir="${component.build}"
+			   compiler="${javac.compiler}"
+	           debug="${javac.debug}"
+	    	   target="${javac.target}">
+			<classpath refid="component.classpath" />
+		</javac> -->
+		
+		<!-- Compile the java code from the srclist  into ${build} -->
+		<javac srcdir="${component.src}" destdir="${component.build}"
+			   compiler="${javac.compiler}"
+	           debug="${javac.debug}"
+	    	   target="${javac.target}">
+			<classpath refid="component.classpath" />
+		</javac>
+		
+	</target>
+	
+	<target name="jar" depends="build" unless="project.includesource">
+		<!-- Create application JAR file -->
+		<jar jarfile="${component.dist}/lib/${component.name}.jar"
+	           basedir="${component.build}">
+		</jar>
+	</target>
+		
+	<target name="jar-sdk" depends="build"  if="project.includesource">
+		<!-- Create application JAR file -->
+		<jar jarfile="${component.dist}/lib/${component.name}.jar"
+	           basedir="${component.build}">
+			 <fileset dir="src"/>
+		</jar>
+	</target>
+	
+	<target name="dist" depends="build,jar,jar-sdk" >
+	</target> 
+	
+    
+                
+	<!--
+	*	Target: dist-install
+	*	Info:
+	*	 install auxiliary (3rd party) libraries into {project.lib}  dir 
+	*		
+    -->
+	
+	<target name="dist-install" depends="dist" description="install libraries">
+		<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+		<mkdir dir="${project.doc}" />
+		<mkdir dir="${project.lib}" />
+		
+		<!-- Copy all-in-one package lib into project lib dir --> 
+		<copy file="${component.dist}/lib/${component.name}.jar" todir="${project.dist}/lib" />
+		
+		<mkdir dir="${project.auxlib}/globus-4.1"/> 
+		<copy todir="${project.auxlib}/globus-4.1" >  
+			 <fileset dir="lib/globus-4.1"/>
+         </copy> 
+			
+	</target>
+		
+	<target name="clean" description="clean">
+		<delete dir="{$component.dist}"/>
+		<delete dir="{$component.build}"/>
+	</target>
+	
+</project>
+	
+

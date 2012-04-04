@@ -1,0 +1,48 @@
+###
+# File      : build.prop
+# Component : SRM for Java
+# 
+# Info: 
+#
+#   Build properties. Holds customizable properties 
+#   
+
+###
+# *** IMPORTANT *** 
+# Do not add spaces to the end of the values ! 
+
+##
+# Component properties: 
+# - The property  "driver.root" is set in the main build file. 
+
+##
+# srm package properties. 
+
+srm.package=nl.uva.vlet.lbl.srm
+# name for distribution to use 
+srm.name=vlet-lbl-srm
+# version
+srm.version=0.3
+
+###
+# Java Compiler options : Explicitly use java 1.6
+#disabled: 
+#javac.debug=true
+javac.target=1.6
+javac.compiler=javac1.6
+
+project.name=nl.uva.vlet.lbl.srm
+
+lib.location=lib
+
+stubsrc=stubsrc
+src.dir=src
+build.dir=build
+#wsdl=https://sdm.lbl.gov/srm-wg/srm.v2.2.wsdl
+wsdl2.2=schema/srm.v2.2.wsdl
+#http://sdm.lbl.gov/srm-wg/srm.v1.1.wsdl
+wsdl1.1=schema/srm.v1.1.wsdl
+
+jar1.1.name=${project.name}.V1.1.jar
+jar2.2.name=${project.name}.V2.2.jar
+

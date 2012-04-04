@@ -1,0 +1,10 @@
+====================================
+Release Notes for the SRM Client. 
+====================================
+
+0.1 Date: 1 Jan-2010: First stand alone SRM client. 
+    This release contains the SRM V2.2 client as used in VLET.
+     
+0.2 Date: 28 Feb-2010:
+    Update for VLET 1.2.0-ALPHA-1
+    

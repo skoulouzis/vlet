@@ -1,0 +1,155 @@
+<project name="mbuild-configuration-vlemed" default="" basedir=".">
+    <description>
+    ====================================================================
+        Project   : VL-e / VLEMED 
+        Component : mbuild 
+        File      : components configuration file 
+        Info      :
+    
+        Custom Components for VLEMED. 
+        
+        This file contains both component configuration as well 
+        as distribution targets.
+        
+    ===================================================================            
+    </description>
+
+    <!-- import component targets -->
+    <import file="build.xml"/>
+                  
+    
+     <!-- delete -->
+    <target name="build-vlemed-current" depends="project-build-init,project-checkout" description="build Vlemed Current">
+        <!-- now build all -->
+
+        <!-- Recurse into packages -->
+        <antcall target="vlemed-all">
+            <param name="target" value="dist-install" />
+        </antcall>
+    
+        <!-- read updated version file -->
+        <property file="${project.dist}/etc/vlet_version.prop" />
+        <echo message="New version=${vlet.version}" />
+            
+        <!-- default vlet prefix -->
+        <property name="vlet.prefix" value="vlet-vlemed"/>
+        <property name="vlet.ziproot" value="${vlet.prefix}-${vlet.version.timestamp}"/>
+
+        <antcall target="create-zipfiles">
+       </antcall>
+    
+    </target>
+    
+    <target name="build-vlemed-zipfile" description="build Vlemed Zipfile">
+    
+        <!-- create zip file from dist/* to vlet-<Version>  -->
+    <zip destfile="${project.packs}/${vlet.ziproot}.zip">
+
+    
+    <zipfileset dir="${project.dist}" filemode="644" prefix="${vlet.ziproot}" 
+                excludes="bin/**,zips/**" />
+
+     <!-- add shell scrips with x permissions ! -->
+     <zipfileset dir="${project.dist}/bin" filemode="755" prefix="${vlet.ziproot}/bin" />
+     </zip>
+
+    </target>
+    
+    
+    <!-- VLEMED  -->
+    <target name="vlemed-all" depends="vlet-basic,vlet-vlemed-plugins"/>
+                
+    <!-- 
+         Vlemed components configuration. 
+         First build vlet, the vlemed components
+      --> 
+    <!-- <target name="vlet-vlemed" depends="vlet-all"> --> 
+    <target name="vlet-vlemed" depends="vlet-basic">
+    
+        <antcall target="buildComponent">
+            <param name="name" value="util.kbtools"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="util"/>
+        </antcall>
+            
+        <antcall target="buildComponent">
+            <param name="name" value="util.kbparametersweep"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="util"/>
+        </antcall>
+            
+        <antcall target="buildComponent">
+            <param name="name" value="util.kbGUI"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="util"/>
+        </antcall>
+        
+        <!-- Kamel old LFC Wrapper. Needed to fullfill building dependencies -->
+       <!-- <antcall target="buildComponent">
+            <param name="name" value="vfs.wraplfcfs"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="vrs"/>
+        </antcall> -->
+        
+        <antcall target="buildComponent">
+            <param name="name" value="ws.glitejobservice"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="vlemed"/>
+        </antcall>
+    	<!-- 
+        <antcall target="buildComponent">
+            <param name="name" value="ws.featservice"/>
+            <param name="version" value=""/>
+            <param name="cvs.path" value="vlemed"/>
+        </antcall> -->
+    
+        
+    </target>
+                
+    <target name="vlet-vlemed-plugins" depends="vlet-vlemed">
+    
+    <!-- <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.aid.metadatasearch"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall> -->
+
+    <!-- <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.feat.featparametersweep"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall> --> 
+
+    <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.feat.fslviewer"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall>
+
+    <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.monitoring.glitejobmonitoring"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall>
+    
+    <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.opener.genericappliopener"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall>
+
+    <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.workflow.moteur"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall>
+
+    <antcall target="buildComponent">
+        <param name="name" value="appl.vbplugin.workflow.moteur2"/>
+        <param name="version" value=""/>
+        <param name="cvs.path" value="vlemed"/>
+    </antcall>
+
+    </target> 
+
+</project>

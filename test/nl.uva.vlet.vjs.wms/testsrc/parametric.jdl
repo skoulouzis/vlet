@@ -1,0 +1,15 @@
+JobType = "Parametric";
+Executable = "/bin/echo";
+Arguments = "Hello World_PARAM_";
+Parameters= 6;
+ParameterStep =1;
+ParameterStart = 0;
+StdOutput = "myoutput_PARAM_.txt";
+StdError = "myerror_PARAM_.txt";
+OutputSandbox  = {"myoutput_PARAM_.txt", "myerror_PARAM_.txt"};
+ShallowRetryCount = 1;
+requirements = other.GlueCEName == "express";
+virtualorganisation = "pvier"; 
+rank =- other.GlueCEStateEstimatedResponseTime;
+
+

@@ -1,0 +1,26 @@
+###
+#Project    : VLET
+#Component  : auxlib 
+#Maintainer : P.T. de Boer 
+
+
+Info
+===
+ This module contains 3rd party libraries and other used tools.  
+ --- 
+ Most of the libraries previously contained in this module have been moved to
+ the module which actually uses them. See the "lib" directory of the individual
+ eclipse projects. 
+ This to better manage the dependencies between the modules and the used 3rd party
+ libraries.  
+ Big library sets (globus, apache-axis, jglite) have been placed into their own module.  
+ 
+Component Structure: 
+===
+    build.xml            Main build file
+    build.prop	         Local property settings for this component
+    doTool.xml           Do common unpack/build/install tasks for a single tool
+    NOTES                this notes file
+    configuration/      Configuration information.  
+  
+   

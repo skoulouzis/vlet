@@ -1,0 +1,23 @@
+## 
+# Module: grid.globus 
+##
+# Info: 
+#   Legacy Globus 4.1 code.  
+#   Moved to own project to reduce dependencies into Globus 4.1  
+#   Contains Proxy Provider, VOMSifier and legacy OGSA and GLOBUS 
+#   transport stack initialization code. 
+# 
+# Version: 
+#   Since 1.3.0 
+#
+
+By extracting the globus code into a separate (software) module, vrs.core is now 
+independent of the used globus version.
+Upon initialization the globus proxy provider and transport stack needs to be registered
+for the globus code to be of effect. 
+
+Structure
+===
+- globus_src ; alternative globus initalization source (legacy 4.1 code) 
+- lib/globus-4.1 	; contain globus jars not found in cog-jglobus.  
+

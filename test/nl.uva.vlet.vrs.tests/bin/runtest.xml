@@ -1,0 +1,179 @@
+<project name="vlet-tests" default="test-dist" basedir=".">
+	<description>
+        Project        : VLET
+        Component      : vrs.tests 
+        Eclipse target : test-dist
+                
+        Configuring: 
+        ===
+            - All configuration settings are in tests.prop 
+                
+    </description>
+
+	<property environment="env"/>
+	<property name="tests.root" location="." />
+	<property file="tests.prop"/>
+
+	<!-- Defaults: run from installation -->
+	<property name="project.tests" location="." />
+	<property name="project.tests.libdir" location="." />
+	<property name="project.tests.bindir" location="." />
+	<!-- Defaults assume installed int VLET_INSTALL/tests 
+	     can be overriden by mbuild -->
+	<property name="vlet.install" value=".." />
+	<property name="project.dist" value="${vlet.install}" />
+	<property name="project.lib" value="${project.dist}/lib" />
+	<property name="project.bin" value="${project.dist}/bin" />
+
+	<!-- Target: init -->
+
+	<target name="test-init" >
+		<echo message="--- test configuration ---" />
+		<echo message=" ant.home             = ${ant.home}" />
+		<echo message=" project.tests        = ${project.tests} "/>
+		<echo message=" project.tests.libdir = ${project.tests.libdir} "/>
+		<echo message=" project.tests.bindir = ${project.tests.bindir} "/>
+		<echo message=" vlet.install         = ${vlet.install} "/>
+		<echo message=" project.destdir      = ${project.destdir} "/>
+		<echo message=" project.dist         = ${project.dist} "/>
+		<echo message=" project.lib          = ${project.lib} "/>
+		<echo message=" project.lib          = ${project.bin} "/>
+
+		<fail message="*** Error: property 'vlet.install' not defined. Please start with '-Dvlet.install=&lt;path&gt;' argument. "
+              unless="vlet.install"/>
+
+	</target>
+
+
+	<path id="test.classpath">
+		<!-- include project libraries-->
+		<fileset dir="${project.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		
+		<!-- include project executable jars for bootstrap testing-->
+		<fileset dir="${project.bin}">
+			<include name="**/*.jar" />
+		</fileset>
+
+		<fileset dir="${project.tests.libdir}">
+			<include name="**/*.jar" />
+		</fileset>
+
+		<!-- add test libraries -->
+		<pathelement location="${project.tests.libdir}" />
+		<pathelement location="${project.tests.libdir}/ant-junit.jar"/>
+		<pathelement location="${project.tests.libdir}/junit.jar"/>
+	</path>
+
+	<!--
+	      target: runTest
+          info  : ant junit test bootrapper 
+      -->
+
+	<target name="runTest" depends="test-init">
+		<!-- fork ant junit test with junit.jar on the classpath !-->
+		<echo message="--- Warning  Forking test: ${test.class.name} ---"/>
+		<echo message=" > Executing ant from command line enabling junit.jar "/> 
+		<echo message="---"/>
+				
+		<exec executable="ant">
+			<arg value="-f"/> 
+		    <arg value="runtest.xml"/> 
+		    <arg value="-lib" /> 
+			<arg value="junit.jar"/> 
+			<arg value="doRunTest" /> 
+		    <arg value="-Dtest.class.name=${test.class.name}"/> 
+		</exec>
+	</target>
+			
+	<target name="doRunTest" depends="test-init"> 
+		
+		<junit fork="yes" haltonfailure="yes"
+				printsummary="on"  >
+			<test name="${test.class.name}" />
+			<formatter type="plain" usefile="false" />
+			<classpath refid="test.classpath" />
+		</junit>
+	</target>
+
+	<target name="test-global" depends="test-init" >
+		<antcall target="runTest">
+			<param name="test.class.name" value="test.junit.global.testGlobal"/>
+		</antcall>
+	</target>
+	
+	<target name="test-core" depends="test-init" >
+		<antcall target="runTest">
+			<param name="test.class.name" value="test.junit.global.testVRL"/>
+		</antcall>
+	</target>
+	
+	<!-- 
+        *** Test Suites ***
+       -->
+
+	<target name="test-localfs" depends="test-init" >
+		<antcall target="runTest">
+			<param name="test.class.name" value="test.junit.vfs.testLocalFS"/>
+		</antcall>
+	</target>
+
+
+
+	<target name="test-srb-passive" depends="test-init" >
+		<antcall target="runTest">
+			<param value="test.class.name" name="test.junit.vfs.testSRB_passive" />
+			</antcall>
+	</target>
+
+	<target name="test-srb-active" depends="test-init" >
+		<antcall target="runTest">
+			<param value="test.class.name" name="test.junit.vfs.testSRB_active" />
+			</antcall>
+	</target>
+
+	<target name="test-gftp-passive" depends="test-init" >
+		<antcall target="runTest">
+			<param value="test.class.name" name="test.junit.vfs.testGFTP_passive" />
+		</antcall>
+	</target>
+
+	<target name="test-gftp-active" depends="test-init" >
+		<antcall target="runTest">
+			<param value="test.class.name" name="test.junit.vfs.testGFTP_active" />
+		</antcall>
+	</target>
+
+	<target name="test-sftp" depends="test-init" >
+		<antcall target="runTest">
+			<param value="test.class.name" name="test.junit.vfs.testSFTP" />
+		</antcall>
+	</target>
+
+	<!-- 
+        Target: all 
+        info:
+        Runs all tests using project environment. 
+     -->
+	<target name="test-vfs" depends="test-localfs,test-srb-passive,test-srb-active,test-gftp-passive,test-gftp-active,test-sftp">
+		<echo message="--- Test Results ---" />
+		<echo message=" testLocalfs      fault=${tests.localfs.fault}"/>
+		<echo message=" testSRB passive  fault=${tests.srb_passive.fault}"/>
+		<echo message=" testSRB active   fault=${tests.srb_active.fault}"/>
+		<echo message=" testGFTP passive fault=${tests.gftp_passive.fault}"/>
+		<echo message=" testGFTP active  fault=${tests.gftp_active.fault}"/>
+		<echo message=" testSFTP         fault=${tests.sftp.fault}"/>
+	</target>
+
+	<target name="test-all" depends="test-global,test-vfs" >
+	</target>
+
+	<!-- simple self test to test installation. 
+	     Does not run a full test suite. --> 
+	<target name="test-dist" depends="test-global" >
+	</target>
+
+</project>
+
+

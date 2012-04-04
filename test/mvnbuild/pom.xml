@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+                             
+                             
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <!--  
+            Default build properties
+            Assumes eclipse environment!  
+          -->
+        <vlet.rootdir>.</vlet.rootdir>        
+        <vlet.dist>${vlet.rootdir}/dist</vlet.dist>
+        <vlet.source.subdir>..</vlet.source.subdir>  
+        <vlet.modules.core>${vlet.source.subdir}</vlet.modules.core>
+	    <vlet.version>1.4.2</vlet.version>
+    </properties>
+
+    <!-- Toplevel artefact settings --> 
+
+    <groupId>nl.uva.vlet</groupId>
+    <artifactId>mvnbuild</artifactId>
+    <packaging>pom</packaging>
+    <version>dev-1</version>
+    <name>mvnbuild (${project.version})</name>
+
+    <repositories>
+    
+        <repository>
+           <id>elab</id>
+         <name>elab</name>
+         <layout>default</layout>
+         <releases>
+           <enabled>true</enabled>
+           <updatePolicy>always</updatePolicy>
+           <checksumPolicy>warn</checksumPolicy>
+         </releases>
+         <snapshots>
+           <enabled>true</enabled>
+           <updatePolicy>always</updatePolicy>
+           <checksumPolicy>warn</checksumPolicy>
+         </snapshots>
+         <url>http://elab.lab.uvalight.net:8080/maven2</url> 
+         
+        </repository>
+        
+    </repositories>
+    
+    
+    <modules>
+        <!--  core -->
+        <module>${vlet.modules.core}/nl.uva.vlet.vrs.core</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.vfs.jcraft.ssh</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.grid.globus</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.vfs.gftp</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.lbl.srm</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.vfs.srm</module>
+        <module>${vlet.modules.core}/org.glite.lfc</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.vfs.lfc</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.vfs.irods</module>
+        <!--  gui  -->
+          <module>${vlet.modules.core}/nl.uva.vlet.gui.utils</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.gui.vbrowser</module>
+        <!-- Distribution  -->
+        <module>${vlet.modules.core}/distribution</module>
+           
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+            
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                          <files>
+                            <file>${vlet.rootdir}/project.prop</file>
+                            <file>${vlet.rootdir}/local.prop</file>
+                          </files>
+                    </configuration>
+                </plugin>
+                
+                   <plugin>
+                 <artifactId>maven-assembly-plugin</artifactId>
+                 <version>2.2.1</version>
+                    <configuration>
+                  <descriptors>
+                   <descriptor>bin.xml</descriptor>
+                  </descriptors>
+                 </configuration>
+                </plugin>
+               
+            </plugins>
+        </pluginManagement>
+  </build>
+
+  <dependencies>
+  
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <scope>test</scope>
+    </dependency>
+        
+    <!-- *************** MAVEN PROPERTIES PLUGIN *************** -->
+    
+    <dependency>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+    </dependency>
+    
+   </dependencies>
+</project>

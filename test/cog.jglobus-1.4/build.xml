@@ -1,0 +1,53 @@
+<project name="auxTools" default="dist" basedir=".">
+    <description>
+        Project   : VLET
+        Component : CoG-JGlobus-1.7
+        Author    : Piter .T. de Boer 
+    	
+       </description>
+        
+    <!-- Global properties -->
+
+	<!--
+	          1) Read global project properties (if specified) from: project.prop
+	             - for this to work project.root variable must be set to project root 
+	          2) Set environment properties prefix to 'env.' 
+	          3) Set tool.root to the location if this component 
+	          4) Read local components properties from: build.prop 
+	        --> 
+	        
+	<property name="project.root" location="../mbuild" />
+    <property file="${project.root}/project.prop"/> 
+    <property environment="env"/>
+    <property name="tool.root" location="." />
+	<property file="build.prop"/>   
+		
+    <!-- Target: init --> 
+	<target name="init" >
+    	<property name="tool.name" value="cog-jglobus-1.4" />
+    	<property name="tool.lib" value="${tool.root}/lib" />
+    </target> 
+
+	<!-- not used --> 
+    <target name="source-dist" /> 
+
+	<!-- not used --> 
+    <target name="dist" /> 
+    	
+    <target name="dist-install" depends="init" description="install CoG-JGlobus">
+        <fail message="*** Error: Cannot install libraries: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 
+        
+        <mkdir dir="${project.auxlib}/${tool.name}"/>
+    	
+        <copy todir="${project.auxlib}/${tool.name}">
+            <fileset dir="${tool.lib}/" /> 
+        </copy>
+        
+    </target>
+        
+    <target name="clean" description="clean">
+      	<!--  <delete dir="${build}"/> -->  
+        <!-- <delete dir="${dist}"/> -->  
+    </target>     
+</project>
+    

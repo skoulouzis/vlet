@@ -1,0 +1,21 @@
+###
+#Project    : VLeT
+#Component  : VBrowser
+#Maintainer : P.T. de Boer 
+#
+
+Info
+=== 
+The Main VBrowser of the VL-e Toolkit. 
+
+
+Component Structure: 
+===
+    src/                 Source
+    testsrc/             Source for testing purposes 
+    icons/               Icons directory 
+    etc/                 Default configuration files
+    bin/                 Startup and configure scripts 
+    build.xml            Main build file
+    build.prop	         Local property settings for this component
+    NOTES                this notes file 

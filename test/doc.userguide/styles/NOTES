@@ -1,0 +1,21 @@
+#
+# Info: LaTeX styles directory 
+#
+
+
+Notes
+=== 
+
+This directory contains extra styles. 
+For now they are location in this directory, but this might change and the 
+used style packages might move to a more general location. 
+
+
+Packages
+=== 
+Following additional packages are use:
+
+[lineno] form: http://ftp.nluug.nl/FreeBSD/distfiles/latex-lineno/
+
+
+

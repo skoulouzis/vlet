@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/cog-jglobus.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cog-jobmanager.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cog-url.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix-asn1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/cryptix32.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jce-jdk13-131.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgss.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/puretls.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

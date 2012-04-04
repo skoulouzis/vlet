@@ -1,0 +1,11 @@
+*.out
+UserGuide.bbl
+UserGuide.aux
+UserGuide.dvi
+UserGuide.pdf
+UserGuide.blg
+UserGuide.toc
+vldefs.aux
+ch2_installation.tex.backup
+.directory
+*.backup

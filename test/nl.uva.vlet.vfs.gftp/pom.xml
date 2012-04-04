@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>nl.uva.vlet</groupId>
+  <artifactId>vlet-vfs.gftp</artifactId>
+  <name>vfs.gftp (${vlet.version})</name>
+  <version>${vlet.version}</version>
+
+   <parent>
+      <groupId>nl.uva.vlet</groupId>
+      <artifactId>mvnbuild</artifactId>
+      <version>dev-1</version>
+      <relativePath>../mvnbuild/pom.xml</relativePath>
+  </parent>
+
+  <build>
+        <sourceDirectory>src</sourceDirectory>
+        
+        <!--  NOT  <testSourceDirectory>testsrc</testSourceDirectory> -->
+        
+        <plugins>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                   <source>1.6</source>
+                <target>1.6</target>
+            </configuration>
+            </plugin>
+        </plugins>
+  </build>
+  <dependencies>
+      <dependency>
+          <groupId>nl.uva.vlet</groupId>
+          <artifactId>vlet-vrs.core</artifactId>
+          <version>${vlet.version}</version>
+          <type>jar</type>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>nl.uva.vlet</groupId>
+          <artifactId>vlet-grid.globus</artifactId>
+          <version>${vlet.version}</version>
+          <type>jar</type>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.globus</groupId>
+          <artifactId>cog-jglobus</artifactId>
+          <version>1.4</version>
+      </dependency>
+  </dependencies>            
+
+</project>

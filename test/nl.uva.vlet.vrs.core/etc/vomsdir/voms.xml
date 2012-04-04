@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!-- 
+  File   : voms.xml 
+  Author : Piter T. de Boer 
+  Info   : 
+  
+       Additional VOMS servers information. 
+       This file will also be scanned in addition to possible other voms.xml files. 
+           
+       Current search order for VO information is (first matched, first used):  
+        - User Configuration : $HOME/.globus/vomsdir/voms.xml
+        - Installation       : $VLET_INSTALL/etc/voms.xml 
+        - GLobus (host)      : /etc/grid-security/vomsdir/voms.xml           
+-->
+
+<!DOCTYPE voms[
+  <!ELEMENT name (#PCDATA)>
+  <!ELEMENT admin (#PCDATA)>
+  <!ELEMENT port (#PCDATA)>
+  <!ELEMENT cert (#PCDATA)>
+  <!ELEMENT dn (#PCDATA)>
+  <!ELEMENT server (name,port,cert,dn)>
+  <!ELEMENT vo (name,admin,server*)>
+  <!ELEMENT voms (vo*)>
+]>
+
+<!--
+  PLEASE NOTE!!!
+
+  If you edit this file, please note the form of the Email part of the DN (if it exists)
+  This is a Globus / BouncyCastle / Java consistency problem
+
+  The reason to have a seaming repeat of the name/cert for each server is because the cert
+  is a filename and can be changed - and often is on a standard UI... 
+  this file is designed so it can be added into an existing UI as well as within a purely acacia environment.
+-->
+
+<!-- 
+   =================
+   VL-e VOMS Servers
+   =================
+   See:   https://voms.grid.sara.nl:8443/vomses
+
+   "pvier"  "voms.grid.sara.nl" "30000" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "pvier"
+   "vlibu"  "voms.grid.sara.nl" "30002" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "vlibu"
+   "vlemed" "voms.grid.sara.nl" "30003" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "vlemed"
+   "vlefi"  "voms.grid.sara.nl" "30004" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "vlefi"
+   "vledut" "voms.grid.sara.nl" "30005" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "vledut"
+   "phicos" "voms.grid.sara.nl" "30006" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "phicos"
+   "ncf"    "voms.grid.sara.nl" "30014" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "ncf"
+   "dans"   "voms.grid.sara.nl" "30016" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "dans"
+   "lsgrid" "voms.grid.sara.nl" "30018" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "lsgrid"
+   "lofar"  "voms.grid.sara.nl" "30019" "/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl" "lofar" 
+   
+--> 
+
+<voms> 
+
+ <!-- SARA VL-e and related dutch e-Science projects: -->
+ 
+ <vo>
+  <name>pvier</name>
+  <admin>https://voms.grid.sara.nl:8443/voms/pvier/webui/admin</admin>
+  <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30000</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+  </server>
+ </vo>
+ 
+ <vo>
+  <name>vlibu</name>
+  <admin>https://voms.grid.sara.nl:8443/voms/vlibu/webui/admin</admin>
+  <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30002</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+  </server>
+ </vo>
+
+ <vo>
+   <name>vlemed</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/vlemed/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30003</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+ <vo>
+   <name>vlefi</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/vlefi/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30004</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+
+ <vo>
+   <name>vledut</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/vledut/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30005</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+
+ <vo>
+   <name>vledbi</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/vledbi/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30006</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+  <vo>
+   <name>phicos</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/phicos/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30006</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+   <vo>
+   <name>ncf</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/ncf/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30014</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+  
+ <vo>
+   <name>dans</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/dans/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30016</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+ <vo>
+   <name>dans</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/dans/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30016</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+
+ <vo>
+   <name>lsgrid</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/lsgrid/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30018</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+ <vo>
+   <name>lofar</name>
+   <admin>https://voms.grid.sara.nl:8443/voms/lofar/webui/admin</admin>
+   <server>
+     <name>voms.grid.sara.nl</name>
+     <port>30019</port>
+     <cert>voms.grid.sara.nl.1304</cert>
+     <dn>/O=dutchgrid/O=hosts/OU=sara.nl/CN=voms.grid.sara.nl</dn>
+   </server>
+ </vo>
+ 
+ <!-- 
+   ===========================================================================
+      BIOMED france
+   ===========================================================================
+   --> 
+  
+<vo>
+  <name>biomed</name>
+  <admin>https://cclcgvomsli01.in2p3.fr:8443/voms/biomed</admin>
+  <server>
+    <name>cclcgvomsli01.in2p3.fr</name>
+    <port>15000</port>
+    <cert>cclcgvomsli01.in2p3.fr.4786.pem</cert>
+    <dn>/O=GRID-FR/C=FR/O=CNRS/OU=CC-LYON/CN=cclcgvomsli01.in2p3.fr</dn>
+  </server>
+</vo> 
+
+ <!-- 
+   ===========================================================================
+      LCG DTEAM
+   ===========================================================================
+   --> 
+
+<vo>
+  <name>dteam</name>
+  <admin>https://voms2.hellasgrid.gr:15004/voms/dteam</admin>
+  <server>
+    <name>voms2.hellasgrid.gr</name>
+    <port>15004</port>
+    <cert>voms2.hellasgrid.gr.pem</cert>
+    <dn>/C=GR/O=HellasGrid/OU=hellasgrid.gr/CN=voms2.hellasgrid.gr</dn>
+  </server>
+</vo> 
+
+</voms>

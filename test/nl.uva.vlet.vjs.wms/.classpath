@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="src" path="icons"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/glite-security-delegation-java.jar"/>
+	<classpathentry kind="lib" path="lib/glite-security-trustmanager.jar"/>
+	<classpathentry kind="lib" path="lib/glite-security-util-java.jar"/>
+	<classpathentry kind="lib" path="lib/glite-service-discovery-api-java.jar"/>
+	<classpathentry kind="lib" path="lib/glite-wms-wmproxy-api-java.jar"/>
+	<classpathentry kind="lib" path="lib/glite-jdl-api-java.jar"/>
+	<classpathentry kind="lib" path="lib/glite-security-voms-api-java.jar"/>
+	<classpathentry kind="lib" path="lib/classad.jar"/>
+	<classpathentry kind="lib" path="lib/lb.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.grid.globus"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

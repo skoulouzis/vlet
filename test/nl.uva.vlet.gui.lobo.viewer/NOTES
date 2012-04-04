@@ -1,0 +1,24 @@
+###
+#Project    : VLeT
+#Component  : Lobo/Cobra HTML parser+renderer
+#
+
+Info
+=== 
+Cobra HTML parser viewer. 
+Build Cobra JAR from sources. 
+
+
+Component Structure: 
+===
+    src/                Source
+    etc/                Extra files for the viewer.
+    lib/                Pre compiles libraries. Use ant cobra to rebuild source  
+    build.xml           Main build file
+    build.prop	        Local property settings for this component
+    NOTES               this notes file
+    zips                Original Cobra Source contained in zip file. 
+	icons				Default icons for the menus, etc. 
+	                    these will be added to the <Viewer>.jar   
+
+	                    

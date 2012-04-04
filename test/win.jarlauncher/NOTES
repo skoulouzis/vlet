@@ -1,0 +1,26 @@
+*********************************************************** 
+*               Exclusive code by Piter.NL                *
+***********************************************************
+ 
+       (c) by Piter.nl. 2004-2010
+           See www.piter.nl/source/jarlauncher
+       (C) VL-e 2006-2010 	
+           See www.vl-e.nl 
+
+Info
+===
+ Jarlauncher compiles windows executables with an embedded
+ icon to start up a single jar. 
+
+ - Modified for the Vl-e toolkit to start the vbrowser.jar
+   which is a bootstrap loader for the vbrowser. 
+   vbrowser.exe -> vbrowser.jar -> startVBrowser ... 
+
+
+Developers note
+===
+Currently the binaries created by this component are already
+copied into the vrs.core/bin directory since it is not
+necessary to rebuild this component each time.
+ 
+Make sure that cross compiling package: mingw32 is installed.

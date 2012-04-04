@@ -1,0 +1,363 @@
+<project name="mbuild" default="dist-install" basedir=".">
+    <description>
+    ===========================================================================
+        Project    : VL-e Toolkit
+        Component  : mbuild
+        Maintainer : P.T. de Boer 
+        
+    	Info:    
+            VLET Project Root Ant Build File         
+            The toplevel (meta) build file to call to build the whole project
+            or a single component. 
+    ===========================================================================
+    </description>
+
+    <!--
+        See also: configuration.xml:  contains component list and configuration targets. 
+        Since it is imported BEFORE the project.prop, configuration properties
+        can be overruled if they are defined in that file first. 
+     -->
+
+    <!-- 
+    	Property: project.root 
+    	          All paths are (and must be) relative from this location.
+      -->
+    <property name="project.root" location="." />
+
+    <!-- configuration files -->
+    <import file="configuration.xml" />
+    <import file="distributions.xml" />
+
+    <!-- 
+        Target : config 
+        Info   : read/check configuration         
+     -->
+
+    <target name="mbuild-config" depends="">
+
+        <!-- 
+        	configuration: Import properites >>> HERE <<<  
+          -->
+        <property file="build.prop" />
+        <property file="project.prop" />
+    
+        <mkdir dir="${project.var}" />
+        <property name="mbuild.log" location="${project.var}/mbuild.log" />
+        <!-- Create project wide time stamp -->
+        <!-- TimeStamp if NOT already set/done  -->
+        <tstamp>
+            <format property="project.tstamp" pattern="hh:mm:ss_d-MMMM-yyyy" locale="en,UK"/>
+        </tstamp>
+            <!-- if version is NOT specified, use date-time -->
+        <tstamp>
+            <format property="project.version" pattern="yyyy-MM-d_hh-mm-ss" locale="en,UK"/>
+        </tstamp>
+            
+        <!-- operating system dependencies ! -->
+
+        <condition property="isWindows">
+            <os family="windows" />
+        </condition>
+
+        <condition property="isUnix">
+            <os family="unix" />
+        </condition>
+            
+        <!-- TODO: check Cygwin/Mingw32! -->
+            
+    </target>
+
+    <target name="mbuild-init" depends="mbuild-config">
+        <!-- Create the project build structure (if not already crated) -->
+    
+        <mkdir dir="${project.dist}" />
+        <mkdir dir="${project.dist}/gars" />
+        <mkdir dir="${project.doc}" />
+        <mkdir dir="${project.lib}" />
+        <mkdir dir="${project.bin}" />
+
+        <!-- display configuration: see also: configuration.xml -->
+        <property name="init.message.txt" value="--- mbuild configuration ---
+            ${line.separator} ant.version       = ${ant.version} 
+            ${line.separator} os.name           = ${os.name}    
+            ${line.separator} os.version        = ${os.version} 
+            ${line.separator} ant.java.version  = ${ant.java.version}
+            ${line.separator}
+            ${line.separator}--- project configuration ---
+            ${line.separator} project.root      = ${project.root}
+            ${line.separator} project.dist      = ${project.dist}
+            ${line.separator} project.sourceroot= ${project.sourceroot}  
+            ${line.separator} project.tstamp    = ${project.tstamp}
+            ${line.separator} project.version   = ${project.version}
+            ${line.separator}
+            ${line.separator} --- distribution settings ---              
+            ${line.separator} project.includesource = ${project.includesource}
+            ${line.separator}
+            ${line.separator} --- cvs ---                  
+            ${line.separator} cvs.checkout   = ${cvs.checkout}
+            ${line.separator}
+            ${line.separator} --- external tools/external software ---          
+            ${line.separator} globus.location   = ${globus.location}           
+            ${line.separator} swig.location     = ${swig.location}"/>
+
+        <echo message="${init.message.txt}" /> 
+        
+        <echo file="${mbuild.log}" message="--- mbuild init at: ${project.tstamp}---${line.separator}" append="true" />
+        <echo file="${mbuild.log}" message=" project.version   = ${project.version} ${line.separator}" append="true" />
+        <echo file="${mbuild.log}" message="${init.message.txt} ${line.separator}" append="true" />
+
+    </target>
+
+
+    <!--
+        Target : source-install 
+        info   : build source for default (basic set) of configured VLET components 
+      -->
+    <target name="source-dist" description="Create source distribution">
+        <!-- Recurse into packages -->
+        <antcall target="vlet-basic">
+            <param name="target" value="source-dist" />
+        </antcall>
+    </target>
+
+    <!--
+    	Target : source-install-all
+        info   : build source for all configured VLET components 
+      -->
+    <target name="source-dist-all" description="Create source distribution for ALL components">
+        <!-- Recurse into packages -->
+        <antcall target="vlet-all">
+            <param name="target" value="source-dist" />
+        </antcall>
+    </target>
+
+
+    <!--
+         Target : dist-install 
+         info   : build configured VLeT components 
+         
+         Calls the default target (vlet-all) and builds components. 
+      -->
+    <target name="dist-install" depends="mbuild-init" description="build+install all components">
+        <!-- Recurse into packages -->
+        <antcall target="vlet-basic">
+            <param name="target" value="dist-install" />
+        </antcall>
+    </target>
+
+    <!--
+         Target : dist-all-install 
+         info   : build configured VLET components 
+         
+         Calls the vlet-all target and builds all components. 
+      -->
+    <target name="dist-install-sdk" depends="mbuild-init" description="build+install all components">
+        <!-- Recurse into packages -->
+        <antcall target="vlet-sdk">
+            <param name="target" value="dist-install" />
+        </antcall>
+    </target>
+    
+    <!--
+         Target : dist-install-all
+         info   : build configured VLET components 
+         
+         Calls the vlet-all target and builds all components. 
+      -->
+    <target name="dist-install-all" depends="mbuild-init" description="build+install all components">
+        <!-- Recurse into packages -->
+        <antcall target="vlet-all">
+            <param name="target" value="dist-install" />
+        </antcall>
+    </target>
+
+    <!--
+        Target : call test target 
+        info   : call test ant file in ${project.tests}
+      -->
+    <target name="test-dist" depends="mbuild-init" description="Call self test targets">
+         <ant antfile="${project.tests}/runtest.xml" 
+            dir="${project.tests}"
+            target="test-dist">
+        </ant>
+      
+    </target>
+
+    <target name="test-all" depends="mbuild-init" description="Call ALL test targets">
+         <ant antfile="${project.tests.bindir}/runtest.xml" 
+            dir="${project.tests}"
+            target="test-all">
+        </ant>
+    </target>
+
+    <!--
+         Target : bin-install 
+         info   : create binary installation into: ${project.prefix}
+      -->
+    <target name="bin-install" depends="mbuild-init" description="install binary version">
+
+        <echo message="Installation paths will be hardcoded"/>
+        <echo message="--- project configuration ---" />
+        <echo message=" project.destdir            =${project.destdir}" />
+        <echo message=" project.install            =${project.install}" />
+        <echo message=" project.install.bindir     =${project.install.bindir}" />
+        <echo message=" project.install.libdir     =${project.install.libdir}" />
+        <echo message=" project.install.sysconfdir =${project.install.sysconfdir}" />
+        <echo message=" project.install.docdir     =${project.install.docdir}" />
+
+        <!-- use option 'destdir' prefix in the case of temp/rpm builds ! -->
+
+        <!-- root directory: project.install -->
+        <mkdir dir="${project.destdir}${project.install}" />
+        <copy todir="${project.destdir}${project.install}" >
+            <!-- 
+                Just add the directory to the following list 
+                Note: contents is copied. Not the directory itself
+              -->
+            <fileset dir="${project.dist}">
+                <include name="*.*"/>
+            </fileset>
+        </copy>
+
+        <!-- bin directory: project.install.bindir -->
+        <mkdir dir="${project.destdir}${project.install.bindir}" />
+        <copy todir="${project.destdir}${project.install.bindir}" >
+            <!-- 
+                Just add the directory to the following list 
+                Note: contents is copied. Not the directory itself. 
+                Also the file are stored in a pattern set, for (optional) modifying
+              -->
+            <fileset dir="${project.dist}/bin">
+                <patternset id="binaries.fileset.id"/>
+            </fileset>
+        </copy>
+
+
+        <!-- sysconfdir (./etc) directory: project.install.sysconfdir -->
+        <mkdir dir="${project.destdir}${project.install.sysconfdir}" />
+        <copy todir="${project.destdir}${project.install.sysconfdir}" >
+            <!-- 
+                Just add the directory to the following list 
+                Note: contents is copied. Not the directory itself
+                -->
+            <fileset dir="${project.dist}/etc"/>
+
+        </copy>
+
+        <!-- docdir  (./doc) directory: project.install.docdir -->
+        <mkdir dir="${project.destdir}${project.install.docdir}" />
+        <copy todir="${project.destdir}${project.install.docdir}" >
+            <!-- 
+                Just add the directory to the following list 
+                Note: contents is copied. Not the directory itself
+                -->
+            <fileset dir="${project.dist}/doc"/>
+        </copy>
+
+        <!-- libdir  (./lib) directory: project.install.libdir -->
+        <mkdir dir="${project.destdir}${project.install.libdir}" />
+
+        <copy todir="${project.destdir}${project.install.libdir}" >
+            <!-- 
+                Just add the directory to the following list 
+                Note: contents is copied. Not the directory itself
+                -->
+            <fileset dir="${project.dist}/lib"/>
+        </copy>
+
+        <!-- 
+               <chmod dir="${project.destdir}${project.install.bindir}" perm="ugo+x" includes="**/*.sh,**/bin/*" />
+            -->
+        <!-- 
+             update configuration to binary installation ! 
+             Use replaceregexp to keep comments ! 
+            -->
+        <property name="vletrc.prop" value="${project.destdir}${project.install.sysconfdir}/vletrc.prop"/>
+
+        <!-- propertyfile reformates file, erasing comments: 
+            <propertyfile  file="${vletrc.prop}"
+                comment="Generated vletrc properties" >
+            <entry  key="vlet.install"        operation="=" value="${project.install}"/>
+            <entry  key="vlet.install.bindir" operation="=" value="${project.install.bindir}"/>
+            <entry  key="vlet.install.libdir" operation="=" value="${project.install.libdir}"/>
+            <entry  key="vlet.install.docdir"     operation="=" value="${project.install.docdir}"/>
+            < ! - -  note that vletrc.prop is already installed in sysconfdir !  - - >  
+            <entry  key="vlet.install.sysconfdir" operation="=" value="${project.install.sysconfdir}"/>                        
+        </propertyfile>
+        -->
+
+        <!-- currently a sequence of replaceregexp -->
+
+        <replaceregexp file="${vletrc.prop}"
+            match="(#*)vlet.install=(.*)" replace="vlet.install=${project.install}" />
+        <replaceregexp file="${vletrc.prop}"
+            match="(#*)vlet.install.bindir=(.*)" replace="vlet.install.bindir=${project.install.bindir}" />
+        <replaceregexp file="${vletrc.prop}"
+            match="(#*)vlet.install.libdir=(.*)" replace="vlet.install.libdir=${project.install.libdir}" />
+        <replaceregexp file="${vletrc.prop}"
+            match="(#*)vlet.install.docdir=(.*)" replace="vlet.install.docdir=${project.install.docdir}" />
+        <replaceregexp file="${vletrc.prop}"
+            match="(#*)vlet.install.sysconfdir=(.*)" replace="vlet.install.sysconfdir=${project.install.sysconfdir}" />
+
+
+        <!-- harcode sysconfdir into scripts: -->
+        <replaceregexp byline="true">
+            <regexp pattern="(#*)VLET_SYSCONFDIR=(.*)"/>
+            <substitution expression="VLET_SYSCONFDIR=${project.install.sysconfdir}"/>
+            <!-- only use MY binaries (skip others in, for example: /usr/local/bin/* !) 
+                  -->
+            <fileset dir="${project.destdir}${project.install.bindir}">
+                <patternset refid="binaries.fileset.id"/>
+            </fileset>
+        </replaceregexp>
+
+        <!-- update permissions on previous file set  -->
+        <chmod perm="ugo+x" >
+            <fileset dir="${project.destdir}${project.install.bindir}">
+                <patternset refid="binaries.fileset.id"/>
+            </fileset>
+        </chmod>
+
+
+        <!--now update all scripts about whereabout of the 'sysconfdir' -->
+
+    </target>
+
+    <!-- target stub for bin-install -->
+    <target name="install" depends="bin-install" />
+
+    <!--
+        Target : dist-clean
+        info   : Recurse into default packages and invoke 'clean' target 
+      -->
+    <target name="clean">
+
+        <!-- import local properties first -->
+        <property file="build.prop" />
+        <property file="project.prop" />
+
+        <!-- Delete the build and dist (+legacy) directory trees -->
+        <delete dir="${project.dist}" />
+        <delete dir="${project.var}" />
+
+    </target>
+
+    <!-- Clean -->
+    <target name="dist-clean" description="clean up" depends="mbuild-config">
+
+        <!-- Recurse into packages -->
+        <antcall target="vlet-basic">
+            <param name="target" value="clean" />
+        </antcall>
+    </target>
+
+    <!-- Clean -->
+    <target name="dist-all-clean" description="clean up" depends="mbuild-config">
+
+        <!-- Recurse into packages -->
+        <antcall target="vlet-all">
+            <param name="target" value="clean" />
+        </antcall>
+    </target>
+
+</project>

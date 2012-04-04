@@ -1,0 +1,113 @@
+==============================================================================
+    Project    : VL-e Toolkit
+    Component  : mbuild 
+    Maintainer : P.T. de Boer (PTdB) 
+    
+    Info:
+        VL-e root build component (or metabuild component) 
+        This is the root configuration component which builds the 
+        other components.
+        
+==============================================================================
+        
+Component Structure: 
+===
+    build.xml           Main ant build file. 
+    configuration.xml   Configuration file. Contains components, cvs structure 
+                        and versions      
+    distributions.xml   Distribution targets 
+    doCompononent.xml   Component related targets
+    [dist/]             Project distribution directory 
+    project.prop        Default project properties 
+    [build.prop]        Customized (local/host specific) settings
+    [vletpacks]         Distribution zipfiles and build environment. 
+
+Note to Developers: 
+=== 
+    - ant 1.6.5+ is needed to use the ant files 
+    - To be able to call the components build.xml from within the component, 
+      you need to define the 'project.root' property which MUST point to 
+      the absolute location of this component as follows:
+      
+          ant -Dproject.root=<mbuild directory> 
+          
+   - Most project variables (-D<var>=<value> ) can be set in local.prop. 
+     Customize this file to match with you personal (=local) build environment. 
+
+      
+About this component 
+===
+    The general way invoke ant and use this build.xml file is : 
+        
+        ant <ant-options> <ant-target> [ -D<project-variable> [ -D<project-variable>...]] 
+    
+    For the ant options use 'ant --help'
+    
+    Current defined toplevel targets: 
+        <nothing>            no arguments: default target = project-install 
+                             (uses defaults from project.prop file!) 
+        dist-install         build+install 'current' components using mbuild defaults 
+        vlet-install         build+install 'vlet' components using mbuild defaults  
+        dist-clean           clean all components, recurses into components 
+        clean		     clean mbuild, does not recurse into components. 
+
+    Releases and distribution targets (distribution.xml) :      
+
+        build-current        checkout latest + build vlet core components snapshot in 'vletpacks'
+        build-all-current    checkout latest + build vlet ALL components  in 'vletpacks'
+        build-release        build latest (versioned) default release. 
+        build-all-release    build latest (versioned) 'all' release. 
+
+    Source Releases (distribution.xml): 
+
+        build-source-current   create source release from latest from CVS HEAD 
+        build-source-release   create latest stable source release 
+        
+    Component targets:    
+        doComponent -Dname=<component> -Dtarget=<component-target>
+        
+    Definable project-variables are:
+        
+        -Dproject.sourcedir=<component parent dir> - parent directory to checkout/find the components
+        -Dproject.dist=<install-dir>             - ABSOLUTE PATH of project dist or installation directory 
+        -Dcvs.checkout=[true|false]              - wether to check out missing components
+        -Dcvs.checkout.options                   - options for the cvs checkout command like: "-D 04-oct-2004"
+                                                   or "-r stable-1.0.0". 
+                                                   Setting this variable OVERRIDES configuration information                                    
+
+    Examples:
+    ===  
+    - To build the whole project type: 
+        ant 
+        
+    - To clean the whole project type: 
+        ant clean 
+
+    - checkout and build  'current' distribution  in ./vletpacks 
+        ant build-current 
+        
+    - checkout and build  'current' distribution  in ./dist
+        ant dist-install
+        
+    - To build/clean a separate component type: 
+        ant doComponent -Dname=<component> -Dtarget=dist-install 
+        ant doComponent -Dname=<component> -Dtarget=clean
+
+    - Invoke the build file from a component invoke ant as follows: 
+    
+        ant -Dproject.root=<absolute path of mbuild dir>  [ <component-target> ] 
+
+      for example in the frontend component (to compile it) :
+        
+          [frontend_dir]$ ant -Dproject.root=../mbuild dist 
+
+    - checkout,build and install current distribution in seperate component and dist directory
+      (This will ONLY checkout the needed components from CVS) type: 
+    
+        ant -Dcvs.checkout=true -Dproject.sourcedir=comps-current -Dproject.dist=dist-current
+    
+      optionally you can specify a cvs date tag, for example '-D <date>' : 
+      
+          ant -Dcvs.checkout=true -Dcvs.checkout.options="-D 04-oct-2004" -Dproject.dist=`pwd`/dist-04oct-1
+       
+                  

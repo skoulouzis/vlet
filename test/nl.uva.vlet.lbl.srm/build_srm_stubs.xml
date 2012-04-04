@@ -1,0 +1,68 @@
+<project name="${project.name}" default="jar" basedir=".">
+
+	<!--
+	<property file="build.prop" />
+	-->
+		
+	<property file="${build.prop.file}" />	
+
+	<path id="axis.classpath">
+		<fileset dir="${lib.location}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<path id="master.classpath">
+		<pathelement path="${build.dir}" />
+		<path refid="axis.classpath" />
+		<fileset dir="${xerces.home}">
+			<include name="xercesImpl.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="axis-tasks.properties" classpathref="axis.classpath" />
+
+	<target name="init-stubs">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${stubsrc}" />
+		<mkdir dir="${build.dir}/classes" />
+		
+		<!--
+		<delete includeemptydirs="true">
+			<fileset dir="${build.dir}" includes="**/*.*" />
+		</delete>
+		-->
+		
+		<!--
+		<delete includeemptydirs="true">
+			<fileset dir="${src-gen.dir}" includes="**/*.*" />
+		</delete>
+		-->
+	</target>
+
+	<target name="generate-stubs" depends="init-stubs" unless="stubs.exist">
+		
+		<axis-wsdl2java output="${stubsrc}" verbose="true" url="${wsdl}" all="true" testcase="true" wrapArrays="true" namespacemappingfile="${nsmapfile}">			
+		</axis-wsdl2java>
+			
+	</target>
+
+	<target name="compile-stubs" depends="init-stubs">
+		<javac srcdir="${stubsrc}" destdir="${build.dir}/classes" classpathref="axis.classpath" debug="on">		
+		</javac>
+	</target>
+	
+	<target name="build-stubs" depends="generate-stubs,compile-stubs">
+		<javac srcdir="${stubsrc}" destdir="${build.dir}/classes" classpathref="axis.classpath" debug="on">		
+		</javac>
+	</target>
+
+
+	<!-- Create a JAR file with the implementation classes -->
+	<target name="jar" depends="build-stubs">
+		<jar jarfile="${build.dir}/${jar.name}" basedir="${build.dir}/classes">
+		</jar>
+	</target>
+	
+
+</project>

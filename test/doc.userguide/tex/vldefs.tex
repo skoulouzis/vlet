@@ -1,0 +1,74 @@
+%%
+%% The VLeT style commands: 
+%%
+%% You are encouraged to add own styles and aliases to this file 
+%% Especially acronyms and other common used terms like 'Linux' 
+%% VLET_INSTALL, etc 
+%%
+
+% personal formatting commands: 
+
+\newcommand\Mail[1]{\texttt{#1}}
+%%\newcommand\Url[1]{\texttt{#1}}
+\newcommand\Script[1]{\texttt{#1}}
+%% URL text format, NOT A HYPERLINK
+\newcommand\Text{\textnormal}
+\newcommand\Bold[1]{\textbf{#1}}
+\newcommand\Variable[1]{\textsf{#1}}
+\newcommand\Menu[1]{\textsf{#1}}
+\newcommand\Path[1]{\textbf{\texttt{#1}}}
+\newcommand\File[1]{\Path{#1}}
+\newcommand\Note[1]{\textbf{\underline{#1}}}
+\newcommand\Emph[1]{\textit{#1}}
+\newcommand\EmphBold[1]{\textit{\Bold{#1}}}
+\newcommand\Class[1]{\texttt{#1}}
+\newcommand\Code[1]{\texttt{#1}}
+\newcommand\Link[1]{\texttt{#1}}
+% references: 
+
+%% aliases to ensure consistent usage of name/file/terms etc : 
+%% terms/concepts/names 
+
+\newcommand\linux[0]{\textbf{Linux}}
+\newcommand\Linux[0]{\textbf{Linux}}
+\newcommand\globus[0]{\textbf{GLOBUS}}
+\newcommand\windows[0]{\textbf{Windows}}
+\newcommand\vletrc{\Path{vletrc}}
+\newcommand\myvle{\texttt{MyVLe}}
+\newcommand\LocalSys{\texttt{Local System}}
+\newcommand\GridHood{\texttt{Grid Neighbourhood}}
+\newcommand\VOGroup{\texttt{VO Group}}
+\newcommand\VO{\texttt{VO}}
+\newcommand\vlet{\texttt{VLET}}
+\newcommand\link{\texttt{Link}}
+\newcommand\vbrowser{\texttt{VBrowser}}
+\newcommand\rightclick{\Bold{right-click}}
+\newcommand\python{\texttt{Python }}
+\newcommand\dutchgrid{\texttt{DUTCHGRID}}
+
+% some recurrent environment variables 
+\newcommand\VLETINSTALL{\Variable{VLET{\_}INSTALL}} 
+\newcommand\VLETCONF{\VLETINSTALL/etc/vletrc.prop}
+\newcommand\VLETUSERCONF{\HOME/.vletrc/vletrc.prop}
+\newcommand\HOME{\Variable{HOME}} 
+\newcommand\VLET{\Variable{VLET}}
+ 
+% \newcommand\cpp{\texttt{C++}}
+
+%% misc: 
+% couldn't find a windows 'backslash' command so the mathematical \backslash is used: 
+\newcommand\bsl[0]{$\backslash$}
+\newcommand\rarr[0]{$\rightarrow$}
+\newcommand\larr[0]{$\leftarrow$}
+\newcommand\lt[0]{$<$}
+\newcommand\gt[0]{$>$}
+
+% same for simple 4 character wide TAB (Should be outlined with some indentation)
+\newcommand\tab{\hspace*{4ex}} 
+\newcommand\step{\hspace*{4ex}\textbf{-}\ } 
+
+%%
+%% simple listing commands: 
+\def\boxedlisting{ \hspace*{10mm}\begin{boxedminipage}{150mm}}
+\def\endboxedlisting{\end{boxedminipage}\\}
+

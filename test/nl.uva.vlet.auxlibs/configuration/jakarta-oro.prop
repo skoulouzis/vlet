@@ -1,0 +1,19 @@
+###
+# auxtool: jakarta-oro
+# 
+# Info:
+#    jakarta-oro, sometimes needed by MagicType 
+#
+
+name=jakarta-oro
+version=2.0.8
+zipfile=jakarta-oro-2.0.8.jar
+
+# shortcut to inform tool installer it is already a jar
+isjar=true
+nosource=true
+topleveldir=
+
+#url 
+#url=
+

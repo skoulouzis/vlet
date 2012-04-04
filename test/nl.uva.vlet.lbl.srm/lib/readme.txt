@@ -1,0 +1,1 @@
+This directory contains a sub-set of cog-jglobus 1.4 libraries needed for SRM.  

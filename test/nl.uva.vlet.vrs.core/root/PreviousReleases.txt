@@ -1,0 +1,243 @@
+======================================================================
+ 1.2.0 Release Notes 
+======================================================================
+   
+New Features
+===
+- New Grid 'Info' Resource. Really browse the Grid!
+  MyVle now shows "Grid Neighbourhood" and "Local System" as parent folders
+  for grid resources and local resources. Properties for these resources 
+  can be specified. (Right click on the resource and select 'properties').  
+- First implementation of WMS prototype. Currently supports Job Monitoring only.  
+  Still experimental!
+  The WMS API in VLET can be used to create custom WMS Job plugins. 
+- Switched from Cobra Toolkit to Lobo Browser which has more (web browsing) 
+  features. This also fixes the "505" error when loading .dtd files.    
+- New script: urils.sh which can list remote resources. 
+  Now the commands "uricopy.sh", "uristat.sh" and "urils.sh" together form 
+  a complete scripting interface into the VFS.
+- New Copy Dialog asks for options when a target already exists. 
+  Added "Skip" feature so that directories can be merged or aborted copy 
+  actions can be continued (skipping already existing files). 
+- Added multi-select feature: 
+   - Press CTRL-A in the IconPanel to select all. 
+   - Holding down the SHIFT key lets the user select a range of files.  
+- SRM files have a new meta data attribute:"Storage Type".
+  For normal files this should be "PERMANENT".  In previous versions the 
+  storage type wasn't always set to PERMANENT which could lead to data loss. 
+- Added Text Wrapping and Character Encoding settings for TextViewer Plugin.
+
+Disabled
+=== 
+- SRB Has been phased out.   
+  Due to incompatible changes in the API and the fact that SRB isn't used nor supported
+  this resource has been disabled. 
+
+Major Bugs fixes (See bugtracker for an overview of all bugs)  
+===
+- Fixed BDII bug 
+- Fixed VOLATILE bug in SRM. By default new created files were marked
+  as "VOLATILE". This has been set to "PERMANENT".
+- Fixed handling of zero sized LFC Files when replica lengths are not zero.
+  Added feature in ReplicaEditor which updates the LFC File size from the 
+  replica information. 
+- Fixed bug with different username configurations for same SFTP locations. 
+- Fixed bug in VBrowser.exe when JAVA_HOME was unspecified.
+  (This bug only appeared in alpha versions).
+
+Configuration changes 
+===
+- see vletrc.prop
+
+Other Issues:
+=== 
+- Jython installation has been fixed (was broken).  
+  Note: Only the vlet-all distribution contains Jython.     
+
+Other
+===
+- SRM Rewrite. To better maintain the SRM implementation a standalone SRM 
+  API has been developed. The VRS now uses this rewritten SRM client.    
+  SToRM and CasTor Storage Elements should now be fully supported as well thanks
+  to this refactoring.                                                                                                                                                  
+                
+======================================================================
+ Previous 1.1.x Release Notes 
+======================================================================
+   
+=== Release notes for 1.1.4 ===
+- Fixed BDII bug 
+- Fixed VOLATILE bug in SRM. By default new created files were marked
+  as "VOLATILE". This has been set to "PERMANENT".
+  
+=== Release notes for 1.1.2 ===
+
+This is a bug fix release: 
+- SRB was disabled. This has been fixed. 
+   
+=== Release notes for 1.1.1 ===
+
+This is a bug fix release.  
+
+New Features: 
+- added uristat.sh script to query resource attribute likes 
+  permissions, size(s) and checksum values (if supported).  
+- added -checksum <TYPE> option to uricopy.sh 
+- updated 'phicos' VO and added 'dteam' VO information. 
+- lib/auxlibs has been cleaned up. Old libraries have been removed.
+  Version number information has been added. 
+- added bitmap ".bmp" support. 
+ 
+Bugs: 
+- SRM Bugs regarding SToRM implementation have been fixed (for biomed SEs). 
+- Create VLink bug has been fixed.
+- Fixed image load bug in ImageViewer when a URL contains strange characters. 
+- Unknown root CA Certificate exceptions are now recognized and an Exception
+  with a appropriate error message is thrown to inform the user. 
+
+=== Release notes for 1.1.0 ===
+
+GUI: 
+- The VBrowser has new monitoring dialogs. When copying or moving files, a new 
+  (Transfer) Monitoring Dialog will appear. 
+- When selecting multiple files and dropping them, the copying of the files 
+  will be executed one by one and will only show one transfer dialog for all
+  the 'dropped' files.    
+  In previous releases multiple selected files dropped onto the same 
+  resource would trigger multiple transfer dialogs. 
+
+LFC:  
+- New Replica Editor. Checksum values and other attributes of individual
+  replica's can be inspected as well. 
+- LFC Permissions added. 
+  Note that Storage Element permissions are handled separately by the SRM services
+  and might not honour the permissions as set in the LFC server. 
+- Removed 'DefaultVO' option from LFC configuration. Only 'DefaultVORandom' is kept. 
+  In practice there is no real difference between DefaultVO and DefaultVORandom.  
+- Added menu option "lfc->replicaToPreferred" which recursively replicates a file
+  or directory to all storage elements listed in listPreferredSEs. 
+- API: VReplicatable interface has been updated with new replica methods which allow
+  easy addition/removal of replicas. (See VReplicatable in the VRS package).
+    
+SRM:
+- First implementation of Checksum interface. Checksum values and types can be queried. 
+  Use VBrowser Table View and add checksum attributes to inspect checksum values. 
+  Which checksum type is used depends on the SRM Implementation. 
+  
+Miscellaneous:  
+- Added TCP time out options for BDII, LFC and SRM. Default value is 30 seconds.
+  This speeds up connection attempts to non reachable resources. 
+- Added experimental SSH Tunnel configurations for LFC and BDII protocols.     
+- Added web proxy configuration for plain HTTP resources. 
+  Works with some https services as well.    
+
+Bugs: 
+- See bug tracker for details 
+
+
+
+===========================
+Previous 1.0.x Release Notes 
+===========================
+
+=== Release notes for 1.0.2 ===
+Date: 13 August 2009. 
+
+This is a bug fix release: 
+- Fixed bug #284: must ignore exceptions after CLOSEDIR when listing remote 
+  LFC directory.  
+
+=== Release notes for 1.0.1 ===
+Date: 15 july 2009
+
+This is a bug fix release.
+
+About the release:
+=== 
+ - vlet-1.0.zip contains VLET "Core" without application plugins.  
+ - vlet-all-1.0.zip contains VLET with the VLEMED and AID plugins.
+ - vlet-all-gars-1.0.zip contains the GAR files (grid services). 
+ Note that the LFC Grid Service is NOT needed anymore to access LFC servers.
+
+
+Updates:
+=== 
+- UserGuide has been updated to cover most of the significant changes in 1.0 
+
+Fixed bugs: 
+===
+- The value of 'replicasNrOfTries' was always reset to 0. This has been fixed. 
+- Replicas from SRM V1 Storage Elements can now be read. 
+  Storing at a V1 SRM service is still not supported as most storage element support
+  a V2.2 interface as well which will be used if available. 
+- Under certain conditions uploading a file to an LFC location would try the upload 
+  only once instead of the specified 'replicaNrOfTries'.   
+- A bug in the parsing or user and domain settings of an SRB location has been 
+  fixed which garbled the SRB Server Settings. 
+- Under Cygwin the local filesystem implementation would try to use the 'stat' command 
+  which failed. This has been disabled.  
+- When editing a text using the embedded text editor, the original file permissions would
+  be reset. These are now kept. 
+- Port numbers have been removed from replicas registered in the LFC server to stay
+  compatible with the lcg-* commands.   
+- As of VLET 1.0, all JavaGAT libraries and dependencies have been removed. 
+  It was never used and no plugins ever have been developed using JavaGAT.  
+- See bugtracker for more details about the above bugs. 
+
+=== Release notes for 1.0 ===
+
+Date: 27 May 2009
+
+Features: 
+===
+
+VBrowser:
+- Added monitoring (still work in progress). Some methods now will 
+  display a 'Task Monitor' similar to the already existing "Transfer Dialog".  
+- New Properties editor. Shows resource properties in separate tabs. 
+ 
+VRS/VFS:
+- New API. See vrs.* and vfs.* classes.
+- SSH Passphrase authentication added ! 
+  Use ~/.ssh/id_rsa file or change it from the SSH option to point to 
+  your SSH key needed for passphrase authentication.   
+- LFC: Added New Pure Java implementation for LFC
+  - BDII Service is now used to query VO allowed Storage Elements. 
+    Replica URIs are automatically matched against these Storage Elements. 
+  - Old 'WrapperLFC' is not supported anymore. 
+    The grid service has been removed from the gar distribution. 
+- Updated SRM driver to work correctly and efficient with LFC.
+- Third party copying between GridFTP,SRM and LFC has been updated to 
+  work with all possible combinations between them, since the default
+  transport protocol used in SRM and LFC is GridFTP. 
+- Added transfer monitoring in 3rd party GridFTP transfers. 
+ 
+uricopy.sh: 
+- added "-info" and "-mkdirs" option to uricopy.sh script. The latter 
+  create the full path of the target directory if not existing yet. 
+  Script tested with new LFC driver. Seems to work. 
+
+Other:
+ - VLTerm supports more vt100 and xterm codes and is now an almost 
+   working terminal emulator. 
+ - Image viewer support zoom: double click maximize/minimize and use
+   mouse wheel to zoom in/out. 
+   
+API:  
+- Updated Virtual Resource/FileSystem API to "1.0" 
+  See JavaDOCs for details. 
+
+Bugs:
+===
+- Resource Folders now correctly save a multilevel hierarchy of Resource Descriptions. 
+- Default SRB and LFC properties were not correctly read from vletrc.prop.
+  Use "srb.<server property>=..." and lfc.<server property>=..." to specify 
+  installation defaults.  
+- Fixed a lot a bugs due to asynchronous browsing. VBrowser panels now can be 
+  populated in the background by for example a Query Plug-in without corrupting 
+  the internal VBrowser data structure.    
+- Fixed DataChannel Authentication mismatch when using third party transfer
+  between old (1.x) Grid FTP servers and new (2.x). Needed for true
+  3rd party copying between GFTP, SRM and LFC servers. 
+- For more bug fixed see the bugtracker. 
+ 

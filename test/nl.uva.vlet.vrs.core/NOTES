@@ -1,0 +1,38 @@
+###
+# Project   : VL-e Toolkit (VLeT) 
+# Component : VRS Main+VRS+VFS classes 
+# Author    : Piter T. de Boer 
+
+Component Information
+=== 
+ Main Component for all the Virtual Resource System (VRS/VFS classes)
+ + util classes. 
+ Most core VFS implementations are also present in this component. 
+
+Component Structure: 
+===
+    NOTES                This notes file 
+    build.xml            Main build file
+    build.prop	         Local property settings for this component
+    source/              Sources
+    source/main	         Main VRS API and interfaces
+    source/vdriver       VRS/VFS implementation (adaptors)
+    source/tests         test code 
+    etc/                 Default configuration files 
+    bin/                 Startup files and configuration scripts 
+    root/                Files to be installed in the ROOT directory of the
+                         project package
+    cert_urls/           certificate URLs to be included as default grid
+                         certificates                          
+    getCertificates.xml	 ant file to fetch certificates 
+
+Developers Notes
+=== 
+ - Read SDD.txt for the Software Developers Documentation 
+ 
+
+History
+=== 
+2006 april-01 	First prototype version created.  
+2009 June 1st   Version 1.0 released 
+-

@@ -1,0 +1,445 @@
+<project name="mbuild-distributions" default="build-current" basedir=".">
+    <description>
+    ====================================================================
+        Project   : VLET
+        Component : project distributions.  
+        File      : distributions.xml
+        Info      :
+        
+        This ant build file contains the distribution or package targets.
+        These target call build.xml with distribution specific settings. 
+       
+        For example: 
+            ant build-current   # check out current version (HEAD) from CVS 
+                                  and build it. 
+            ant build-release   # build stable version which has been released.  
+            ant build-source    # create source distribution.   
+                
+    ===================================================================            
+    </description>
+
+    <import file="build.xml" />
+
+     <!-- 
+            Default properties for the project distributions build environment. 
+            (Auto build settings. Override setting in the project.props file) 
+     -->
+    <target name="project-build-init" depends="" description="Set project build environment">
+
+        <!-- 
+             By initiliazing project properties inside a <target> these properties
+             can be overriden by specifying them before calling this target 
+             -->
+        
+        <property name="cvs.version" value="" />
+        <property name="cvs.module" value="vlet" />
+        <property name="cvsoptions" value="" />
+
+        <!-- Project structure. Default assumes CVS checkout, not eclipse workspace! -->
+
+        <property name="project.flatten"     value="false" />  <!-- use cvs structure ! --> 
+        <property name="project.packs"       location="vletpacks" />
+        <property name="project.dist"        location="${project.packs}/dist" />
+        <property name="project.checkoutdir" location="${project.packs}" />
+        <property name="project.topleveldir" location="${project.checkoutdir}/${cvs.module}" />
+        <!-- non flattened: use toplevel directory as source root -->
+        <property name="project.sourceroot" location="${project.topleveldir}/source" />
+              
+        <!-- import local properties first -->
+        <property file="local.prop" />
+        <property file="project.prop" />
+        
+        <!-- cleanup previous builds ! --> 
+        <delete dir="${project.packs}" />
+        
+        <!-- mbuild.log at init time --> 
+        <property name="mbuild.log" location="${project.dist}/log/mbuild.log"/>
+        <mkdir dir="${project.dist}/log" />
+
+        <!-- timestamp for current versions --> 
+        <tstamp>
+           <format property="vlet.version.timestamp" pattern="yyyyMMd_HHmm" locale="en" />
+        </tstamp> 
+        
+        <echo message=" --- project build init --- " /> 
+        <echo message="  build.target=${build.target} "/>
+        <echo message="  build.source=${build.source} "/>
+
+        <echo message=" --- project build structure --- " /> 
+         <echo message="  project.flatten     = ${project.flatten}"/> 
+         <echo message="  project.packs       = ${project.packs}"/> 
+         <echo message="  project.dist        = ${project.dist}"/> 
+          <echo message="  project.checkoutdir = ${project.checkoutdir}"/> 
+          <echo message="  project.topleveldir = ${project.topleveldir}"/> 
+          <echo message="  project.sourceroot  = ${project.sourceroot}"/> 
+               
+    </target>
+
+    <target name="project-enable-sdk" description="Enable inclusion of source">
+           <!-- include source in jars ! --> 
+           <property name="project.includesource" value="true"/> 
+    </target>
+    
+    <!-- 
+        Target: Project Checkout 
+        Parameters: (defaults are taken from project.prop)!
+             - cvs.module 
+             - cvs.user
+             - cvs.host
+             - cvs.root
+             - cvsoptions
+                
+     -->
+    <target name="project-checkout" depends="project-build-init" description="Checkout from CVS" >
+        
+        <echo message=" --- cvs checkout --- " /> 
+        <echo message=" ${cvs.module}: cvs command     = cvs checkout ${cvsoptions} ${cvs.module} " />
+        <echo message=" ${cvs.module}: cvs user        = ${cvs.user}" />
+        <echo message=" ${cvs.module}: cvs host        = ${cvs.host}" />
+        <echo message=" ${cvs.module}: cvs root        = ${cvs.user}@${cvs.host}/${cvs.root}" />
+        <echo message=" ${cvs.module}: cvs destination = ${project.checkoutdir}" />
+
+        <!-- Todo: find way to copy stdout to logfile -->
+        <echo file="${mbuild.log}" 
+              message=" ${cvs.module}: cvs checkout ${cvsoptions} ${cvs.module}  =>  ${project.sourcedir} ${line.separator}" 
+              append="true" />
+
+        <echo message="cvs co ${cvsoptions} ${cvs.module}" />
+        <cvs command="co ${cvsoptions} ${cvs.module}" 
+             cvsRoot="${cvs.user}@${cvs.host}/${cvs.root}" 
+             dest="${project.checkoutdir}" cvsRsh="ssh" />
+
+        <!-- 
+            end checkout 
+          -->
+        <!-- block further checkouts after initial checkout ! -->
+        <property name="cvs.checkout" value="false" />
+        
+        <!-- remove unused source --> 
+        <!-- delete dir="${project.checkoutdir}/vlet/source/auxtool.javagat"/-->
+        <delete dir="${project.checkoutdir}/vlet/source/auxtools/"/>
+        <delete dir="${project.checkoutdir}/vlet/source.old" />  
+        <delete dir="${project.checkoutdir}/vlet/source.old2" />
+        <delete dir="${project.checkoutdir}/vlet/source.old3" />
+                
+        <!-- Strip old/development code ! --> 
+        <delete dir="${project.checkoutdir}/vlet/source/vrs" />
+        <delete dir="${project.checkoutdir}/vlet/source/gui" />
+        <delete dir="${project.checkoutdir}/vlet/source/ws" />
+        
+                        
+    </target>
+
+    <target name="project-build-dist" depends="project-checkout" description="Build project" unless="build.source" >
+        
+        <!-- Recurse into packages -->
+        <antcall target="${build.target}">
+            <param name="target" value="dist-install" />
+        </antcall>
+        
+    </target>
+                
+    <target name="project-build-source" depends="project-checkout" description="Build source project" if="build.source" >
+
+        <!-- Recurse into packages -->
+        <antcall target="${build.target}">
+            <param name="target" value="source-dist" />
+         </antcall>
+        
+    </target> 
+            
+    <!-- 
+        Target: create zipfile of binary distribution 
+        Parameters: 
+               vlet.version : 
+               vlet.prefix  : 
+               vlet.ziproot : Toplevel directory in zip distribution  
+                              Default = ${vlet.prefix}-${vlet.version} 
+               vlet.zipfilename :  Zip filename WITHOUT .zip ! 
+                              Default = ${vlet.ziproot
+      --> 
+   <target name="project-build-bin-zipfiles" description="Create zipped distro." unless="build.source" >
+        <!--
+            =======================================================
+               following properties are default if not specified yet 
+            =======================================================
+            --> 
+       
+       <!-- read updated version file after compilation -->
+       <property file="${project.dist}/etc/vlet_version.prop" />
+            
+        <!-- default vlet and zip prefix -->
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet"/>
+           <!-- derived --> 
+        <property name="vlet.zip.root" value="${vlet.prefix}-${vlet.version}"/>
+        <property name="vlet.zip.filename" value="${vlet.zip.prefix}-${vlet.version}"/>     
+        <property name="vlet.gars.zip.root" value="${vlet.zip.prefix}-gars-${vlet.version}"/>
+        <property name="vlet.gars.zip.filename" value="${vlet.gars.ziproot}"/>     
+       
+        <echo message=" === building zipfile === " />
+        <echo message=" - project.dist     = ${project.dist}" />
+        <echo message=" - vlet.version     = ${vlet.version}" />
+        <echo message=" - vlet.prefix      = ${vlet.prefix}" />
+           <echo message=" - vlet.zip.prefix  = ${vlet.zip.prefix}" />
+        <echo message=" - vlet.zip.root    = ${vlet.zip.root}" />
+        <echo message=" - vlet.zip.filename= ${vlet.zip.filename}" />
+        <echo message=" - target packs dir = ${project.packs}"/> 
+    
+        <!-- 
+              create zip file from dist/* to vlet-<Version>  
+          -->
+        <zip destfile="${project.packs}/${vlet.zip.filename}.zip">
+            <!-- Add all excluding shell scripts and other executables --> 
+            <zipfileset dir="${project.dist}" filemode="644" prefix="${vlet.zip.root}" 
+                        excludes="bin/**,zips/**,gars/*" />
+
+            <!-- Now add shell scrips with x permissions ! -->
+            <zipfileset dir="${project.dist}/bin" filemode="755" prefix="${vlet.zip.root}/bin" />
+        </zip>
+
+    <!-- create standalone GARS zipfile --> 
+       <!-- 
+        <zip destfile="${project.packs}/${vlet.gars.zipfilename}.zip">
+            < ! - -  Add all excluding shell scripts and other executables   - - >  
+            <zipfileset dir="${project.dist}/gars" filemode="644" prefix="${vlet.gars.ziproot}/gars" />
+        </zip> 
+      --> 
+    </target>
+    
+    <target name="project-build-src-zipfiles" if="build.source" >
+       <!-- read updated version file from source distro-->
+        <property file="${project.topleveldir}/source/core/nl.uva.vlet.vrs.core/etc/vlet_version.prop" />
+        
+        <echo message="source version=${vlet.version}" />
+                
+        <tstamp>
+            <format property="vlet.version.timestamp" pattern="yyyyMMd_HHmm" locale="en" />
+        </tstamp> 
+                 
+        <property name="vlet.prefix" value="vlet-src"/>
+        <property name="vlet.zip.prefix" value="vlet-src"/>
+        <property name="vlet.zip.root" value="${vlet.prefix}-${vlet.version}_${vlet.version.timestamp}"/>
+        <property name="vlet.zip.filename" value="${project.packs}/${vlet.zip.root}.zip"/>
+        
+        <echo message=" === building source zipfile === " />
+        <echo message=" - vlet.version     = ${vlet.version}" />
+        <echo message=" - vlet.prefix      = ${vlet.prefix}" />
+        <echo message=" - vlet.zip.prefix  = ${vlet.zip.prefix}" />
+        <echo message=" - vlet.zip.root    = ${vlet.zip.root}" />
+        <echo message=" - vlet.zip.filename= ${vlet.zip.filename}" />
+        <echo message=" - target packs dir = ${project.packs}"/> 
+            
+        <!-- CLEAN NOT USED MODULES -->
+        <delete dir="${project.checkoutdir}/vlet/source/core/org.globus.gt4.1.wscore"/>
+        <delete dir="${project.checkoutdir}/vlet/source.old"/>
+        <delete dir="${project.checkoutdir}/vlet/source.old2"/>
+        <delete dir="${project.checkoutdir}/vlet/source.old3"/>
+
+        <!-- old code -->
+        <delete dir="${project.checkoutdir}/vlet/source/auxtools/"/>
+        <delete dir="${project.checkoutdir}/vlet/source/vrs/"/>
+        <delete dir="${project.checkoutdir}/vlet/source/gui/"/>
+        
+        <!-- proto/obsolete/defunct --> 
+        <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.gui.cobra.viewer"/>
+        <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.vrs.rfts"/>
+        <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.gui.wms"/>
+
+        <!-- Experimental Code: Not in Source Distributions -->
+        <delete dir="${project.checkoutdir}/vlet/source/demo"/>
+        <delete dir="${project.checkoutdir}/vlet/source/app"/>
+        <delete dir="${project.checkoutdir}/vlet/source/vlemed"/>
+        <delete dir="${project.checkoutdir}/vlet/source/proto"/>
+        <delete dir="${project.checkoutdir}/vlet/source/computis"/>
+        <delete dir="${project.checkoutdir}/vlet/source/creatis"/>
+                  
+        <!-- --> 
+        <zip destfile="${vlet.zip.filename}"> 
+
+            <!-- add exectuable configure script --> 
+            <zipfileset file="${project.topleveldir}/configure" filemode="755" prefix="${vlet.zip.root}" />
+                    
+            <!-- create zipfile with some standard excludes --> 
+            <zipfileset dir="${project.topleveldir}" filemode="644" prefix="${vlet.zip.root}" 
+                    excludes="configure,*.ac,*.m4,**/dist,**/build,**/*.class" />
+
+                    <!-- add shell scrips with x permissions ! -->
+                    <!-- <zipfileset dir="${project.topleveldir}/bin" filemode="755" prefix="${vlet.prefix}/bin" />
+                      -->
+        </zip>
+    </target>
+
+    <!-- 
+         Master build will either build a "dist" or "source" depending on the build.source property 
+        -->
+    <target name="master-build" 
+            depends="project-build-source,project-build-dist,project-build-src-zipfiles,project-build-bin-zipfiles" 
+            description="Master distribution build target for both dist and source">
+        
+        <!-- Post Build --> 
+        
+           <!-- read updated version file after compilation -->
+           <property file="${project.dist}/etc/vlet_version.prop" />
+        
+    </target>
+    
+    
+    <target name="build-current" description="build basic (default) distribution">
+          
+        <!-- build configuration:  -->
+        <property name="build.target" value="vlet-basic" />
+        
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+                   
+    </target>
+    
+    <target name="build-all-current" description="build 'all' distribution">
+
+        <!-- build configuration:  -->
+        <property name="build.target" value="vlet-all" />
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet-all"/>
+    
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+        
+    </target>
+            
+    <target name="build-sdk-current" description="build 'sdk' distribution">
+        
+        <!-- include source in jars ! -->
+        <property name="build.target" value="vlet-sdk" />
+        <property name="project.includesource" value="true"/> 
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet-sdk"/>
+        
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+        
+    </target>
+
+    <target name="build-sdk-release" description="build 'sdk' distribution">
+            
+        <!-- include source in jars ! -->
+        <property name="build.target" value="vlet-sdk" />
+        
+        <property name="cvsoptions" value="-r vlet-1-4-1" />
+        <property name="project.includesource" value="true"/> 
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet-sdk"/>
+            
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+            
+    </target>
+    
+    <target name="build-all-release" depends="" description="build latest released 'all' version">
+
+        <property name="build.target" value="vlet-all" />
+        <property name="cvsoptions" value="-r vlet-1-4-1" />  
+        
+        <!-- set prefix to explicit version. Else the tstamp will be used --> 
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet-all"/>
+
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+
+    </target>
+
+    <target name="build-release" depends="" description="build latest released version">
+
+        <property name="build.target" value="vlet-basic" />
+        <property name="cvsoptions" value="-r vlet-1-4-1" />  
+                
+        <!-- set prefix to explicit version. Else the tstamp will be used --> 
+        <property name="vlet.prefix" value="vlet"/>
+        <property name="vlet.zip.prefix" value="vlet"/>
+    
+           <!-- do actual build --> 
+        <antcall target="master-build"/>
+
+    </target>
+            
+    <!--
+      Master build for zipped source release:  
+      -->
+
+    <target name="build-source" description="build source distribution">
+        
+        <!-- build target -->
+        <property name="build.target" value="vlet-basic" />
+        <property name="build.source" value="source-only" /> <!-- any value evaluates to 'true' -->
+        
+        <property name="vlet.prefix" value="vlet-src"/>
+        <property name="vlet.zip.prefix" value="vlet-src"/>
+            
+        <!-- block further checkouts -->
+        <property name="cvs.checkout" value="false" />
+
+        <!-- do actual build --> 
+        <antcall target="master-build"/>
+        
+     </target> 
+        
+    <target name="build-source-current" depends="build-source" description="build source distribution"/>
+                
+    <!-- Build Versioned Source Release -->
+    <target name="build-source-release"  description="build lastest (stable) source distribution">
+       
+        <!-- set tag version + prefix version --> 
+        <property name="cvsoptions" value="-r vlet-1-4-1" />
+        
+        <!-- set prefix to explicit version. Else the tstamp will be used --> 
+        <property name="vlet.prefix" value="vlet-src"/>
+        <property name="vlet.zip.prefix" value="vlet-src"/>
+        <property name="vlet.zip.root" value="vlet-src-1.4.1"/>
+             
+        <!-- reuse build-source target --> 
+        <antcall target="build-source">
+        </antcall>
+           
+    </target>
+	
+    <!-- Build Versioned SDK Source -->
+    <target name="build-sdk-source"  description="build sdk source distribution">
+           
+        <!-- set tag version + prefix version --> 
+    	<property name="build.target" value="vlet-sdk" />
+    	
+    	<!-- cvs tag makes sure only sdk modules are checked out from cvs ! --> 
+        <property name="cvsoptions" value="-r vlet-sdk" /> 
+
+        <!-- If no explicit version is used the project build tstamp will be used --> 
+        <property name="vlet.prefix" value="vlet-src"/>
+        <property name="vlet.zip.prefix" value="vlet-sdk-src"/>
+                  
+        <!-- reuse build-source target --> 
+        <antcall target="build-source">
+        </antcall>
+               
+    </target>
+    
+    <!-- Build Versioned SDK Source Release -->
+    <target name="build-sdk-source-release"  description="build sdk source release">
+       
+        <!-- set tag version + prefix version --> 
+        <property name="build.target" value="vlet-sdk" />
+
+        <!-- cvs tag makes sure only sdk modules are checked out from cvs ! --> 
+        <property name="cvsoptions" value="-r vlet-sdk-1-4-1" /> 
+        
+        <!-- set prefix to explicit version. Else the tstamp will be used --> 
+        <property name="vlet.prefix" value="vlet-src"/>
+        <property name="vlet.zip.prefix" value="vlet-sdk-src"/>
+        <property name="vlet.zip.root" value="vlet-sdk-src-1.4.1"/>
+                
+        <!-- reuse build-source target --> 
+        <antcall target="build-source">
+        </antcall>
+           
+    </target>   
+  
+</project>

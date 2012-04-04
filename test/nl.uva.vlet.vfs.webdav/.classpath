@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.grid.globus"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-jcr-commons-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackrabbit-webdav-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-slide-commandline-2.0rc1.jar"/>
+	<classpathentry kind="lib" path="lib/jakarta-slide-webdavlib-2.0rc1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.0.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

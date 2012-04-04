@@ -1,0 +1,21 @@
+###
+# auxtool: avalon-logkit
+# 
+# Info:
+#    Auxtools property file 
+#
+
+## package properties
+#name=avalon-framework
+#version=4.2.0
+#zipfile=avalon-framework-4.2.0.jar
+#
+## distribution is single jar: copy jar only to lib/auxlib
+#isjar=true
+#nosource=true
+##no toplevel dir
+#topleveldir=
+#
+## url is used if not in tool repitory 
+#url=ftp://ftp.cs.uu.nl/mirror/apache.org/dist/avalon/avalon-framework/jars/avalon-framework-4.2.0.jar
+

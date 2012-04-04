@@ -1,0 +1,77 @@
+<project name="UserGuide" default="dist" basedir=".">
+	<description>
+		Project	  : VL-e Toolkit
+		Component : UserGuide
+				
+		Wapper for the Makefile which compiles the LaTeX document 
+		See Makefile for actual build details 
+		
+   	</description>
+    <!-- Global properties -->
+
+      <property name="component.root" location="." /> 
+      <!-- 1st -> import project environment, 2d ->  local build.prop -->
+      <property environment="env"/> 
+      <property file="${project.root}/project.prop"/>
+      <property file="build.prop"/> 
+      
+		
+	<!-- Target: init --> 
+		
+	<target name="init" >
+			
+	</target> 
+	    
+    <!-- nothing to do for source distribution --> 
+    <target name="source-dist"/>	
+    
+	<!-- Compile the LaTeX document --> 
+	
+	<target name="dist" depends="init" description="Call Makefile">
+		<mkdir dir="${component.build}" />
+		<mkdir dir="${component.dist}" />
+		
+		<antcall target="invoke">
+        	<param name="invoke.bin" value="make"/>
+            <param name="invoke.args" value="dist"/>
+            <param name="invoke.dir" location="." />
+        </antcall>
+			
+	</target> 	
+	
+	<target name="dist-install" depends="dist" description="Copy document">
+	    
+	    <fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 
+	    
+		<copy todir="${project.doc}" file="${component.dist}/UserGuide.pdf"/>
+	</target> 
+			
+	<target name="clean" description="dummy target">
+		<antcall target="invoke"> 
+			<param name="invoke.bin" value="gmake"/> 
+			<param name="invoke.args" value="clean"/>
+			<param name="invoke.dir" location="." /> 
+		</antcall> 
+	</target> 
+	
+	 <!--
+	   Target          : invoke
+	   Parameters      : invoke.bin,invoke.args,invoke,dir
+
+	   Call local command (wrapper for 'exec') and pass some parameters
+	 -->
+		
+	<target  name="invoke" description="Call local command">
+		<echo message="invoke ${invoke.bin} ${invoke.args} in ${invoke.dir} "/>	
+		<exec executable="${invoke.bin}" dir="${invoke.dir}" failonerror="true">
+	    	<arg line="${invoke.args}"/>
+
+	    	<env key="PROJECT_ROOT" value="${project.root}" />
+	   	 	<env key="PROJECT_DIST" value="${project.dist}" />
+	   		<env key="VLET_INSTALL" value="${project.dist}" />
+            <env key="PROJECT_LIB" value="${project.lib}" />
+	   	</exec>
+	</target>
+	
+</project>
+	

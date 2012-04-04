@@ -1,0 +1,33 @@
+###
+# Project   : VL-e Toolkit (VLeT) 
+# Component : vrs.tests 
+# Author    : Piter T. de Boer 
+
+Info
+=== 
+ Unit tests and test suites for the VL-e Toolkit. 
+ Most test are execution from within the eclipse environment by selecting 
+ a class from the test.junit.vrs package. 
+ The './bin' directory does contain some ant+script files to 
+ test a distribution, but these are not maintained very much.  
+	
+Tests
+===
+ - test.junit : default unit test classes + configuration, may contain 
+	            abstract classes which must be subclassed
+ - test.junit.regression : regression tests to test whether exotic bugs in the 
+                APIs  (3rd party or my own) are still there or not. 	            
+ - test.junit.vrs : set of unit tests to test the VRS/VFS,
+ 			    run these classes to do the  actual testing. 
+ - testSuites/TextConfiguration : 
+                currently hardcoded test settings. 
+
+
+Run a test
+===	
+ To run a test, select one of the Test Suites from test.junit.vrs. 
+ From eclipse select: "Run As" -> "JUnit test" or
+ run "Run As" -> "Java Application"
+ Some tests might need configuration/authentication to access 
+ remote resources. 
+	

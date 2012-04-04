@@ -1,0 +1,64 @@
+=======================================================================
+    Project    : VL-e Toolkit
+    Component  : UserGuide 
+    Maintainer : 
+    			- contents: All  (See CVS history)
+    			- Makefile/build.xml and styles: P.T. de Boer 
+    Info:
+        The VLeT UserGuide.  
+                
+========================================================================
+       			
+Component Structure: 
+===
+    NOTES               This file 
+    build.xml           Ant build file 
+    Makefile            LaTeX commands 
+    tex/	            LaTeX sources devided in chapters
+    tex/vlDefs.tex      Custom LaTeX definitions and styles 
+    tex/UserGuide.tex   Main UserGuide document root. 
+    fig/                vector graphics (.fig files)
+    images/             bitmap images preferably in .png format (NOT JPG) 
+    images/eps          Not yet converted eps files (legacy eps files) 
+    fonts/              Extra fonts (might move to general location)
+    styles/             Extra styles (dito)
+
+About this component:
+=== 
+    Type 'make' or 'ant' to compile the document.  
+    GNU make and LaTeX as pdflatex are needed by this component. 
+    A typical linux distro should have these commands avaliable.
+    
+        
+Note to Developers: 
+=== 
+ - Images: 
+    Do note resize the images to make them smaller in the document. 
+    Use the 'scale' or 'width' option in LaTeX, because print resolution
+    is usually much higher then screen resolution. 
+ - screenshots can easily be acquired by using gimp and go to the menu: 
+    File->Acquire->Screenshot. DO NOT SAVE AS JPG, use PNG instead. 
+ - Compression: 
+    Do not use lossy compression formats like JPG. On screen they might
+    look ok, but when printed the JPG noise (artifacts) are visable. 
+    (Exceptions might be made for large high resolution pictures >300dpi) 
+ - Do not forget to commit GIF/PNG files as 'binary'. 
+ - Image conversion: 
+    The Makefile contains implicit pattern rules to convert all pictures  
+    in the 'images' directory to 'eps' (for latex) or 'pdf' (for pdflatex).
+    Add extra patterns for other formats if needed (.bmp/.png). 
+    Just use the filename WITHOUT EXTENTION in the LaTeX document and put the GIF/PNG
+    file in 'images/' to autoconvert it (latex and pdflatex will append the
+    right extension to it).
+ - Viewing: 
+    You can view the PDF file in the 'dist' directory or view the DVI file
+    in the build directory, which also contains the EPS files. 
+
+TODO:
+===
+  - hypertextify the resulting PDF and create HTML 
+  - add VL-e housestyle (Verdana fonts,section headers,etc) 
+	    
+Revision history:
+===
+01-07-2006 (PdB) First template 

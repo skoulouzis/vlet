@@ -1,0 +1,9 @@
+Executable = "/bin/echo"; 
+Arguments = "Hello World"; 
+Stdoutput = "message.txt";
+StdError = "stderror";
+OutputSandbox = {"message.txt","stderror"};
+virtualorganisation = "pvier"; 
+requirements = other.GlueCEName == "express";
+rank =- other.GlueCEStateEstimatedResponseTime;
+RetryCount = 3;

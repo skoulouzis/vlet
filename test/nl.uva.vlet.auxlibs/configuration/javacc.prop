@@ -1,0 +1,30 @@
+###
+# auxtool: javacc 
+# 
+# Info:
+#    Java CC  
+#
+
+####
+## Mandatory tool properties: 
+#
+#name=javacc
+#version=3.2
+#zipfile=javacc-3.2.zip
+#
+## toplevel directory which is create when unzipping the archive: 
+## Some zipfile contain a toplevel directory, some don't 
+#topleveldir=javacc-3.2
+#
+####
+## unpack,compile and install properties:
+#
+##nothing to compile 
+#nosource=true
+## copy to auxtool directory ! 
+#isauxtool=true
+#
+
+
+
+			

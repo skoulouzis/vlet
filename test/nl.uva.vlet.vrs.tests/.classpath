@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="oldsrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/junit.jar"/>
+	<classpathentry kind="lib" path="lib/ant-junit.jar"/>
+	<classpathentry kind="lib" path="lib/jfcunit.jar"/>
+	<classpathentry kind="src" path="/nl.uva.vlet.vfs.lfc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.glite.lfc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.srm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.auxlibs"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.lbl.srm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vjs.wms"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.grid.globus"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.gftp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.webdav"/>
+	<classpathentry kind="src" path="/nl.uva.vlet.vfs.irods"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.jcraft.ssh"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

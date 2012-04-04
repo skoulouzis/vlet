@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/jmimemagic/jakarta-oro-2.0.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jconfig/jconfig.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jsch/jsch-0.1.42.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/icoreader/ICOReader-1.04.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.apache/ant.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jmimemagic/jmimemagic-0.1.2.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

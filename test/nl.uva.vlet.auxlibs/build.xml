@@ -1,0 +1,134 @@
+<project name="auxlibs" default="dist" basedir=".">
+    <description>
+        Project   : VLET
+        Component : auxlibs
+        Author    : Piter.T de Boer 
+        
+        This module contains the remainder of generic 3rd party tools and libraries. 
+	    Most libraries have been moved to the actual module (eclipse eproject) that
+    	uses them. Big library sets (globus,axis,glite) have been move to a 
+    	seperate module for better version management. 
+        
+       </description>
+        
+    <!-- Global properties -->
+
+    <property name="project.root" location="../mbuild" />
+    <property name="component.root" location="." /> 
+    <!-- 1st -> import project environment, 2d ->  local build.prop -->
+    <property environment="env"/> 
+    <property file="${project.root}/project.prop"/>
+    <property file="build.prop"/> 
+    
+    <!-- Target: init --> 
+    <target name="init" >
+      
+    </target> 
+    
+    <!-- 
+        Build source distribution, which means do all tools 
+        and create auxlib
+      --> 
+    <target name="source-dist" >
+        <property name="source_dist" value="true"/> 
+    </target>
+        
+    <!-- 
+         plain libraries/jars which can be copied directly 
+         into the distribution. 
+      -->
+    
+    <target name="auxlibs" depends="init">
+    </target>
+    
+    <!-- AuxTools are packages which need more configuration and special 
+         building instructions to set up. 
+         The file doTool.xml can configure these more complex packages 
+      --> 
+    <target name="auxtools" depends="init">
+    	
+    	<!-- 
+    	     =======================
+    	     No auxiliary tools used
+    	     ======================= 
+    	  --> 
+    	
+        <!-- jython --> 
+        <!-- <ant antfile="doTool.xml" target="doTool"> 
+            <property name="tool.propertyfile" value="configuration/jython.prop"/> 
+        </ant> --> 
+            
+        <!-- Java Activation Framework (JAF) --> 
+        <!-- Is already in from gt4! 
+        <ant antfile="doTool.xml" target="doTool"> 
+             <property name="tool.propertyfile" value="configuration/jaf.prop"/> 
+        </ant>
+        -->
+    </target>
+        
+    <target name="dist" depends="init"/>
+
+    
+    <target name="dist-install" depends="dist" description="install auxTools">
+        <fail message="*** Error: Cannot install libraries: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 
+        
+        <!--
+            auxlib:  minimal jar set needed for compile/runtime 
+                    the libraries might also be in auxtools/<tool>
+        --> 
+        
+        <mkdir dir="${project.auxlib}"/>
+    	<!-- <copy todir="${project.auxlib}">
+            <fileset dir="${component.dist}/auxlib" /> 
+        </copy> --> 
+    	
+    	<!-- <mkdir dir="${project.auxlib}/jglite"/> --> 
+    	<!-- <copy todir="${project.auxlib}/jglite" >  
+    	     < ! - -  
+    		   Just add the directory to the following list 
+    	       Note: contents is copied. Not the directory itself
+    	       - - > 
+    	     <fileset dir="lib/jglite"/>
+        </copy>
+    	-->
+    	
+        <copy todir="${project.auxlib}" >
+           <!-- 
+               Just add the directory to the following list 
+               Note: contents is copied. Not the directory itself
+            -->
+             
+            <!-- not needed anymore 
+                 <fileset dir="lib/acacia" /> 
+             -->
+ 
+            <fileset dir="lib/org.apache" />        	
+            <!-- <fileset dir="lib/avalon" /> --> 
+            <fileset dir="lib/jsch" /> 
+            <fileset dir="lib/jmimemagic" />
+        	<!-- move to gui.utils:  
+	            <fileset dir="lib/com.jgoodies"/> --> 
+            <!-- Moved to seperate plugin:
+                 <fileset dir="lib/org.jpedal" />
+              -->  
+            <fileset dir="lib/icoreader" />
+            <fileset dir="lib/jconfig" /> 
+
+	    </copy>
+
+        <!-- 
+            auxtools: complete tool installation 
+        --> 
+        <mkdir dir="${project.license}"/>
+   		 <copy todir="${project.license}">
+        	<fileset dir="${component.root}/etc/license" /> 
+    	</copy>
+        
+    </target>
+        
+    <target name="clean" description="clean">
+        <delete dir="${component.build}"/> 
+        <delete dir="${component.dist}"/> 
+    </target>     
+</project>
+    

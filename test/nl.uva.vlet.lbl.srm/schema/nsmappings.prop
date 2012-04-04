@@ -1,0 +1,4 @@
+#rename namespaces
+http\://srm.1.0.ns=srm.dcachev1.stubs
+http\://www.themindelectric.com/package/diskCacheV111.srm/=srm.dcachev1.stubs
+http\://srm.lbl.gov/StorageResourceManager=gov.lbl.srm.v22.stubs

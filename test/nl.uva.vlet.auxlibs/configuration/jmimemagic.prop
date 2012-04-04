@@ -1,0 +1,29 @@
+##
+# auxtool: jMimeMagic  
+# 
+# Info:
+#   Java Magic Mime types libraries.
+# 
+
+###
+# Tool properties: 
+
+name=jmimemagic
+version=0.0.4a
+zipfile=jmimemagic-0.0.4a.jar
+
+# toplevel directory which is create when unzipping the archive: 
+# Some zipfile contain a toplevel directory, some don't 
+topleveldir=
+
+###
+# unpack,compile and install properties:
+
+#nothing to compile 
+nosource=true
+# copy jar file 
+isjar=true
+
+
+
+			

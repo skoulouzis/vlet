@@ -1,0 +1,336 @@
+%
+% VBrowser
+%
+
+\appendix
+\chapter{Appendices}
+\label{chap:appendices}
+
+\section{VRL specification} 
+
+This appendix specifies the syntax used for VRLs (Virtual Resource Locators)
+which follows the specification of URIs (Universal Resource Indicators) as
+specified in \cite{bernerslee2005uri}.\\
+In short a VRL is an URI, but not all URIs are VRLs.\\
+\par
+VRLs can be seen as Virtual URLs which may have extra schemes which do not map
+to an actual network protocol but to an 'Virtual' Protocol or 'VRS' Driver
+protocol (VDriver). An example is 'rfts' which is not an actual network protocol but is
+implemented as Grid Service protocol to an Reliable File Transfer Service. The
+actual network protocol used is SOAP messages over https connections as
+specified in the WSRF specifications. This is hidden for the user. \\
+
+\subsection{Syntax} 
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+ VRL                ::= SCHEME + ':' + SCHEMESPECIFICPART
+
+ SCHEMESPECIFICPART ::=   [ '//' + AUTHORITY ]  
+                        + [ '/' + PATH ] 
+                        + [ '?' + QUERY ] 
+                        + [ '#' + FRAGMENT ]
+
+ AUTHORITY          ::=  [ USERINFO + '@' ] + [ HOSTNAME + [ ':' + PORT ] ]  
+
+ SCHEME             ::= 'file', 'gftp', 'sftp', 'http', 'lfn', 'srm', ..
+
+ USERINFO           ::= USERNAME + [ '.' + DOMAINNAME ] + [ ':' + PASSWORD ]
+
+ USERNAME           ::= UNRESERVED <see rfc3986> 
+
+ DOMAINNAME         ::= UNRESERVED <see rfc3986>
+
+ HOSTNAME           ::= UNRESERVED <see rfc3986> 
+
+ PASSWORD           ::= UNRESERVED <see rfc3986>
+
+ QUERY              ::= UNRESERVED <see rfc3986>
+	
+ FRAGMENT           ::= UNRESERVED <see rfc3986>
+
+ UNRESERVED         ::= [ ALPHA | NUM |  '-' | '.' | '_' | '~' ] * 
+
+\end{verbatim}
+\end{minipage}\\
+\\
+\Note{Notes:}
+\begin{itemize}
+%   \item SRB URIs have a \Variable{DOMAINNAME} in the \Variable{USERNAME} part. 
+%         VRLs will take the last dot separated string as domain name. 
+%         For example in 'john.doe.vle', the 'vle' part is the domain name 
+%         and 'john.doe' the username. 
+  \item It is not recommended putting plain text passwords in URIs as this 
+        is a security hazard. 
+  \item The AUTHORITY part start with two slashes '//' but is optional. When
+        the scheme specific part starts with only one slash it has no authority
+        part.
+\end{itemize}
+
+\subsection{Examples of URIs}
+
+This section explains how URIs (VRLs) are used in VLET/VBrowser .\\  
+Below an example of a full URI.
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+     foo://john_doe@example.com:8042/over/there?name=ferret#nose
+     \_/   \_______________________/\_________/ \_________/ \__/
+      |              |                |            |         |
+    scheme       authority           path        query    fragment
+\end{verbatim}
+ \end{minipage}\\
+
+After the first colon (':') the \emph{scheme specific} part starts. 
+This part can contain an authority part which always starts with two slashes
+('//').\\
+For example:\\
+\\
+  \tab \path{sftp://skoulouz@ui.grid.sara.nl:22/data/home/skoulouz}\\
+\\
+The \emph{authority} part can be omitted if for the scheme no authority is
+needed. In that case the scheme specific part may NOT start with two slashes,
+but only one in for example in the following URI:\\
+\\
+   \tab (1) \path{file:/home/dexter/e-laboratory}\\
+\\
+This is equivalent with an empty \emph{authority} URI as follows:\\
+\\
+   \tab (2) \path{file:///home/dexter/e-laboratory}\\ 
+\\ 
+The above URI (2) will be normalized to (1) to indicate an empty authority
+part and remove superfluous slashes.\\
+\\
+\subsection{URI Attributes}
+
+An URI can have URI attributes specified in the \emph{query} part. Some scheme
+implementations support URI attributes to specify extra options or parameters
+to the underlying implementation. \\
+The syntax is as follows:\\ 
+\\
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+ QUERY         ::= [ ParameterList ]  
+
+ ParameterList ::=  Parameter + [ '&' + ParameterList ]
+
+ Parameter     ::=   Name + '=' +  Value
+
+\end{verbatim}
+ \end{minipage}\\
+\\
+\\
+Example of two URI Attributes in an LFC URI:\\
+\\
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim}
+ lfn://lfc.grid.sara.nl/grid/vlemed/stuff\
+      ?lfc.listPreferredSEs=srm.grid.sara.nl\
+      &lfc.replicaSelectionMode=Preferred
+\end{verbatim}
+\end{minipage}\\
+\\
+% \\
+% Or specifying properties for LFC resources: \\
+% \\
+% \hspace*{10mm}\begin{minipage}{170mm}
+% \begin{verbatim}
+%  lfn://lfc.grid.sara.nl/grid/vlemed/stuff\
+%      ?lfc.listPreferredSEs=srm.grid.sara.nl
+% \end{verbatim}
+% \end{minipage}\\
+% \\
+(Remove the backslash '\bsl' when concatenating the URI parts). \\
+You can use this feature when invoking the \path{uricopy.sh} script or accessing
+the VRS programmatically.
+\par
+Most properties which can be specified as Resource Properties using the
+VBrowser can be specified here although not all combinations have been tested
+and some are implementation specific. Check the documentation of the specific
+protocol implementation to see which property is supported. 
+\par
+Don't forget to prepend the property with the name of the scheme, like in
+\path{'lfc.listPreferredSEs'} to indicate the \path{lfc} property
+\path{listPreferredSEs}. That is when lfc is replicating a file, it will use the storage elements indicated after the \path{'lfc.listPreferredSEs='} which for the example above would be srm.grid.sara.nl
+
+%%%
+%%%
+%%%
+
+\newpage
+\section{Overview of configuration files and directories}
+
+The next sections show an overview of the distribution and user
+configuration files. See chapter \ref{chap:customization} for the
+customization of these files.
+
+\subsection{Installation files and settings}
+
+ Selection of configuration files and directories in the VLET distribution
+ replace \path{VLET_INSTALL} with the location of the distribution):\\
+ \\
+ \begin{tabular}{ l l }
+   \path{VLET_INSTALL/etc} & Directory where all distribution settings are.\\
+   \path{VLET_INSTALL/etc/vletrc.prop} & Installation properties and (default)
+        settings.\\
+   \path{VLET_INSTALL/etc/certificates} & Extra trusted CA root certificates.\\
+   \path{VLET_INSTALL/etc/vomsdir/voms.xml} & VO Server configuration.\\
+   \path{VLET_INSTALL/lib/plugins} & Custom VDriver plugins and VBrowser
+        Viewers.\\
+ \end{tabular}
+ 
+
+\subsection{Default installation configuration file vletrc.prop} 
+
+The default settings for SRB and for LFC can be found in
+\path{VLET_INSTALL/etc/vletrc.prop}.\\
+These are the default properties used when creating a new resource or contact
+remote resources.\\
+Most of these properties can also be specified during startup or as extra URI
+attribute in the URI (VRL).\\
+\\
+% \subsubsection{Default SRB settings} 
+% 
+% Below an example of SRB properties found in
+% \path{VLET_INSTALL/etc/vletrc.prop}. \\
+% \\
+% \begin{boxedlisting}
+% \begin{verbatim}
+% 
+% ###
+% # Default SRB host at SARA :
+% #
+% 
+% srb.hostname=srb.grid.sara.nl
+% srb.path=/VLENL/home
+% srb.port=50000
+% srb.mdasCollectionHome=/VLENL/home
+% srb.mdasDomainHome=vlenl
+% srb.mdasDomainName=vlenl
+% srb.defaultResource=vleGridStore
+% #srb.username=
+% srb.mcatZone=VLENL
+% # set to true when behind a firewall (Default)
+% # if incoming connection are allowed set to 'false'
+% srb.passiveMode=true
+% #this string MUST match the Enum Value for 'GSI_AUTH'
+% srb.AUTH_SCHEME=GSI_AUTH
+% 
+% \end{verbatim} 
+% \end{boxedlisting}
+
+\subsubsection{Default LFC settings} 
+
+The default settings for LFC which can be found in
+\path{VLET_INSTALL/etc/vletrc.prop}. \\
+\\
+\begin{boxedlisting}
+\begin{verbatim}
+
+## Default LFC Server settings: 
+## 
+# Default LFC hostname: Specify empty field for the user to fill in. 
+#lfc.hostname=lfc.grid.sara.nl
+lfc.hostname=<LFCHOST>
+# Default port: 
+lfc.port=5010
+## Example of preconfigured Storage Elements:
+#lfc.listPreferredSEs=srm.grid.sara.nl,tbn18.nikhef.nl
+lfc.replicaNrOfTries=5
+## Replica selection mode (reading). 
+## One of: Preferred, PrefferedRandom, AllSequential, AllRandom
+#lfc.replicaSelectionMode=PreferredRandom
+## Replica creation mode (writing) 
+## One of:  Preferred, PrefferedRandom, DefaultVO, DefaultVORandom
+#lfc.replicaCreationMode=Preferred
+## replica naming policy. One of: Similar,Random 
+#lfc.replicaNamePolicy=Similar
+
+\end{verbatim} 
+\end{boxedlisting}
+
+\subsection{User configuration files}
+ 
+ All the user configurations are stored in the users home directory
+ under \path{.vletrc}.\\
+ An overview of current used directories and files are (replace HOME with the
+ user's home directory):
+ \\
+ \\
+ \begin{tabular}{ l l }
+   \path{HOME/.vletrc/} & Directory where user configuration files are stored.\\
+   \path{HOME/.vletrc/vletrc.prop} & User property settings.\\
+   \path{HOME/.vletrc/cacerts} & User trusted certificates.\\
+   \path{HOME/.vletrc/certificates/} & Directory for extra user trusted (CA) certificates.\\ 
+   \path{HOME/.vletrc/guisettings.prop} & User GUI (VBrowser) settings.\\
+   \path{HOME/.vletrc/mime.types} & User configured mime types.\\
+   \path{HOME/.vletrc/viewerconf.prop} & User mime type to Viewer mapping.\\
+   \path{HOME/.vletrc/myvle/} & User's 'My Grid' environment.\\
+   \path{HOME/.vletrc/icons/} & User customized icons.\\
+   \path{HOME/.vletrc/icons/mimetypes/} & User mimetype icons.\\
+   \path{HOME/.vletrc/icons/mimetypes/text-plain.png} & Example User
+      customized icon for mime type 'text/plain'.\\
+   \path{HOME/.vletrc/plugins/} & User Installed plugins.\\
+
+ \end{tabular}
+\\
+
+\subsection{Example user customized mime.types file}
+
+The file \path{HOME/.vletrc/mime.types} contains 
+user customized mime types. \\
+See \ref{chap:customization}  how to customize this file.\\ 
+\\
+  \begin{boxedlisting}[170]
+\begin{verbatim}
+###
+# File    : mime.types
+# Location: $HOME/.vletrc/mime.types
+# ---
+# Default mime types:  <MIMETYPE>  <EXTENSION1> <EXTENSION2> ...
+#
+
+# example vle text mime type: 
+application/vle-text          vletxt txt TXT
+
+# example vlemed mime types:  
+application/vlemed-fslview    nii nii.gz NII NII.GZ
+application/jglite-jobids     vljids
+application/taverna-scufl     scufl
+application/feat-fsf          fsf FSF 
+
+#end default mime types file 
+\end{verbatim}
+\end{boxedlisting}
+ 
+\subsection{Example user customized viewerconf.prop file}
+
+The file \path{HOME/.vletrc/viewerconf.prop} contains 
+user customized mime type to (VBrowser) Viewer mappings.\\ 
+See \ref{chap:customization}  how to customize this file. \\
+\\
+\begin{boxedlisting}
+\begin{verbatim}
+##
+# File    : viewerconf.prop 
+# Location: $HOME/.vletrc/viewerconf.prop
+#---
+# Mimetype/viewer class mapping file. NO spaces between '=' !.  
+# <MIMETYPE>=<VIEWERCLASS> 
+
+# Example viewer mapping for the application/vle-text mimetype:
+application/vle-text=nl.uva.vlet.gui.viewers.TextViewer
+
+# Example vlemed mimetype and to viewer mapping: 
+application/vlemed-fslview=nl.amc.vlet.feat.fslview.gui.ViewerFSL
+application/taverna-scufl=nl.uva.vlet.moteur.plugin.gui
+application/jglite-jobids=nl.uva.vlet.monitoring.gui.ViewerGliteJobMonitoring
+application/feat-fsf=nl.amc.vlet.feat.client.main.gui.ViewerFeatParameterSweep
+
+# end viewerconf.prop file 
+\end{verbatim}
+\end{boxedlisting}\\
+\\
+
+ 
+ 

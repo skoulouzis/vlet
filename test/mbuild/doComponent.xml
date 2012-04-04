@@ -1,0 +1,249 @@
+<project name="mbuild-doComponent" default="doComponent" basedir=".">
+	<description>
+	====================================================================
+		File: invoke component targets 
+		
+		This file contains all the component targets to build,checkout, 
+		update the component. 
+		See the configuration.xml for the component sets which can be build. 
+		This file is imported from the master mbuild.xml file. 
+	===================================================================			
+	</description> 
+
+	<import file="build.xml"/>
+	
+	<!-- 
+	 *	Target: check 
+	 *	Sets:
+	 *          cvspath               : path from root to component 
+	 *			component.exists      : whether the component already exists in the local build environment 
+	 *			component.update      : whether the component should be updated (cvs update) 
+	 *			component.checkout    : whether the component should be checked out from the cvs 
+	 *	Info:
+	 *		The 'check' target sets some conditional properties which determine the CVS state of the component
+	 *			
+	 --> 
+    <target name="configure-component">
+        
+		<!-- cvs environment --> 
+		<property name="cvspath" value="${cvs.path}/${name}" /> 
+		<property name="cvsname" value="${name}"/> 
+		<property name="cvsoptions" value="${cvs.version}" />  
+	    
+		
+		<!-- set default version, if not specified as parameter --> 
+		<!-- set cvs.version to ${version} if it is not set already --> 
+	    
+		<condition property="cvs.version" value="${version}" > 
+		    <not>
+		 	    <isset property="cvs.version"/> 
+		    </not> 
+    	</condition> 
+			
+			<!--
+				Following (default) properties can be overriden if set BEFORE calling this target
+	            (=default ant behaviour/feature !)
+	            Also make sure following properties DO NOT COLLIDE WITH GLOBAL SET PROPERTIES,
+	            once the property is set can not be reassigned.
+	         --> 
+		
+		<condition property="component.checkout" value="true"> 
+			<and>
+				<isfalse value="${component.exists}"/> 
+				<istrue value="${cvs.checkout}"/> 
+			</and>
+		</condition> 
+		
+		<condition property="component.update" value="true"> 
+            <and>
+            	<!-- component must exist --> 
+		        <istrue value="${component.exists}"/> 
+				<istrue value="${cvs.update}"/> 
+			</and>
+		</condition> 
+
+	     <!-- 
+	         Check Flattened Project (= Eclipse Environment!) 
+	         A flattened project has all the components in ${project.sourceroot} 
+	      -->
+	    <condition property="sourcepath" value="${project.sourceroot}/${name}">
+	        <istrue value="${project.flatten}"/> 
+	    </condition> 
+	    
+	    <!--
+	       Non flattened project: use project CVS structure 
+	       Source path is <sourceroot>/<cvs.path>/<component name>
+	    --> 
+	    <condition property="sourcepath" value="${project.sourceroot}/${cvs.path}/${name}">
+	        <isfalse value="${project.flatten}"/> 
+		</condition> 
+
+		<available property="component.exists" file="${sourcepath}/build.xml"/> 
+
+	    
+		<!-- explicitly use string 'false' for token <false>
+		     Todo: isn't there some other way to convert token false in string 'false' ?  -->
+				
+		<condition property="component.checkout.string" value="false"> 
+			<isfalse value="${component.checkout}" /> 
+		</condition> 
+		
+		<condition property="component.checkout.string" value="true"> 
+			<istrue value="${component.checkout}" /> 
+		</condition> 
+		
+		<condition property="component.exists.string" value="false"> 
+			<isfalse value="${component.exists}" /> 
+		</condition> 
+			
+		<condition property="component.exists.string" value="true"> 
+			<istrue value="${component.exists}" /> 
+		</condition> 
+		
+		<!-- TODO: Check version if component already exists... --> 
+		
+	</target>
+	
+	<!-- check uptodate-ness of component --> 
+	
+	<target name="isuptodate" depends="configure-component" if="component.exists" > 
+		
+		<!-- not 100%, Files in Attic result in warning => retval=1 
+		<exec executable="cvs" dir="${project.sourcedir}/${name}" resultproperty="component.cvsdiff" >  
+			<arg line ="-Q diff -r HEAD"/> 
+		</exec> 
+		
+		<condition property="component.uptodate.string" value="no changes"> 
+			<equals arg1="${component.cvsdiff}" arg2="0" />
+		</condition> 
+		
+		<condition property="component.uptodate.string" value="*** Warning: Component ${name} differes from repository ***"> 
+			<equals arg1="${component.cvsdiff}" arg2="1" />
+		</condition> 
+		
+		<condition property="component.uptodate.string" value="*** Error: Component ${name} cvs diff return error code ***"> 
+			<equals arg1="${component.cvsdiff}" arg2="2" />
+		</condition> 
+		
+		< ! - -  does cvs diff have more return values ? - - >  
+		
+		<condition property="component.uptodate.string" value="*** CVS UNKNOWN RETURN VALUE ***"> 
+		  <and>
+		   <not>
+			<equals arg1="${component.cvsdiff}" arg2="0" />
+		   </not>
+		   <not>
+			<equals arg1="${component.cvsdiff}" arg2="1" />
+		   </not> 
+		  </and> 
+		</condition> 
+		
+		<echo message="cvs diff returned  = ${component.cvsdiff}" /> 
+		<echo message=" ${name}: uptodate = ${component.uptodate.string}" />
+		<echo message=" ${name}: uptodate = ${component.uptodate.string}${line.separator}" file="${mbuild.log}" append="true" />
+		--> 		
+		
+	</target> 
+	
+    <!-- Target: checkout: currently not used (anymore) --> 
+   <target name="checkout-component" depends="configure-component" if="component.checkout">
+		<!-- info --> 
+		<echo message=" ${name}: cvs checkout ${cvsoptions} ${cvspath} "/>
+		<echo message=" ${name}: cvs root        = ${cvs.user}@${cvs.host}/${cvs.root}"/>
+		<echo message=" ${name}: cvs destination = ${sourcepath}"/>
+			
+		<!-- Todo: find way to copy stdout to logfile --> 
+		<echo file="${mbuild.log}" message=" ${name}: cvs checkout ${cvsoptions} ${cvspath}  =>  ${sourcepath} ${line.separator}" append="true" /> 
+
+	    <echo message="cvs co ${cvsoptions} ${cvspath}"/>
+	     <cvs command="co ${cvsoptions} ${cvspath}"
+	        cvsRoot=":ext:${cvs.user}@${cvs.host}/${cvs.root}"
+		    dest="${sourcepath}"
+	        cvsRsh="ssh"
+	        />
+	    
+		<!-- important: rescan property since checkout results in existing component: --> 
+		<available property="component.exists" file="${sourcepath}/build.xml"/> 
+			
+	</target>	
+	
+	<!-- update already existing component --> 
+	<target name="update-component" depends="configure-component" if="component.update">
+		<echo file="${mbuild.log}" message=" ${name}: cvs update ${sourcepath} in ${line.separator}" append="true" /> 
+		<cvs command="update"	dest="${sourcepath}" />
+	</target>	
+
+	<!--
+	 *	Target: doBuildComponent
+	 *	Params : 
+	 * 		target : target to do on the component
+	 *		name   : component to build 
+	 *
+	 *	Info:
+	 *		Uses the conditional targets: checkoutComponent and updateComponent to 
+	 *    	check wether the compontent needs to be check'd out or updated from the cvs. 
+	 --> 
+	<target name="doBuildComponent" depends="checkout-component,update-component"> 
+
+		<fail unless="component.exists" 
+		 message="*** Component: ${name} at ${sourcepath} is missing or cvs checkout went wrong (missing build.xml file ?)" />
+		
+		<!-- default target: can be overriden by previous target--> 
+		<property name="target" value="dist-install"/> 
+		
+		<ant antfile="build.xml" 
+			dir="${sourcepath}" 
+			target="${target}">
+		 </ant>
+		<mkdir dir="${project.conf}"/>
+		<!-- mbuild log -->
+		<echo file="${mbuild.log}" message="doComponent:${name} target=${target}: OK ${line.separator}" append="true" />
+		
+		<!-- update configuration -->
+		<property name="comp.conf" location="${project.conf}/${name}" /> 
+		<echo file="${comp.conf}" 
+			  message= "#=== Component ${name} ===${line.separator}build=ok${line.separator}" append="true" /> 
+		<echo file="${comp.conf}" 
+			  message= "cvspath=${cvspath}${line.separator}" append="true" /> 
+		<echo file="${comp.conf}" 
+			  message= "target=${target}${line.separator}" append="true" /> 
+			    
+	</target> 
+	
+	<target name="buildComponent" depends="configure-component">
+		<!-- print header --> 
+		<echo message="============================================="/> 
+		<echo message="=== Component: ${name}: ${target}"/> 
+		<echo message="============================================="/> 
+        <echo message=" project root         = ${project.root}"/> 
+        <echo message=" project dist         = ${project.dist}"/> 
+        <echo message=" project sourceroot   = ${project.sourceroot}"/> 
+        <echo message=" project flatten      = ${project.flatten}"/> 
+	    <echo message=" --- cvs --- "/> 
+ 	    <echo message=" component cvspath    = ${cvspath}"/> 	
+   		<echo message=" component sourcepath = ${sourcepath}"/> 
+		<echo message=" component exists     = ${component.exists.string}"/> 
+	
+	    <echo file="${mbuild.log}" message="=== 
+    		${line.separator}Build Component: ${name} 
+	    	${line.separator}===
+	    	${line.separator} Target   = ${target}
+	    	${line.separator} cvspath  = ${cvspath}
+	    	${line.separator} sourcepath = ${sourcepath}
+	    	${line.separator} " append="true" /> 
+		
+		<antcall target="doBuildComponent" /> 
+		
+	</target> 
+	
+	<!--
+	 *  Target: doComponent
+	 *     command line command to manually build single component. 
+	 *
+	 *     for example: 
+	 *         ant doComponent -Dname=auxTools -Dtarget=dist-install 
+	 -->
+	<target name="doComponent" depends="mbuild-init,buildComponent"> 
+    </target> 
+	
+</project>

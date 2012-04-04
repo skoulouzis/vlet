@@ -1,0 +1,98 @@
+%%%
+%% File       : UserGuide.tex  
+%% Maintainer : All 
+%% Info: 
+%%    See also: vlDefs.tex for the used tyles and aliases.  
+%%  
+
+%% TODO: 
+%%
+%% - UserGuide style document 
+%% - Update labels and references
+%%  
+
+%% Start of document
+\documentclass [a4paper,10pt,twoside]{report}
+
+%% packages 
+\usepackage{graphicx}
+\usepackage[english]{babel} 
+%%% Not Used Packages/Missing packages !!!
+\usepackage{fullpage}
+%%\usepackage{fancyhdr}
+%%\usepackage{fancyvrb}
+%%\usepackage{letterspacing}
+%%\usepackage{listings}
+\usepackage{color}
+\usepackage{alltt}
+\usepackage{boxedminipage}
+
+%% usefull for reviewing:
+%\usepackage[pagewise]{lineno}
+
+%% Following line most be specified as LAST package:
+%% enable hyperlinks in PDF file: 
+\usepackage[colorlinks=true, pdfstartview=FitV, linkcolor=blue, 
+            citecolor=blue, urlcolor=blue]{hyperref}
+\include{vldefs} 
+
+%\lstloadlanguages{C++,Java}
+%% 
+%% Begin of document 
+%%
+\begin{document} 
+
+%% Enable linenumbers for reviewing. Also uncomment %\usepackage{lineno}
+%\linenumbers
+
+%% Frontpage
+\input{front} 
+\newpage
+
+%% Colofon  
+\input{colofon} 
+\newpage
+
+%% Table of Contents  
+\tableofcontents
+\newpage
+\newpage 
+
+%% My Style Settings (After Table of Contents!) 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+%%\lstset{language=C}
+\newcommand{\cpp}{\texttt{C++ }}
+
+%% Chapter 1 
+\input{ch1_intro} 
+\newpage
+
+
+%% Chapter 2 
+\input{ch2_installation} 
+\newpage
+
+%% Chapter 3 
+\input{ch3_vbrowser} 
+\newpage
+
+%% Chapter 3 
+\input{ch4_tools} 
+\newpage
+
+
+%% Chapter 5
+\input{ch5_customization} 
+\newpage
+
+%% Chapter 3 
+\input{appendices} 
+\newpage
+
+%% Bibliography
+\bibliography{biblio}
+\bibliographystyle{plain}
+
+\end{document} 
+

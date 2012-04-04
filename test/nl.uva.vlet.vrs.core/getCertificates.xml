@@ -1,0 +1,128 @@
+<project name="GridCertificates" default="dist" basedir=".">
+	<description>
+		Project	  : VLeT
+		Component : Grid Certificates
+        Eclipse target : dist
+            	
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+            	
+    </description>
+
+    <!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set component.root to the location if this component 
+      4) Read local components properties from: build.prop 
+    --> 
+    
+    <property file="${project.root}/project.prop"/> 
+    <property environment="env"/>
+    <property name="component.root" location="." />
+    <property file="build.prop"/> 
+		
+	<!-- Target: init --> 
+	
+	<target name="init" >
+		<mkdir dir="${component.dist}" />
+		<mkdir dir="${certdir}" />
+	</target>
+	
+    <!-- source distribution: just download (get)  --> 
+    <target name="source-dist" depends="dist"/>
+	    
+	<target name="dist" depends="init" >
+		<!-- recursive call to set properties in private property scope -->
+		<!-- <ant antfile="getCertificates.xml" target="doCertificate">
+			<property name="certfile" value="${urldir}/dutchgrid_dutchdemo.prop"/> 
+		</ant> --> 
+		
+		<ant antfile="getCertificates.xml" target="doCertificate">
+			<property name="certfile" value="${urldir}/dutchgrid_medium.prop"/> 
+		</ant> 
+
+		<ant antfile="getCertificates.xml" target="doCertificate">
+			<property name="certfile" value="${urldir}/terena_escience_cert.prop"/> 
+		</ant> 
+
+	</target> 
+	
+	<!--
+	*	Target: dist-install
+	*	Info:
+	*	 install auxiliary (3rd party) libraries into {project.lib}  dir 
+	*		
+    -->
+	
+	<target name="dist-install" depends="dist" description="install libraries">
+		<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+		<mkdir dir="${project.dist}/etc" />
+		<mkdir dir="${project.dist}/etc/certificates" />
+		
+		<copy todir="${project.dist}/etc/certificates" > 
+		  <fileset dir="${certdir}" /> 
+		</copy> 
+		
+	</target>
+		
+	<target name="clean" description="clean">
+		<delete dir="${component.dist}"/>
+		<delete dir="${component.build}"/>
+	</target>
+	
+	<!--
+		 *** Helper Targets ***
+		 
+		 The following targets are called through a recursive call to this file 
+		 to ensure the local scope settings of the imported property files. 
+	 -->
+	
+	<target name="doCertificate" depends="importCertificateProperties,doWget">
+		
+	</target> 
+		
+	<target name="importCertificateProperties" >
+	    
+	   <!-- prepend imported properties in file with "certificate." -->
+       <property prefix="certificate" file="${certfile}"/> 
+	   <property name="certificate.file" value="${certificate.cert_filename}"/>
+	   <property name="certificate.policyfile" value="${certificate.hash}.signing_policy"/>
+			 
+		
+		<!-- check if zipfile is already in local zipcache: -->
+		<available property="certificate.exists" 
+		    file="${certdir}/${certificate.file}"/>
+		
+	   <!-- Use Spaces in following echo part! -->
+	   <echo>
+       === Importing: ${certificate.name} ===
+        properties  file=${certfile}
+        ---
+	   	certificate.hash=${certificate.hash}
+        certificate.base_url=${certificate.base_url}
+        certificate.cert_url=${certificate.cert_url}
+        certificate.cert_filename=${certificate.cert_filename}
+        certificate.policyfile=${certificate.policyfile}
+        certificate.exists=${certificate.exists}
+        project.certificates=${project.certificates}
+       </echo>
+		
+		<!-- copy property file --> 
+		<copy file="${certfile}" todir="${certdir}"/> 
+		
+	</target> 
+	
+	<target name="doWget" unless="certificate.exists">
+		<mkdir dir="${certdir}"/>
+		<get src="${certificate.cert_url}"
+		     dest="${certdir}/${certificate.cert_filename}" />
+		<!-- <get src="${certificate.base_url}/${certificate.policyfile}"
+		     dest="${certdir}/${certificate.policyfile}" />  -->
+
+	</target> 
+	
+</project>
+	
+

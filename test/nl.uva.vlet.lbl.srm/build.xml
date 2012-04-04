@@ -1,0 +1,334 @@
+<project name="nl.uva.vlet.lbl.srm" default="dist" basedir=".">
+    <description>
+        Project   : VLET/srm
+        Component : Pure SRM Java package 
+                
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+                
+    </description>
+
+    <!-- Project Settings -->
+	<property name="project.root" location="../mbuild" />
+    <property file="${project.root}/project.prop"/> 
+	<!-- environment -->
+    <property environment="env"/>
+	
+	<!-- local build properties --> 
+    <property file="build.prop"/> 
+    
+	    <property file="${project.root}/project.prop"/> 
+	    <property environment="env"/>
+	    <property name="component.root" location="." />
+	    <property file="build.prop"/> 
+	
+    <property name="dist"  value="dist"/> 
+    <property name="build" value="build"/> 
+    <property name="src"   value="src"/>
+	<property name="root"   location="." /> <!-- resolve ./ -->
+    
+    <!-- derived properties --> 
+    <property name="dist.package.dir" location="${dist}/${srm.name}"/> 
+    <property name="dist.package.doc" location="${dist}/${srm.name}/doc"/> 
+    <property name="dist.package.lib" location="${dist}/${srm.name}/lib"/> 
+	<property name="dist.package.jar" location="${dist}/${srm.name}/lib/${srm.package}-${srm.version}.jar"/> 
+
+    <!-- Target: init --> 
+    
+    <target name="init.old" >
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+        <mkdir dir="${dist.package.dir}" /> 
+        <mkdir dir="${dist.package.lib}" />
+        <mkdir dir="${dist.package.doc}" />
+           
+        <echo message=" srm.package     =${srm.package} ${line.separator}"/> 
+        <echo message=" srm.version     =${srm.version} ${line.separator}"/>
+        <echo message=" dist.package.dir =${dist.package.dir} ${line.separator}"/> 
+        <echo message=" dist.package.jar =${dist.package.jar} ${line.separator}"/> 
+        
+    </target>
+	
+	<target name="init" description="Create the build directory structure used by compile">		        	
+		<ant antfile="build_srm_stubs.xml" target="init-stubs">
+			<property name="build.prop.file" value="build.prop" />
+		</ant>
+		
+		<mkdir dir="${build}" />
+		<mkdir dir="${stubsrc}" />
+		<mkdir dir="${dist}" />
+		
+		<mkdir dir="${dist.package.dir}" />
+	    <mkdir dir="${dist.package.dir}/lib" /> 
+	    <mkdir dir="${dist.package.doc}" />
+	   		
+	</target>
+	
+        
+    <!-- Target: Config (configure this component) -->
+    <target name="config" >
+    </target> 
+
+    <!--
+         Target: source-dist (Only needed when creating source distributions) 
+      -->
+    <target name="source-dist" >
+        <!-- this is already a source distribution ... --> 
+    </target> 
+       
+    
+    <path id="classpath">
+    	
+    	<!-- local libs --> 
+  		<fileset dir="lib">
+    	    <include name="**/*.jar" />
+    	</fileset>
+    	
+    	<!-- include project libraries-->
+    	
+    	<fileset dir="${project.lib}">
+    	    <include name="**/*.jar" />
+    	</fileset> 
+    	            
+        <!-- add local paths settings --> 
+    </path>
+                
+            
+    <!--
+        Target = Compilation 
+    -->
+               
+    <target name="build-client" depends="init" description="Compile the SRM client source ">
+         <javac srcdir="src" destdir="${build}/classes"
+               compiler="${javac.compiler}"
+               debug="${javac.debug}"
+               target="${javac.target}">
+               <classpath refid="classpath" />
+        </javac>
+    </target>
+
+	<target name="check-stubs"  description="check existance of stubs">
+		
+		<available property="stubs.srm1.1.exists" file="${stubsrc}/gov/lbl/srm/v22/stubs/ISRM.java"/>
+		<available property="stubs.srm2.2.exists" file="${stubsrc}/srm/dcachev1/stubs/ISRM.java"/>
+		
+		<echo message=" - stubs.srm1.1.exists=${stubs.srm1.1.exists} " />
+		<echo message=" - stubs.srm2.2.exists=${stubs.srm2.2.exists} " />
+				
+	</target>
+
+	<target name="do-stubs" depends="check-stubs,compile-stubs-srm1.1,compile-stubs-srm2.2" description="Build stubs for V1 and V2">
+		
+	</target>
+	
+	<target name="generate-stubs-srm1.1" description="Generate v1.1 stubs" unless="stubs.srm1.1.exists">
+		
+		<echo>Generating SRM stubs for V 1.1. WSDL file is ${wsdl1.1}</echo>
+		<ant antfile="build_srm_stubs.xml" target="generate-stubs">
+			<property name="stubs.exists" value="${stubs.srm1.1.exists}"/> 
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl1.1}" />
+			<property name="nsmapfile" value="schema/nsmappings.prop" />
+		</ant>
+	</target>
+	
+	<target name="compile-stubs-srm1.1" depends="generate-stubs-srm1.1" description="Compile v1.1 stubs">
+		
+		<echo>Compiling SRM stubs for V 1.1. WSDL file is ${wsdl1.1}</echo>
+		<ant antfile="build_srm_stubs.xml" target="compile-stubs">
+			<property name="stubs.exists" value="${stubs.srm1.1.exists}"/> 
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl1.1}" />
+			<property name="nsmapfile" value="schema/nsmappings.prop" />
+		</ant>
+	</target>
+	
+	
+
+	<target name="generate-stubs-srm2.2" description="Generate v2.2 stubs"  unless="stubs.srm2.2.exists" >	
+		
+		<echo>Compiling srm stubs for V 2.2. WSDL file is ${wsdl2.2}</echo>
+		<ant antfile="build_srm_stubs.xml" target="generate-stubs">
+			<property name="stubs.exists" value="${stubs.srm2.2.exists}"/> 
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl2.2}" />
+			<property name="nsmapfile" value="schema/nsmappings.prop" />
+		</ant>
+	</target>
+
+	<target name="compile-stubs-srm2.2" depends="generate-stubs-srm2.2" description="Compile v2.2 stubs" >	
+		
+		<echo>Compiling srm stubs for V 2.2. WSDL file is ${wsdl2.2}</echo>
+		<ant antfile="build_srm_stubs.xml" target="compile-stubs">
+			<property name="stubs.exists" value="${stubs.srm2.2.exists}"/> 
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl2.2}" />
+			<property name="nsmapfile" value="schema/nsmappings.prop" />
+		</ant>
+	</target>
+	
+	<target name="build" depends="do-stubs,build-client">
+		
+	</target>
+
+		
+	<target name="jar" depends="build">
+		<jar jarfile="${dist.package.jar}" basedir="${build}/classes">
+		    <!-- Add Source -->
+			<fileset dir="src"/>
+            <manifest>
+            <attribute name="Built-By" value="UvA" />
+                   <attribute name="Main-Class" value="nl.uva.vlet.lbl.srm.SRMMain" />
+                   <section name="common">
+                    <attribute name="Specification-Title" value="VLET SRM implementation" />
+                         <attribute name="Specification-Version" value="${srm.version}" />
+                         <attribute name="Specification-Vendor" value="www.vl-e.nl/" />
+                         <attribute name="Implementation-Title" value="srm for java" />
+                     <attribute name="Implementation-Version" value="${srm.version}" />
+                     <attribute name="Implementation-Vendor" value="www.vl-e.nl/" />
+                   </section>
+            </manifest>
+		</jar>
+	</target>
+	
+	<target name="jar-all" depends="jar-1.1,jar-2.2">	
+	</target>
+	
+	<target name="jar-1.1" description="Generate V1 jars">	
+		<echo>Compiling srm stubs for V 2.2. WSDL file is ${wsdl2.2}</echo>
+		<ant antfile="build_srm_stubs.xml" target="jar">
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl1.1}" />
+			<property name="jar.name" value="${jar2.2.name}" />
+		</ant>
+	</target>
+	
+	
+	
+	<target name="jar-2.2" description="Generate V2.2 jars">	
+		<echo>Compiling srm stubs for V 2.2. WSDL file is ${wsdl2.2}</echo>
+		<ant antfile="build_srm_stubs.xml" target="jar">
+			<property name="build.prop.file" value="build.prop" />
+			<property name="wsdl" value="${wsdl2.2}" />
+			<property name="jar.name" value="${jar2.2.name}" />
+		</ant>
+	</target>
+
+	<target name="javadoc" depends="init" description="documentation">
+			<mkdir dir="${dist.package.doc}/api" />
+			<javadoc  use="true"
+	             private="false"
+	            destdir="${dist.package.doc}/api"
+	            author="false"
+	            version="false"
+	            windowtitle="VL-e Toolkit"
+	            packagenames="vlet.*">
+				<!-- include all java source found in the 'src' directory of this component -->
+				<fileset dir="${src}" defaultexcludes="yes">
+					<include name="**/*.java" />
+				</fileset>
+				<fileset dir="${stubsrc}" defaultexcludes="yes">
+			        <include name="**/*.java" />
+			    </fileset>
+			</javadoc>
+		</target>
+	
+    <target name="dist" depends="build,javadoc,jar" >
+    	 	
+       <!-- copy extra libs --> 
+       <copy todir="${dist.package.dir}/lib">
+            <fileset dir="lib/" />
+       </copy>
+
+       <!-- copy extra files to the root distribution directory --> 
+       <copy todir="${dist.package.dir}" file="ReleaseNotes.txt"/>
+                
+       <!-- extra run script --> 
+    	<!--
+       <copy todir="${dist.package.dir}">
+           <fileset dir="bin/" />
+       </copy>
+        --> 
+    	
+       <!-- update permission of lfc* scrips --> 
+    	<!--
+       <chmod perm="ugo+rx" >
+           <fileset dir="${dist.package.dir}">
+               <filename name="lfc*"/> 
+           </fileset>
+       </chmod>
+       --> 
+    </target> 
+    
+    <!--
+    *    Target: dist-install
+    *    Info:
+    *          Only used when component is part of the main project. 
+    *        
+    -->
+    
+    <target name="dist-install" depends="dist" description="install srm into VLET distribution">
+        <fail message="*** Error: property VLET 'project.root' not defined or could not find project environment.${line.separator}. Please start with '-Dproject.root=&lt;path&gt;' argument. " 
+              unless="project.env.ok"/>         
+		
+        <!-- install srm distribution into project -->
+        <mkdir dir="${project.lib}/vdrivers" />
+    	<echo message="Installing SRM jar only:${dist.package.jar}"/>
+    	
+        <copy todir="${project.lib}/vdrivers"
+               file="${dist.package.jar}"  />
+        
+    </target>
+        
+    <target name="clean" description="clean">
+        <delete dir="${dist}"/>
+        <delete dir="${build}"/>
+    </target>
+	
+    <target name="clean-stubs" description="clean including generated stubs">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+        <delete dir="${stubsrc}"/>
+    </target>
+	
+	<!--
+	    *   Standalone Targets: 
+	    *         Build source zip or distribution zip for release. 
+	    -->
+	
+	<target name="source-zip" depends="source-dist" description="Create source zipfile">
+	        <mkdir dir="${dist}" />
+	        <!-- create zip file from dist/* to vlet-<Version>  -->
+			<zip destfile="${dist}/${srm.name}-src-${srm.version}.zip">
+	            <!-- create zipfile with some standard exlcludes --> 
+			    <zipfileset dir="${root}" 
+			        filemode="644" prefix="${srm.name}-${srm.version}" 
+					excludes="dist/**,build/**,**/*.class,testsrc/**" />
+				
+			    	<!-- excludes="configure,*.ac,*.m4,**/dist,**/build,**/*.class"  -->
+	                <!-- add shell scrips with x permissions ! -->
+			        <!-- <zipfileset dir="${project.topleveldir}/bin" filemode="755" prefix="${vlet.source.prefix}/bin" />
+			          -->
+			 </zip>
+	</target>
+	
+	<target name="dist-zip" depends="dist" description="Create distribution zipfile">
+      	   <!-- create zip file from dist/* to vlet-<Version>  -->
+			<zip destfile="${dist}/${srm.name}-${srm.version}.zip">
+		        <!-- create zipfile with some standard exlcludes --> 
+			    <zipfileset dir="${dist}/${srm.package}" 
+			        filemode="644" prefix="${srm.name}-${srm.version}" 
+					excludes="dist/**,build/**,**/*.class,testsrc/**" />
+				
+			    	<!-- excludes="configure,*.ac,*.m4,**/dist,**/build,**/*.class"  -->
+	                <!-- add shell scrips with x permissions ! -->
+			        <!-- <zipfileset dir="${project.topleveldir}/bin" filemode="755" prefix="${vlet.source.prefix}/bin" />
+			          -->
+			 </zip>
+	</target>
+
+</project>
+    
+

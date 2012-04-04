@@ -1,0 +1,36 @@
+###
+# File      : build.prop
+# Component : VRS Main 
+# 
+# Info: 
+#
+#   build properties. Holds customizable properties for the build
+#   
+
+###
+# Do not add spaces to the end of the values ! 
+# Component defaults (not that component.root is set in the main build file)
+component.name=vlet-vrs-core
+component.dist=${component.root}/dist
+component.build=${component.root}/build
+component.src=${component.root}/source
+# build location for bootstrapper code which is standalone jar!
+build.bootstrap=${component.root}/build.bootstrap
+
+#certificates
+project.certificates=${component.dist}/etc/certificates
+certdir=${project.certificates}
+urldir=${component.root}/cert_urls
+
+###
+# Local Project Settings: 
+#
+# Note: for the env.<ENVIRONMENT VARIABLE> construct to work 
+# the property 'environment' needs to be set (in the main build file) to 'env'
+# as follows:  <property environment="env"/>
+
+# To use VLAM_INSTALL as project.root uncomment the following: 
+#project.root=${env.VLAM_INSTALL} 
+#Installed project libraries: 
+#project.lib=${project.root}/lib
+

@@ -1,0 +1,381 @@
+<project name="vlet" default="dist" basedir=".">
+	<description>
+        Project        : VL-e Toolkit
+        Component      : VRS/Vlet Main
+        Eclipse target : dist
+            	
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+            	
+    </description>
+
+	<!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set component.root to the location if this component 
+      4) Read local components properties from: build.prop 
+    -->
+	<property name="project.root" value="../mbuild"/>
+	<property file="${project.root}/project.prop"/>
+	<property environment="env"/>
+	<property name="component.root" location="." />
+	<property file="build.prop"/>
+
+    <property name="package.prefix" value="nl.uva.vlet"/> 
+    <property name="package.dir" value="nl/uva/vlet"/> 
+	    
+	<!-- Target: init -->
+
+	<target name="bump-buildnr" if="vlet.increasebuildnr">
+		<propertyfile  file="${component.root}/etc/vlet_version.prop"  comment="The versioning property file" >
+			<entry  key="vlet.buildnr" type="int" operation="+" default="1"/>
+		</propertyfile>
+
+		<!-- read version information -->
+		<property file="etc/vlet_version.prop" />
+
+		<cvs command="commit -m  new-build-number-${vlet.version} etc/vlet_version.prop"
+            cvsRsh="ssh"   
+        />
+
+
+	</target>
+
+	<target name="init" depends="bump-buildnr">
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${component.build}"/>
+		<mkdir dir="${build.bootstrap}"/>
+		<mkdir dir="${component.dist}"/>
+		<mkdir dir="${component.dist}/lib"/>
+		<mkdir dir="${component.dist}/bin"/>
+		<mkdir dir="${component.dist}/doc"/>
+
+		<!-- read version information -->
+		<property file="etc/vlet_version.prop" />
+
+
+		<tstamp>
+			<format property="vlet.tstamp" pattern="yyyy-MM-d HH:mm:ss" locale="en"/>
+		</tstamp>
+
+	</target>
+
+
+	<target name="config" >
+	</target>
+
+	<target name="generate" >
+	</target>
+
+	<path id="component.classpath">
+		<!-- include project libraries-->
+		<fileset dir="${project.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+
+		<!-- add local paths settings -->
+
+		<pathelement location="${component.build}" />
+		<pathelement location="${component.src}" />
+
+	</path>
+
+	<!--
+        Target = Compilation 
+    -->
+
+	<target name="build" depends="init" description="compile the source ">
+		<!-- Compile the java code from into ${build} -->
+		<!--
+	    <javac srcdir="${component.src}/bootstrap" destdir="${component.build}" 
+	                compiler="javac1.5">
+	    			<classpath refid="component.classpath" />
+	    		</javac>
+	    		-->
+	        
+	    <javac srcdir="${component.src}/main" destdir="${component.build}"
+	       	   compiler="${javac.compiler}"
+               debug="${javac.debug}"
+	    	   target="${javac.target}">
+	           <classpath refid="component.classpath" />
+	    </javac>
+	    <!--	    
+	    <javac srcdir="${component.src}/vdriver" destdir="${component.build}" 
+	           compiler="${javac.compiler}"
+	    	   debug="${javac.debug}"
+               target="${javac.target}">
+	           <classpath refid="component.classpath" />
+	    </javac>
+	     -->
+	    		
+		<!-- Compile jdk1.4 compatible bootstrapper -->
+		
+		<javac srcdir="${component.src}/main/${package.dir}/bootstrap" destdir="${build.bootstrap}" 
+	           source="1.4" 
+	           debug="${javac.debug}"
+		       target="1.4" />
+	</target>
+
+	<target name="javadoc" depends="init" description="documentation">
+		<mkdir dir="${component.dist}/doc/api" />
+		<javadoc  use="true"
+             private="false"
+            destdir="${component.dist}/doc/api"
+            author="false"
+            version="false"
+            windowtitle="VL-e Toolkit"
+            packagenames="vlet.*">
+			<!-- include all java source found in the 'src' directory of this component -->
+			<fileset dir="${component.src}" defaultexcludes="yes">
+				<include name="**/*.java" />
+				<exclude name="vdriver/**/*" /> 
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="jar" depends="build" unless="project.includesource">
+		<!-- Create application JAR file -->
+		<jar jarfile="${component.dist}/lib/${component.name}.jar"
+            basedir="${component.build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+		    	<attribute name="Main-Class" value="${mainclass}" />
+		    	<section name="common">
+		    		<attribute name="Specification-Title" value="${component.name}" />
+		    		<attribute name="Specification-Version" value="${vlet.version}" />
+		    		<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Implementation-Title" value="${component.name}" />
+		    		<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
+		    		<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+		    	</section>
+   				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
+  			</manifest>
+		</jar>
+	</target>
+	
+	<target name="jar-sdk" depends="build"  if="project.includesource">
+		<!-- Create application JAR file -->
+		<jar jarfile="${component.dist}/lib/${component.name}.jar"
+            basedir="${component.build}">
+			 <fileset dir="source/main"/>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${mainclass}" />
+		    	<section name="common">
+		    		<attribute name="Specification-Title" value="${component.name}" />
+		    		<attribute name="Specification-Version" value="${vlet.version}" />
+		    		<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Implementation-Title" value="${component.name}" />
+		    		<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
+		    		<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+	    		</section>
+				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
+			</manifest>
+		</jar>
+	</target>
+	
+		<!--
+			Bootstrap Jars. 
+			Each bootstrap jar contains the bootstrap.* package
+			but each has a different startup class 
+		-->
+    <target name="jarjar">
+        
+    <jar jarfile="${component.dist}/bin/${jarname}"
+                  basedir="${build.bootstrap}"
+                  includes="${package.dir}/bootstrap/*.class">
+
+    			<!-- define MANIFEST.MF -->
+    			<manifest>
+    				<attribute name="Built-By" value="${user.name}" />
+    				<attribute name="Main-Class" value="${mainclass}" />
+    				<section name="common">
+    					<attribute name="Specification-Title" value="${name}" />
+    					<attribute name="Specification-Version" value="${vlet.version}" />
+    					<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+    					<attribute name="Implementation-Title" value="${component.name}" />
+    					<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
+    					<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+    				</section>
+
+    				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
+    			</manifest>
+    		</jar>
+    </target>
+        
+    <!-- 
+       build bootstrap jar which are autoexecutable and start a functional application 
+    	-->
+	<target name="bootstrap" depends="build" >
+	    
+		<antcall target="jarjar">
+		    <param name="jarname" value="vbrowser.jar"/>
+		    <param name="mainclass" value="${package.prefix}.bootstrap.startVBrowser"/>
+		    <param name="name" value="Vl-e Toolkit VBrowser"/>
+		</antcall>
+	    
+		<antcall target="jarjar">
+		    <param name="jarname" value="GridProxyDialog.jar"/>
+		    <param name="mainclass" value="${package.prefix}.bootstrap.GridProxyDialog"/>
+		    <param name="name" value="Vl-e Toolkit GridProxyDialog"/>
+		</antcall>
+	    
+		<antcall target="jarjar">
+		    <param name="jarname" value="vlterm.jar"/>
+		    <param name="mainclass" value="${package.prefix}.bootstrap.startVLTerm"/>
+		    <param name="name" value="Vl-e Toolkit VLTerm"/>
+		</antcall>
+	    
+		<antcall target="jarjar">
+ 		    <param name="jarname" value="bootstrapper.jar"/>
+ 		    <param name="mainclass" value="${package.prefix}.bootstrap.Bootstrapper"/>
+ 		    <param name="name" value="Vl-e Toolkit Bootstrapper"/>
+ 		</antcall>
+	</target>
+    
+    <!-- source distribution: nothing to do --> 
+    <target name="source-dist"/>
+   	  
+    
+	<target name="dist" depends="build,jar,jar-sdk,bootstrap,javadoc" >
+		<filterset id="vletfilters">
+			<!-- nifty:  ant filterset (keyword subtitution) while copying files ! -->
+			<filter token="VLET_VERSION" value="${vlet.version}"/>
+			<filter token="DATE" value="${vlet.tstamp}"/>
+		</filterset>
+
+		<copy todir="${component.dist}/etc" verbose="true" >
+			
+			<fileset dir="etc/">
+				<!-- include name="README"/ -->
+				<exclude name="cacerts"/> 
+			</fileset>
+	
+			<filterset refid="vletfilters"/>
+
+		</copy>
+		<copy todir="${component.dist}/lib/icons" verbose="true" >
+              <fileset dir="icons/">
+			  </fileset>
+		</copy>
+
+		<mkdir dir="${component.dist}/root"/>
+
+		<!-- Copy TEXT files --> 
+		<copy todir="${component.dist}/root" verbose="true" >
+			<fileset dir="root/">
+				<exclude name="cacerts"/>
+				<!-- include name="README"/ -->
+			</fileset>
+
+			<filterset refid="vletfilters"/>
+		</copy>
+		
+		<!-- Copy BINARY Files --> 
+		<copy todir="${component.dist}/etc" verbose="true" >
+			<fileset file="etc/cacerts">
+				<!-- include name="README"/ -->
+			</fileset>
+
+		</copy>
+		
+		<copy todir="${component.dist}/doc" verbose="true" >
+			<fileset dir="doc/">
+				<!-- include name="README"/ -->
+			</fileset>
+
+			<filterset refid="vletfilters"/>
+		</copy>
+		
+		<copy todir="${component.dist}/bin" verbose="true" >
+			<fileset dir="bin/"/>
+		</copy>
+	
+	</target>
+    
+    <target name="certificates" depends="init" description="Fetch certificats">
+    	<!-- disabled --> 
+    	<!--
+    	<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+    	<mkdir dir="${project.doc}" />
+          	
+    	<ant antfile="getCertificates.xml" target="dist-install" /> 
+         --> 
+    </target>
+        
+ 	<!--
+    *    Target: dist-install
+    *    Info:
+    *     install auxiliary (3rd party) libraries into {project.lib}  dir 
+    *        
+    -->
+
+	<target name="dist-install" depends="dist,certificates" description="install libraries">
+		<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " 
+              unless="project.env.ok"/>
+		<mkdir dir="${project.doc}" />
+
+		<!-- toplevel directory structure -->
+		<mkdir dir="${project.lib}" />
+		<mkdir dir="${project.lib}/linux" />
+		<mkdir dir="${project.lib}/win32" />
+
+		<mkdir dir="${project.bin}" />
+		<mkdir dir="${project.bin}/linux" />
+		<mkdir dir="${project.bin}/win32" />
+
+		<mkdir dir="${project.lib}" />
+		<copy todir="${project.lib}">
+			<fileset dir="${component.dist}/lib" />
+		</copy>
+		<!--
+	    <copy file="${component.dist}/lib/vbrowser.jar" todir="${project.dist}/bin" />
+	    <!- - executable jar file, both in lib and bin ? - -> 
+	    <copy file="${component.dist}/lib/vbrowser.jar" todir="${project.dist}/bin" />
+	    <copy file="${component.dist}/lib/bootstrapper.jar" todir="${project.dist}/bin" />
+	    <copy file="${component.dist}/lib/vlterm.jar" todir="${project.dist}/bin" />
+	   	-->		
+		<!-- etc -->
+
+		<copy todir="${project.dist}/">
+			<fileset dir="${component.dist}/root" />
+		</copy>
+		<mkdir dir="${project.dist}/etc" />
+		<copy todir="${project.dist}/etc">
+			<fileset dir="${component.dist}/etc">
+			</fileset>
+		</copy>
+
+		<!--bin-->
+		<mkdir dir="${project.dist}/bin" />
+		<copy todir="${project.dist}/bin">
+			 <fileset dir="${component.dist}/bin">
+	             <patternset id="binaries.fileset.id"/>
+             </fileset>
+		</copy>
+		
+		<!--doc-->
+		<mkdir dir="${project.dist}/doc" />
+		<copy todir="${project.dist}/doc">
+				<fileset dir="${component.dist}/doc" />
+		</copy>
+					
+        <!-- update permissions on previous file set  -->
+        <chmod perm="ugo+x" >
+           <fileset dir="${project.bin}">
+               <patternset refid="binaries.fileset.id"/>
+           </fileset>
+        </chmod>
+
+	</target>
+
+	<target name="clean" description="clean">
+		<delete dir="${component.dist}"/>
+		<delete dir="${component.build}"/>
+	</target>
+
+</project>
+
+

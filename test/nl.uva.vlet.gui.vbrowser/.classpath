@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="icons"/>
+	<classpathentry kind="src" path="testsrc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.utils"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.gftp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.lfc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.srm"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

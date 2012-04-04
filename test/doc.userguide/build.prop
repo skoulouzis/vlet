@@ -1,0 +1,24 @@
+###
+# File      : build.prop
+# Component : userguide 
+# 
+# Info: 
+#
+#   build properties. 
+
+###
+# Component defaults (property component.root is set in the main build file)
+
+component.name=doc.userguide
+component.dist=${component.root}/dist
+component.build=${component.root}/build
+component.tex=${component.root}/tex
+component.dist.lib=${component.root}/dist/lib
+
+
+# To use VLET_INSTALL as project.root uncomment the following: 
+# (This does not overide an already set project.root!) 
+#project.root=${env.VLET_INSTALL} 
+
+#Installed project libraries: 
+#project.lib=${project.root}/lib

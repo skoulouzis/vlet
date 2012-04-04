@@ -1,0 +1,15 @@
+ICONS directory README 
+===
+
+
+Icons toplevel directory. 
+Classpath must point to this location. 
+CLASSPATH=$CLASSPATH:$PROJECT/icons 
+
+
+Icon source:
+===
+menu icons: Eclipse and some howebrew icons
+filesystem and mimetype icons: KDE and GNOME 
+
+

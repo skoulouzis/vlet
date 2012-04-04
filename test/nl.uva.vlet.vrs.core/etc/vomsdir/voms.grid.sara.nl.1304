@@ -1,0 +1,95 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1304 (0x518)
+        Signature Algorithm: sha1WithRSAEncryption
+        Issuer: C=NL, O=NIKHEF, CN=NIKHEF medium-security certification auth
+        Validity
+            Not Before: Mar  9 00:00:00 2007 GMT
+            Not After : Mar  8 14:46:21 2008 GMT
+        Subject: O=dutchgrid, O=hosts, OU=sara.nl, CN=voms.grid.sara.nl
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+            RSA Public Key: (1024 bit)
+                Modulus (1024 bit):
+                    00:c9:13:79:a5:16:62:47:e1:3c:30:8e:e4:7b:a4:
+                    05:80:6b:d0:8a:c2:01:9a:24:a1:81:8d:1a:a9:d9:
+                    ba:df:a5:43:1e:64:53:8e:04:18:ea:e6:7c:79:9a:
+                    0f:3c:7c:1b:3c:93:1a:21:4c:e6:f1:26:31:fb:36:
+                    72:5a:7c:2c:67:fc:c8:b3:fe:ed:bb:5f:06:27:55:
+                    a5:10:48:b6:c1:d8:e8:22:c9:d8:56:4d:6d:37:45:
+                    c2:b0:0c:b0:50:0f:12:4d:a2:51:88:37:66:b1:68:
+                    50:c8:08:2c:33:0a:c4:b7:dd:79:e8:8c:03:c1:e7:
+                    d7:4e:69:9c:96:6e:88:9d:73
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Key Usage: critical
+                Digital Signature, Non Repudiation, Key Encipherment, Data Encipherment
+            X509v3 CRL Distribution Points: 
+                URI:http://ca.dutchgrid.nl/medium/cacrl.pem
+
+            X509v3 Certificate Policies: 
+                Policy: 1.3.6.1.4.1.10434.4.2.2.1.2.2
+
+            X509v3 Authority Key Identifier: 
+                keyid:5B:05:3A:99:C6:D5:22:BD:FD:94:80:FC:11:A8:D0:F1:71:D6:4B:A4
+                DirName:/C=NL/O=NIKHEF/CN=NIKHEF medium-security certification auth
+                serial:00
+
+            X509v3 Subject Key Identifier: 
+                14:A6:E2:50:1B:AD:38:32:5E:3D:FF:96:8F:86:8E:DF:3D:A8:92:1C
+            Netscape Cert Type: 
+                SSL Client, SSL Server, S/MIME
+            Netscape CA Policy Url: 
+                http://ca.dutchgrid.nl/medium/policy/
+            Netscape Comment: 
+                Certificate issued under DutchGrid medium-security policy version 2.2;limited liabilities apply, see http://ca.dutchgrid.nl/medium/policy/ for details;Certificate Tag: f7b4c6ef-c91379
+            X509v3 Subject Alternative Name: 
+                DNS:voms.grid.sara.nl
+    Signature Algorithm: sha1WithRSAEncryption
+        6a:7c:4a:29:47:a5:3a:84:3f:29:ec:c4:c3:40:20:8b:b3:6d:
+        54:29:6f:dd:d2:67:b1:a9:da:b6:29:cf:c6:9c:a8:91:8a:d6:
+        75:6f:92:68:47:6e:9c:cd:83:1c:93:74:43:0f:ae:2c:80:04:
+        2f:dd:02:6c:02:30:d0:dd:9c:2c:a9:a2:53:ba:02:a8:9f:6b:
+        0f:ee:7d:2f:9a:28:b7:ac:9d:f3:4f:96:d8:1e:81:fd:00:3c:
+        78:1f:51:0e:47:87:51:c5:19:15:15:d5:a5:98:98:1a:6b:c9:
+        5a:cf:69:14:b3:75:af:e3:8d:67:30:a9:f1:58:cf:25:af:fb:
+        0b:23:b2:fd:72:73:2c:29:41:af:d6:04:ac:38:62:2a:41:01:
+        42:53:24:4e:56:aa:a3:01:df:1f:f3:3e:4b:28:74:e9:a1:9a:
+        93:a1:19:61:21:2b:4a:48:32:9c:b7:a3:92:57:e1:d9:52:57:
+        be:35:28:68:8f:9b:f0:9e:e6:2c:7a:c4:74:fe:89:3e:76:94:
+        6a:45:da:76:70:65:75:22:36:d2:c7:9e:56:22:34:44:00:d0:
+        ad:59:d5:2b:5f:27:45:e2:4d:57:30:3c:ba:85:81:18:b0:10:
+        c8:de:19:c5:61:16:0d:6a:e7:2b:52:51:d3:27:30:8a:bc:b2:
+        d6:da:8d:4b
+-----BEGIN CERTIFICATE-----
+MIIE4zCCA8ugAwIBAgICBRgwDQYJKoZIhvcNAQEFBQAwUjELMAkGA1UEBhMCTkwx
+DzANBgNVBAoTBk5JS0hFRjEyMDAGA1UEAxMpTklLSEVGIG1lZGl1bS1zZWN1cml0
+eSBjZXJ0aWZpY2F0aW9uIGF1dGgwHhcNMDcwMzA5MDAwMDAwWhcNMDgwMzA4MTQ0
+NjIxWjBSMRIwEAYDVQQKEwlkdXRjaGdyaWQxDjAMBgNVBAoTBWhvc3RzMRAwDgYD
+VQQLEwdzYXJhLm5sMRowGAYDVQQDExF2b21zLmdyaWQuc2FyYS5ubDCBnzANBgkq
+hkiG9w0BAQEFAAOBjQAwgYkCgYEAyRN5pRZiR+E8MI7ke6QFgGvQisIBmiShgY0a
+qdm636VDHmRTjgQY6uZ8eZoPPHwbPJMaIUzm8SYx+zZyWnwsZ/zIs/7tu18GJ1Wl
+EEi2wdjoIsnYVk1tN0XCsAywUA8STaJRiDdmsWhQyAgsMwrEt9156IwDwefXTmmc
+lm6InXMCAwEAAaOCAkUwggJBMAwGA1UdEwEB/wQCMAAwDgYDVR0PAQH/BAQDAgTw
+MDgGA1UdHwQxMC8wLaAroCmGJ2h0dHA6Ly9jYS5kdXRjaGdyaWQubmwvbWVkaXVt
+L2NhY3JsLnBlbTAaBgNVHSAEEzARMA8GDSsGAQQB0UIEAgIBAgIwegYDVR0jBHMw
+cYAUWwU6mcbVIr39lID8EajQ8XHWS6ShVqRUMFIxCzAJBgNVBAYTAk5MMQ8wDQYD
+VQQKEwZOSUtIRUYxMjAwBgNVBAMTKU5JS0hFRiBtZWRpdW0tc2VjdXJpdHkgY2Vy
+dGlmaWNhdGlvbiBhdXRoggEAMB0GA1UdDgQWBBQUpuJQG604Ml49/5aPho7fPaiS
+HDARBglghkgBhvhCAQEEBAMCBeAwNAYJYIZIAYb4QgEIBCcWJWh0dHA6Ly9jYS5k
+dXRjaGdyaWQubmwvbWVkaXVtL3BvbGljeS8wgcgGCWCGSAGG+EIBDQSBuhaBt0Nl
+cnRpZmljYXRlIGlzc3VlZCB1bmRlciBEdXRjaEdyaWQgbWVkaXVtLXNlY3VyaXR5
+IHBvbGljeSB2ZXJzaW9uIDIuMjtsaW1pdGVkIGxpYWJpbGl0aWVzIGFwcGx5LCBz
+ZWUgaHR0cDovL2NhLmR1dGNoZ3JpZC5ubC9tZWRpdW0vcG9saWN5LyBmb3IgZGV0
+YWlscztDZXJ0aWZpY2F0ZSBUYWc6IGY3YjRjNmVmLWM5MTM3OTAcBgNVHREEFTAT
+ghF2b21zLmdyaWQuc2FyYS5ubDANBgkqhkiG9w0BAQUFAAOCAQEAanxKKUelOoQ/
+KezEw0Agi7NtVClv3dJnsanatinPxpyokYrWdW+SaEdunM2DHJN0Qw+uLIAEL90C
+bAIw0N2cLKmiU7oCqJ9rD+59L5oot6yd80+W2B6B/QA8eB9RDkeHUcUZFRXVpZiY
+GmvJWs9pFLN1r+ONZzCp8VjPJa/7CyOy/XJzLClBr9YErDhiKkEBQlMkTlaqowHf
+H/M+Syh06aGak6EZYSErSkgynLejklfh2VJXvjUoaI+b8J7mLHrEdP6JPnaUakXa
+dnBldSI20seeViI0RADQrVnVK18nReJNVzA8uoWBGLAQyN4ZxWEWDWrnK1JR0ycw
+iryy1tqNSw==
+-----END CERTIFICATE-----

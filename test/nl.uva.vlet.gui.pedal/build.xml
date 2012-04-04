@@ -1,0 +1,168 @@
+<project name="vlet.gui.pedal" default="dist" basedir=".">
+	<description>
+		Project	  : VLeT/Application
+		Component : Pedal PDF Viewer
+        Eclipse target : dist
+            	
+        Configuring: 
+        ===
+            - All configuration settings are in build.prop 
+            	
+    </description>
+
+    <!--
+      1) Read global project properties (if specified) from: project.prop
+         - for this to work project.root variable must be set to project root 
+      2) Set environment properties prefix to 'env.' 
+      3) Set viewer.root to the location if this viewer 
+      4) Read local viewers properties from: build.prop 
+    --> 
+  
+	<property environment="env"/>
+    <property name="viewer.root" location="." />
+	<!-- use default eclipse environment for mbuild location ! -->
+	<property name="project.root" value="../mbuild/"/> 
+	<property file="${project.root}/project.prop"/> 
+    <property file="build.prop"/> 
+
+	<property name="plugindist"	value="${viewer.dist}/${viewer.package}"/> 
+    <property name="viewer.lib" location="lib" />
+	
+	<!-- Target: init --> 
+	
+	<target name="init" >
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${viewer.build}" />
+		<mkdir dir="${viewer.dist}" />
+	</target>
+		
+	<!-- Target: Config (configure this component) -->
+    <target name="config" >
+	</target> 
+    
+    <!-- Target: generate (create stubbers or other code) -->
+	<target name="generate" >
+	</target> 
+	
+    <!--
+         Target: source-dist (Only needed when creating source distributions) 
+      -->
+   	<target name="source-dist" >
+   	</target> 
+   	
+    
+	<path id="viewer.classpath">
+		<!-- include project libraries--> 
+		<fileset dir="${project.lib}">
+			<include name="**/*.jar" />
+		</fileset> 
+		<fileset dir="${viewer.lib}">
+			<include name="**/*.jar" />
+		</fileset> 
+		
+		<!-- add local paths settings --> 
+		<pathelement location="${viewer.build}" />
+		<pathelement location="${viewer.src}" />
+	</path>
+				
+	<!--
+		Target = Compilation 
+	-->
+	   		
+	<target name="build" depends="init" description="compile the source ">
+		
+		<!-- Compile the java code from the srcdir into destdir -->
+		<javac srcdir="${viewer.src}" destdir="${viewer.build}"
+			   compiler="${javac.compiler}"
+	           debug="${javac.debug}"
+	    	   target="${javac.target}" >
+			<classpath refid="viewer.classpath"/>
+		</javac> 
+			
+		
+		<!-- copy icons into build dir, so they will be copied into the jar --> 
+		<!-- <copy todir="${viewer.build}">
+			<fileset dir="${viewer.root}/icons" /> 
+	    </copy> -->
+		
+	</target>
+	
+	<target name="jar" depends="build" >
+		<!-- Create application JAR file -->
+		<jar jarfile="${viewer.dist}/${viewer.mainclass}.jar"
+        	 basedir="${viewer.build}"/>
+		
+	</target>
+
+	<target name="dist" depends="build,jar" >
+    
+    	<!-- 
+    	  instead of an single jar file, the 
+    	  viewer distribution can also be a directory containing the 
+    	  jar files needed for the viewer. 
+    	  The directory MUST have the name of the Main Viewer Class. 
+    	  The jar file can have another name. 
+    	  Optionally extra jars/file can be copied to this directory
+    	-->
+    	      
+    	      
+    	<mkdir dir="${plugindist}" />
+    	  	<copy
+    	        tofile="${plugindist}/${viewer.name}.jar"
+    	  	    file="${viewer.dist}/${viewer.mainclass}.jar"  
+            />
+    	      
+    	<!-- Add extra file --> 
+		  <!-- <copy todir="${plugindist}">
+					<fileset dir="${viewer.root}/etc" /> 
+	    	   </copy> -->
+		
+		<!-- Add extra libs --> 
+		<copy todir="${plugindist}">
+			<fileset dir="${viewer.lib}"/> 
+		</copy> 
+		
+		<!-- create plugin.prop file -->
+		<property name="plugininfo" value="${plugindist}/plugin.prop"/>
+		<echo message="##${line.separator}#Plugin description for: ${viewer.name}${line.separator}#${line.separator}" 
+		      file="${plugininfo}" append="false" /> 
+		        	
+		<echo message="#Plugin name:${line.separator}viewer.name=${viewer.name}${line.separator}${line.separator}" 
+		      file="${plugininfo}" append="true" /> 
+
+		<echo message="#Plugin package name:${line.separator}viewer.package=${viewer.package}${line.separator}${line.separator}" 
+		      file="${plugininfo}" append="true" />
+		              	
+		<echo message="#Plugin Main Class (IMimeViewer):${line.separator}viewer.mainclass=${viewer.mainclass}${line.separator}${line.separator}" 
+		      file="${plugininfo}" append="true" /> 
+    	  	    
+	</target> 
+	
+	<!--
+	*	Target: dist-install
+	*	Info:
+	*	  	Only used when component is part of the main project. 
+	*		
+    -->
+	
+	<target name="dist-install" depends="dist" description="install libraries">
+		<fail message="*** Error: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/> 		
+		<mkdir dir="${project.doc}" />
+		<mkdir dir="${project.lib}/plugins" />
+		<mkdir dir="${project.auxlib}/cobra" />
+		
+		<!-- Copy all-in-one package lib into project lib dir --> 
+		<copy todir="${project.dist}/lib/plugins/${viewer.package}">
+			<fileset dir="${plugindist}" /> 
+		</copy>
+		
+	</target>
+		
+	<target name="clean" description="clean">
+		<delete dir="${viewer.dist}"/>
+		<delete dir="${viewer.build}"/>
+	</target>
+	
+</project>
+	
+

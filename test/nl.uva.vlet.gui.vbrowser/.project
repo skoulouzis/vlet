@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>nl.uva.vlet.gui.vbrowser</name>
+	<comment></comment>
+	<projects>
+		<project>nl.uva.vlet.gui.utils</project>
+		<project>nl.uva.vlet.vfs.srb</project>
+		<project>nl.uva.vlet.vrs.core</project>
+		<project>vrs.core</project>
+		<project>vrs.info</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.jem.beaninfo.BeanInfoNature</nature>
+	</natures>
+</projectDescription>

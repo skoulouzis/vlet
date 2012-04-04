@@ -1,0 +1,101 @@
+###
+# Project : VLET/vrs
+# File    : Software Developers Document (SDD). 
+# Author  : Piter T. de Boer 
+# Info    : 
+#           Software Engineering Guide lines for the VRS architecture
+#
+# 
+
+Programming conventions
+=== 
+- Java is the main language as are its programming conventions. 
+
+- Use symmetrical and vertical code (=single column) style like:  
+  if
+  {
+     //...
+  }
+  // The statements 'if','{ and '}' are in one line, this is proven as better and faster readable ! 
+
+
+- wrap lines longer then 80: 
+  int retval=method(argument1,argument2,   ..., 
+                    argumentN,argumentM);   
+
+- NULL values are allowed in simple functions like method. If the returned value is an object
+  and one of the parameters given as arguments is NULL as well, the function might return null. 
+
+- Exceptions must be respected. Either throw a (subclass) of VlException or handle the exception 
+  correctly. Do NOT ignore exceptions. 
+
+- Exception "Chaining" is recommended to add more explanation to what happened where
+  when going up the call stack. This can be done as follows: 
+
+     try
+     {
+       //... 
+     } 
+     catch (Exception originalException) 
+     {
+        // chain exception :
+        throw new VlException("Exception Name","Exception Message",originalExeption); 
+     }
+
+
+Applet Compatibility ! 
+===
+
+- NO local file access. Use classloaders to find files ! 
+- Since the VRS architecture provides a File interface, use that 
+  one if really file access is needed, so any file on the grid
+  can be used to store your data. 
+
+  classloader example: 
+
+    /** Fetches icon with name filename from classpath */ 
+    ImageIcon getIcon(String filename) 
+    {
+        URL iconUrl = this.getClass().getClassLoader().getResource(filename);   
+
+        if (iconUrl == null)
+        {
+            System.err.println("Error: Icon file not found (not in classpath):"
+            return null;  
+        }
+
+       return new ImageIcon(iconUrl);
+    }
+
+    // *** VRS reading /// 
+    {
+        VNode vnode=new VRSClient().openLocation(loc);
+        
+        if ((node instanceof VStreamReadable)==false)
+        {
+            throw new InterfaceMismatchException("Remote resource is not (stream)readable:"+loc);
+        }
+        
+        InputStream inps=((VStreamReadable)vnode).getInputStream(); 
+    }
+  
+    // *** (direct) VFS File acces *** 
+    {
+       // use vfs client for configurable access ! 
+       VFSClient vfs=new VFSClient(); 
+       VFile file=vfs.getFile("file:///etc/grid-security/gridmapfile"); 
+       
+       // conveniance method from VFile (might throw exceptions) 
+       String contents=file.getContentAsString(); 
+
+       // Input Stream: 
+       InputStream inps=file.getInputStream(); 
+       
+       // output stream: 
+       OutputStream outps=file.getOutputStream(); 
+    }
+       
+        
+More...
+===
+  

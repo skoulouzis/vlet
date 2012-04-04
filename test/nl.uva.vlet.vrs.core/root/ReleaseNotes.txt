@@ -1,0 +1,160 @@
+******************************************************************************
+                       VL-e Toolkit Release Notes 
+******************************************************************************
+*
+*   Copyright 2006-2011 The Virtual Laboratory for e-Science (VL-e) 
+* 
+* Licensed under the Apache License, Version 2.0 (the "License").  
+* You may not use this file except in compliance with the License. 
+* You can obtain the Apache License at the following location: 
+*       http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software 
+* distributed under the License is distributed on an "AS IS" BASIS, 
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+* See the License for the specific language governing permissions and 
+* limitations under the License.
+* 
+* Info:
+*    See: http://www.vl-e.nl/vbrowser/
+*
+* Version : @VLET_VERSION@
+* Date    : @DATE@
+
+
+=== Release notes for 1.4.1 ===
+
+This is a bugfix release.
+
+Updates:
+===
+- Fixed the asynchronous srmLs bug. The SRM API now supports asynchronous 
+  polling enabled in newer versions of dCache.  
+- Added extra 'srmCount' and 'srmOffset' parameters to SRM VRLs. 
+  This way an SRM directory with more then 1000 entries can be listed using urils.sh 
+  as follows:  
+  
+     urils.sh srm://srm.grid.sara.nl:8443/data/pvier/ptdeboer/bigdir?srmCount=100&srmOffset=200  
+
+=== Release notes for 1.4.0 ===
+
+Features
+===
+- Script urils.sh -l <uri> now also works if <uri> isn't a directory but a plain file.
+- Script uristat.sh also works on non file resources.   
+- The navigation bar now has a completion "combo" box which remembers typed in locations. 
+- Added support for certificate files ending with ".crt". Clicking on them will
+  start a Certificate Viewer which ask the user if the certificate needs to be 
+  imported into the trusted certificate store. 
+  Right clicking on a .crt file will show a "certs" submenu with certificate options. 
+- When browsing an SSH location, a VLterm can be started directly with the new menu 
+  option "Open VLTerm".  
+- Prototype implementation of iRods plugin. Supports only minimal file browsing
+  and up- and downloading.  
+  No optimization nor iRods specific features have been implemented. 
+
+Bug fixes:
+===
+- Fixed bugs which could occur when viewing similar resources in the ResourceTree. 
+  Both subtrees should now be updated correctly.
+- Changing the VO field of a proxy will now trigger a connection reset so the new 
+  VO of the new proxy will be used.    
+- Added new Terena root CA certificate to the default certificate store. 
+  Some dutchgrid sites use this new (root) certificate. 
+- For an overview of all bug fixes see the bug tracker. 
+
+
+=== Release notes for 1.3.2 ===
+
+Updates:  
+===
+- LFC replica methods have been improved and some bugs have been fixed.
+  Also the logging when performing file transfers has been updated.  
+- A new distribution is available: the vlet-sdk. This is a minimized distribution
+  containing only the virtual file system (VFS) and a stripped VBrowser without
+  any extra plugins which can be used for example inside a (tomcat) web service. 
+  
+Plugins: 
+- The new Moteur plugin (2.0) is available in this release. 
+
+API: 
+===
+- The VRS/VFS has been cleaned up. Some internal methods have been renamed (old 
+  method names have been deprecated) and the (javadoc) documentation has been updated.
+- All classes in the legacy 'kbtools' now have 'nl.uva.vlet.kbtools.*' as package
+  prefix instead of 'nl.uva.vlet.tools.*' to avoid confusion.    
+- DBII interface has been cleaned up and 'public' methods can now be used in 
+  in custom plugins.    
+
+=== Release notes for 1.3.1 ===
+
+Please send bug reports, questions or other feedback to: vlet-users@lists.vl-e.nl. 
+This list is moderated, so any message from a new sender might take a few days before
+it will be accepted. Follow up messages will be automatically accepted.    
+
+This is a bugfix release.
+
+Updates:
+===
+- Fixed BDII bug (again). The BDII query still relied on the 1.2 Glue scheme to get 1.3 Glue objects. 
+  This has been fixed and new Storage Elements should appear under Grid Neighbourhood. 
+  
+
+=== Release notes for 1.3.0 ===
+
+Updates: 
+===
+- Added "Force Delete" for LFC which removes LFC entries even when the status of the 
+  replicas can't be determined. 
+- Added LB Resources (Logging and Bookkeeping) to GridNeighbourhood. 
+  LB Resources also show up as logical childs under WMS Resources. 
+- urils.sh script now supports 'listing' of LB resources. 
+  The resulting names will be the user jobs as registered at the LB Server. 
+- User certificate authentication to grid enabled websites (https) now works.
+  After creating a proxy, the user certificate information will be used when
+  contacting the remote web site.
+- Grid proxy dialog now supports VO Roles and VO Groups. 
+  To specify a role, just fill it in at he "VO Role" field.  
+  To specify a "VO Group" just use "<VO Name>/<VO Group>" at the VO Name field. 
+  For example "pvier/test" (don't use a slash before the VO Name).  
+- The implementations of SRM and LFC have been further improved to be robust in 
+  the case of errors or temporarily service failures. 
+- UserGuide has been updated to include changes from 1.2.0 and 1.3.0.
+    
+Tools:
+===            
+- Added JGridStart under "Tools->Grid Utils"
+- Added Jython examples for 'urils' and 'lfccp' which can respectively list remote URI
+  locations and copy to an LFC location (script includes example how to specify properties.).    
+- The scripts uricp.sh,uristat.sh and urils.sh can be used as script interface 
+  to the VRS (and VFS).  
+
+API: 
+===
+- The BDII code has been updated to support the 1.3 Glue schema as well.
+  This to support the new PoC update.  
+- Updated WMS and LB API now fully available in the VLET API. 
+  Experimental job submission and monitoring plugins are available.
+  See module: nl.uva.vlet.examples/src/example.vjs.TestSubmit.java    
+- https/ssl API has been updated to grid proxies and non grid proxy authentication 
+  when setting up https/ssl connections. See SSLContextManager and CertificateStore classes.
+  Grid and SSL certificate management has been centralized in one API.  
+- GridProxy now can use different proxy providers.   
+  The default one is globus (No other proxy providers have been implemented yet).
+- ClassLogger API now available which extends java.util.logging.Logger
+
+Plugins:
+ - The Computis imzML plugin has been added to the vlet-all distribution. 
+     
+Bug fixes: 
+===
+- When copying an LFC file which has more then one replica, under some
+  conditions, only one replica was tried. If that failed the copy loop stopped.
+  This has been fixed so multiple replicas, if available, will be tried. 
+- WMS now correctly queries the LB Services that are associated with that WMS.
+- LB Server 2.0 is supported as well.    
+- The "Overwrite All" feature from copy dialog didn't work. 
+- Logging output/warning statements from LoboBrowser have been reduced. 
+- See bugtracker for all bugs.
+- The layout of the Grid Proxy dialog has been improved to work better on MacOs. 
+

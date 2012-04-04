@@ -1,0 +1,13 @@
+#TeXlipse project settings
+#Tue Jul 24 11:43:49 CEST 2007
+builderNum=0
+outputDir=build/
+makeIndSty=
+bibrefDir=
+outputFormat=dvi
+tempDir=build
+mainTexFile=UserGuide.tex
+outputFile=UserGuide.dvi
+langSpell=
+markDer=true
+srcDir=tex/

@@ -1,0 +1,39 @@
+<html>
+<head>
+<title> VBrowser Applet </title>
+
+<body 
+ bgcolor=#ffffff
+ text=#000000
+ link="#8080ff"
+ vlink="#a0a0ff"
+ alink="#c0c0ff"
+>
+
+ <h1> VBrowser Test Applet </h1> 
+ ...
+ <p>
+ 
+<hr> 
+
+ <center> 
+  <!-- 
+    Note: Token 'J''A''R''S' (sic) will be replaced be (auxiliary) jars in ./lib 
+    by gen.sh script.
+    --> 
+  <applet 
+   code="nl.uva.vlet.gui.VBrowserApplet.class" 
+   codebase="."
+   archive="gui.VBrowser.jar,gui.utils.jar,VRS.jar,icons.jar,
+JARS
+" 
+  height=200 width=600   
+  alt="No applet ?. Perhaps java isn't working. You need java 1.5.">
+  <param name="applet" value="1"> 
+  </applet>
+ </center> 
+ 
+<hr>
+
+</body> 
+</html>  
