@@ -48,7 +48,7 @@
 			
 	<target name="clean" description="dummy target">
 		<antcall target="invoke"> 
-			<param name="invoke.bin" value="gmake"/> 
+			<param name="invoke.bin" value="make"/> 
 			<param name="invoke.args" value="clean"/>
 			<param name="invoke.dir" location="." /> 
 		</antcall> 
