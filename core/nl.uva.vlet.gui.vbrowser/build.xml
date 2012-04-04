@@ -55,9 +55,10 @@
 	<target name="build" depends="init" description="compile the source ">
 		<!-- Compile the java code from the srclist } into ${build} -->
 		<javac srcdir="${component.src}" destdir="${component.build}"
-			   compiler="${javac.compiler}"
-	           debug="${javac.debug}"
-	    	   target="${javac.target}">
+		       compiler="${javac.compiler}"
+			   debug="${javac.debug}"
+			   source="${javac.source}" 
+			   target="${javac.target}">
 			<classpath refid="component.classpath" />
 		</javac>
 	</target>

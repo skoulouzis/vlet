@@ -102,9 +102,10 @@
                
     <target name="build-client" depends="init" description="Compile the SRM client source ">
          <javac srcdir="src" destdir="${build}/classes"
-               compiler="${javac.compiler}"
-               debug="${javac.debug}"
-               target="${javac.target}">
+		       compiler="${javac.compiler}"
+			   debug="${javac.debug}"
+			   source="${javac.source}" 
+			   target="${javac.target}">
                <classpath refid="classpath" />
         </javac>
     </target>
