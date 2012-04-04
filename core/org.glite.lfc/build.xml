@@ -75,9 +75,10 @@
         <!-- Compile the java code from the ${src} into ${build} -->
         
          <javac srcdir="src" destdir="${build}"
-               compiler="${javac.compiler}"
-               debug="${javac.debug}"
-               target="${javac.target}">
+		       compiler="${javac.compiler}"
+			   debug="${javac.debug}"
+			   source="${javac.source}" 
+			   target="${javac.target}">
                <classpath refid="classpath" />
         </javac>
     </target>

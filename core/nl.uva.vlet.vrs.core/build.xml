@@ -98,6 +98,7 @@
 	    <javac srcdir="${component.src}/main" destdir="${component.build}"
 	       	   compiler="${javac.compiler}"
                debug="${javac.debug}"
+	    	   source="${javac.source}" 
 	    	   target="${javac.target}">
 	           <classpath refid="component.classpath" />
 	    </javac>

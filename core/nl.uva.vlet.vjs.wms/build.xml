@@ -95,9 +95,10 @@
         <!-- Compile the java code from the ${src} into ${build} -->
     	
     	<javac srcdir="${vdriver.src}" destdir="${vdriver.build}"
-               compiler="${javac.compiler}"
-   		       debug="${javac.debug}"
-   		       target="${javac.target}">
+		       compiler="${javac.compiler}"
+			   debug="${javac.debug}"
+			   source="${javac.source}" 
+			   target="${javac.target}">
                <classpath refid="vdriver.classpath" />
         </javac>
         
