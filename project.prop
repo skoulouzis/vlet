@@ -27,7 +27,7 @@ project.flatten=false;
 #source components  (not needed, use CVS structure) 
 #use root as toplevel directory for the source components
 #project.sourceroot=${project.root}
-project.sourceroot=${project.root}/
+project.sourceroot=${project.root}/source
 
 ##
 #project.dist is the project install directory!  
