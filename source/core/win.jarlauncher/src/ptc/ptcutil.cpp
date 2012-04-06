@@ -13,8 +13,8 @@
  * 		- "F" plain file methods
  */
 
-// Since this code is cross compiled using mingw32 amongst other, not much libraries can be used.
-// The aim of this code is to provide a stable and robust methods with as less dependencies as
+// Since this code is cross compiled using mingw32 amongst others, not much libraries can be used.
+// The aim of this code is to provide a stable and robust interface with as less dependencies as
 // possible for plain "C" stuff.
 
 #include <string.h>
