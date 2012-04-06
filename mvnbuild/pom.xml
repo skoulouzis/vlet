@@ -42,7 +42,7 @@
            <updatePolicy>always</updatePolicy>
            <checksumPolicy>warn</checksumPolicy>
          </snapshots>
-         <url>http://elab.lab.uvalight.net:8080/maven2</url> 
+         <url>http://elab.lab.uvalight.net:80/maven2</url> 
          
         </repository>
         
@@ -64,7 +64,7 @@
           <module>${vlet.modules.core}/nl.uva.vlet.gui.utils</module>
         <module>${vlet.modules.core}/nl.uva.vlet.gui.vbrowser</module>
         <!-- Distribution  -->
-        <module>${vlet.modules.core}/distribution</module>
+        <module>${vlet.modules.core}/mvndistribution</module>
            
     </modules>
 
