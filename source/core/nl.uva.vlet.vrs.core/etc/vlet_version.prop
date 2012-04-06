@@ -1,6 +1,6 @@
 #Contains current version.
 ##
-vlet.build=2-beta
+vlet.build=0
 vlet.major=1
 vlet.version=${vlet.major}.${vlet.minor}.${vlet.build}
-vlet.minor=4
+vlet.minor=5
