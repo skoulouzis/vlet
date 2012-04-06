@@ -1,0 +1,143 @@
+<project name="vlet-toplevel-build" default="dist-install-all" basedir=".">
+    <description>
+        Project     : VLET  
+        Component   : Toplevel distribution build file. 
+            
+                      Calls mbuild/build.xml file with toplevel build properties
+                      taken from project.prop and an optional configured build.prop 
+                      See mbuild/build.xml and mbuild/configuration.xml for project 
+                      build files.  
+       </description>
+    
+    <!--project.root: All paths are (and must be) relative from this location -->
+    <property name="project.root"  location="." />
+    
+    <!-- 
+       Local properties for the toplevel build: 
+       By calling ./configure or 'ant configure', these properties will
+       be configured 
+    --> 
+    <property file="build.prop" prefix="project" /> 
+    
+    <!-- 
+        Default properties for the toplevel build. 
+        if not set in build.prop these project defaults 
+        will be used 
+      --> 
+    <property file="project.prop"/> 
+    
+    <!-- default mbuild properties --> 
+	<property name="mbuild.dir" value="mbuild/"/>
+	
+    <property file="${mbuild.dir}/project.prop"/> 
+    
+    <!-- 
+         Target: init 
+      --> 
+    <target name="init" >
+        <mkdir dir="${project.dist}" />
+        <mkdir dir="${project.lib}" />
+        <mkdir dir="${project.lib}/auxlib" />
+    </target> 
+    
+    <!--
+         Target: dist-install
+      -->
+    <target name="configure" description="configure">
+        <echo message="--- configured options ---" /> 
+        <echo message=" project.destdir            ='${project.destdir}'" /> 
+        <echo message=" project.prefix             ='${project.prefix}'" /> 
+        <echo message=" project.exec_prefix        ='${project.exec_prefix}'" /> 
+        <echo message=" project.install            ='${project.install}'" /> 
+        <echo message=" project.install.bindir     ='${project.install.bindir}'" /> 
+        <echo message=" project.install.libdir     ='${project.install.libdir}'" /> 
+        <echo message=" project.install.sysconfdir ='${project.install.sysconfdir}'" /> 
+        <echo message=" project.install.sysconfdir ='${project.install.docdir}'" /> 
+        <echo message=" project.install.var        ='${project.install.var}'" /> 
+        <echo message=" project.tests              ='${project.tests}'" /> 
+        <echo message=" project.tests.bindir       ='${project.tests.bindir}'" /> 
+        <echo message=" project.tests.libdir       ='${project.tests.libdir}'" /> 
+        <echo message="--- Java Environment ---" /> 
+        <echo message=" JAVAC                      ='${project.JAVAC}'" /> 
+        
+    </target>
+    
+    <target name="source-dist" depends="init" description="Create source release">
+        <ant antfile="${mbuild.dir}/build.xml" target="source-dist"> 
+        </ant> 
+    </target>
+   
+    <!-- shorcut/alias -->  
+    <target name="vlet" depends="dist-install"/>
+
+    <!-- shorcut/alias -->  
+    <target name="vlet-sdk" depends="dist-install-sdk"/>
+
+    <!-- shorcut/alias -->  
+    <target name="vlet-all" depends="dist-install-all"/>
+
+    <!--
+         Target: dist-install 
+      -->
+    <target name="dist-install" depends="configure" description="Build complete project">
+        <ant antfile="${mbuild.dir}/build.xml" target="dist-install"> 
+        </ant> 
+    </target>
+    
+    <!--
+         Target: dist-install-all
+      -->
+    <target name="dist-install-all" depends="configure" description="Build complete project">
+        <ant antfile="${mbuild.dir}/build.xml" target="dist-install-all"> 
+        </ant> 
+    </target>
+
+    <!--
+         Target: dist-install-all
+      -->
+    <target name="dist-install-sdk" depends="configure" description="Build complete project">
+        <ant antfile="${mbuild.dir}/build.xml" target="vlet-sdk"> 
+        </ant> 
+    </target>
+    
+    <!--
+         Target: bin-install
+      -->
+    <target name="bin-install" depends="configure" description="Build complete project">
+    	<ant antfile="${mbuild.dir}/build.xml" target="bin-install"> 
+        </ant> 
+    </target>
+      
+   <target name="test-dist" depends="configure" description="invoke installation tests">
+        <ant antfile="${mbuild.dir}/build.xml" target="test-dist"> 
+        </ant> 
+   </target>
+
+    <target name="test-all" depends="configure" description="invoke ALL tests">
+        <ant antfile="${mbuild.dir}/build.xml" target="test-all"> 
+        </ant> 
+   </target>
+    
+    
+    <!--
+    *    Target: clean 
+    *       - Cleans toplevel build, does not descend into components
+    -->
+    <target name="clean" description="clean">
+        <delete dir="${project.dist}"/>
+        <ant antfile="${mbuild.dir}/build.xml" target="clean"> 
+        </ant> 
+    </target>
+    
+    <!--
+    *    Target: dist-clean
+    *       - Cleans whole distribution: decends into components 
+    -->
+    <target name="dist-clean" description="dist-clean"> 
+        <delete dir="${project.dist}"/>
+        <ant antfile="${mbuild.dir}/build.xml" target="dist-clean"> 
+        </ant> 
+    </target>
+
+</project>
+    

@@ -1,0 +1,19 @@
+# $Id: configure.ac,v 1.9 2010/06/25 13:21:24 ptdeboer Exp $
+
+AC_PREREQ(2.57)
+
+AC_INIT(java-skeleton, 0.1)
+AM_INIT_AUTOMAKE
+
+# require JDK 1.6
+VLE_CHECK_JDK([1.6])
+
+# optional builds:
+VLET_ENABLE_USERGUIDE
+VLET_ENABLE_JYTHON
+VLET_ENABLE_GRID_SERVICES 
+
+AC_PROG_INSTALL
+AC_CONFIG_FILES([build.prop])
+AC_OUTPUT
+

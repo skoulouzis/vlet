@@ -1,0 +1,52 @@
+##
+# Generated build property file by configure 
+#
+# Install directories for the binary installation.
+# (and other configured environment properties) 
+#
+# Important: 
+#  - To give the variable name a proper 'project' name scope, 
+#    this property file will be loaded with property prefix 'project'
+#    so that all variables in this file have the 'project.' prefix ! 
+# -  DON'T PUT SPACES AFTER PROPERTY VALUES 
+
+##
+# Autoconf configured variables. 
+# These variables will get a 'project.' prefix, when loaded by ant: 
+# 
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+# java environment (TODO: use these in ant builds) 
+JAR = @JAR@
+JAVA = @JAVA@
+JAVAC = @JAVAC@
+JAVAC_FLAGS = @JAVAC_FLAGS@
+JAVAH = @JAVAH@
+JAVA_HOME = @JAVA_HOME@
+JDK = @JDK@
+
+##
+# Build configuration 
+#
+build.doc.userguide=@build_doc_userguide@
+build.module.jython=@build_module_jython@
+
+##
+#
+globus.location=@globus_location@
+
+##
+# Configured project.install.* properties.
+# See for default values: project.prop 
+# These variables will get a 'project.' prefix, when loaded by ant: 
+
+install=${prefix}
+install.sysconfdir=@sysconfdir@
+install.libdir=@libdir@
+install.bindir=@bindir@
+install.var=@localstatedir@
+# configure doesn't support docdir, but make does: 
+install.docdir=${prefix}/doc
+
+

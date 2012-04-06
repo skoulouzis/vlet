@@ -1,0 +1,59 @@
+###
+# Project  : VLET
+# File     : project.prop
+# Author   : Piter T. de Boer 
+#
+# Info: 
+#    Default properties for the toplevel (full) build 
+#    Put custom build properties in 'build.prop'. This file will be generated
+#    when using the configure script.
+# 
+#    The order of the properties is (first defined is used): 
+#     - build.prop          ; "configure" result 
+#     - project.prop        ; default toplevel properties
+#     - mbuild/project.prop ; all project properties with their default settings.  
+# 
+
+# project properties have been read -> used as assertion in component build file. 
+project.env.ok=true 
+
+###
+### default settings: 
+###
+
+##
+# use cvs structure 
+project.flatten=false; 
+#source components  (not needed, use CVS structure) 
+#use root as toplevel directory for the source components
+#project.sourceroot=${project.root}
+project.sourceroot=${project.root}/
+
+##
+#project.dist is the project install directory!  
+# This directory is also used for incremental builds, 
+# this during the build, files are already installed 
+# in this directory
+project.dist=${project.root}/dist
+
+# fix zipdir into project root 
+# (for source-dist version of auxtools)
+project.zipdir=${project.root}/zips
+
+# same for downloaded certificates: 
+project.certificates=${project.root}/certificates
+
+##
+# If the target install directory is different then the "project.dist"
+# specify the project.bindir for binary destributions. 
+# this is ./configure --prefix-dir target ! 
+# If you do not want to use ./configure, specify them here: 
+
+#project.install=/opt/vlet
+#project.install.execdir=${project.install}
+#project.install.libdir=${project.install.execdir}/lib
+#project.install.sysconfdir=${project.install}/etc
+#project.install.bindir=${project.install.execdir}/bin
+#project.install.var=${project.install}/var
+#project.install.docdir${project.install}/doc
+
