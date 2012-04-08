@@ -88,15 +88,15 @@
         <!-- Create application JAR file -->
         <jar jarfile="${dist.package.jar}"
             basedir="${build}"
-            includes="org/glite/lfc/**,eu/geclipse/**"
-            excludes="nl/uva/vlet/**">
+            includes="nl/uva/vlet/glite/lfc/**"
+            >
                 
                <!-- Add Source --> 
             <fileset dir="src"/>
                 
             <manifest>
             <attribute name="Built-By" value="UvA/g-Eclipse" />
-                   <attribute name="Main-Class" value="org.glite.lfc.main.Lfcls" />
+                   <attribute name="Main-Class" value="nl.uva.vlet.glite.lfc.main.Lfcls" />
                    <section name="common">
                     <attribute name="Specification-Title" value="UvA/g-Eclipse LFC implementation" />
                          <attribute name="Specification-Version" value="${lfcj.version}" />
