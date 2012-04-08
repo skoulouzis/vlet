@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="lib/ant-junit.jar"/>
 	<classpathentry kind="lib" path="lib/jfcunit.jar"/>
 	<classpathentry kind="src" path="/nl.uva.vlet.vfs.lfc"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.glite.lfc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.srm"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.auxlibs"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.utils"/>
@@ -20,5 +19,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.webdav"/>
 	<classpathentry kind="src" path="/nl.uva.vlet.vfs.irods"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.jcraft.ssh"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.glite.lfc"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
