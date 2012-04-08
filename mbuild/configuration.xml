@@ -352,9 +352,9 @@
     <target name="vlet-app-jmol" depends="vlet-core">
     	
 	    <antcall target="buildComponent">
-	        <param name="name" value="app.jython"/>
+	        <param name="name" value="addon.jython"/>
 	        <param name="version" value=""/>
-	        <param name="cvs.path" value="app"/>
+	        <param name="cvs.path" value="addons"/>
 	    </antcall>
     	
 	</target> 
