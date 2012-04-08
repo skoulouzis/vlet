@@ -101,9 +101,9 @@ project.flatten=true
 ###
 # Java Compiler options : Explicitly use java 1.7 
 javac.debug=true
-javac.target=1.6
-javac.source=1.6
-javac.compiler=javac1.6
+javac.target=1.7
+javac.source=1.7
+javac.compiler=javac1.7
 
 ###
 ### default CVS settings 
