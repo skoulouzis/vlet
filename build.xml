@@ -1,4 +1,4 @@
-<project name="vlet-toplevel-build" default="dist-install-all" basedir=".">
+<project name="vlet-toplevel-build" default="dist-install" basedir=".">
     <description>
         Project     : VLET  
         Component   : Toplevel distribution build file. 
