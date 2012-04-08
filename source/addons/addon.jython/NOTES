@@ -1,0 +1,11 @@
+###
+#Project    : VLeT
+#Component  : Jython module 
+#Maintainer : P.T. de Boer 
+
+
+Info
+===
+- 16 november 2009
+  Moved jython jars+scripts into separate module. 
+ 

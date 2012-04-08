@@ -1,0 +1,81 @@
+<project name="jython" default="dist" basedir=".">
+    <description>
+        Project   : VLeT
+        Component : jython tool installer 
+        Author    : Piter .T. de Boer
+    	
+       </description>
+        
+    <!-- Global properties -->
+
+    <property name="tool.root" location="." /> 
+    <!-- 1st -> import project environment, 2d ->  local build.prop -->
+    <property environment="env"/> 
+	<property name="project.root" location="../mbuild" /> 
+    <property file="${project.root}/project.prop"/>
+    <property file="build.prop"/> 
+    
+	<property name="tool.build" location="build"/> 
+	<property name="tool.unzipdir" location="${tool.build}/unzipdir"/> 
+		
+    <!-- Target: init --> 
+    <target name="init" >
+		<mkdir dir="${tool.build}"/>
+	 	<mkdir dir="${tool.unzipdir}"/>
+    </target>
+	
+    
+    <!-- 
+        Build source distribution, which means do all tools 
+        and create auxlib
+      --> 
+    <target name="source-dist" >
+        <property name="source_dist" value="true"/> 
+    </target>
+
+    <target name="unzip" depends="init" description="install tool">
+	    <unzip src="${tool.zipdir}/${tool.zipfile}" dest="${tool.unzipdir}" />
+   </target> 
+    		
+    <target name="dist" depends="unzip" />
+
+    <target name="dist-install" depends="dist" description="install tool">
+        <fail message="*** Error: Cannot install libraries: property 'project.root' not defined. Please start with '-Dproject.root=&lt;path&gt;' argument. " unless="project.env.ok"/>
+
+    	<echo message="Installing Tool:${tool.name}"/>
+     	<echo message=" - tool.version = ${tool.version}"/> 
+     	<echo message=" - tool.name    = ${tool.name}"/> 
+     	<echo message=" - tool.zipfile = ${tool.zipfile}"/> 
+        <echo message=" - destination  = ${project.auxtools}/${tool.name}" />
+    	
+        <mkdir dir="${project.auxtools}/jython"/>
+    	<mkdir dir="${project.bin}"/>
+    	<mkdir dir="${project.py}" />
+
+    	<!-- jython jars --> 
+        <copy todir="${project.auxtools}/jython">
+           <fileset dir="${tool.unzipdir}" />
+        </copy>
+        	
+    	<!-- python scripts --> 
+        <copy todir="${project.py}">
+           <fileset dir="${tool.root}/py" />
+        </copy>
+    	
+    	<!-- jython start scipt (bash) --> 
+    	<copy todir="${project.bin}">
+			<fileset dir="${tool.root}/bin" />
+		</copy>
+    	
+    	<!-- script must exist! --> 
+	 	<chmod perm="ugo+x" file="${project.bin}/jython.sh"/>
+	 	<chmod perm="ugo+x" file="${project.py}/*"/>
+    	
+    </target>
+        
+    <target name="clean" description="clean">
+    	<delete dir="${tool.build}"/>
+    </target>
+    	
+</project>
+    

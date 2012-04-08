@@ -1,0 +1,31 @@
+###
+# auxtool: jython
+# 
+# Info:
+
+#
+
+#tool properties
+
+
+##
+# Version: 2.2.1
+name=jython
+version=2.2.1
+#unzip installer jar file ! 
+zipfile=jython_installer-2.2.1-bin.jar
+
+# shortcut to inform tool installer it is already a jar
+#isjar=false
+#nosource=false
+topleveldir=
+# do NOT set srcdir to empty when there is no source. 
+#srcdir=
+#nothing to compile 
+nosource=true
+# copy to auxtool directory ! 
+isauxtool=true
+
+#url to use when not in binary tool repository
+#url=
+
