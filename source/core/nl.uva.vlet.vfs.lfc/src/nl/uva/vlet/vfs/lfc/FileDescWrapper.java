@@ -26,10 +26,10 @@ package nl.uva.vlet.vfs.lfc;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.internal.ReplicaDesc;
 import nl.uva.vlet.vrl.VRL;
 
-import org.glite.lfc.internal.FileDesc;
-import org.glite.lfc.internal.ReplicaDesc;
 
 public class FileDescWrapper
 {

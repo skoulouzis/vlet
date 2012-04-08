@@ -250,7 +250,7 @@
         </antcall>
 
         <antcall target="buildComponent">
-            <param name="name" value="org.glite.lfc"/>
+            <param name="name" value="nl.uva.vlet.glite.lfc"/>
                <param name="version" value=""/>
                <param name="cvs.path" value="core"/>
         </antcall>

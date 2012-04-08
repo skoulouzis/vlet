@@ -5,8 +5,9 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+
 
 
 public class TestLFCServer

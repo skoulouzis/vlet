@@ -38,6 +38,8 @@ import nl.uva.vlet.exception.ResourceLinkIsBorkenException;
 import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInternalError;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.internal.ReplicaDesc;
 import nl.uva.vlet.io.StreamUtil;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
@@ -56,8 +58,6 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VCommentable;
 import nl.uva.vlet.vrs.VRS;
 
-import org.glite.lfc.internal.FileDesc;
-import org.glite.lfc.internal.ReplicaDesc;
 
 public class LFCFile extends VFile implements VLogicalFileAlias, VUnixFileAttributes,
         ILFCLocation, VReplicatable, VThirdPartyTransferable, VGlobalUniqueID,

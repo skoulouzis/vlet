@@ -23,8 +23,8 @@
 
 package nl.uva.vlet.vfs.lfc;
 
-import org.glite.lfc.LFCException;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.glite.lfc.LFCException;
 
 /**
  * Mapping of LFC error codes to VlExceptions.  

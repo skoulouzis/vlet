@@ -60,6 +60,11 @@ import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.exception.VlInterruptedException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.glite.lfc.LFCConfig;
+import nl.uva.vlet.glite.lfc.LFCException;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.internal.ReplicaDesc;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.util.SSHUtil;
@@ -87,11 +92,6 @@ import nl.uva.vlet.vrs.io.VStreamAccessable;
 import nl.uva.vlet.vrs.io.VStreamReadable;
 import nl.vlet.uva.grid.globus.GlobusUtil;
 
-import org.glite.lfc.LFCConfig;
-import org.glite.lfc.LFCException;
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
-import org.glite.lfc.internal.ReplicaDesc;
 
 /** 
  */

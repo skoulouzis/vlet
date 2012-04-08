@@ -32,6 +32,7 @@ import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.ResourceAlreadyExistsException;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.vfs.VDir;
@@ -44,7 +45,6 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VCommentable;
 import nl.uva.vlet.vrs.VRSContext;
 
-import org.glite.lfc.internal.FileDesc;
 
 public class LFCDir extends VDir 
     implements VUnixFileAttributes,ILFCLocation,VCommentable,VReplicatableDirectory

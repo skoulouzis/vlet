@@ -23,6 +23,6 @@ FOR /R .\lib %%G IN (*.jar) DO set CLASSPATH=!CLASSPATH!;%%G
 echo 
 
 echo CLASSPATH = %CLASSPATH%
-%JAVA% -cp %CLASSPATH% org.glite.lfc.main.LfcStat %ARGS%
+%JAVA% -cp %CLASSPATH% nl.uva.vlet.glite.lfc.main.LfcStat %ARGS%
 
 

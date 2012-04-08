@@ -30,6 +30,8 @@ import java.net.URISyntaxException;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
 import nl.uva.vlet.util.ChecksumUtil;
 import nl.uva.vlet.vfs.VChecksum;
 import nl.uva.vlet.vfs.VFile;
@@ -39,8 +41,6 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
 
 
 public class TestLFCServer

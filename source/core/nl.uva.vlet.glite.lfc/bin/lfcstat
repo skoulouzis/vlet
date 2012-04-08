@@ -13,5 +13,5 @@ for f in `ls ${LIBDIR}/*.jar` ; do
 done
 
 echo "CLASSPATH =$CP" 
-java -cp $CP org.glite.lfc.main.LfcStat $@
+java -cp $CP nl.uva.vlet.glite.lfc.main.LfcStat $@
 

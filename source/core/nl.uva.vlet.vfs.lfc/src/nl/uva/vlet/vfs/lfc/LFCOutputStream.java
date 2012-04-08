@@ -26,13 +26,13 @@ package nl.uva.vlet.vfs.lfc;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.glite.lfc.LFCException;
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.glite.lfc.LFCException;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.vfs.VChecksum;
 import nl.uva.vlet.vfs.VFile;

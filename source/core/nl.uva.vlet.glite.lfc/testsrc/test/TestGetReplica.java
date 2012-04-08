@@ -6,9 +6,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
-import org.glite.lfc.internal.ReplicaDesc;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.internal.ReplicaDesc;
+
 
 
 public class TestGetReplica

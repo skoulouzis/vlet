@@ -27,12 +27,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import org.glite.lfc.LFCException;
-import org.glite.lfc.LFCServer;
-import org.glite.lfc.internal.FileDesc;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.glite.lfc.LFCException;
+import nl.uva.vlet.glite.lfc.LFCServer;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
 import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.lfc.LFCClient;
 

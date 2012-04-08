@@ -38,6 +38,7 @@ import nl.uva.vlet.exception.ResourceCreationFailedException;
 import nl.uva.vlet.exception.VlConfigurationError;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.glite.lfc.LFCConfig;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.util.bdii.ServiceInfo;
 import nl.uva.vlet.vfs.FileSystemNode;
@@ -52,7 +53,6 @@ import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRSContext;
 
-import org.glite.lfc.LFCConfig;
 
 public class LFCFileSystem extends FileSystemNode
 {
