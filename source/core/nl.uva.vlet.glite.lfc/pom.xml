@@ -3,7 +3,7 @@
   <groupId>nl.uva.vlet</groupId>
   <artifactId>vlet-lfc</artifactId>
   <version>${vlet.version}</version>
-  <name>glite-lfc (${vlet.version})</name> 
+  <name>glite.lfc (${vlet.version})</name> 
   
   <parent>
       <groupId>nl.uva.vlet</groupId>
