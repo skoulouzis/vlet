@@ -3,3 +3,9 @@
 # Maven toplevel build 
 #
 
+The maven build isn't finished yet. 
+The command "mvn compile" works for the core vlet modules but that is basically it. 
+
+To test this, checkout "mvnbuild" (this module) and "mvndistribution) as sibling projects to the core modules. 
+All modules must be in the same directory. 
+
