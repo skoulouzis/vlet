@@ -29,20 +29,18 @@ Project Structure:
  README.txt       ; This readme 
  configure        ; autoconf (gnu-style) generated configure script 
  Makefile         ; Makefile wrapper for ant
- zips/            ; zipcache for downloaded zips and jar files. 
  mbuild/          ; Project (meta) build component.
                     This component holds all the build logic and is 
                     called by the toplevel build file. 
  source/          ; Source components, see below:
 
- source/auxtools/ ; 3rd party libaries and tools.
- source/core/     ; source components for the VRS. 
+ source/core/     ; Source components for the VRS. 
                     Note that the components in this 
                     directory are eclipse projects, each which an 
                     own source ("src") directory. 
- source/doc/      ; documentation components (need latex command to create documents). 
+ source/doc/      ; Documentation components (need latex command to create documents). 
                     LaTeX documents are treated as 'source' components.   
- source/app/      ; application examples and other plugins. 
+ source/modules/  ; Extra VLET modules. For example "module.jython"
  
  
 Junit tests:
@@ -67,7 +65,7 @@ Building the project
  
  To build everything, just type: 
  
-     ant
+     ant 
 
  which is equivalent to: 
 
@@ -79,11 +77,11 @@ Building the project
      
  The above command will build a default distribution in 'dist'.  
  
- Build a source distribution 
+ Build a source distribution (prepares components for a source distribution): 
   
      ant source-dist 
      
- Perform a binary installation after a (complete) build 
+ Perform a binary installation after a (complete) build:  
  
      ant bin-install
       
