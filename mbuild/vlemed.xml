@@ -54,17 +54,17 @@
      </zip>
 
     </target>
-    
+	
     
     <!-- VLEMED  -->
-    <target name="vlemed-all" depends="vlet-basic,vlet-vlemed-plugins"/>
+    <target name="vlemed-all" depends="vlet-core,vlet-vlemed-plugins"/>
                 
     <!-- 
          Vlemed components configuration. 
          First build vlet, the vlemed components
       --> 
     <!-- <target name="vlet-vlemed" depends="vlet-all"> --> 
-    <target name="vlet-vlemed" depends="vlet-basic">
+    <target name="vlet-vlemed" depends="vlet-core">
     
         <antcall target="buildComponent">
             <param name="name" value="util.kbtools"/>

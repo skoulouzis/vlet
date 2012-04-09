@@ -83,17 +83,17 @@
 
     <!-- VLET VFS api only based upon minimal cog-jglobus + axis 1.4 installation -->
     <target name="vlet-vrs" 
-            depends="auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core,vlet-post">
+            depends="auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core-vdrivers,vlet-post">
     </target>
 
     <!-- VLET VRS api + vbrower based upon minimal cog-jglobus + axis 1.4 installation -->
     <target name="vlet-sdk" 
-            depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core,vlet-vbrowser,vlet-post">
+            depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core-vdrivers,vlet-vbrowser,vlet-post">
     </target>
 
     <!-- Minimal set of components using cog-jglobus-1.4 and no Grid Service modules -->
-    <target name="vlet-basic" 
-            depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
+    <target name="vlet-core" 
+            depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core-vdrivers,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
     </target>
 
 	 <!-- Test build configuration for a minimal VBrowser build without GLOBUS (and no Lobo) ! --> 
@@ -102,18 +102,22 @@
 	</target>
 	
     <!-- Standard set, based upon globus gt4.1.0 wscore without extra (application) modules --> 
-    <target name="vlet-basic-gt4.1" 
-            depends="auxlibs-globus-wsclient-4.1.0,vlet-core,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
+    <target name="vlet-core-gt4.1" 
+            depends="auxlibs-globus-wsclient-4.1.0,vlet-core-vdrivers,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
     </target>
     
     <!--
          Full "vlet-all" distribution, including application modules. 
-         See vlemed.xml for vlemed targets or external.xml for others. 
+         Call vlet-core + vlet-modules 
       -->
     <target name="vlet-all"  
-            depends="project-enable-sdk,vlet-basic-gt4.1,vlet-aid,vlet-app-plugins,vlemed-all,vlet-tests,vlet-post">
+            depends="project-enable-sdk,vlet-core,vlet-modules,vlet-tests,vlet-post">
     </target>
-	
+
+    <target name="vlet-vlemed-all"  
+            depends="project-enable-sdk,vlet-core-gt4.1,vlet-modules,vlemed-all,vlet-tests,vlet-post">
+    </target>
+
     <!-- =================================================================== --> 
     <!--    VLET Auxiliary                                                   --> 
 	<!-- =================================================================== --> 
@@ -206,6 +210,7 @@
     <!--    VLET Core VRS/VFS                                                --> 
     <!-- =================================================================== --> 
                 
+	<!-- VRS itself, includes some internal vdrivers -->
     <target name="vlet-vrs-core" depends="mbuild-init">
 
         <antcall target="buildComponent">
@@ -216,7 +221,8 @@
     	
 	</target>
 	
-    <target name="vlet-core" depends="mbuild-init,vlet-vrs-core">
+	<!-- All "core" VDrivers -->
+    <target name="vlet-core-vdrivers" depends="mbuild-init,vlet-vrs-core">
     	
 	    <antcall target="buildComponent">
     		<param name="name" value="nl.uva.vlet.vfs.jcraft.ssh"/>
@@ -261,7 +267,7 @@
            <param name="cvs.path" value="core"/>
         </antcall>
 
-    	<!-- Can't support it no more, no more -->
+    	<!-- functionality could be covered by new iRods vdrivers -->
     	<!-- <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.srb"/>
             <param name="version" value=""/>
@@ -283,7 +289,7 @@
             <param name="cvs.path" value="core"/>
         </antcall>
     	
-    	<!-- moved to core  
+    	<!-- moved to vrs core  
     	<antcall target="buildComponent">
             <param name="name" value="vrs.info"/>
             <param name="version" value=""/>
@@ -330,7 +336,7 @@
                    
     </target>
     
-    <target name="vlet-gt4.1-services" depends="vlet-core">
+    <target name="vlet-gt4.1-services" depends="vlet-core-vdrivers">
  
       <antcall target="buildComponent">
          <param name="name" value="nl.uva.vlet.vrs.rfts"/>
@@ -347,40 +353,35 @@
          --> 
     </target>
     
-    <target name="vlet-app-plugins" depends="vlet-app-jmol,vlet-app-jython" /> 
-        
-    <target name="vlet-app-jmol" depends="vlet-core">
-    	
-	    <antcall target="buildComponent">
-	        <param name="name" value="addon.jython"/>
-	        <param name="version" value=""/>
-	        <param name="cvs.path" value="addons"/>
-	    </antcall>
-    	
-	</target> 
+	
+	<!-- =================================================================== --> 
+    <!--       VLET Modules   (addons/plugins/etc/)                          -->
+	<!-- =================================================================== --> 
+			
+    <target name="vlet-modules" depends="vlet-module-jython" /> 
 
 	<target name="check-build-jython">
 		<!-- set if not set --> 
-		<property name="project.build.app.jython" value="yes" />
+		<property name="project.build.module.jython" value="yes" />
 		 
     	<condition property="build.jython">
     		<and>
     			<!-- yes/true strings: -->
-	 			<istrue value="${project.build.app.jython}"/>
+	 			<istrue value="${project.build.module.jython}"/>
 			</and> 
  		</condition>
 
-    	<echo message=" project.build.app.jython =${project.build.doc.userguide} "/>     	
-		<echo message=" build.jython             =${build.jython} "/>
+    	<echo message=" project.build.module.jython =${project.build.module.jython} "/>     	
+		<echo message=" build.jython                =${build.jython} "/>
 
 	</target>
 			
-	<target name="vlet-app-jython" if="build.jython" depends="vlet-core,check-build-jython">
+	<target name="vlet-module-jython" if="build.jython" depends="vlet-core-vdrivers,check-build-jython">
            
         <antcall target="buildComponent">
-            <param name="name" value="app.jython"/>
+            <param name="name" value="module.jython"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="app"/>
+            <param name="cvs.path" value="modules"/>
         </antcall>
             	
     </target>
@@ -389,7 +390,7 @@
     <!--       AID plugins (under development)                               -->
     <!-- =================================================================== --> 
     
-    <target name="vlet-aid" depends="vlet-core">
+    <target name="vlet-aid" depends="vlet-core-vdrivers">
          
         <antcall target="buildComponent">
             <param name="name" value="app.aid.dbdemo"/>

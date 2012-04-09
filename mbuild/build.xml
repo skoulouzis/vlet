@@ -27,7 +27,7 @@
     <!-- configuration files -->
     <import file="configuration.xml" />
     <import file="distributions.xml" />
-
+ 
     <!-- 
         Target : config 
         Info   : read/check configuration         
@@ -111,11 +111,11 @@
 
     <!--
         Target : source-install 
-        info   : build source for default (basic set) of configured VLET components 
+        info   : build source for default (core set) of configured VLET components 
       -->
     <target name="source-dist" description="Create source distribution">
         <!-- Recurse into packages -->
-        <antcall target="vlet-basic">
+        <antcall target="vlet-core">
             <param name="target" value="source-dist" />
         </antcall>
     </target>
@@ -140,7 +140,7 @@
       -->
     <target name="dist-install" depends="mbuild-init" description="build+install all components">
         <!-- Recurse into packages -->
-        <antcall target="vlet-basic">
+        <antcall target="vlet-core">
             <param name="target" value="dist-install" />
         </antcall>
     </target>
@@ -346,7 +346,7 @@
     <target name="dist-clean" description="clean up" depends="mbuild-config">
 
         <!-- Recurse into packages -->
-        <antcall target="vlet-basic">
+        <antcall target="vlet-core">
             <param name="target" value="clean" />
         </antcall>
     </target>
