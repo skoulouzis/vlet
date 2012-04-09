@@ -42,12 +42,28 @@
            <updatePolicy>always</updatePolicy>
            <checksumPolicy>warn</checksumPolicy>
          </snapshots>
-         <url>http://elab.lab.uvalight.net:80/maven2</url> 
+         <url>http://elab.lab.uvalight.net/maven2</url> 
          
         </repository>
-        
+        <repository>
+           <id>piter.nl</id>
+         <name>piter.nl</name>
+         <layout>default</layout>
+         <releases>
+           <enabled>true</enabled>
+           <updatePolicy>always</updatePolicy>
+           <checksumPolicy>warn</checksumPolicy>
+         </releases>
+         <snapshots>
+           <enabled>true</enabled>
+           <updatePolicy>always</updatePolicy>
+           <checksumPolicy>warn</checksumPolicy>
+         </snapshots>
+	 <url>http://www.piter.nl/maven2</url> 
+         
+        </repository>
+
     </repositories>
-    
     
     <modules>
         <!--  core -->
@@ -57,7 +73,7 @@
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.gftp</module>
         <module>${vlet.modules.core}/nl.uva.vlet.lbl.srm</module>
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.srm</module>
-        <module>${vlet.modules.core}/org.glite.lfc</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.glite.lfc</module>
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.lfc</module>
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.irods</module>
         <!--  gui  -->

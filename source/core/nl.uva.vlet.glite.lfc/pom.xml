@@ -2,8 +2,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.uva.vlet</groupId>
   <artifactId>vlet-lfc</artifactId>
-  <version>1.0</version>
-   <build>
+  <version>${vlet.version}</version>
+  <name>lbl.srm (${vlet.version})</name> 
+  
+  <parent>
+      <groupId>nl.uva.vlet</groupId>
+      <artifactId>mvnbuild</artifactId>
+      <version>dev-1</version>
+      <relativePath>../mvnbuild/pom.xml</relativePath>
+  </parent>
+  
+  <build>
         <sourceDirectory>src</sourceDirectory>
         
         <!--  NOT  <testSourceDirectory>testsrc</testSourceDirectory> -->
@@ -18,7 +27,8 @@
 	        </configuration>
 	        </plugin>
         </plugins>
- </build>
+        
+   </build>
    <dependencies>
    	<dependency>
    		<groupId>org.globus</groupId>
