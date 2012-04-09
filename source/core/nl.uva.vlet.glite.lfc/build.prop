@@ -26,6 +26,6 @@ lfcj.version=1.0.0
 ###
 # Java Compiler options : Updated to 1.7 
 javac.debug=true
-javac.target=1.7
-javac.compiler=1.7
-javac.source=1.7
+javac.target=1.6
+javac.source=1.6
+javac.compiler=javac1.6
