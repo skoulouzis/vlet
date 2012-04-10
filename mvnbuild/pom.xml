@@ -15,7 +15,8 @@
         <vlet.dist>${vlet.rootdir}/dist</vlet.dist>
         <vlet.source.subdir>..</vlet.source.subdir>  
         <vlet.modules.core>${vlet.source.subdir}</vlet.modules.core>
-	    <vlet.version>1.4.2</vlet.version>
+        <!-- should read nl.uva.vlet.vrs.core/etc/vlet_version.prop --> 
+        <vlet.version>1.5.0-dev-0</vlet.version>
     </properties>
 
     <!-- Toplevel artefact settings --> 
