@@ -3,8 +3,7 @@
 	====================================================================
 		File: invoke component targets 
 		
-		This file contains all the component targets to build,checkout, 
-		update the component. 
+		This file contains all the component specific ant targets. 
 		See the configuration.xml for the component sets which can be build. 
 		This file is imported from the master mbuild.xml file. 
 	===================================================================			
@@ -15,28 +14,28 @@
 	<!-- 
 	 *	Target: check 
 	 *	Sets:
-	 *          cvspath               : path from root to component 
+	 *          scmpath               : path from root to component 
 	 *			component.exists      : whether the component already exists in the local build environment 
-	 *			component.update      : whether the component should be updated (cvs update) 
-	 *			component.checkout    : whether the component should be checked out from the cvs 
+	 *			component.update      : whether the component should be updated (scm update) 
+	 *			component.checkout    : whether the component should be checked out from the scm 
 	 *	Info:
-	 *		The 'check' target sets some conditional properties which determine the CVS state of the component
+	 *		The 'check' target sets some conditional properties which determine the scm state of the component
 	 *			
 	 --> 
     <target name="configure-component">
         
-		<!-- cvs environment --> 
-		<property name="cvspath" value="${cvs.path}/${name}" /> 
-		<property name="cvsname" value="${name}"/> 
-		<property name="cvsoptions" value="${cvs.version}" />  
+		<!-- scm environment --> 
+		<property name="scmpath" value="${scm.path}/${name}" /> 
+		<property name="scmname" value="${name}"/> 
+		<property name="scmoptions" value="${scm.version}" />  
 	    
 		
 		<!-- set default version, if not specified as parameter --> 
-		<!-- set cvs.version to ${version} if it is not set already --> 
+		<!-- set scm.version to ${version} if it is not set already --> 
 	    
-		<condition property="cvs.version" value="${version}" > 
+		<condition property="scm.version" value="${version}" > 
 		    <not>
-		 	    <isset property="cvs.version"/> 
+		 	    <isset property="scm.version"/> 
 		    </not> 
     	</condition> 
 			
@@ -50,7 +49,7 @@
 		<condition property="component.checkout" value="true"> 
 			<and>
 				<isfalse value="${component.exists}"/> 
-				<istrue value="${cvs.checkout}"/> 
+				<istrue value="${scm.checkout}"/> 
 			</and>
 		</condition> 
 		
@@ -58,7 +57,7 @@
             <and>
             	<!-- component must exist --> 
 		        <istrue value="${component.exists}"/> 
-				<istrue value="${cvs.update}"/> 
+				<istrue value="${scm.update}"/> 
 			</and>
 		</condition> 
 
@@ -71,10 +70,10 @@
 	    </condition> 
 	    
 	    <!--
-	       Non flattened project: use project CVS structure 
-	       Source path is <sourceroot>/<cvs.path>/<component name>
+	       Non flattened project: use project scm structure 
+	       Source path is <sourceroot>/<scm.path>/<component name>
 	    --> 
-	    <condition property="sourcepath" value="${project.sourceroot}/${cvs.path}/${name}">
+	    <condition property="sourcepath" value="${project.sourceroot}/${scm.path}/${name}">
 	        <isfalse value="${project.flatten}"/> 
 		</condition> 
 
@@ -109,36 +108,36 @@
 	<target name="isuptodate" depends="configure-component" if="component.exists" > 
 		
 		<!-- not 100%, Files in Attic result in warning => retval=1 
-		<exec executable="cvs" dir="${project.sourcedir}/${name}" resultproperty="component.cvsdiff" >  
+		<exec executable="scm" dir="${project.sourcedir}/${name}" resultproperty="component.scmdiff" >  
 			<arg line ="-Q diff -r HEAD"/> 
 		</exec> 
 		
 		<condition property="component.uptodate.string" value="no changes"> 
-			<equals arg1="${component.cvsdiff}" arg2="0" />
+			<equals arg1="${component.scmdiff}" arg2="0" />
 		</condition> 
 		
 		<condition property="component.uptodate.string" value="*** Warning: Component ${name} differes from repository ***"> 
-			<equals arg1="${component.cvsdiff}" arg2="1" />
+			<equals arg1="${component.scmdiff}" arg2="1" />
 		</condition> 
 		
-		<condition property="component.uptodate.string" value="*** Error: Component ${name} cvs diff return error code ***"> 
-			<equals arg1="${component.cvsdiff}" arg2="2" />
+		<condition property="component.uptodate.string" value="*** Error: Component ${name} scm diff return error code ***"> 
+			<equals arg1="${component.scmdiff}" arg2="2" />
 		</condition> 
 		
-		< ! - -  does cvs diff have more return values ? - - >  
+		< ! - -  does scm diff have more return values ? - - >  
 		
-		<condition property="component.uptodate.string" value="*** CVS UNKNOWN RETURN VALUE ***"> 
+		<condition property="component.uptodate.string" value="*** scm UNKNOWN RETURN VALUE ***"> 
 		  <and>
 		   <not>
-			<equals arg1="${component.cvsdiff}" arg2="0" />
+			<equals arg1="${component.scmdiff}" arg2="0" />
 		   </not>
 		   <not>
-			<equals arg1="${component.cvsdiff}" arg2="1" />
+			<equals arg1="${component.scmdiff}" arg2="1" />
 		   </not> 
 		  </and> 
 		</condition> 
 		
-		<echo message="cvs diff returned  = ${component.cvsdiff}" /> 
+		<echo message="scm diff returned  = ${component.scmdiff}" /> 
 		<echo message=" ${name}: uptodate = ${component.uptodate.string}" />
 		<echo message=" ${name}: uptodate = ${component.uptodate.string}${line.separator}" file="${mbuild.log}" append="true" />
 		--> 		
@@ -148,18 +147,18 @@
     <!-- Target: checkout: currently not used (anymore) --> 
    <target name="checkout-component" depends="configure-component" if="component.checkout">
 		<!-- info --> 
-		<echo message=" ${name}: cvs checkout ${cvsoptions} ${cvspath} "/>
-		<echo message=" ${name}: cvs root        = ${cvs.user}@${cvs.host}/${cvs.root}"/>
-		<echo message=" ${name}: cvs destination = ${sourcepath}"/>
+		<echo message=" ${name}: scm checkout ${scmoptions} ${scmpath} "/>
+		<echo message=" ${name}: scm root        = ${scm.user}@${scm.host}/${scm.root}"/>
+		<echo message=" ${name}: scm destination = ${sourcepath}"/>
 			
 		<!-- Todo: find way to copy stdout to logfile --> 
-		<echo file="${mbuild.log}" message=" ${name}: cvs checkout ${cvsoptions} ${cvspath}  =>  ${sourcepath} ${line.separator}" append="true" /> 
+		<echo file="${mbuild.log}" message=" ${name}: scm checkout ${scmoptions} ${scmpath}  =>  ${sourcepath} ${line.separator}" append="true" /> 
 
-	    <echo message="cvs co ${cvsoptions} ${cvspath}"/>
-	     <cvs command="co ${cvsoptions} ${cvspath}"
-	        cvsRoot=":ext:${cvs.user}@${cvs.host}/${cvs.root}"
+	    <echo message="scm co ${scmoptions} ${scmpath}"/>
+	     <scm command="co ${scmoptions} ${scmpath}"
+	        scmRoot=":ext:${scm.user}@${scm.host}/${scm.root}"
 		    dest="${sourcepath}"
-	        cvsRsh="ssh"
+	        scmRsh="ssh"
 	        />
 	    
 		<!-- important: rescan property since checkout results in existing component: --> 
@@ -169,8 +168,8 @@
 	
 	<!-- update already existing component --> 
 	<target name="update-component" depends="configure-component" if="component.update">
-		<echo file="${mbuild.log}" message=" ${name}: cvs update ${sourcepath} in ${line.separator}" append="true" /> 
-		<cvs command="update"	dest="${sourcepath}" />
+		<echo file="${mbuild.log}" message=" ${name}: scm update ${sourcepath} in ${line.separator}" append="true" /> 
+		<scm command="update"	dest="${sourcepath}" />
 	</target>	
 
 	<!--
@@ -181,12 +180,12 @@
 	 *
 	 *	Info:
 	 *		Uses the conditional targets: checkoutComponent and updateComponent to 
-	 *    	check wether the compontent needs to be check'd out or updated from the cvs. 
+	 *    	check wether the compontent needs to be check'd out or updated from the scm. 
 	 --> 
 	<target name="doBuildComponent" depends="checkout-component,update-component"> 
 
 		<fail unless="component.exists" 
-		 message="*** Component: ${name} at ${sourcepath} is missing or cvs checkout went wrong (missing build.xml file ?)" />
+		 message="*** Component: ${name} at ${sourcepath} is missing or scm checkout went wrong (missing build.xml file ?)" />
 		
 		<!-- default target: can be overriden by previous target--> 
 		<property name="target" value="dist-install"/> 
@@ -204,7 +203,7 @@
 		<echo file="${comp.conf}" 
 			  message= "#=== Component ${name} ===${line.separator}build=ok${line.separator}" append="true" /> 
 		<echo file="${comp.conf}" 
-			  message= "cvspath=${cvspath}${line.separator}" append="true" /> 
+			  message= "scmpath=${scmpath}${line.separator}" append="true" /> 
 		<echo file="${comp.conf}" 
 			  message= "target=${target}${line.separator}" append="true" /> 
 			    
@@ -219,8 +218,8 @@
         <echo message=" project dist         = ${project.dist}"/> 
         <echo message=" project sourceroot   = ${project.sourceroot}"/> 
         <echo message=" project flatten      = ${project.flatten}"/> 
-	    <echo message=" --- cvs --- "/> 
- 	    <echo message=" component cvspath    = ${cvspath}"/> 	
+	    <echo message=" --- scm --- "/> 
+ 	    <echo message=" component scmpath    = ${scmpath}"/> 	
    		<echo message=" component sourcepath = ${sourcepath}"/> 
 		<echo message=" component exists     = ${component.exists.string}"/> 
 	
@@ -228,7 +227,7 @@
     		${line.separator}Build Component: ${name} 
 	    	${line.separator}===
 	    	${line.separator} Target   = ${target}
-	    	${line.separator} cvspath  = ${cvspath}
+	    	${line.separator} scmpath  = ${scmpath}
 	    	${line.separator} sourcepath = ${sourcepath}
 	    	${line.separator} " append="true" /> 
 		

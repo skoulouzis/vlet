@@ -10,7 +10,7 @@
         These target call build.xml with distribution specific settings. 
        
         For example: 
-            ant build-current   # check out current version (HEAD) from CVS 
+            ant build-current   # check out current version (HEAD) from SCM repository 
                                   and build it. 
             ant build-release   # build stable version which has been released.  
             ant build-source    # create source distribution.   
@@ -31,9 +31,9 @@
              can be overriden by specifying them before calling this target 
              -->
         
-        <property name="cvs.version" value="" />
-        <property name="cvs.module" value="vlet" />
-        <property name="cvsoptions" value="" />
+        <property name="scm.version" value="" />
+        <property name="scm.module.name" value="vlet" />
+        <property name="scm.options" value="" />
 
         <!-- Project structure. Default assumes CVS checkout, not eclipse workspace! -->
 
@@ -41,7 +41,7 @@
         <property name="project.packs"       location="vletpacks" />
         <property name="project.dist"        location="${project.packs}/dist" />
         <property name="project.checkoutdir" location="${project.packs}" />
-        <property name="project.topleveldir" location="${project.checkoutdir}/${cvs.module}" />
+        <property name="project.topleveldir" location="${project.checkoutdir}/${scm.module.name}" />
         <!-- non flattened: use toplevel directory as source root -->
         <property name="project.sourceroot" location="${project.topleveldir}/source" />
               
@@ -83,50 +83,66 @@
     <!-- 
         Target: Project Checkout 
         Parameters: (defaults are taken from project.prop)!
-             - cvs.module 
-             - cvs.user
-             - cvs.host
-             - cvs.root
-             - cvsoptions
+             - scm.module.name 
+             - scm.user
+             - scm.host
+             - scm.root
+             - scm.options
                 
      -->
-    <target name="project-checkout" depends="project-build-init" description="Checkout from CVS" >
+    <target name="project-checkout" depends="project-build-init" description="Checkout from SCM" >
         
-        <echo message=" --- cvs checkout --- " /> 
-        <echo message=" ${cvs.module}: cvs command     = cvs checkout ${cvsoptions} ${cvs.module} " />
-        <echo message=" ${cvs.module}: cvs user        = ${cvs.user}" />
-        <echo message=" ${cvs.module}: cvs host        = ${cvs.host}" />
-        <echo message=" ${cvs.module}: cvs root        = ${cvs.user}@${cvs.host}/${cvs.root}" />
-        <echo message=" ${cvs.module}: cvs destination = ${project.checkoutdir}" />
+    	<property name="scm.destdir"  location="${project.checkoutdir}/${scm.module.name}" />
+    	
+        <echo message=" --- SCM checkout module: ${scm.module.name} --- " /> 
+    	<echo message=" ${scm.module.name}: SCM type        = ${scm.type} " />
+    	       
+	    <echo message=" ${scm.module.name}: scm host        = ${scm.host}" />
+        <echo message=" ${scm.module.name}: scm user        = ${scm.user}" />
+    	<echo message=" ${scm.module.name}: scm path        = ${scm.user}@${scm.host}${scm.root} " />
+    	        
+    	<echo message=" ${scm.module.name}: scm checkout cmd= ${scm.checkoutcommand}" />
+        <echo message=" ${scm.module.name}: scm destination = ${scm.destdir}" />
 
         <!-- Todo: find way to copy stdout to logfile -->
         <echo file="${mbuild.log}" 
-              message=" ${cvs.module}: cvs checkout ${cvsoptions} ${cvs.module}  =>  ${project.sourcedir} ${line.separator}" 
+              message=" SCM CHECKOUT: ${scm.checkoutcommand} ==> ${project.checkoutdir} ${line.separator}" 
               append="true" />
 
-        <echo message="cvs co ${cvsoptions} ${cvs.module}" />
-        <cvs command="co ${cvsoptions} ${cvs.module}" 
-             cvsRoot="${cvs.user}@${cvs.host}/${cvs.root}" 
-             dest="${project.checkoutdir}" cvsRsh="ssh" />
+    	<echo message=" >>> " /> 
+        <echo message=" SCM CHECKOUT: ${scm.checkoutcommand} ${scm.destdir} " />
+    	<echo message=" >>> " /> 
+    	    		
+        <!-- EXEC : SVN command  --> 
+    	<exec command="${scm.checkoutcommand} ${scm.destdir}" />
+    	<!-- ============================================================= -->
+    	
+        <!-- <cvs command="co ${scm.options} ${scm.module.name}" 
+             cvsRoot="${scm.user}@${scm.host}/${scm.root}" 
+             dest="${project.checkoutdir}" cvsRsh="ssh" /> -->
 
         <!-- 
             end checkout 
           -->
-        <!-- block further checkouts after initial checkout ! -->
-        <property name="cvs.checkout" value="false" />
+        <!-- block further checkouts after initial checkout ! 
+             (only works if scm.checkout property hasn't been set yet) 
+          -->
+        <property name="scm.checkout" value="false" />
         
         <!-- remove unused source --> 
         <!-- delete dir="${project.checkoutdir}/vlet/source/auxtool.javagat"/-->
-        <delete dir="${project.checkoutdir}/vlet/source/auxtools/"/>
+        <!--  <delete dir="${project.checkoutdir}/vlet/source/auxtools/"/>
         <delete dir="${project.checkoutdir}/vlet/source.old" />  
         <delete dir="${project.checkoutdir}/vlet/source.old2" />
         <delete dir="${project.checkoutdir}/vlet/source.old3" />
-                
+          --> 
+    	
         <!-- Strip old/development code ! --> 
-        <delete dir="${project.checkoutdir}/vlet/source/vrs" />
+        <!--
+    	<delete dir="${project.checkoutdir}/vlet/source/vrs" />
         <delete dir="${project.checkoutdir}/vlet/source/gui" />
         <delete dir="${project.checkoutdir}/vlet/source/ws" />
-        
+          -->
                         
     </target>
 
@@ -231,21 +247,19 @@
         <echo message=" - target packs dir = ${project.packs}"/> 
             
         <!-- CLEAN NOT USED MODULES -->
-        <delete dir="${project.checkoutdir}/vlet/source/core/org.globus.gt4.1.wscore"/>
+        <!-- <delete dir="${project.checkoutdir}/vlet/source/core/org.globus.gt4.1.wscore"/>
         <delete dir="${project.checkoutdir}/vlet/source.old"/>
         <delete dir="${project.checkoutdir}/vlet/source.old2"/>
-        <delete dir="${project.checkoutdir}/vlet/source.old3"/>
+        <delete dir="${project.checkoutdir}/vlet/source.old3"/> -->
 
-        <!-- old code -->
-        <delete dir="${project.checkoutdir}/vlet/source/auxtools/"/>
-        <delete dir="${project.checkoutdir}/vlet/source/vrs/"/>
-        <delete dir="${project.checkoutdir}/vlet/source/gui/"/>
         
         <!-- proto/obsolete/defunct --> 
+    	<!--
         <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.gui.cobra.viewer"/>
         <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.vrs.rfts"/>
         <delete dir="${project.checkoutdir}/vlet/source/core/nl.uva.vlet.gui.wms"/>
-
+        --> 
+    	
         <!-- Experimental Code: Not in Source Distributions -->
         <delete dir="${project.checkoutdir}/vlet/source/demo"/>
         <delete dir="${project.checkoutdir}/vlet/source/app"/>
@@ -288,7 +302,7 @@
     <target name="build-current" description="build basic (default) distribution">
           
         <!-- build configuration:  -->
-        <property name="build.target" value="vlet-basic" />
+        <property name="build.target" value="vlet-core" />
         
         <!-- do actual build --> 
         <antcall target="master-build"/>
@@ -325,7 +339,7 @@
         <!-- include source in jars ! -->
         <property name="build.target" value="vlet-sdk" />
         
-        <property name="cvsoptions" value="-r vlet-1-4-1" />
+        <property name="scm.options" value="-r vlet-1-4-1" />
         <property name="project.includesource" value="true"/> 
         <property name="vlet.prefix" value="vlet"/>
         <property name="vlet.zip.prefix" value="vlet-sdk"/>
@@ -338,7 +352,7 @@
     <target name="build-all-release" depends="" description="build latest released 'all' version">
 
         <property name="build.target" value="vlet-all" />
-        <property name="cvsoptions" value="-r vlet-1-4-1" />  
+        <property name="scm.options" value="-r vlet-1-4-1" />  
         
         <!-- set prefix to explicit version. Else the tstamp will be used --> 
         <property name="vlet.prefix" value="vlet"/>
@@ -351,8 +365,8 @@
 
     <target name="build-release" depends="" description="build latest released version">
 
-        <property name="build.target" value="vlet-basic" />
-        <property name="cvsoptions" value="-r vlet-1-4-1" />  
+        <property name="build.target" value="vlet-core" />
+        <property name="scm.options" value="-r vlet-1-4-1" />  
                 
         <!-- set prefix to explicit version. Else the tstamp will be used --> 
         <property name="vlet.prefix" value="vlet"/>
@@ -370,14 +384,14 @@
     <target name="build-source" description="build source distribution">
         
         <!-- build target -->
-        <property name="build.target" value="vlet-basic" />
+        <property name="build.target" value="vlet-core" />
         <property name="build.source" value="source-only" /> <!-- any value evaluates to 'true' -->
         
         <property name="vlet.prefix" value="vlet-src"/>
         <property name="vlet.zip.prefix" value="vlet-src"/>
             
         <!-- block further checkouts -->
-        <property name="cvs.checkout" value="false" />
+        <property name="scm.checkout" value="false" />
 
         <!-- do actual build --> 
         <antcall target="master-build"/>
@@ -390,7 +404,7 @@
     <target name="build-source-release"  description="build lastest (stable) source distribution">
        
         <!-- set tag version + prefix version --> 
-        <property name="cvsoptions" value="-r vlet-1-4-1" />
+        <property name="scm.options" value="-r vlet-1-4-1" />
         
         <!-- set prefix to explicit version. Else the tstamp will be used --> 
         <property name="vlet.prefix" value="vlet-src"/>
@@ -410,7 +424,7 @@
     	<property name="build.target" value="vlet-sdk" />
     	
     	<!-- cvs tag makes sure only sdk modules are checked out from cvs ! --> 
-        <property name="cvsoptions" value="-r vlet-sdk" /> 
+        <property name="scm.options" value="-r vlet-sdk" /> 
 
         <!-- If no explicit version is used the project build tstamp will be used --> 
         <property name="vlet.prefix" value="vlet-src"/>
@@ -429,7 +443,7 @@
         <property name="build.target" value="vlet-sdk" />
 
         <!-- cvs tag makes sure only sdk modules are checked out from cvs ! --> 
-        <property name="cvsoptions" value="-r vlet-sdk-1-4-1" /> 
+        <property name="scm.options" value="-r vlet-sdk-1-4-1" /> 
         
         <!-- set prefix to explicit version. Else the tstamp will be used --> 
         <property name="vlet.prefix" value="vlet-src"/>

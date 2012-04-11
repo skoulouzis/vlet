@@ -99,40 +99,49 @@ project.tests.logdir=${project.tests.vardir}/log
 project.flatten=true
 
 ###
-# Java Compiler options : Explicitly use java 1.7 
+# Java Compiler options : Explicitly use java 1.6 
 javac.debug=true
-javac.target=1.7
-javac.source=1.7
-javac.compiler=javac1.7
+javac.target=1.6
+javac.source=1.6
+javac.compiler=javac1.6
 
 ###
-### default CVS settings 
+### default SCM (cvs/svn) settings 
 ###
+
 #
-# if component already exist do a cvs update 
-cvs.root=/cvsroot/vlet
-cvs.module=vlet
-cvs.update=false
+# if component already exist do a scm (svn/cvs/git) update 
+# CVS checkout dir and CVS cache:
+scm.type=svn
+scm.command=svn
+scm.host=svn.code.sf.net
+scm.port=22
+scm.root=/p/vlet/code/trunk
+#toplevel "vlet" module 
+scm.module.name=vlet
+#variable user.name is defined by ant 
+#scm.user=${user.name}
+# use autobuilder account:
+# anonymous access is allowed. User only needed for RW access. 
+scm.user=devpiter
+# SVN allows optional checkout directory after full commmand. See distributions.xml for full path:
+#scm.checkoutcommand=${scm.command} checkout svn+ssh://${scm.user}@${scm.host}${scm.root}/${scm.module.name}
+scm.checkoutcommand=${scm.command} checkout svn://${scm.host}${scm.root}/${scm.module.name}
+
+# whether to autoupdate code from scm
+scm.update=false
 #cvs.update=true
 # overwrite if component already exists ? (implemented yet) 
-cvs.overwrite=false
+scm.overwrite=false
 
 #default version: moved to distributions.xml  
-#cvs.version=-r vlet-1-3-2
-#cvs.version=-r HEAD
-cvs.version=
-# CVS checkout dir and CVS cache:
-cvs.host=gforge.vl-e.nl
-cvs.port=2401
-#variable user.name is defined by ant 
-#cvs.user=${user.name}
-# use autobuilder account:
-cvs.user=ptdeboer
-
+#scm.version=-r vlet-1-4-1
+#scm.version=-r HEAD
+scm.version=
 
 ###
 # Optional build targets (imported from configured build.prop with prefix="project")
-#  
+# These are configured by the toplevel "./configure" script  
 #project.build.doc.userguide=yes
 #project.build.module.jython=yes
 
@@ -157,9 +166,8 @@ project.install.docdir=${project.install}/doc
 ### External Tools/System Tools 
 ###
 
-#most developpers use 'gnu make' syntax without knowing it. Do not use obsolete 'make'
-tools.gmake=gmake
-tools.make=${tools.gmake} 
+#tools.make=gmake
+tools.make=make; 
 
 # other tools and/or commands can be defined as follows:
 #tools.sed=sed 
@@ -186,15 +194,9 @@ tools.make=${tools.gmake}
 # use project settings (only if configured) 
 #globus.location=${project.globus.location}
 
-### SWIG 
-#Swig installation (if other than default installed should be used) 
-#You can also change this by defining the SWIG_INSTALL environment variable
-#swig on fs2: 
-#swig.location=/usr/share/local/package/swig-1.3.20
-
 ### Java Home
 # not that this variable might already be set by ant !
-#java.home=/usr/java/j2sdk1.4.2_04
+#java.home=/opt/jdk1.7
 
 ### Jre Environment 
 #Java Runtime Environment:

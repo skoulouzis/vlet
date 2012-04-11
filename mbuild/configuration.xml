@@ -6,80 +6,26 @@
         File      : components configuration file 
         Info      :
         
-        Configuration File for the VLET project.
+        Configuration file for the VLET project.
         Contains list of components and specifies dependencies
-        between components. This file also specifies the place in the CVS 
-        for (optional) dynamic builds of a 'configured' version. 
+        between components. This file also specifies the place in the SCM 
+    	repository for (optional) dynamic builds of a 'configured' version. 
         
         Currently the components are grouped in sets of components where
     	each group is an ant target. 
-        Actual distribution target are distributions.xml
+        Actual distribution targets (release targets) are in distributions.xml
     
     ===================================================================            
     </description>
 
     <!-- import component targets -->
     <import file="build.xml"/>
-    <import file="vlemed.xml"/>
-    <import file="external.xml"/>
+    <!-- <import file="vlemed.xml"/>  -->
     <import file="doComponent.xml" />
-	
-    <!--      
-         Configuration Settings
-    
-         The properties defined in project.prop  can be overriden by setting
-         them on the command line when invoking ant or definining them 
-         before the .prop file is imported. 
-         For example by calling a configuration target in configuration.xml. 
-         This uses the feature that property setting in ant is done in a 
-         first-come-first set way. When a property is defined for a 
-         second time, only the first settings will be used. 
-                   
-         For example: to set the cvs.checkout option, invoke ant as follows:
-         
-                   ant -Dcvs.checkout=true 
-                   
-         This will overrule subsequent settings of this property (f.e. in project.prop) 
-                     
-         To use a different component dir (and use also as it as checkout dir) invoke:
-         
-                   ant -Dcvs.checkout=true -Dproject.source=vlet-source
-                   
-         This will create a ./vlet-source directory for the check'd out source. 
-                    
-         Note that when invoking ant in the local component directory 
-         the DEFAULT .prop files are read and used. 
-         -->
-
-
-    <!--
-        =========================================================================
-            build components 
-        =========================================================================
-
-        In the next section build targets are defines which build a set 
-        of components. Some build targets are a set of components which depend 
-        on the other. These targets are called from the 'master' mbuild
-        file to build the selected project or set of components. 
-        
-        Parameters can be supplied to change the default behaviour of the build. 
-        
-        For example: 
-          - Example to 'fix' component at a date: 
-                <param name="cvs.checkout.options" value="-D 08-oct-2004"/>  
-                    
-          - use fixed 'version': (if tagged with version ID) 
-                <param name="cvs.version" value="v1.1"/> 
-                    
-        NOTE: The 'cvs.version' parameter will only be used when cvs.checkout=true. 
-              This parameter can also be (globally) overruled when it is set
-              BEFORE calling buildComponents 
-         -->
-     
+	   
     <!-- ================================================================= --> 
-    <!-- Vlet Components: targets group components and their dependencies  --> 
+    <!-- VLET target groups                                                --> 
     <!-- ================================================================= --> 
-
 
     <!-- VLET VFS api only based upon minimal cog-jglobus + axis 1.4 installation -->
     <target name="vlet-vrs" 
@@ -91,7 +37,7 @@
             depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core-vdrivers,vlet-vbrowser,vlet-post">
     </target>
 
-    <!-- Minimal set of components using cog-jglobus-1.4 and no Grid Service modules -->
+    <!-- Default VLET components (core) cog-jglobus-1.4 and no Grid Service modules -->
     <target name="vlet-core" 
             depends="project-enable-sdk,auxlibs,cog-jglobus-1.4,axis-1.4,vlet-core-vdrivers,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
     </target>
@@ -101,7 +47,7 @@
             depends="auxlibs,vlet-vrs-core,vlet-vbrowser,vlet-tests,vlet-post">
 	</target>
 	
-    <!-- Standard set, based upon globus gt4.1.0 wscore without extra (application) modules --> 
+    <!-- Legacy Globus webservice core (not supported anymore) --> 
     <target name="vlet-core-gt4.1" 
             depends="auxlibs-globus-wsclient-4.1.0,vlet-core-vdrivers,vlet-gui,vlet-latexdocs,vlet-tests,vlet-post">
     </target>
@@ -114,68 +60,70 @@
             depends="project-enable-sdk,vlet-core,vlet-modules,vlet-tests,vlet-post">
     </target>
 
-    <target name="vlet-vlemed-all"  
+	<!-- legacy vlemed. Not supported 
+      <target name="vlet-vlemed-all"  
             depends="project-enable-sdk,vlet-core-gt4.1,vlet-modules,vlemed-all,vlet-tests,vlet-post">
-    </target>
-
+      </target>
+     -->
+	
     <!-- =================================================================== --> 
-    <!--    VLET Auxiliary                                                   --> 
+    <!--    VLET Components and other modules                                --> 
 	<!-- =================================================================== --> 
     
+	<!-- Auxiliary libraries --> 
     <target name="auxlibs" depends="mbuild-init">
 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.auxlibs"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
         
     </target>
     
-    <!-- Full GT4.1.0 wscore -->  
+    <!-- Full GT4.1.0 wscore (not supported anymore) -->  
     <target name="globus-wsclient-4.1.0" depends="auxlibs">
     
         <antcall target="buildComponent">
             <param name="name" value="org.globus.wsclient-4.1.0"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
   
     </target>
                 
-	 <target name="cog-jglobus-1.4" depends="auxlibs">
+	<!-- minimal cog toolkit. Still stuck to 1.4  --> 
+	<target name="cog-jglobus-1.4" depends="auxlibs">
 
         <antcall target="buildComponent">
             <param name="name" value="cog.jglobus-1.4"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     </target>
             	
-	  <!-- Minimal Axis 1.4 can replace globus 4.1 webclient 
-	        -->  
+	<!-- Minimal Axis 1.4 can replace globus 4.1 webclient. 
+	     Enough for pure webservice clients -->
     <target name="axis-1.4" depends="auxlibs">
 
 	        <antcall target="buildComponent">
 	            <param name="name" value="org.apache.axis-1.4"/>
 	            <param name="version" value=""/>
-	            <param name="cvs.path" value="core"/>
+	            <param name="scm.path" value="core"/>
 	        </antcall>
 	  
 	    </target>
 	
     <!-- mutual exlusive targets: either "full" or "minimal" --> 
-    
     <target name="auxlibs-globus-wsclient-4.1.0" depends="auxlibs,globus-wsclient-4.1.0"/>
-    <!-- =================================================================== --> 
-    <!--    VLET Core VRS/VFS                                                --> 
+
+	<!-- =================================================================== --> 
+    <!--    VLET documentation                                               --> 
     <!-- =================================================================== --> 
 	    
     <!-- 
-         conditional target: latexdocs can only be
-         created on Linux
+         Conditional target: latexdocs can only be created on Linux
       -->
-
 	
 	<target name="check-build-latexdocs">
 		<!-- set if not set --> 
@@ -201,13 +149,13 @@
         <antcall target="buildComponent" >
             <param name="name" value="doc.userguide"/>
             <param name="version" value=""/>
-	        <param name="cvs.path" value="doc"/>
+	        <param name="scm.path" value="doc"/>
         </antcall>  
     	
     </target>
                 
     <!-- =================================================================== --> 
-    <!--    VLET Core VRS/VFS                                                --> 
+    <!--    VLET core VRS/VFS                                                --> 
     <!-- =================================================================== --> 
                 
 	<!-- VRS itself, includes some internal vdrivers -->
@@ -216,90 +164,88 @@
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vrs.core"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     	
 	</target>
 	
-	<!-- All "core" VDrivers -->
+	<!-- All "core" vdrivers -->
     <target name="vlet-core-vdrivers" depends="mbuild-init,vlet-vrs-core">
     	
 	    <antcall target="buildComponent">
     		<param name="name" value="nl.uva.vlet.vfs.jcraft.ssh"/>
     	    <param name="version" value=""/>
-    	    <param name="cvs.path" value="core"/>
+    	    <param name="scm.path" value="core"/>
     	</antcall>
  
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.grid.globus"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.gftp"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
-        
         
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.lbl.srm"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     	
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.srm"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.glite.lfc"/>
                <param name="version" value=""/>
-               <param name="cvs.path" value="core"/>
+               <param name="scm.path" value="core"/>
         </antcall>
                     
         <antcall target="buildComponent">
            <param name="name" value="nl.uva.vlet.vfs.lfc"/>
            <param name="version" value=""/>
-           <param name="cvs.path" value="core"/>
+           <param name="scm.path" value="core"/>
         </antcall>
 
-    	<!-- functionality could be covered by new iRods vdrivers -->
+    	<!-- Functionality could be implemented by new iRods vdriver -->
     	<!-- <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.srb"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall> -->  
-        
     	
 		<!-- prototypes -->
-			
+    	
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vjs.wms"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     	
     	 <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.irods"/>
 	        <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     	
-    	<!-- moved to vrs core  
+    	<!-- moved to vrs core as internal vdriver:
     	<antcall target="buildComponent">
             <param name="name" value="vrs.info"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="vrs"/>
+            <param name="scm.path" value="vrs"/>
         </antcall> 
          --> 
     
     </target>
 
-    <!-- GUI modules --> 
+    <!-- GUI components --> 
     <target name="vlet-vbrowser" depends="vlet-vrs-core">
         
     	<!-- GUI/VBrowser -->
@@ -307,57 +253,60 @@
      	<antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.gui.utils"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.gui.vbrowser"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
 	</target> 
     	
     <!-- GUI modules --> 
     <target name="vlet-gui" depends="vlet-vrs-core,vlet-vbrowser">
         
-    	<!-- Lobo --> 
+    	<!-- Lobo Browser --> 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.gui.lobo.viewer"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
     	
     	<!-- Pedal PDF --> 
         <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.gui.pedal"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="core"/>
+            <param name="scm.path" value="core"/>
         </antcall>
                    
     </target>
     
+	<!-- Globus 4.1 modules. Not supported anymore --> 
     <target name="vlet-gt4.1-services" depends="vlet-core-vdrivers">
  
       <antcall target="buildComponent">
          <param name="name" value="nl.uva.vlet.vrs.rfts"/>
          <param name="version" value=""/>
-         <param name="cvs.path" value="core"/>
+         <param name="scm.path" value="core"/>
      </antcall>
   
         <!-- Disabled prototype for now:
         <antcall target="buildComponent">
             <param name="name" value="ws.pvfs"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="ws"/>
+            <param name="scm.path" value="ws"/>
         </antcall>
          --> 
     </target>
     
 	
 	<!-- =================================================================== --> 
-    <!--       VLET Modules   (addons/plugins/etc/)                          -->
+    <!--       VLET modules   (addons/plugins/etc/)                          -->
 	<!-- =================================================================== --> 
-			
+
+	<!-- current modules --> 
+    			
     <target name="vlet-modules" depends="vlet-module-jython" /> 
 
 	<target name="check-build-jython">
@@ -381,13 +330,13 @@
         <antcall target="buildComponent">
             <param name="name" value="module.jython"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="modules"/>
+            <param name="scm.path" value="modules"/>
         </antcall>
             	
     </target>
 
     <!-- =================================================================== --> 
-    <!--       AID plugins (under development)                               -->
+    <!--       AID plugins (prototype)                                       -->
     <!-- =================================================================== --> 
     
     <target name="vlet-aid" depends="vlet-core-vdrivers">
@@ -395,13 +344,13 @@
         <antcall target="buildComponent">
             <param name="name" value="app.aid.dbdemo"/>
             <param name="version" value=""/>
-            <param name="cvs.path" value="app"/>
+            <param name="scm.path" value="app"/>
         </antcall>
             
       <!-- <antcall target="buildComponent">
            <param name="name" value="app.vbplugin.aid.RDFViewer"/>
            <param name="version" value=""/>
-           <param name="cvs.path" value="app"/>
+           <param name="scm.path" value="app"/>
        </antcall>  -->
                    
     </target>
@@ -414,7 +363,7 @@
            <antcall target="buildComponent">
                <param name="name" value="nl.uva.vlet.vrs.tests"/>
                <param name="version" value=""/>
-               <param name="cvs.path" value="core"/>
+               <param name="scm.path" value="core"/>
            </antcall>
     </target>
                    
@@ -423,6 +372,7 @@
 
        <!-- update permissions -->
        <chmod dir="${project.dist}" perm="ugo+x" includes="**/*.sh,**/bin/*" />
+    	
     </target> 
         
     <!--

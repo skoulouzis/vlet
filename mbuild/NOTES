@@ -46,22 +46,26 @@ About this component
     Current defined toplevel targets: 
         <nothing>            no arguments: default target = project-install 
                              (uses defaults from project.prop file!) 
-        dist-install         build+install 'current' components using mbuild defaults 
+        dist-install         build+install core components using mbuild defaults 
+        dist-install-all     build+install all components (including modules) using mbuild defaults 
         vlet-install         build+install 'vlet' components using mbuild defaults  
         dist-clean           clean all components, recurses into components 
-        clean		     clean mbuild, does not recurse into components. 
-
+        clean		         clean mbuild, does not recurse into components.
+         
+	Source targets: 
+	    source-dist          prepare components for a source release. 
+	    
     Releases and distribution targets (distribution.xml) :      
 
-        build-current        checkout latest + build vlet core components snapshot in 'vletpacks'
-        build-all-current    checkout latest + build vlet ALL components  in 'vletpacks'
-        build-release        build latest (versioned) default release. 
+        build-current        checkout latest + build vlet 'core' components snapshot in 'vletpacks'
+        build-all-current    checkout latest + build vlet ALL components (core+modules)  in 'vletpacks'
+        build-release        build latest (versioned) 'core' release. 
         build-all-release    build latest (versioned) 'all' release. 
 
     Source Releases (distribution.xml): 
 
-        build-source-current   create source release from latest from CVS HEAD 
-        build-source-release   create latest stable source release 
+        build-source-current   create source release from latest from SCM HEAD. 
+        build-source-release   create latest stable source release. 
         
     Component targets:    
         doComponent -Dname=<component> -Dtarget=<component-target>
@@ -69,11 +73,7 @@ About this component
     Definable project-variables are:
         
         -Dproject.sourcedir=<component parent dir> - parent directory to checkout/find the components
-        -Dproject.dist=<install-dir>             - ABSOLUTE PATH of project dist or installation directory 
-        -Dcvs.checkout=[true|false]              - wether to check out missing components
-        -Dcvs.checkout.options                   - options for the cvs checkout command like: "-D 04-oct-2004"
-                                                   or "-r stable-1.0.0". 
-                                                   Setting this variable OVERRIDES configuration information                                    
+        -Dproject.dist=<install-dir>             - ABSOLUTE PATH of project dist or installation directory                                
 
     Examples:
     ===  
@@ -82,12 +82,12 @@ About this component
         
     - To clean the whole project type: 
         ant clean 
-
-    - checkout and build  'current' distribution  in ./vletpacks 
-        ant build-current 
         
-    - checkout and build  'current' distribution  in ./dist
+    - build  'current' distribution  in ./dist
         ant dist-install
+
+    - build  'current' distribution + modules  in ./dist
+        ant dist-install-all
         
     - To build/clean a separate component type: 
         ant doComponent -Dname=<component> -Dtarget=dist-install 
@@ -101,13 +101,9 @@ About this component
         
           [frontend_dir]$ ant -Dproject.root=../mbuild dist 
 
-    - checkout,build and install current distribution in seperate component and dist directory
-      (This will ONLY checkout the needed components from CVS) type: 
-    
-        ant -Dcvs.checkout=true -Dproject.sourcedir=comps-current -Dproject.dist=dist-current
-    
-      optionally you can specify a cvs date tag, for example '-D <date>' : 
-      
-          ant -Dcvs.checkout=true -Dcvs.checkout.options="-D 04-oct-2004" -Dproject.dist=`pwd`/dist-04oct-1
-       
+
+	Build release from SVN: 
+	
+    - checkout and build  'current' distribution from SCM in ./vletpacks 
+        ant build-current 
                   

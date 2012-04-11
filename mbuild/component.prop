@@ -3,8 +3,8 @@
 # Author:  P.T. de Boer
 #
 # Info:
-#    property file specified the default layout and settings 
-#    of the used components. 
+#    property file which specifies the default component structure and settings. 
+#
 
 ##
 #mandatory component properties (one for all) 

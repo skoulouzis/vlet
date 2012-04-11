@@ -36,8 +36,9 @@
     <target name="mbuild-config" depends="">
 
         <!-- 
-        	configuration: Import properites >>> HERE <<<  
+        	configuration: Import buidl specific properites >>> HERE <<<  
           -->
+    	
         <property file="build.prop" />
         <property file="project.prop" />
     
@@ -93,12 +94,11 @@
             ${line.separator} --- distribution settings ---              
             ${line.separator} project.includesource = ${project.includesource}
             ${line.separator}
-            ${line.separator} --- cvs ---                  
-            ${line.separator} cvs.checkout   = ${cvs.checkout}
+            ${line.separator} --- SCM ---                  
+            ${line.separator} scm.checkout   = ${scm.checkout}
             ${line.separator}
             ${line.separator} --- external tools/external software ---          
-            ${line.separator} globus.location   = ${globus.location}           
-            ${line.separator} swig.location     = ${swig.location}"/>
+            ${line.separator} globus.location   = ${globus.location}"/>           
 
         <echo message="${init.message.txt}" /> 
         
