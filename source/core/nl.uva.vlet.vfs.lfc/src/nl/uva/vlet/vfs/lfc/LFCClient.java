@@ -104,7 +104,7 @@ public class LFCClient
     static
     {
         // Override LFC Logger with my Logger!
-        lfcLogger = ClassLogger.getLogger("org.glite.lfc");
+        lfcLogger = ClassLogger.getLogger("nl.uva.vlet.vfs.lfc");
         LFCServer.setLogger(lfcLogger);
 
         logger = ClassLogger.getLogger(LFCClient.class);
