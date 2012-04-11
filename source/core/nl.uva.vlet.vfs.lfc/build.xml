@@ -1,7 +1,7 @@
-<project name="vfs.srm" default="dist" basedir=".">
+<project name="vfs.lfc" default="dist" basedir=".">
     <description>
         Project   : VLET/VBrowser
-        Component : LFC VDriver 
+        Component : LFC vrdiver 
                 
         Configuring: 
         ===

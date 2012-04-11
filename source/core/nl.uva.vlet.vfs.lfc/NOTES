@@ -1,12 +1,17 @@
 ###
 #
-# Developers not for the Pure Java LFC Driver.
+# Developers notes for the LFC java implementation.
 #
-# Based upon code from G-Eclipse
+# Based upon code from gEclipse. 
 #
 # Written by: Spiros Koulouzis and Piter T. de Boer 
 #
 
+Updates:
+- added exception handling
+- added more LFC features
+- fixed numerous bugs
+- code now licensed under Apache 2.0 
 
 
 
