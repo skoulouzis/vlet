@@ -37,13 +37,13 @@
 
         <!-- Project structure. Default assumes CVS checkout, not eclipse workspace! -->
 
-        <property name="project.flatten"     value="false" />  <!-- use cvs structure ! --> 
+        <property name="project.flatten"     value="false" />  <!-- use scm repo structure ! --> 
         <property name="project.packs"       location="vletpacks" />
         <property name="project.dist"        location="${project.packs}/dist" />
         <property name="project.checkoutdir" location="${project.packs}" />
         <property name="project.topleveldir" location="${project.checkoutdir}/${scm.module.name}" />
         <!-- non flattened: use toplevel directory as source root -->
-        <property name="project.sourceroot" location="${project.topleveldir}/source" />
+        <property name="project.sourceroot"  location="${project.topleveldir}/source" />
               
         <!-- import local properties first -->
         <property file="local.prop" />
@@ -66,12 +66,12 @@
         <echo message="  build.source=${build.source} "/>
 
         <echo message=" --- project build structure --- " /> 
-         <echo message="  project.flatten     = ${project.flatten}"/> 
-         <echo message="  project.packs       = ${project.packs}"/> 
-         <echo message="  project.dist        = ${project.dist}"/> 
-          <echo message="  project.checkoutdir = ${project.checkoutdir}"/> 
-          <echo message="  project.topleveldir = ${project.topleveldir}"/> 
-          <echo message="  project.sourceroot  = ${project.sourceroot}"/> 
+        <echo message="  project.flatten     = ${project.flatten}"/> 
+        <echo message="  project.packs       = ${project.packs}"/> 
+        <echo message="  project.dist        = ${project.dist}"/> 
+        <echo message="  project.checkoutdir = ${project.checkoutdir}"/> 
+        <echo message="  project.topleveldir = ${project.topleveldir}"/> 
+        <echo message="  project.sourceroot  = ${project.sourceroot}"/> 
                
     </target>
 
@@ -197,7 +197,7 @@
         <echo message=" - project.dist     = ${project.dist}" />
         <echo message=" - vlet.version     = ${vlet.version}" />
         <echo message=" - vlet.prefix      = ${vlet.prefix}" />
-           <echo message=" - vlet.zip.prefix  = ${vlet.zip.prefix}" />
+        <echo message=" - vlet.zip.prefix  = ${vlet.zip.prefix}" />
         <echo message=" - vlet.zip.root    = ${vlet.zip.root}" />
         <echo message=" - vlet.zip.filename= ${vlet.zip.filename}" />
         <echo message=" - target packs dir = ${project.packs}"/> 

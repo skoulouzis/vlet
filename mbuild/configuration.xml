@@ -114,7 +114,7 @@
 	  
 	    </target>
 	
-    <!-- mutual exlusive targets: either "full" or "minimal" --> 
+    <!-- auxlibs+globsu webservice client (obsolete) --> 
     <target name="auxlibs-globus-wsclient-4.1.0" depends="auxlibs,globus-wsclient-4.1.0"/>
 
 	<!-- =================================================================== --> 
@@ -158,7 +158,7 @@
     <!--    VLET core VRS/VFS                                                --> 
     <!-- =================================================================== --> 
                 
-	<!-- VRS itself, includes some internal vdrivers -->
+	<!-- VRS itself, includes some internal vdrivers. Check packages with ".vdriver" prefix!  -->
     <target name="vlet-vrs-core" depends="mbuild-init">
 
         <antcall target="buildComponent">

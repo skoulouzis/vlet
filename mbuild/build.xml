@@ -6,7 +6,7 @@
         Maintainer : P.T. de Boer 
         
     	Info:    
-            VLET Project Root Ant Build File         
+            VLET project root Ant (meta) build file         
             The toplevel (meta) build file to call to build the whole project
             or a single component. 
     ===========================================================================
@@ -36,7 +36,7 @@
     <target name="mbuild-config" depends="">
 
         <!-- 
-        	configuration: Import buidl specific properites >>> HERE <<<  
+        	configuration: Import build specific properites >>> HERE <<<  
           -->
     	
         <property file="build.prop" />
@@ -94,8 +94,11 @@
             ${line.separator} --- distribution settings ---              
             ${line.separator} project.includesource = ${project.includesource}
             ${line.separator}
-            ${line.separator} --- SCM ---                  
-            ${line.separator} scm.checkout   = ${scm.checkout}
+            ${line.separator} --- SCM (optional) ---                  
+            ${line.separator} scm.type       = ${scm.type}
+            ${line.separator} scm.host       = ${scm.host}
+            ${line.separator} scm.root       = ${scm.root}
+        	${line.separator} scm.checkout   = ${scm.checkout}
             ${line.separator}
             ${line.separator} --- external tools/external software ---          
             ${line.separator} globus.location   = ${globus.location}"/>           
