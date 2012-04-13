@@ -1,4 +1,4 @@
-<project name="vlet-toplevel-build" default="dist-install" basedir=".">
+<project name="vlet-toplevel-build" default="vlet-dist" basedir=".">
     <description>
         Project     : VLET  
         Component   : Toplevel distribution build file. 
@@ -61,20 +61,25 @@
         <echo message=" JAVAC                      ='${project.JAVAC}'" /> 
         
     </target>
+   
+	<!-- === VLET toplevel targets === --> 
+	
+    <target name="vlet-dist" depends="dist-install"/>
+
+	<target name="vlet-dist-sdk" depends="dist-install-sdk"/>
     
+	<target name="vlet-dist-all" depends="dist-install-all"/>
+
+    <target name="vlet-source-dist" depends="source-dist"/>
+
+	<target name="vlet-bin-install" depends="bin-install"/>
+
+	<!-- === Actual project targets === --> 
+	
     <target name="source-dist" depends="init" description="Create source release">
         <ant antfile="${mbuild.dir}/build.xml" target="source-dist"> 
         </ant> 
     </target>
-   
-    <!-- shorcut/alias -->  
-    <target name="vlet" depends="dist-install"/>
-
-    <!-- shorcut/alias -->  
-    <target name="vlet-sdk" depends="dist-install-sdk"/>
-
-    <!-- shorcut/alias -->  
-    <target name="vlet-all" depends="dist-install-all"/>
 
     <!--
          Target: dist-install 
@@ -93,7 +98,7 @@
     </target>
 
     <!--
-         Target: dist-install-all
+          Target: dist-install-sdk: Build minimal "SDK" project 
       -->
     <target name="dist-install-sdk" depends="configure" description="Build complete project">
         <ant antfile="${mbuild.dir}/build.xml" target="vlet-sdk"> 

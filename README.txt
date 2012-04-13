@@ -4,12 +4,12 @@
 # Author  : Piter T. de Boer 
 #
 
-This is the toplevel README for the VLET distribution. 
+This is the toplevel README for the VLET source distribution. 
 If you can read this file it means you checked out the VLET source directly 
-from CVS. 
+from the SCM repository. 
 Some components might need extra configuration before a build can be done. 
-Also experimental source may have been checked out currently not part of a 
-stable distribution. This code will not be build. 
+Also experimental source may have been checked out which is currently not part 
+of a stable distribution. This code will not be build. 
 
 As a quick build instruction, execute the following commands: 
 
@@ -28,12 +28,11 @@ Project Structure:
  [build.prop]     ; (auto)configured build properties 
  README.txt       ; This readme 
  configure        ; autoconf (gnu-style) generated configure script 
- Makefile         ; Makefile wrapper for ant
+ Makefile         ; Makefile wrapper for ant. The Makefile calls ant targets. 
  mbuild/          ; Project (meta) build component.
                     This component holds all the build logic and is 
                     called by the toplevel build file. 
  source/          ; Source components, see below:
-
  source/core/     ; Source components for the VRS. 
                     Note that the components in this 
                     directory are eclipse projects, each which an 
@@ -49,14 +48,12 @@ Current junit test source can be found under:
  
  source/core/nl.uva.vlet.vrs.tests 
    
-These can be run only from an Eclipse environment. 
+These can only be run from an Eclipse environment. 
 
 
 Building the project
 ===
- This is the toplevel build. It is intended for (non modular) auto builds. 
- The ant file included in this toplevel directory will build ALL components 
- currently under this structure. 
+ This is the toplevel build. 
  The ant file in this directory is just a bootstrap ant file for the 
  build in mbuild. See that directory for the actual  components and project
  structure. 
