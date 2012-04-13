@@ -22,7 +22,7 @@
 ANT_ERROR			="*** Error: ant not found or not on your PATH"
 JAVA_ERROR			="*** Error: javac not found or not on your PATH"
 JAVAC_ERROR			="*** Error: javac not found or not on your PATH"
-JAVA_VERSION_ERROR	="*** Error: Wrong java version. Need >=1.5"
+JAVA_VERSION_ERROR	="*** Error: Wrong java version. Need >=1.6"
 
 .PHONY: all configure build-check dist install clean
 
@@ -48,7 +48,7 @@ build-check:
 	@which javac >/dev/null || (echo ${JAVAC_ERROR} ; exit 1) 
 
 #disabled: 	
-#@[ `java -version 2>&1 | grep version | sed "s/[^0-9]*[0-9]\.\([0-9]\).*/\1/"` -ge 5 ] || (echo ${JAVA_VERSION_ERROR} && exit 1) 
+#@[ `java -version 2>&1 | grep version | sed "s/[^0-9]*[0-9]\.\([0-9]\).*/\1/"` -ge 6 ] || (echo ${JAVA_VERSION_ERROR} && exit 1) 
 	
 ##	
 # Build distribution 
