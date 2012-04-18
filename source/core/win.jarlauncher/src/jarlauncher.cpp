@@ -1,13 +1,11 @@
 /*
- * Windosh JarLauncher. 
+ * Win/Dos JarLauncher.
  *
  * <pre> 
- * (c) Piter.NL 2004-2010
- * (C) VL-e  2006-2010
- * Distribution Prohibited. 
+ * (c) Piter.NL 2004-2012
  * </pre>
  *
- * @Author:  Piter T. de Boer, redistributed for the VL-e project. 
+ * @Author:  Piter T. de Boer
  */ 
 
 #include <windows.h>
@@ -16,11 +14,20 @@
 #include "ptc/ptcutil.hpp"
 #include "debug.hpp" 
 
-#define VMARGS_PROP   "vmargs"
-#define JAVAEXE_PROP  "java.exe"
-#define JAVA_HOME     "JAVA_HOME"
-#define JAVAHOME_PROP "java.home"
-#define JAVAW_EXE     "javaw.exe"
+#define JAVA_HOME         "JAVA_HOME"
+
+// ============================================
+// vbrowser.ini properties:
+// ============================================
+
+#define JAVA_VMARGS_PROP   "java.vmargs"
+#define JAVA_EXE_PROP      "java.exe"
+#define JAVA_HOME_PROP     "java.home"
+// actual jarfile to start:
+#define JAVA_MAINJAR_PROP "java.mainjar"
+
+// Java commands:
+#define JAVAW_EXE   "javaw.exe"
 
 #define MAX_TXT 1313
 
@@ -33,7 +40,7 @@
  *   path.  
  */ 
 
-char *vmargs=NULL; 
+char *java_vmargs=NULL;
 char *java_home=NULL; 
 char *java_exe=NULL; 
 char *main_ini=NULL;
@@ -48,9 +55,12 @@ int readini(char *filename)
    {
       return 0;
    }
+   // ====================
+   // Read "vbrowser.ini"
+   // ====================
 
    char *line=NULL;
-   debug("Reading ini file: %s\n",filename); 
+   DEBUGPRINTF("Reading ini file: %s\n",filename);
 
    do
    {
@@ -64,27 +74,32 @@ int readini(char *filename)
       if (line[0]=='[') 
          continue; // section 
 
-      debug(" - parsing line: '%s'\n",line); 
+      DEBUGPRINTF(" - parsing line: '%s'\n",line);
       char *name=NULL; 
       char *value=NULL; 
       int pos=Ssplit(line,'=',&name,&value); 
 
       if (pos>0)
       {
-         if (Scompare(name,VMARGS_PROP)==0) 
+         if (Scompare(name,JAVA_VMARGS_PROP)==0)
          {
-             vmargs=value; 
-             debug(" + Found: vmargs=%s\n",vmargs); 
+             java_vmargs=value;
+             DEBUGPRINTF(" + found: java.vmargs=%s\n",java_vmargs);
          }
-         else if (Scompare(name,JAVAEXE_PROP)==0) 
+         else if (Scompare(name,JAVA_EXE_PROP)==0)
          {
              java_exe=value; 
-             debug(" + Found: javaexe=%s\n",vmargs); 
+             DEBUGPRINTF(" + found: java.exe=%s\n",java_vmargs);
          }
-         else if (Scompare(name,JAVAHOME_PROP)==0) 
+         else if (Scompare(name,JAVA_HOME_PROP)==0)
          {
              java_home=value; 
-             debug(" + Found: jave.home=%s\n",vmargs); 
+             DEBUGPRINTF(" + found: java.home=%s\n",java_vmargs);
+         }
+         else if (Scompare(name,JAVA_MAINJAR_PROP)==0)
+         {
+        	 main_jar=value;
+             DEBUGPRINTF(" + found: java.mainjar=%s\n",java_vmargs);
          }
 
       }
@@ -96,20 +111,20 @@ int readini(char *filename)
 
 const char *nonullstring(const char *string, const char *defaultString)
 {
-	if (string!=NULL)
-			return string;
+    if (string!=NULL)
+        return string;
 
-	if (defaultString!=NULL)
-			return defaultString;
+    if (defaultString!=NULL)
+        return defaultString;
 
-	return "<NULL>";
+    return "<NULL>";
 }
 // ===
 // Main 
 // ===
 
 int WINAPI WinMain(HINSTANCE hInstance,
-			HINSTANCE hPrevInstance,
+            HINSTANCE hPrevInstance,
             LPSTR lpCmdLine,
             int nCmdShow)
 {
@@ -134,8 +149,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
  sepc[0] = '\0';
  dirname=strdup(exepath); 
 
- debug("dirname=%s\n",dirname); 
- debug("full basename=%s\n",basename); 
+ DEBUGPRINTF("dirname=%s\n",dirname);
+ DEBUGPRINTF("full basename=%s\n",basename);
 
  // remove .exe: truncate 
  if (strlen(basename)>4)   
@@ -143,7 +158,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
  // truncate exepath! 
 
- main_jar=Sappend(basename,".jar"); 
+ main_jar=Sappend(basename,".jar"); // default mainjar to exectuable name!
  main_ini=Sappend(basename,".ini"); 
   
  // exepath now points to basedir of installation ! 
@@ -154,6 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
  // ================
  // Read ${MAIN}.ini 
  // ================
+ // might change default settings!
  readini(main_ini); 
 
  // Defaults if not specified in config file
@@ -163,7 +179,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
  // Environment Variable can have quotes: 
  java_home=SstripQuotes(java_home); 
  
- debug(" getenv(JAVA_HOME=%s\n",nonullstring(java_home,"<undefined>"));
+ DEBUGPRINTF(" getenv(JAVA_HOME=%s\n",nonullstring(java_home,"<undefined>"));
  
  if (java_exe==NULL) 
     java_exe=Sduplicate(JAVAW_EXE);
@@ -190,15 +206,15 @@ int WINAPI WinMain(HINSTANCE hInstance,
  javaws_path=strdup(jcmd); 
 
  // Add optional VMArgs: 
- if (vmargs!=NULL)
+ if (java_vmargs!=NULL)
  {
-     strcat(jcmd, vmargs); 
+     strcat(jcmd, java_vmargs);
      strcat(jcmd, " ");  // add space:
  }
 
  // add -jar command 
  {
-     // start with hardcoded: -jar <MAINJAR> 
+     // start with -jar <MAINJAR>
      strcat(jcmd,"-jar "); 
      strcat(jcmd, main_jar); 
      strcat(jcmd, " ");
@@ -214,7 +230,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
  fprintf(stderr," Jarlauncher jar = %s\n",nonullstring(main_jar,"<undefined>"));
  fprintf(stderr," Jarlauncher ini = %s\n",nonullstring(main_ini,"<undefined>"));
  fprintf(stderr," JAVA_HOME       = %s\n",nonullstring(java_home,"<undefined>"));
- fprintf(stderr," vmarguments     = %s\n",nonullstring(vmargs,"")); // empty is allowed
+ fprintf(stderr," vmarguments     = %s\n",nonullstring(java_vmargs,"")); // empty is allowed
  fprintf(stderr," arguments       = %s\n",nonullstring(lpCmdLine,""));
  fprintf(stderr," commandline     = %s\n",jcmd); // actual command
  fprintf(stderr,"\n"); 
@@ -232,9 +248,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
     		 "*** Jarlauncher Exception ***\n",
     		 "javaw.exe not found:",
     		 javaws_path);
-     fprintf(stderr,"\n*** Jarlauncher javaw not found:%s***\n",javaws_path);
-     MessageBox(NULL,message,"File Error", MB_OK);
-     return 1;
+     fprintf(stderr,"\n*** Jarlauncher: javaw not found:%s***\n",javaws_path);
+     MessageBox(NULL,message,"Java Error", MB_OK);
+     return 101;
  }
 
  if (Fexists(main_jar)==0)
@@ -244,16 +260,47 @@ int WINAPI WinMain(HINSTANCE hInstance,
     		 "Jarfile doesn't exist or is unreadable:",
     		 main_jar);
      //strcat(message,"."); 
-     fprintf(stderr,"\n*** Jarlauncher file open error:%s***\n",main_jar);
+     fprintf(stderr,"\n*** Jarlauncher: file open error:%s***\n",main_jar);
      MessageBox(NULL,message,"File Error", MB_OK);
-     return 2;
+     return 102;
  }
 
  // ***
  // exec
  // ***
 
- WinExec(jcmd, SW_SHOW);
+ unsigned int result=WinExec(jcmd, SW_SHOW);
+ 
+ if (result>31)
+ {
+	 DEBUGPRINTF(" Java started...\n");
+ }
+ else
+ {
+	 fprintf(stderr,"return code=%i\n",result);
+
+	 if (result==2)
+	 {
+		 char *message=Sappend(
+	    		 "*** Jarlauncher Exception ***\n",
+	    		 "Java couldn't be started or Java isn't properly installed.");
+	     //strcat(message,".");
+	     fprintf(stderr,"\n*** Jarlauncher: Java couldn't be started:%s***\n",jcmd);
+	     MessageBox(NULL,message,"Java Error", MB_OK);
+	 }
+	 else
+	 {
+		 char *message=Sappend(
+	    		 "*** Jarlauncher Exception ***\n",
+	    		 "Unknown error occured.");
+	     //strcat(message,".");
+	     fprintf(stderr,"\n*** Jarlauncher: Unknown error:%i***\n",result);
+	     MessageBox(NULL,message,"Java Error", MB_OK);
+	 }
+
+	 return result;
+ }
+
  return 0;
 }
 

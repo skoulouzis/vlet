@@ -3,7 +3,7 @@
 //#define DEBUG 1
 
 #ifdef DEBUG
-  #define debug(format, args...) fprintf (stderr, format, args)
+  #define DEBUGPRINTF(format, args...) fprintf(stderr, format, args)
 #else
-  #define debug(format, args...) /* debug */ 
+  #define DEBUGPRINTF(format, args...) /* debug */
 #endif
