@@ -117,7 +117,38 @@ lib/icons/mimetypes     # custom mimetype icons.
 py/                     # Java Python (Jython) examples.  
 \end{verbatim}
 \end{boxedlisting}
- 
+
+
+\subsection{Configuring vbrowser.ini for Windows}
+
+Under Windows, the file 'vbrowser.exe' (located in the 'bin' directory) starts
+the VBrowser.
+This executable uses the default Java version installed and starts the Java
+executable jar file 'vbrowser.jar'. 
+If you want to specify an alternative java installation, or the default java
+installation can't be found, you can specify it in a configuration file
+'vbrowser.ini' located in the same directory as 'vbrowser.exe'.
+\\
+If on windows VLET is installed in for example \Path{C:\bsl vlet\bsl } you can
+create the file \Path{vbrowser.ini} at the following path:\\
+
+	\tab \Path{C:\bsl vlet\bsl bin\bsl vbrowser.ini} 
+
+In that file you can add the following lines:
+
+	\tab \Path{\#\#}\\
+	\tab \Path{\# Use following Java installation:}\\
+	\tab \Path{java.home=C:\bsl Program Files\bsl Java\bsl jdk1.7}\\
+
+You don't have to put the path between quotes, but make sure no extra spaces are
+after the last part of the path (\Path{..\bsl jdk1.7}).\\
+Also you can specify extra Java VM options, for example to increase the Java
+memory settings: 
+
+	\tab \Path{\# Extra Java VM options. Increase heap size:}\\
+	\tab \Path{java.vmargs=-Xms256m -Xmx512m}
+	
+	
 \subsection{Configuring the installation}
 
  The next sections explains how to configure the default settings in your
@@ -136,7 +167,8 @@ py/                     # Java Python (Jython) examples.
 
 \section{Configuring Grid Certificates}
 
-\subsection{Configuring your personal grid certificate}
+
+\subsection{Configuring your personal Grid certificate}
 \label{sec:user_configuration}
 
 The next paragraphs explain where you can find/store your grid certificate
@@ -160,6 +192,10 @@ depending on the operating system you are using.
  
 	 \tab \Path{C:\bsl WINDOWS\bsl profiles\bsl (Your User Name)\bsl .globus}
 
+ Or on Windows 7, this could be: 
+ 
+ 	 \tab \Path{C:\bsl Users\bsl (Your User Name)\bsl .globus}
+ 	
  The \Path{C:\bsl WINDOWS} part is the prefix where windows is installed. 
  The \Path{.globus} is the directory where the Globus Commodity Grid
  Toolkit (CoG) stores its  configuration files. \\
@@ -180,7 +216,7 @@ depending on the operating system you are using.
  	 \tab \Path{C:\bsl My Documents\bsl globus}
  
  When installing your grid certificates into another location than the default, 
- you need to configure the VBrowserto search for this location. 
+ you need to configure the VBrowser to search for this location. 
  This will be explained in Section \ref{sec:grid_proxy_configuration}. 
  
 \subsubsection{Your Grid Certificate files}
@@ -212,18 +248,18 @@ depending on the operating system you are using.
  file is present it will override any configurations made in \VLETCONF\ or 
  \path{HOME/.vletrc/vletrc.prop}
 
-\subsection{Configuring host certificates} 
+\subsection{Configuring host or ``root CA'' certificates} 
 
 The default place to store host certificates under \Linux\ is:\\
 
-	\tab \Path{/etc/grid-security/certifates}\\
+	\tab \Path{/etc/grid-security/certificates}\\
 	
 If you don't have the rights to add/install certificates to this place, you can 
 add new certificates to the following location: 
 
 	\tab \VLETINSTALL\path{/etc/certificates}
 
-Or to add CA certificates to your user environment put them in: 
+Or to add root CA certificates to your user environment put them in: 
 
 	\tab \path{HOME/.vletrc/certificates} 
 
