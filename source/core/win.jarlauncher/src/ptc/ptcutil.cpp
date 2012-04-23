@@ -287,8 +287,8 @@ int Fexists(const char *filepath)
 	if (fp==NULL)
 		return 0;
 
-	return 1;
 	fclose(fp);
+	return 1;
 }
 
 /**
