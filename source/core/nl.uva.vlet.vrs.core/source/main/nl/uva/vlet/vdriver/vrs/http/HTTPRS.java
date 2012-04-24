@@ -21,7 +21,7 @@
  */ 
 // source: 
 
-package nl.uva.vlet.vrs.http;
+package nl.uva.vlet.vdriver.vrs.http;
 
 import java.io.InputStream;
 import java.io.OutputStream;

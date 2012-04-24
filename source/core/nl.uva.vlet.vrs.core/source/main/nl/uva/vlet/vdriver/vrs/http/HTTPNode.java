@@ -21,7 +21,7 @@
  */ 
 // source: 
 
-package nl.uva.vlet.vrs.http;
+package nl.uva.vlet.vdriver.vrs.http;
 
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHARSET;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;

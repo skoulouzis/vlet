@@ -43,12 +43,12 @@ import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.exception.VlUnsupportedSchemeException;
 import nl.uva.vlet.util.PluginLoader;
 import nl.uva.vlet.util.PluginLoader.PluginInfo;
+import nl.uva.vlet.vdriver.vrs.http.HTTPFactory;
+import nl.uva.vlet.vdriver.vrs.http.HTTPSFactory;
 import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrl.VRLStreamHandlerFactory;
 import nl.uva.vlet.vrms.MyVLe;
-import nl.uva.vlet.vrs.http.HTTPFactory;
-import nl.uva.vlet.vrs.http.HTTPSFactory;
 import nl.uva.vlet.vrs.ui.IMasterUI;
 import nl.uva.vlet.vrs.ui.SimpelUI;
 
