@@ -36,7 +36,6 @@ import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRSContext;
 
 /**
- * 
  *  Example Skeleton FileSystemServer implementation 
  *  See Super Class FileSystemNode methods for default implementation. 
  */  

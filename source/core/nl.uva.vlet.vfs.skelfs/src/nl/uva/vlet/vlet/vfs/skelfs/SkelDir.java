@@ -30,7 +30,6 @@ import nl.uva.vlet.vrl.VRL;
 
 /**
  * Minimal implementation of the VDir class. 
- * Redirect most methods to the FileSystem object. 
  */
 public class SkelDir extends VDir
 {
@@ -60,6 +59,10 @@ public class SkelDir extends VDir
 	@Override
 	public VFSNode[] list() throws VlException 
 	{
+		// >>>
+		// This method creates a dummy list of nodes! 
+		// >>>
+		
 		VFSNode nodes[]=new VFSNode[3];
 		
 		String[] paths = this.getVRL().getPathElements(); 
@@ -73,14 +76,14 @@ public class SkelDir extends VDir
 	
 	public SkelFS getFileSystem()
 	{
-	    // Down Cast from VFileSystem inteface to actual FileSystem object. 
+	    // Downcast from VFileSystem interface to actual FileSystem object. 
 	    return (SkelFS)super.getFileSystem(); 
 	}
 	
 	@Override
 	public long getModificationTime() throws VlException
 	{
-		// return current time (for testing), replace with actaul modification time 
+		// Example: Return current time (for testing), replace with actual modification time 
 		// of file. 
 		return System.currentTimeMillis();
 	}
@@ -95,14 +98,13 @@ public class SkelDir extends VDir
 	@Override
 	public boolean isWritable() throws VlException
 	{
-		// check user right to change, write to this file. 
+		// check user whether user has the rights to change this file. 
 		return this.getFS().hasWriteAccess(this.getPath()); 
 	}
 
 	public long getNrOfNodes() throws VlException
 	{
-		// If there is a faster way the just listing the directory, 
-		// re implement this method. 
+		// count number of nodes. Faster implementation is recommended. 
 		VFSNode[] files = this.list();
 		
 		if (files==null)
@@ -114,7 +116,7 @@ public class SkelDir extends VDir
 	public VRL rename(String newName, boolean renameFullPath)
 			throws VlException
 	{
-		// Perform rename. This can be a full path rename. 
+		// Perform rename. This can be a full path rename or a relative (path) rename. 
 		return this.getFS().rename(getPath(),newName,renameFullPath);  
 	}
 

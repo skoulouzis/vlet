@@ -35,7 +35,7 @@ import nl.uva.vlet.vrs.VRSContext;
 
 /**
  *  Example Skeleton VFS Factory. 
- *  Creates FileSystem objects implementing the VFileSystem interface.  
+ *  This is the Factory for VirtualFileSytems or VFileSystem objects. 
  */ 
 public class SkelFSFactory extends VFSFactory
 {
@@ -61,7 +61,7 @@ public class SkelFSFactory extends VFSFactory
 			throws VlException 
 	{
 		// Delegate implementation to super method. 
-		// This method checks if there isn't already a filesystem object created
+		// Super method checks if there isn't already a filesystem object created
 		// for this specific context and VRL location and optionally return cached FileSystem object. 
 		VFileSystem fs=super.openFileSystem(context,location);
 		return fs; 

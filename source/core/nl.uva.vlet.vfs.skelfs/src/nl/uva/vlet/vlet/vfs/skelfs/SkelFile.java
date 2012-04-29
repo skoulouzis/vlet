@@ -32,8 +32,8 @@ import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 
 /** 
- * Example Skeleton File.
- * Most methods are redirected o the FileSystem implementation.  
+ * Example Skeleton VFile.
+ *  
  */
 public class SkelFile extends VFile
 {
@@ -116,15 +116,16 @@ public class SkelFile extends VFile
     }
 
     protected void downloadTo(VFSTransfer transfer,VFile targetLocalFile)
-    throws VlException
+    	throws VlException
     {
         // copy contents into local file:
         super.downloadTo(transfer, targetLocalFile); 
     }
-
+    
+    // explicit downcast: 
     protected SkelFS getFS()
     {
-    	// downcast from VFileSystem interface to actual FileSystem object. 
+    	// downcast from VFileSystem interface to actual (Skeleton) FileSystem object. 
     	return ((SkelFS)this.getFileSystem()); 
     }
 }

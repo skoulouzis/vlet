@@ -1,10 +1,8 @@
+### NOTES ###
+
 Example VFS Skeleton Implementation. 
- 
-Developers Notes:
 
-- contains only stub methods. 
-
-Put low level communication into "SkelfsClient"
-Use SKFile and SKDir as glue object between the Client and the VFS. 
+Contains minimal skeleton filesystem implementation. 
+Extend SkelDir,SkelFile and SkelFS for actual filesystem implementation. 
 
 
