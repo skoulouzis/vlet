@@ -32,15 +32,15 @@ import nl.uva.vlet.vrl.VRL;
  * Minimal implementation of the VDir class. 
  * Redirect most methods to the FileSystem object. 
  */
-public class SKDir extends VDir
+public class SkelDir extends VDir
 {
 
-	public SKDir(SkelFS skelfs, VRL vrl)
+	public SkelDir(SkelFS skelfs, VRL vrl)
 	{
 		super(skelfs, vrl);
 	}
 	
-	public SKDir(SkelFS skelfs, String path)  throws VlException
+	public SkelDir(SkelFS skelfs, String path)  throws VlException
 	{
 		this(skelfs, skelfs.resolvePathVRL(path));  	
 	}
@@ -64,9 +64,9 @@ public class SKDir extends VDir
 		
 		String[] paths = this.getVRL().getPathElements(); 
 		
-		nodes[0]=new SKDir(this.getFileSystem(),this.resolvePathVRL("SK-Dir#"+paths.length)); 
-		nodes[1]=new SKFile(this.getFileSystem(),this.resolvePathVRL("SK-file1")); 
-        nodes[2]=new SKFile(this.getFileSystem(),this.resolvePathVRL("SK-file2")); 
+		nodes[0]=new SkelDir(this.getFileSystem(),this.resolvePathVRL("SK-Dir#"+paths.length)); 
+		nodes[1]=new SkelFile(this.getFileSystem(),this.resolvePathVRL("SK-file1")); 
+        nodes[2]=new SkelFile(this.getFileSystem(),this.resolvePathVRL("SK-file2")); 
 		    	
         return nodes; 
 	}

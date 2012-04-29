@@ -26,7 +26,7 @@ vdriver.name=SkelFS
 # Package name space and plugin directory  
 vdriver.package=nl.uva.vlet.vfs.skelfs
 # VRS Factory class 
-vdriver.factory=nl.uva.vlet.vfs.skelds.SkelFSFactory
+vdriver.factory=nl.uva.vlet.vfs.skelfs.SkelFSFactory
 
 # build environment: 
 vdriver.dist=${vdriver.root}/dist

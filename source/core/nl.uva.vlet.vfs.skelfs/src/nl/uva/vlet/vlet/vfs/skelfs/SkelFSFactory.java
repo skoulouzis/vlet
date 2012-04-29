@@ -34,8 +34,8 @@ import nl.uva.vlet.vrs.VRSContext;
 
 
 /**
- *  Example dummy Skeleton VFS Factory
- *  Creates FileSystem resources implementing the VFileSystem interface.  
+ *  Example Skeleton VFS Factory. 
+ *  Creates FileSystem objects implementing the VFileSystem interface.  
  */ 
 public class SkelFSFactory extends VFSFactory
 {
@@ -60,7 +60,8 @@ public class SkelFSFactory extends VFSFactory
 	public VFileSystem openFileSystem(VRSContext context, VRL location)
 			throws VlException 
 	{
-		// 
+		// Super method check if there isn't already a fileystem object created
+		// for this specific context and VRL location. 
 		VFileSystem fs=super.openFileSystem(context,location);
 		return fs; 
 	}
@@ -77,7 +78,7 @@ public class SkelFSFactory extends VFSFactory
 	@Override
 	public void clear() 
 	{
-		// clear class, clean up cached objects and close filesystems. 
+		// clear class, clean up cached objects and close open (file) resources. 
 	}
 
 	@Override
@@ -96,17 +97,25 @@ public class SkelFSFactory extends VFSFactory
 	// See super method 
 	public ServerInfo updateServerInfo(VRSContext context,ServerInfo info, VRL loc) throws VlException
 	{
+		// Update server configuration information. 
+		// Check properties and optional update them. 
+		// The ServerInfo object might be a new created object or an old (saved) configuration. 
+		// Important: 
+		// Use VRSContext object for context specific settings. 
+				
 		// defaults: 
 		info=super.updateServerInfo(context, info, loc); 
 		int port=info.getPort();
 		
-		// update default port. 
+		// Example: update default port. 
 		if (port<=0) 
 		    info.setPort(DEFAULT_PORT);
 		
 		// === 
 		// Check global properties from Context (AND System Properties) 
 		// === 
+		// Example: use property from VRSContext and update ServerInfo if that property
+		// was set yet: 
 		String par1=context.getStringProperty("skelfs.defaultParameter1");
 		
 		if (StringUtil.isEmpty(par1)==false)
@@ -114,9 +123,11 @@ public class SkelFSFactory extends VFSFactory
 		else
 		    info.setIfNotSet(new VAttribute("parameter1","value1"), true);
 		
+		// If property "parameter2" hasn't been specified, specify it as follows: 
         info.setIfNotSet(new VAttribute("parameter2","value2"), true);
         
-		info.store(); //explicit update in registry after changing ! 
+        // Important: Always perform an explicit update in registry after changing ! 
+		info.store(); 
 		
 		return info; 
 	}

@@ -26,7 +26,6 @@ package test;
 import nl.uva.vlet.Global;
 
 import nl.uva.vlet.vlet.vfs.skelfs.SkelFSFactory;
-import nl.uva.vlet.vrs.Registry;
 import nl.uva.vlet.vrs.VRS;
 
 public class TestSkelFSBrowser
@@ -42,7 +41,8 @@ public class TestSkelFSBrowser
 		{
 			e.printStackTrace();
 		}
-
+		
+		// The VBrowser classes must be in the classpath to be able to start this. 
 		nl.uva.vlet.gui.startVBrowser.main(args);
 	}
 

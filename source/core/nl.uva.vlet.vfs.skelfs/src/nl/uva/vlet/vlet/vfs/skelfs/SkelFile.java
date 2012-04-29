@@ -35,14 +35,14 @@ import nl.uva.vlet.vrl.VRL;
  * Example Skeleton File.
  * Most methods are redirected o the FileSystem implementation.  
  */
-public class SKFile extends VFile
+public class SkelFile extends VFile
 {
-	public SKFile(SkelFS fs, VRL vrl)
+	public SkelFile(SkelFS fs, VRL vrl)
 	{
 		super(fs, vrl);
 	}
 
-	public SKFile(SkelFS skelfs, String path) throws VlException
+	public SkelFile(SkelFS skelfs, String path) throws VlException
 	{
 		this(skelfs, skelfs.resolvePathVRL(path));  	
 	}

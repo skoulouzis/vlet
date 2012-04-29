@@ -26,7 +26,6 @@ package nl.uva.vlet.vlet.vfs.skelfs;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.FileSystemNode;
 import nl.uva.vlet.vfs.VDir;
@@ -34,13 +33,13 @@ import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRSContext;
 
 /**
+ * 
  *  Example Skeleton FileSystemServer implementation 
- *  Super Class FileSystemServer holds most of the handling code. 
- */ 
+ *  See Super Class FileSystemNode methods for default implementation. 
+ */  
 public class SkelFS extends FileSystemNode
 {
 	// ========================================================================
@@ -50,8 +49,8 @@ public class SkelFS extends FileSystemNode
 	public SkelFS(VRSContext context, ServerInfo info,VRL location) 
 	{
 		super(context, info);
-		// perform extra initaliation here.
 		
+		// Optionally perform extra initaliation here.
 		// get grid proxy: 
 		// context.getGridProxy() 
 	}
@@ -59,25 +58,27 @@ public class SkelFS extends FileSystemNode
     @Override
     public VDir newDir(VRL path) throws VlException
     {
-    	// new VDir object: path doesn't have to exist. 
-        return new SKDir(this,path); 
+    	// VDir factory method: 
+    	// new VDir object: path doesn't have to exist, just create the (VDir) object. 
+        return new SkelDir(this,path); 
     }
 
     @Override
     public VFile newFile(VRL path) throws VlException
     {
-    	// new VFile object: path doesn't have to exist. 
-        return new SKFile(this,path); 
+    	// VFile factory method: 
+    	// new VFile object: path doesn't have to exist, just create the (VFile) object. 
+        return new SkelFile(this,path); 
     }
     
     @Override
-    public SKDir openDir(VRL path) throws VlException
+    public SkelDir openDir(VRL path) throws VlException
     {
     	// Open filepath and return new VDir object. 
     	// (remote) directory must exist. 
-        SKDir dir=new SKDir(this,path);
+    	SkelDir dir=new SkelDir(this,path);
         
-        // getDir must return Existing directory: 
+        // openDir() must return existing directory: 
         if (dir.exists()==false)
             throw new nl.uva.vlet.exception.ResourceNotFoundException("Directory doesn't exists:"+dir); 
         
@@ -85,13 +86,13 @@ public class SkelFS extends FileSystemNode
     }
 
     @Override
-    public SKFile openFile(VRL path) throws VlException
+    public SkelFile openFile(VRL path) throws VlException
     {
     	// Open filepath and return new VFile object. 
     	// (remote) file must exist.  
-        SKFile file=new SKFile(this,path);
+        SkelFile file=new SkelFile(this,path);
         
-        // getDir must return Existing directory: 
+        // openFile() must return existing file: 
         if (file.exists()==false)
             throw new nl.uva.vlet.exception.ResourceNotFoundException("File doesn't exists:"+file); 
         
@@ -101,11 +102,13 @@ public class SkelFS extends FileSystemNode
 	public void connect() throws VlException 
 	{
 		// connect if not connected yet, or ignore if not applicable. 
+		// multiple connect() calls are possible. Ignore if this happens. 
 	}
 
 	public void disconnect() throws VlException
 	{
 		// disconnect if applicable or ignore. 
+		// multiple disconnect() are allow. Ignore if this happens. 
 	}
 
 	public boolean isConnected() 
@@ -119,16 +122,20 @@ public class SkelFS extends FileSystemNode
 		// Master 'openLocation' which connects to remote resource. 
 		if (isFile(vrl.getPath()))
 		{
-			return new SKFile(this,vrl);			
+			return new SkelFile(this,vrl);			
 		}
 		else if (isDir(vrl.getPath())) 
 		{
-			return new SKDir(this,vrl);
+			return new SkelDir(this,vrl);
 		}
  
 		throw new nl.uva.vlet.exception.ResourceNotFoundException("Don't know what this is:"+vrl);
 	}
 
+	// ========================================================================
+	// Filesystem helper methods: 
+	// ========================================================================
+	
 	public long getLength(String path)
 	{
 		return 0;

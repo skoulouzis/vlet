@@ -1,7 +1,7 @@
 <project name="vfs.skelfs" default="dist" basedir=".">
     <description>
         Project   : VLET/VBrowser
-        Component : VFS Irods VDriver 
+        Component : VFS example "skeleton" VDriver 
                 
         Configuring: 
         ===
