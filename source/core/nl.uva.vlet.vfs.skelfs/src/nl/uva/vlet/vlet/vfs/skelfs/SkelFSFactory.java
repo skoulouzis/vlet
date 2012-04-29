@@ -60,17 +60,18 @@ public class SkelFSFactory extends VFSFactory
 	public VFileSystem openFileSystem(VRSContext context, VRL location)
 			throws VlException 
 	{
-		// Super method check if there isn't already a fileystem object created
-		// for this specific context and VRL location. 
+		// Delegate implementation to super method. 
+		// This method checks if there isn't already a filesystem object created
+		// for this specific context and VRL location and optionally return cached FileSystem object. 
 		VFileSystem fs=super.openFileSystem(context,location);
 		return fs; 
 	}
 	
 	public SkelFS createNewFileSystem(VRSContext context,ServerInfo info, VRL location)
 	{
-		// Create new FileSystem instance 
-		// Use VRSContext for User Context specific settings. 
-		// Check ServerInfo for Resource Info settings and propertie. 
+		// Create new FileSystem instance. 
+		// Use VRSContext for user context dependend specific settings. 
+		// Checks ServerInfo for Resource Info settings and properties. 
 		return new SkelFS(context,info,location);
 	}
 	
@@ -98,7 +99,7 @@ public class SkelFSFactory extends VFSFactory
 	public ServerInfo updateServerInfo(VRSContext context,ServerInfo info, VRL loc) throws VlException
 	{
 		// Update server configuration information. 
-		// Check properties and optional update them. 
+		// This method should check (Server/Resource) properties and optional update them. 
 		// The ServerInfo object might be a new created object or an old (saved) configuration. 
 		// Important: 
 		// Use VRSContext object for context specific settings. 
