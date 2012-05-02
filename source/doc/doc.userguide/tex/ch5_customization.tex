@@ -8,15 +8,15 @@
 \section{Custom viewers/plugins}
 
 The VBrowser supports two kind of extension or plugins. One is for protocol 
-implementations or 'VDrivers', The other are VBrowser Viewer extensions or Viewer 
-plugins. The first are mapped to URI schemes like 'srm://' the latter are mapped to 
-resource mimetypes like 'text/plain'. \\
+implementations or 'VDrivers', The other are VBrowser Viewer extensions or
+'Viewer Plugins'. The first are mapped to URI schemes like 'srm://' the latter
+are mapped to resource mimetypes like 'text/plain'. \\
 \par
 You can install extra viewers or VBrowser plugins in the following directories 
 (create them if they don't exist):
 
 \begin{itemize}
-  \item \Path{VLETINSTALL/lib/plugins}: for installation plugins.
+  \item \Path{\VLETINSTALL/lib/plugins}: for installation plugins.
     \item \Path{HOME/.vletrc/plugins}: path for user plugins.
 \end{itemize}
 
@@ -27,7 +27,7 @@ This name triggers the VBrowser upon startup to load the plugin.
 For example the custom VTK image viewer which can be install at one of the
 following locations:\\
 \\
-\tab \Path{VLETINSTALL/lib/plugins/nl.uva.vle.app.vtk.viewer.NiiViewer/}\\
+\tab \Path{\VLETINSTALL/lib/plugins/nl.uva.vle.app.vtk.viewer.NiiViewer/}\\
 \\	
 for system wide installation of custom plugins, or:\\
 \\
@@ -45,8 +45,11 @@ environment (R2). You can add them to your \Path{.bashrc} or add them to the
 installation configuration in \Path{VLET\_INSTALL/etc/vletenv.sh} if library
 paths are not already setup as specified. \\
 \\
-Extra plugins can be downloaded from the VL-e gforge 
-site: \Link{gforge.vl-e.nl/frs/?group\_id=19}
+Extra plugins can be downloaded from the sourceforge site at the 'files'
+section:\\
+\\
+\tab \Link{http://sourceforge.net/projects/vlet/files/}
+\\
 
 \section{Custom Mimetypes and icons}
 
@@ -59,7 +62,7 @@ consists of a generic part (``text/'' or ``image/'') and a specific part
 The following files defines the mimetypes used in \VLET:
 
 \begin{itemize}
-  \item \Path{VLETINSTALL/etc/mime.types}: for installation configured mime
+  \item \Path{\VLETINSTALL/etc/mime.types}: for installation configured mime
   types.
   \item \Path{HOME/.vletrc/mime.types}: for user configured mime types.
 \end{itemize}
@@ -76,7 +79,7 @@ mimetype name is given followed by their extension(s):\\
 \begin{verbatim}
 ###
 # File    : mime.types
-# Location: $VLET_INSTALL/etc/mime.types
+# Location: $\VLETINSTALL/etc/mime.types
 # ---
 # Default mime types:  <MIMETYPE>  <EXTENSION1> <EXTENSION2> ...
 #

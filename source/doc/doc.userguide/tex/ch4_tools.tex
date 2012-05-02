@@ -66,7 +66,7 @@ shortcut to the jar file instead. \\
 At this moment there is only one script interface to the Virtual Resource System
 (VRS). This script is the URI copy script: \Path{uricopy.sh}\\
 
-The location is: \Path{VLETINSTALL/bin/uricopy.sh} and the syntax is as
+The location is: \Path{\VLETINSTALL/bin/uricopy.sh} and the syntax is as
 follows: 
 
 \tab \Path{uricopy.sh [options] \lt source URI\gt\ \lt destination URI\gt\
@@ -137,6 +137,9 @@ $VLET_INSTALL/bin/uricopy.sh file:/home/ptdeboer/hello.txt \
 \end{verbatim}
 \end{minipage}
 
+The backspace in the above example means the next line should be concatenated,
+without an newline, the the previous. \\
+\\
 Options or server settings can be provided as either a Java property or a URI
 attribute. \\
 For example to specify the preferred Storage Elements provide the
@@ -166,6 +169,24 @@ Optional LFC properties can be: \\
                                          AllSequential, AllRandom
 \end{verbatim}
 \end{minipage}\\
+
+
+\subsubsection{SRM file listing example}
+     
+If a directy, for example a replica directory at a remote (SRM) storage element,
+contains a lot of files, it is possible to list the directory in parts using an
+'offset' and a 'count' parameter. \\
+Use  \Path{srmCount} and \Path{srmOffset} parameters to specify the maximum
+number of files you want to list and the offset. \\
+For example:  
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim} $VLET_INSTALL/bin/urils.sh srm://srm.grid.sara.nl:8443/data/pvier/ptdeboer/bigdir?\
+ srmCount=100&srmOffset=200
+\end{verbatim}
+\end{minipage}
+
+
 
 % \subsubsection{SRB uricopy example}
 % 
@@ -202,7 +223,7 @@ Optional LFC properties can be: \\
 % \\
 % may be omitted if the default resource of the SRB server
 % (\Code{(srb.defaultResource}) equals the one specified in srb settings file:
-% \Path{VLETINSTALL/etc/srbsettings.prop.}\\
+% \Path{\VLETINSTALL/etc/srbsettings.prop.}\\
 % If this option is not or incorrectly set the SRB server might return an error as
 % follows:\\
 % \\
@@ -240,7 +261,7 @@ Optional LFC properties can be: \\
 \subsection{Customized uricopy script}
 
 You can use the uricopy.sh as an example and modify it to your liking. Make sure 
-the \VLETINSTALL environment variable is set so the script can find the
+the \VLETINSTALL\ environment variable is set so the script can find the
 installation as follows: \\
 \\
 \hspace*{5mm}\begin{boxedminipage}{165mm}
@@ -293,17 +314,17 @@ exit $RETVAL;
 Since Jython is a pure java implementation of Python, Jython can be used 
 to access to full VLET API. To run  a Jython script, call the Jython 
 bootstrap script from the VLET installation. \\
-The location of this bootstrap script is: \Path{VLETINSTALL/bin/jython.sh} and
+The location of this bootstrap script is: \Path{\VLETINSTALL/bin/jython.sh} and
 the syntax is as follows: \\
 \\
 \tab \Path{jython.sh [-i] \lt jython file\gt\ }\\
 \\
 Where option \Path{-i} starts the Jython interpreter in interactive mode (leave
 out the file when starting the Jython interpreter in this mode). \\
-Jython examples can be seen in: \Path{VLETINSTALL/py}. 
+Jython examples can be seen in: \Path{\VLETINSTALL/py}. 
 \\
 The documentation for the VLET API can be found at: 
-\Path{VLETINSTALL/doc/api/index-all.html}. \\ 
+\Path{\VLETINSTALL/doc/api/index-all.html}. \\ 
 \\ 
 Below an example how to use the VFS interface from VLET in a Jython 
 script:
