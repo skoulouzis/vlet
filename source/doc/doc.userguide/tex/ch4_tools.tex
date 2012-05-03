@@ -13,7 +13,7 @@ Other applications currently available in the VL-e Toolkit are:
   \item \Bold{GridProxyDialog}: for creating and managing Grid Proxies. 
   \item \Bold{VLTerm}:		    simple vt100 emulator with some
   xterm extensions.  
-  \item \Bold{uricopy.sh,urils.sh}:		URI copy and list script. 
+  \item \Bold{uricopy.sh,urils.sh,uristat.sh}: URI copy, list and stat script.
   \item \Bold{jython.sh}:		Jython startup script. 
 \end{itemize}
 
@@ -61,13 +61,22 @@ shortcut to the jar file instead. \\
 
 \section{Command line tools}
 
-\subsection{URI copy script: uricopy.sh}
+\subsection{URI script interface}
 
-At this moment there is only one script interface to the Virtual Resource System
-(VRS). This script is the URI copy script: \Path{uricopy.sh}\\
-
-The location is: \Path{\VLETINSTALL/bin/uricopy.sh} and the syntax is as
-follows: 
+At this moment there are tree scripts which can interface with the Virtual
+Resource System (VRS).\\
+This script are installed in \Path{\VLETINSTALL/bin/} and are:\\
+\begin{itemize}
+  \item \Path{uricopy.sh} : copy remote file and directories.
+  \item \Path{urils.sh} : list remote resources. Also non filesystems can be
+  listed. 
+  \item \Path{uristat.sh} : like the unix 'stat' command this script can be used
+  to provide status information about the resource.  Any URI can be used. 
+\end{itemize}
+   
+\subsubsection{uricopy.sh}
+   
+The \Path{uricopy.sh} syntax is follows:  
 
 \tab \Path{uricopy.sh [options] \lt source URI\gt\ \lt destination URI\gt\
 	[-D\lt PROPERTY\gt =\lt VALUE \gt]*}
@@ -81,15 +90,16 @@ Command line argument are:
   \item \Path{ [options] } can be: 
 
 \hspace*{10mm}\begin{minipage}{170mm}
-\begin{verbatim}
- -r,-dir    ; perform a recursive copy of the source location (for copying 
-              directories). 
- -v [-v]    ; be verbose. provide option twice to be even more verbose. 
- -f, -force ; overwrite (optional) existing target location. 
- -move      ; move resource and delete source URI after copy command.
- -mkdirs    ; create target directory path 
- -result    ; print resulting destination URI as follows: "result=...".
- -debug     ; enable debug output.
+\begin{verbatim} 
+ -proxy <proxyfile>     ; Optional proxy file
+ -r | -dir      ; perform a recursive copy of the source location (for copying 
+                  directories). 
+ -v [-v]        ; be verbose. provide option twice to be even more verbose. 
+ -f | -force    ; overwrite (optional) existing target location. 
+ -move          ; move resource and delete source URI after copy command.
+ -mkdirs        ; create target directory path 
+ -result        ; print resulting destination URI as follows: "result=...".
+ -debug         ; enable debug output.
 \end{verbatim}
 \end{minipage}
 \end{itemize}
@@ -121,8 +131,51 @@ always will be a child (subdirectory) of the destination URI.\\
 \EmphBold{Moving files or directories:}\\
 \\
 To move a file or a directory specify the \Code{-move} option. The source will
-be deleted after and \Emph{only} after a successful copy. \\
-\\
+be deleted after and \Emph{only} after a successful copy. 
+
+\subsubsection{urils.sh}
+
+\tab \Path{urils.sh [options] [ -proxy \lt proxyFile\gt\ ] \lt URI\gt\ } 
+
+Command line argument are: 
+\begin{itemize}
+  \item \Path{  \lt URI\gt\ } : remote resource. Can be any 'listable' object. 
+  \item \Path{ [options] } can be: 
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim} 
+ -proxy <proxyfile> ; Optional proxy file
+ -l                 ; long list like 'ls -l'.
+ -guid              ; print GUID if the resource has it.
+ -noresolve         ; do not resolve links.
+ -vrls              ; print full VRLs instead of resourcenames.
+\end{verbatim}
+\end{minipage}
+\end{itemize}
+
+\subsubsection{uristat.sh}
+
+\tab \Path{uristat.sh [options] [ -proxy \lt proxyFile\gt\ ] \lt URI\gt\ } 
+
+Command line argument are: 
+\begin{itemize}
+  \item \Path{  \lt URI\gt\ } : remote resource. Can be anything.
+  \item \Path{ [options] } can be: 
+
+\hspace*{10mm}\begin{minipage}{170mm}
+\begin{verbatim} 
+ -proxy <proxyfile> ; Optional proxy file  
+ -v [-v]            ; be verbose (use twice for more)
+ -file              ; print out common file attributes
+ -all               ; print out all resource attributes (default)
+ -[no]quotes        ; put value between single 'quotes' (or not)
+ -checksum <TYPE>        ; report checksum (if supported)
+ -attrs=<attributelist>  ; list of comma separated VRS Attribute names
+ -D<prop>=<value         ; specify java properties to the JVM
+\end{verbatim}
+\end{minipage}
+\end{itemize}
+
 
 \subsection{Examples} 
 
@@ -266,16 +319,19 @@ installation as follows: \\
 \\
 \hspace*{5mm}\begin{boxedminipage}{165mm}
 \begin{verbatim}
-
 #!/bin/bash 
 ##
 # File   : Example modified uricopy.sh script 
-# Version: VLET 1.1
+# Version: VLET 1.5
 # --- 
 
+if [ "$1" == "" ] ; then
+   echo "Please specify VRLs" 
+   exit 1
+fi
+  
 # Default installation: 
 export VLET_INSTALL=/opt/vlet
-export VLET_SYSCONFDIR=$VLET_INSTALL/etc
 # Configuration files on PoC R3: 
 #export VLET_SYSCONFDIR=/etc/vlet
 
@@ -283,17 +339,17 @@ export VLET_SYSCONFDIR=$VLET_INSTALL/etc
 BASE_DIR=$VLET_INSTALL
 
 # my options: 
-OPTIONS="-DpassiveMode=true -Dsrb.username=piter.de.boer -r -force"
+OPTIONS="-DpassiveMode=true -r -force -info"
 
 # source vlet settings: 
-source $VLET_SYSCONFDIR/vletenv.sh 
+source $VLET_INSTALL/etc/vletenv.sh 
 
 ##
 # VLET java class to start: VFSCopy 
 CLASS=nl.uva.vlet.vfs.VFSCopy
 
 # JVM options: 
-JVMOPTS="-Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $BASE_DIR/bin/bootstrapper.jar"
+JVMOPTS="-Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $VLET_INSTALL/bin/bootstrapper.jar"
 
 # Start bootstrapper which does the rest 
 echo "Command:" $JAVA $JVMOPTS $CLASS $OPTIONS $@
@@ -303,7 +359,6 @@ RETVAL=$?
 
 #return exit code from VFSCopy
 exit $RETVAL; 
-
 \end{verbatim}
 \end{boxedminipage}
 
@@ -337,7 +392,7 @@ script:
 # (C) www.vl-e.nl 
 ##
 # File         : vfsclient.py 
-# Vlet version : 1.1
+# Vlet version : 1.5
 # Author       : Piter T. de Boer 
 #
 # Info :  
