@@ -95,7 +95,7 @@ fi
 CLASS=nl.uva.vlet.vrs.tools.URICopy
 
 # Start bootstrapper which does the rest 
-$JAVA -Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $BASE_DIR/bin/bootstrapper.jar  $CLASS $@
+"${JAVA}" ${VLET_JAVA_FLAGS} -Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $BASE_DIR/bin/bootstrapper.jar  $CLASS $@
 # keep return value: 
 RETVAL=$? 
 

@@ -59,12 +59,13 @@ export VLET_INSTALL VLET_SYSCONFDIR
 
 echo "VLET_INSTALL    ="$VLET_INSTALL 
 echo "VLET_SYSCONFDIR ="$VLET_SYSCONFDIR 
+echo "VLET_JAVA_FLAGS ="$VLET_JAVA_FLAGS
 echo "JAVA_HOME       ="$JAVA_HOME 
 echo "CLASSPATH       ="$CLASSPATH
 echo "VBROWSER_JAR    ="$VBROWSER_JAR
 echo "Command line options ="$OPTS
 
 # bootstrap class set's up real enviromment: 
-echo "$JAVA" -cp $CLASSPATH -Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $VBROWSER_JAR $OPTS
-"$JAVA" -cp "$CLASSPATH" -Dvlet.install.sysconfdir="$VLET_SYSCONFDIR" -jar "$VBROWSER_JAR" $OPTS
+echo "${JAVA}" ${VLET_JAVA_FLAGS} -cp $CLASSPATH -Dvlet.install.sysconfdir=$VLET_SYSCONFDIR -jar $VBROWSER_JAR $OPTS
+"${JAVA}" ${VLET_JAVA_FLAGS} -cp "$CLASSPATH" -Dvlet.install.sysconfdir="$VLET_SYSCONFDIR" -jar "$VBROWSER_JAR" $OPTS
 
