@@ -6,13 +6,14 @@
 # Info: 
 #    Makefile for the UserGuide LaTeX document
 #    uses pdflatex to create the pdf file: UserGuide.pdf
-###
+#    Autoconverts images from images/ to .eps files. 
+#
 
-.PHONY:	dist build 
+.PHONY:	dist build dirs dvi pdfs pdflatex
 
 # Build environment 
 ROOT_DIR	=$(shell pwd)
-DIST_DIR		=dist
+DIST_DIR	=dist
 BUILD_DIR	=build
 FIG_DIR		=figs
 GIF_DIR		=images
@@ -99,7 +100,7 @@ pdflatex: ${DOC_PDF}
 
 ${DOC_PDF}: dirs ${PDFS} ${DOC_TEX} ${TEX_SOURCES}
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; pdflatex ${DOC}.tex )
-	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR}; cp ../${BIBLIO_BIB} . )
+	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; cp ../${BIBLIO_BIB} . )
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; bibtex ${DOC_AUX} )
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; pdflatex ${DOC}.tex )
 	cp -f ${BUILD_DIR}/${DOC}.pdf ${DIST_DIR} 
@@ -117,7 +118,7 @@ html: ${JPGS}
 
 ${DOC_DVI}: dirs ${ALL_EPS} ${DOC_TEX} ${TEX_SOURCES} 
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; latex ../${DOC_TEX} )
-	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR}; cp ../${BIBLIO_BIB} . )
+	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; cp ../${BIBLIO_BIB} . )
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; bibtex ${DOC_AUX} )
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; latex ../${DOC_TEX} )
 	(export TEXINPUTS=${TEXINPUTS}; cd ${BUILD_DIR} ; latex ../${DOC_TEX} )
@@ -137,10 +138,6 @@ $(BUILD_DIR)/%.eps: $(GIF_DIR)/%.gif
 $(BUILD_DIR)/%.eps: $(GIF_DIR)/%.png
 	convert $< $@
 
-# Convert .eps to .pdf (legacy EPS files ) 
-$(BUILD_DIR)/%.pdf: $(EPS_DIR)/%.eps
-	epstopdf $< -outfile=$@
-
 # Same to .gif -> .pdf 
 $(BUILD_DIR)/%.pdf: $(GIF_DIR)/%.gif
 	convert $< $@
@@ -149,23 +146,19 @@ $(BUILD_DIR)/%.pdf: $(GIF_DIR)/%.gif
 $(BUILD_DIR)/%.pdf: $(GIF_DIR)/%.png
 	convert $< $@
 
-# Copy legacy eps from eps dir to build dir 
+# Convert .eps to .pdf (legacy EPS files ) 
+# Note: 
+#$(BUILD_DIR)/%.pdf: $(EPS_DIR)/%.eps
+#	epstopdf $< -outfile=$@
+
+# Note: uses converted eps from the eps2eps command 
+$(BUILD_DIR)/%.pdf: $(BUILD_DIR)/%.eps
+	epstopdf $< -outfile=$@
+
+# Copy legacy eps from eps dir to build dir. Use eps2eps to 'cleanup'  
 $(BUILD_DIR)/%.eps: $(EPS_DIR)/%.eps 
-	cp -f $< $@
+	eps2eps $< $@
 
 # clean
 clean:
 	rm -rf ${DIST_DIR} ${BUILD_DIR}
-	
-	
-
-
-
-
-
-
-
-
-
-
-
