@@ -176,9 +176,9 @@ export JAVA
 VERSION=`"$JAVA" -version 2>&1 | grep "version" |  sed "s/.*\([0-9].[0-9_]*\.[0-9_]*\).*/\1/"` 
 MINOR=`echo $VERSION | cut -d '.' -f 2`
 
-if [ "$MINOR" -lt 5 ] ; then 
+if [ "$MINOR" -lt 6 ] ; then 
    println "*** Wrong java version ***"
-   println " You need java 1.5. Current version="$VERSION
+   println " You need java 1.6. Current version="$VERSION
    println " Current used java location="$JAVA 
    println " You can specify the java location by seting JAVA_HOME" 
    exit 1
