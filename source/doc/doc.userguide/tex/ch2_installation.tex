@@ -11,12 +11,12 @@
 
 \section{Installation requirements}
 
-The VL-e Toolkit has the minimal following installation requirements:
+The VL-e Toolkit has the following minimal installation requirements:
 \begin{itemize}  
    \item SUN Java 1.6 JRE (Java Runtime Environment) or JDK is recommended.   
    \item Either Windows 2000/XP/7 or a recent Linux distribution (2.6 kernel)
    \item Other Java 1.6 capable platforms might work as well, but not all
-   architectures have been tested. (Mac Os has been reported to work as well).\\
+   architectures have been tested. (Mac Os works as well).\\
    Alternative Java implementations like 'gcj'  and 'openjdk' might not fully
    support Swing applications which is mandatory for the VBrowser. 
  \end{itemize} 
@@ -64,7 +64,7 @@ For instructions how to get one, see:
          it doesn't exists yet. 
    \item Optionally create a shortcut to \path{VLET_INSTALL/bin/vbrowser.exe}
          (for \windows) and copy the shortcut to your desktop.
-   \item Start \path{vbrowser.sh} or \path{browser.exe} from
+   \item Start \path{vbrowser.sh} or \path{vbrowser.exe} from
           \path{VLET_INSTALL/bin} (or use shortcut). 
    \item Optionally, the \path{vbrowser.jar} can be used to directly start the
           vbrowser using any Java Environment (for Mac OS this is the only
@@ -408,11 +408,11 @@ property file to customize your environment. \\
 \subsection{Command line options and environment variables}
 
 All properties can be set by specifying them as extra arguments on the command
-by using the -D command as follows: \Variable{-D\lt variable \gt=\lt value \gt }.
+by using the -D command as follows: \Variable{-D\lt variable\gt=\lt value\gt }.
 The order in which properties are checked is as follows (higher priority first):
 
 \begin {itemize}
-  \item Command line options \Variable{-D\lt variable \gt=\lt value \gt}
+  \item Command line options \Variable{-D\lt variable\gt=\lt value\gt}
   \item Environment variables. 
   \item User configuration file: \VLETUSERCONF 
   \item Installation configuration file: \VLETCONF 
