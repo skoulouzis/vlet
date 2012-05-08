@@ -26,21 +26,17 @@ package nl.uva.vlet.gui.lobo;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.net.MalformedURLException;
-import java.util.Vector;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.actions.ActionContext;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
-import nl.uva.vlet.gui.dialog.ExceptionForm;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.net.ssl.SslUtil;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRS;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.lobobrowser.main.PlatformInit;
 
 

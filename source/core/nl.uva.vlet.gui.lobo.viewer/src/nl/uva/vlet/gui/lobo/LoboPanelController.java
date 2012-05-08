@@ -2,14 +2,13 @@ package nl.uva.vlet.gui.lobo;
 
 import java.net.URL;
 
-import org.lobobrowser.ua.NavigationEvent;
-import org.lobobrowser.ua.NavigationVetoException;
-
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.vrl.VRL;
+
+import org.lobobrowser.ua.NavigationEvent;
+import org.lobobrowser.ua.NavigationVetoException;
 
 
 public class LoboPanelController implements org.lobobrowser.ua.NavigationListener

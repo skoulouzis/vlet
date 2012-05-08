@@ -24,17 +24,14 @@
 package nl.uva.vlet.gui.lobo;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 
 import org.lobobrowser.clientlet.ClientletResponse;
 import org.lobobrowser.clientlet.ComponentContent;
 import org.lobobrowser.gui.BrowserPanel;
-import org.lobobrowser.ua.NavigationEvent;
-import org.lobobrowser.ua.NavigationVetoException;
 import org.lobobrowser.ua.NavigatorFrame;
 import org.lobobrowser.ua.NavigatorProgressEvent;
 
