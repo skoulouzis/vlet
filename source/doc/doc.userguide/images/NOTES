@@ -1,7 +1,7 @@
 About this directory 
 ===
 Images from this directory are converted by the rules specified in the toplevel Makefile. 
-Currently autoconverted images are: .gif and .png. 
+Currently auto converted images are: .gif and .png. 
 The converted images are located in the build directory. 
 
 
