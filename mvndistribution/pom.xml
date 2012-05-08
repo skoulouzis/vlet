@@ -42,11 +42,15 @@
           <goals>
             <goal>single</goal>
           </goals>
+
           <configuration>
             <descriptors>
               <descriptor>bin.xml</descriptor>
             </descriptors>
+          <outputDirectory>output/</outputDirectory>
+          <workDirectory>target/assembly/work</workDirectory>
           </configuration>
+
         </execution>
       </executions>
      </plugin>

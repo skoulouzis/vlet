@@ -46,23 +46,26 @@
          <url>http://elab.lab.uvalight.net/maven2</url> 
          
         </repository>
+        <!-- 
         <repository>
+        
            <id>piter.nl</id>
-         <name>piter.nl</name>
-         <layout>default</layout>
-         <releases>
-           <enabled>true</enabled>
-           <updatePolicy>always</updatePolicy>
-           <checksumPolicy>warn</checksumPolicy>
-         </releases>
-         <snapshots>
-           <enabled>true</enabled>
-           <updatePolicy>always</updatePolicy>
-           <checksumPolicy>warn</checksumPolicy>
-         </snapshots>
-	 <url>http://www.piter.nl/maven2</url> 
+           <name>piter.nl</name>
+           <layout>default</layout>
+           <releases>
+              <enabled>true</enabled>
+              <updatePolicy>always</updatePolicy>
+              <checksumPolicy>warn</checksumPolicy>
+           </releases>
+           <snapshots>
+              <enabled>true</enabled>
+              <updatePolicy>always</updatePolicy>
+              <checksumPolicy>warn</checksumPolicy>
+           </snapshots>
+	       <url>http://www.piter.nl/maven2</url> 
          
         </repository>
+        --> 
 
     </repositories>
     
@@ -78,8 +81,10 @@
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.lfc</module>
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.irods</module>
         <!--  gui  -->
-          <module>${vlet.modules.core}/nl.uva.vlet.gui.utils</module>
+        <module>${vlet.modules.core}/nl.uva.vlet.gui.utils</module>
         <module>${vlet.modules.core}/nl.uva.vlet.gui.vbrowser</module>
+        <!-- Viewers --> 
+        <!-- <module>${vlet.modules.core}/nl.uva.vlet.gui.lobo.viewer</module> -->
         <!-- Distribution  -->
         <module>${vlet.modules.core}/mvndistribution</module>
            

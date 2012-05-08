@@ -15,6 +15,20 @@
       <!-- Now, select which modules to include in this module-set. -->
       <includes>
         <include>nl.uva.vlet:vlet-vrs.core</include>
+        <include>nl.uva.vlet:vlet-vfs.jcraft.ssh</include>
+        <include>nl.uva.vlet:vlet-grid.globus</include>
+        <include>nl.uva.vlet:vlet-vfs.gftp</include>
+        <include>nl.uva.vlet:vlet-lbl.srm</include>
+        <include>nl.uva.vlet:vlet-vfs.srm</include>
+        <include>nl.uva.vlet:vlet-glite.lfc</include>
+        <include>nl.uva.vlet:vlet-vfs.lfc</include>
+        <include>nl.uva.vlet:vlet-vfs.irods</include>
+        <!-- Gui --> 
+        <include>nl.uva.vlet:vlet-gui.utils</include>
+        <include>nl.uva.vlet:vlet-gui.vbrowser</include>
+        <!-- VBrowser Plugins --> 
+        <!-- <include>nl.uva.vlet:vlet-gui.lobo.viewer</include> -->
+
       </includes>
       
       <binaries>

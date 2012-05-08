@@ -37,7 +37,7 @@
    	</dependency>
    	<dependency>
    		<groupId>nl.uva.vlet</groupId>
-   		<artifactId>vlet-lfc</artifactId>
+   		<artifactId>vlet-glite.lfc</artifactId>
    		<version>${vlet.version}</version>
    	</dependency>
    	<dependency>
