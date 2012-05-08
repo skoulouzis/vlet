@@ -1,0 +1,9 @@
+diff -r orig/cobra-0.98.4/src/org/lobobrowser/util/gui/FontFactory.java /home/jahlborn/src/tmp/cobra/src/main/java/org/lobobrowser/util/gui/FontFactory.java
+32,33d31
+< /** Note: Undocumented class? */
+< import sun.font.FontManager;
+209,210c207
+<         // Proprietary Sun API. Maybe shouldn't use it. Works well for Chinese.
+<         return FontManager.getCompositeFontUIResource(new Font(name, style, size));
+---
+>         return javax.swing.text.StyleContext.getDefaultStyleContext().getFont(name, style, size);

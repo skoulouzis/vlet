@@ -1,0 +1,9 @@
+##
+# Patch: patch_FontFactory.java
+#
+
+Java class org.lobobrowser.util.gui.FontFactory from "lobo.jar" 
+has been patched. 
+Compiled class from cobra-gp-0.98.5.jar has been manually inserted into lobo.jar
+New lobo.jar is called lobo-patched.jar
+
