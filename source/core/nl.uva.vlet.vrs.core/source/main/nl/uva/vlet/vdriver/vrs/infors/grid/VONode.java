@@ -30,7 +30,6 @@ import nl.uva.vlet.vdriver.vrs.infors.InfoConstants;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.ResourceFolder;
 import nl.uva.vlet.vrs.VCompositeDeletable;
-import nl.uva.vlet.vrs.VDeletable;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSContext;
 
