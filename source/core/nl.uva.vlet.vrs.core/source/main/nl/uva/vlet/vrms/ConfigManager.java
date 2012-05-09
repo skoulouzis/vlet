@@ -779,7 +779,7 @@ public class ConfigManager
 	}
 
 	/** Returns CertificateStore from (defaul) location ~/.vletrc/cacerts */ 
-    public CertificateStore getCertificateStore() throws Exception
+    public CertificateStore getCertificateStore() throws VlException
     {
         return CertificateStore.getDefault();   
     }
