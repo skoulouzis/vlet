@@ -32,16 +32,21 @@ import nl.uva.vlet.vrs.VResourceSystem;
 import nl.vlet.uva.grid.globus.GlobusUtil;
 
 /** 
- * This is a Dummy VRSFactory.
- *  
- * The grid -> globus bindings do not provide any resource implementations.  
- * By creating a dummy Resource Factory, the Grid-Globus bindings will be initialized
+ * Globus Information System. 
+ * 
+ * By creating a Globus Resource Factory, the Grid-Globus bindings will be initialized
  * when this factory is created!
- *
+ * The current resource system provides information about the Globus implementation. 
  */
 public class GlobusRSFactory extends VRSFactory
 {
-
+	// "grid" is covered by the info system, as "grid" is generic, and "globus" is 
+	// implementation specific. 
+	// " voms" shouldbe covered by GridInfosystem, this (minimal) resource system
+	// is only for globus stuff. 
+	
+	private static String schemes[]={"globus"};  
+	
     static 
     {
         // Static Initializer! -> registers Globus Bindings
@@ -69,15 +74,14 @@ public class GlobusRSFactory extends VRSFactory
     @Override
     public String[] getSchemeNames()
     {
-        return null;
+        return schemes; 
     }
 
 	@Override
 	public VResourceSystem createNewResourceSystem(VRSContext context,
 			ServerInfo info, VRL location) throws VlException 
 	{
-		throw new VlException("Dummy Globus Resource System doesn't support Resource Implementations");
-		
+		return new GlobusInfoSystem(context,location); 
 	}
 
 }
