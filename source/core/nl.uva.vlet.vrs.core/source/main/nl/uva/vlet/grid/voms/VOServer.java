@@ -45,6 +45,21 @@ public class VOServer
 		return "{"+host+":"+port+","+hostDN+"}"; 
 	}
 	
+	public String getHostname()
+	{
+		return host; 
+	}
+	
+	public int getPort()
+	{
+		return port; 
+	}
+	
+	//public java.net.URI getServerURI()
+	//{
+	//	return new java.net.URI("https://"+host+":"+port+"/"); 
+	//}
+	
 	/** Static List factory method to create list from one server definition */ 
 	public static VOServer[] createList(String hostv, int portv, String certf,String hostDNv)
 	{
