@@ -46,6 +46,8 @@ import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlConfigurationError;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInitializationException;
+import nl.uva.vlet.grid.voms.VO;
+import nl.uva.vlet.grid.voms.VOServer;
 import nl.uva.vlet.net.ssl.CertificateStore;
 import nl.uva.vlet.net.ssl.SSLContextManager;
 import nl.uva.vlet.net.ssl.SslUtil;
@@ -57,7 +59,7 @@ import nl.uva.vlet.vrs.VRSContext;
 /**
  * Grid Proxy Util class.
  * It is a wrapper class around a globus credential. 
- * It providesconveniant methods in handling grid proxies.
+ * It provides convenient methods in handling grid proxies.
  * The Grid Proxy class needs a "GridCredentialProvider" which is the credential (proxy) factory class. 
  * To allow for different proxy schemes, the GridCredentialProvider is a abstract interface. 
  * It is necessary to register a GridCredentialProvider first before the GridProxy class can create
@@ -590,7 +592,10 @@ public class GridProxy
         // Used for testing purposes only: 
         if ((provider=this._getProvider())==null)
             throw new VlInitializationException("No Credential Provider Registered"); 
-        
+
+        //String vo=provider.getDefaultVOName(); 
+    	//checkImportVomsServerCertificates(vo); 
+
         this.credential=provider.createCredential(passwdstr);
         this.saveProxy(); 
 
@@ -1120,6 +1125,11 @@ public class GridProxy
         this.vrsContext=context; 
     }
     
+    public VRSContext getVRSContext()
+    {
+    	return vrsContext; 
+    }
+    
     /** Return default directory name which contains userkey and usercert */ 
     public String getDefaultUserKeyLocation()
     {
@@ -1259,6 +1269,68 @@ public class GridProxy
             throw new VlInitializationException("No Credential Provider has been registered"); 
        
         loadProxy(path); 
+	}
+	
+	/** Resolve VO and return VO info. Delegates to registered provider.  */ 
+	public VO findVO(String name) throws VlException
+	{
+		VGridCredentialProvider provider;
+		// Used for testing purposes only: 
+		if ((provider=this._getProvider())==null)
+			throw new VlInitializationException("No Credential Provider Registered"); 
+	
+		return provider.getVO(name); 
+	}
+ 
+	public void checkImportVomsServerCertificates() throws VlException
+	{
+		VGridCredentialProvider provider;
+     
+		// Used for testing purposes only: 
+		if ((provider=this._getProvider())==null)
+			throw new VlInitializationException("No Credential Provider Registered"); 
+
+		String vo=provider.getDefaultVOName(); 
+		checkImportVomsServerCertificates(vo); 
+	}
+	
+	/** 
+	 * Helper method which contact all VOMS servers for current VO and import
+	 * VOMS server certificate. 	
+	 */
+	public void checkImportVomsServerCertificates(String voName) throws VlException
+	{
+		VO vo=findVO(voName);
+		if (vo==null)
+			throw new VlException("Couldn't find any VO information for:"+voName); 
+		
+		VOServer[] servers = vo.getServers(); 
+		if (servers==null) 
+			throw new VlException("No VOMS server configuration found for:"+voName); 
+		
+		// check servers 
+		for (VOServer serv:servers)
+		{
+			String host=serv.getHostname(); 
+			int port=serv.getPort(); 
+			
+			logger.debugPrintf("Checking VOMS server for vo=%s,server=%s:%d", host,port); 
+			
+			try 
+			{
+	            CertificateStore certStore;
+
+				certStore = getVRSContext().getConfigManager().getCertificateStore();
+	            // check+install certificate: 
+				
+	            certStore.installCert(serv.getHostname(),serv.getPort());
+			}
+			catch (VlException e) 
+			{
+				throw e; // wrap ? 
+			}
+    	}
+		
 	}
 	
 	 // ========================================================================
