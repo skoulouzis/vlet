@@ -30,13 +30,16 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.logging.Level;
 
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.grid.voms.VO;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
@@ -45,8 +48,9 @@ import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.util.cog.GridProxy;
 import nl.uva.vlet.vrs.VRSContext;
 
-/** Proxy Dailog Controller */
-
+/**
+ *  Proxy Dailog Controller
+ */
 class GridProxyDialogController implements ActionListener, WindowListener, FocusListener
 {
     private GridProxyDialog proxyDialog = null;
@@ -82,7 +86,7 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
     
     public void createProxy()
     {
-    	Debug("createProxy()"); 
+    	debugPrintf("createProxy()\n"); 
     	
         final char[] chars = proxyDialog.passwordTextField.getPassword();
 
@@ -124,7 +128,7 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
                {
                   this.setException(e); 
                   Global.debugPrintStacktrace(e);
-                  Debug("Exception:"+e);  
+                  debugPrintf("Exception:%s\n",e);  
                }
                // calback:
                SwingUtilities.invokeLater(runProxyCreated);  
@@ -142,21 +146,47 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
     /** Is called after background task has created the proxy */ 
     protected void proxyCreated()
     {
-    	Debug("proxyCreated");
+    	debugPrintf("proxyCreated\n");
         proxyDialog.setCursor(GuiSettings.getDefaultCursor());
 
         Exception ex=proxyCreationTask.getException();
+        VO vo=null;
+        
+        try 
+        {
+			vo=this.gridProxy.getDefaultVO();
+		} 
+        catch (VlException e) 
+        {
+        	logException("Couldn't get default VO information.",e);
+		} 
         
         if (ex!=null)
         {
-        	// MODALITY CHAINING: when showing a modal dailog DURING another
-        	// modal dailog, the parent dialog MUST be supplied :
-            ExceptionForm.show(this.proxyDialog,ex,true);
-            // use JOptionPane during MODAL dialog 
-       	 	/* JOptionPane.showMessageDialog(this.proxyDialog,
+        	//currently only happens when VOMS server isn't known.  
+        	if ((ex instanceof nl.uva.vlet.exception.VlUnknownCAException) && (vo!=null)) 
+        	{
+        		ExceptionForm.show(this.proxyDialog,ex,true);
+        		
+        		Boolean val=SimpleDialog.askConfirmation("The Certificate Authority (CA) doesn't seem to be recognized for:"+vo.getDefaultHost()
+        				+"\nDo you want to import the CA certificate ?\nAfter importing the new certificate, you have to restart the VBrowser.", true);
+        		if (val)
+        		{
+        			checkImportVomsCA(true);
+        			this.gridProxy.loadCertificates(); 
+        		}
+        	}
+        	else
+        	{
+        		// MODALITY CHAINING: when showing a modal dialog DURING another
+        		// modal dialog, the parent dialog MUST be supplied :
+        		ExceptionForm.show(this.proxyDialog,ex,true);
+        		// use JOptionPane during MODAL dialog 
+       	 		/* JOptionPane.showMessageDialog(this.proxyDialog,
          		    ex.getMessage(),
          		    ex.getName(),
          		    JOptionPane.ERROR_MESSAGE);*/ 
+        	}
         }
         else 
         {
@@ -178,22 +208,40 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
          update(); 
     }
 
-    private void Debug(String msg) 
+    public void checkImportVomsCA(boolean interactive) 
     {
-    	Global.debugPrintln(this,msg); 
+    	String voname=this.gridProxy.getDefaultVOName(); 
+		try 
+		{
+			gridProxy.checkImportVomsServerCertificates(voname);
+		}
+		catch (VlException e) 
+		{
+			e.printStackTrace();
+		}  
+	}
+
+	private void debugPrintf(String format,Object... args) 
+    {
+    	ClassLogger.getLogger(GridProxyDialogController.class).debugPrintf(format,args);  
     	//System.err.println(msg); 
+	}
+	
+	private void logException(String msg,Throwable e) 
+    {
+    	ClassLogger.getLogger(GridProxyDialogController.class).logException(Level.WARNING,e,"%s\n",msg); 
 	}
 
 	public void update()
     {
-		Debug("update()");
+		debugPrintf("update()\n");
 		// reload:
         gridProxy.reload(); 
         
 
         if (gridProxy.isValid() == false)
         {
-        	Debug("udpate(): GridProxy NOT valid");
+        	debugPrintf("udpate(): GridProxy NOT valid\n");
             proxyDialog.proxyCNTextField.setText("*** Invalid Proxy ***");
             
             if (timer!=null) 
@@ -202,7 +250,7 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         }
         else
         {
-        	Debug("update(): GridProxy valid...");
+        	debugPrintf("update(): GridProxy valid...\n");
 
             proxyDialog.proxyCNTextField.setText(gridProxy.getSubject());
             // Initiate Countdown to Desctruction...
@@ -324,19 +372,19 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         if (comp == this.proxyDialog.certificateLocationField) 
         {
             String dir=this.proxyDialog.certificateLocationField.getText();
-        	Debug("new cert dir="+dir);
+            debugPrintf("new cert dir=%s\n",dir);
             this.gridProxy.setUserCertificateDirectory(dir); 
         }
         else if (comp == this.proxyDialog.proxyLocationTextField) 
         {
             String dir=this.proxyDialog.proxyLocationTextField.getText();
-        	Debug("proxypath="+dir);
+        	debugPrintf("proxypath=%s\n",dir);
             this.gridProxy.setDefaultProxyLocation(dir);
         }
         else if (comp == this.proxyDialog.proxyLifetimeField) 
         {
             String str=this.proxyDialog.proxyLifetimeField.getText();
-        	Debug("new lifetime="+str);
+            debugPrintf("new lifetime=%s\n",str);
         	// accept SS, MM:SS and HH:MM:SS format:
         	String strs[]=str.split(" "); // filter (hours) part  
         	String parts[]=strs[0].split(":"); // split HH:MM[:SS] (Keep hours)
@@ -363,7 +411,7 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         	}
         	else
         		return; 
-        	Debug("Setting new lifetime:"+time);
+        	debugPrintf("Setting new lifetime:%d\n",time);
         	this.gridProxy.setDefaultProxyLifetime(time); 
              
         }
@@ -384,14 +432,14 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         else if (comp == this.proxyDialog.voNameTF) 
         {
             String name=this.proxyDialog.voNameTF.getText();
-        	Debug("new vo name="+name);
+        	debugPrintf("new vo name=%s\n",name);
             this.gridProxy.setDefaultVOName(name); 
         }
         else if (comp == this.proxyDialog.voRoleTF) 
         {
             String role=this.proxyDialog.voRoleTF.getText();
 
-            Debug("new vo role="+role);
+            debugPrintf("new vo role=%s\n",role);
             this.gridProxy.setDefaultVORole(role); 
         }
         update(); 
