@@ -561,10 +561,15 @@ public class GlobusCredentialProvider implements VGridCredentialProvider
             
             return cred; 
         }
+        catch (VlException e)
+        {
+        	throw e; // keep VlException as-is. 
+        }
         catch (Exception e)
         {
             // rethrow
-            throw new VlException("Proxy Creation Exception", e.getMessage(), e);
+
+        	throw new VlException("Proxy Creation Exception", e.getMessage(), e);
         }
     }
     
