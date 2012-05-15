@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="testsrc"/>
-	<classpathentry kind="src" path="lobo-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/lobo-pub.jar"/>
 	<classpathentry kind="lib" path="lib/ext/primary.jar"/>
