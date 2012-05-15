@@ -154,7 +154,7 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         
         try 
         {
-			vo=this.gridProxy.getDefaultVO();
+			vo=this.gridProxy.getProvider().getVO(gridProxy.getDefaultVOName()); 
 		} 
         catch (VlException e) 
         {
