@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!-- 
+  File   : voms.xml 
+  Author : Piter T. de Boer 
+  Info   : 
+  
+       Additional VOMS servers information. 
+       This file will also be scanned in addition to possible other voms.xml files. 
+           
+       Current search order for VO information is (first matched, first used):  
+        - User Configuration : $HOME/.globus/vomsdir/voms.xml
+        - Installation       : $VLET_INSTALL/etc/voms.xml 
+        - GLobus (host)      : /etc/grid-security/vomsdir/voms.xml           
+
+       The VOMS XML records in this file are generated from voms.inf
+-->
+
+<!DOCTYPE voms[
+  <!ELEMENT name (#PCDATA)>
+  <!ELEMENT admin (#PCDATA)>
+  <!ELEMENT port (#PCDATA)>
+  <!ELEMENT cert (#PCDATA)>
+  <!ELEMENT dn (#PCDATA)>
+  <!ELEMENT server (name,port,cert,dn)>
+  <!ELEMENT vo (name,admin,server*)>
+  <!ELEMENT voms (vo*)>
+]>
+
