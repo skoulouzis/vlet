@@ -22,7 +22,9 @@
 // source: 
 
 package nl.uva.vlet.bootstrap;
-
+// ====================
+// NO VLET IMPORTS HERE 
+// ====================
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
