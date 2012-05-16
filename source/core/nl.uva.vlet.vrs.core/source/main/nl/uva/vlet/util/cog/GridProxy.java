@@ -1184,6 +1184,13 @@ public class GridProxy
         return this.getCredentialVOName(); 
     }
     
+    /** Return default VO object for current credential provider 
+     * @throws VlException */
+    public VO getDefaultVO() throws VlException
+    {
+    	return findVO(this.getDefaultVOName()); 
+    }
+    
     public X509Certificate getUserCertificate() throws Exception
     {
         return CertificateStore.loadPEMCertificate(this.getUserCertFile());
@@ -1314,7 +1321,7 @@ public class GridProxy
 			String host=serv.getHostname(); 
 			int port=serv.getPort(); 
 			
-			logger.debugPrintf("Checking VOMS server for vo=%s,server=%s:%d", host,port); 
+			logger.debugPrintf("Checking VOMS server for vo=%s,server=%s:%d", voName,host,port); 
 			
 			try 
 			{
