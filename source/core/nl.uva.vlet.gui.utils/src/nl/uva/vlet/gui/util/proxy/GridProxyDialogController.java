@@ -166,14 +166,19 @@ class GridProxyDialogController implements ActionListener, WindowListener, Focus
         	//currently only happens when VOMS server isn't known.  
         	if ((ex instanceof nl.uva.vlet.exception.VlUnknownCAException) && (vo!=null)) 
         	{
-        		ExceptionForm.show(this.proxyDialog,ex,true);
+        		// ExceptionForm.show(this.proxyDialog,ex,true);
+        		// String msg=ex.getMessage(); 
         		
         		Boolean val=SimpleDialog.askConfirmation("The Certificate Authority (CA) doesn't seem to be recognized for:"+vo.getDefaultHost()
+        				//+"\nError message:\n-------\n"
+        				//+msg+"\n------"
         				+"\nDo you want to import the CA certificate ?\nAfter importing the new certificate, you have to restart the VBrowser.", true);
+        	
         		if (val)
         		{
         			checkImportVomsCA(true);
         			this.gridProxy.loadCertificates(); 
+        			// still need to restart after loadCertificates. 
         		}
         	}
         	else
