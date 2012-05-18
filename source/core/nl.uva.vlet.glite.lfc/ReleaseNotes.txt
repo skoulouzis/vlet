@@ -5,7 +5,7 @@
 # Package: nl.uva.vlet.glite.lfc
 # Version: 1.0.1
 # 
-# SVN    : Date=$Date;Revision=$Revision
+# SVN    : $Date$ $Revision$
 #
 
 Authors:
