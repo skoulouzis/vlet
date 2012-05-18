@@ -25,6 +25,7 @@ package nl.uva.vlet.glite.lfc;
 
 public class AssertionFailedException extends java.lang.Error
 {
+	private static final long serialVersionUID = -2354052694441465135L;
 
 	public AssertionFailedException(String msg)
 	{

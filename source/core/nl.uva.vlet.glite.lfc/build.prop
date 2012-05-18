@@ -21,10 +21,10 @@
 lfcj.package=nl.uva.vlet.glite.lfc
 # name for distribution to use 
 lfcj.name=vlet_lfc
-lfcj.version=1.0.0
+lfcj.version=1.0.1
 
 ###
-# Java Compiler options : Updated to 1.7 
+# Java Compiler options : Updated to 1.6 
 javac.debug=true
 javac.target=1.6
 javac.source=1.6

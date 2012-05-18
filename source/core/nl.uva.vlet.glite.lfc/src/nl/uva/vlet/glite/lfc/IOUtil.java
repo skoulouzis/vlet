@@ -24,13 +24,10 @@
 package nl.uva.vlet.glite.lfc;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 
 /** 
@@ -137,11 +134,11 @@ public class IOUtil
         return byteSize(str1)+byteSize(str2)+byteSize(str3);
     }
 
-    public static byte[] readBytes(DataInputStream input)
-    {
-        // TODO Auto-generated method stub
-        return null; 
-    }
+    //public static byte[] readBytes(DataInputStream input)
+    //{
+    //   // TODO Auto-generated method stub
+    //    return null; 
+    //}
     
     /** Reads exact amount of bytes */
     public static byte[] readBytes(DataInputStream input, int size) throws IOException

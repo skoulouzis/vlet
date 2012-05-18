@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class LFCError 
 {
-   /** These seem like standard POSIX errors from errno.h !  */ 
+   /** These are standard POSIX errors from errno.h !  */ 
   final static String[] messages = 
   {
 	  "No Error",
@@ -87,7 +87,7 @@ public class LFCError
       
       // LFC: Now With Extra Errors! 
       errorMap.put(1004,"Error 1004: Time out."); 
-      errorMap.put(2703,"Error 2703: Possible Invalid VOMS Credential Error (VOMS Attribute experied?).");
+      errorMap.put(2703,"Error 2703: Possible Invalid VOMS Credential Error (VOMS Attribute expired?).");
   }
   
   //

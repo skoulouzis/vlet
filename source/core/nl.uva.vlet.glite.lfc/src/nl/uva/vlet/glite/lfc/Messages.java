@@ -24,7 +24,7 @@
 package nl.uva.vlet.glite.lfc;
 
 /**
- * Returns the localised messages for this package.
+ * Returns the localized messages for this package.
  */
 public class Messages 
 {

@@ -23,9 +23,6 @@
 
 package nl.uva.vlet.glite.lfc;
 
-import java.io.IOException;
-
-import org.ietf.jgss.GSSException;
 
 
 /**

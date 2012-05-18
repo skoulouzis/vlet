@@ -3,7 +3,8 @@
 ===============================================================================
 Project: VLET LFC
 Package: nl.uva.vlet.glite.lfc
-Version: 1.0.0
+Version: 1.0.2
+Date   : 1 May 2012 
 
 Authors:
  - Piter T. de Boer 
@@ -22,9 +23,15 @@ Version 1.0.0:
 ===  
  - Updated logging and error messages.
  - Upgraded version to mature. Version is now 1.0.0. 
+
+
+Version 1.0.1: 
+===
+ - Updated text and comments after moving source to sourceforge.net. 
+
  
 Contact: 
 Piter T. de Boer 
-email: ptdeboer [curlythingy] pccuva [dot] nl.  
-PCC UVA BV/NIKHEF. 
+email: ptdeboer [@] gmail [.] com.  
+
 
