@@ -1,10 +1,12 @@
 ===============================================================================
   RELEASE NOTES 
 ===============================================================================
-Project: VLET LFC
-Package: nl.uva.vlet.glite.lfc
-Version: 1.0.2
-Date   : 1 May 2012 
+# Project: VLET LFC
+# Package: nl.uva.vlet.glite.lfc
+# Version: 1.0.1
+# 
+# SVN    : Date=$Date;Revision=$Revision
+#
 
 Authors:
  - Piter T. de Boer 
