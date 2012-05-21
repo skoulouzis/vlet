@@ -111,12 +111,13 @@
 	    </javac>
 	     -->
 	    		
-		<!-- Compile jdk1.4 compatible bootstrapper -->
+		<!-- Compile jdk1.5 compatible bootstrapper -->
 		
-		<javac srcdir="${component.src}/main/${package.dir}/bootstrap" destdir="${build.bootstrap}" 
-	           source="1.4" 
-	           debug="${javac.debug}"
-		       target="1.4" />
+		<javac srcdir="${component.src}/main/${package.dir}/bootstrap" destdir="${build.bootstrap}"
+				compiler="${javac.compiler}"
+	           	source="1.5" 
+	           	debug="${javac.debug}"
+		       	target="1.5" />
 	</target>
 
 	<target name="javadoc" depends="init" description="documentation">
@@ -146,10 +147,10 @@
 		    	<section name="common">
 		    		<attribute name="Specification-Title" value="${component.name}" />
 		    		<attribute name="Specification-Version" value="${vlet.version}" />
-		    		<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Specification-Vendor" value="www.eScienceCenter.nl" />
 		    		<attribute name="Implementation-Title" value="${component.name}" />
 		    		<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
-		    		<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Implementation-Vendor" value="www.eScienceCenter.nl" />
 		    	</section>
    				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
   			</manifest>
@@ -167,10 +168,10 @@
 		    	<section name="common">
 		    		<attribute name="Specification-Title" value="${component.name}" />
 		    		<attribute name="Specification-Version" value="${vlet.version}" />
-		    		<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Specification-Vendor" value="www.eScienceCenter.nl" />
 		    		<attribute name="Implementation-Title" value="${component.name}" />
 		    		<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
-		    		<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+		    		<attribute name="Implementation-Vendor" value="www.eScienceCenter.nl" />
 	    		</section>
 				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
 			</manifest>
@@ -195,10 +196,10 @@
     				<section name="common">
     					<attribute name="Specification-Title" value="${name}" />
     					<attribute name="Specification-Version" value="${vlet.version}" />
-    					<attribute name="Specification-Vendor" value="www.vl-e.nl" />
+    					<attribute name="Specification-Vendor" value="www.eScienceCenter.nl" />
     					<attribute name="Implementation-Title" value="${component.name}" />
     					<attribute name="Implementation-Version" value="${component.version} ${TODAY}" />
-    					<attribute name="Implementation-Vendor" value="www.vl-e.nl" />
+    					<attribute name="Implementation-Vendor" value="www.eScienceCenter.nl" />
     				</section>
 
     				<!-- <attribute name="Class-Path" value="bootstrap.jar" /> --> 
@@ -249,9 +250,8 @@
 
 		<copy todir="${component.dist}/etc" verbose="true" >
 			
-			<fileset dir="etc/">
-				<!-- include name="README"/ -->
-				<exclude name="cacerts"/> 
+			<fileset dir="etc/"
+   	 			excludes="**/genvoms.sh,**/voms.inf,**/voms.xml.header,**/voms.xml.old"> 
 			</fileset>
 	
 			<filterset refid="vletfilters"/>
@@ -346,6 +346,7 @@
 		<mkdir dir="${project.dist}/etc" />
 		<copy todir="${project.dist}/etc">
 			<fileset dir="${component.dist}/etc">
+				
 			</fileset>
 		</copy>
 
