@@ -46,15 +46,16 @@ public class TestAnimatedIcons
     {
         try
         {
-            ImageSequence image = ImageUtil.loadAnimatedGif(new URL("file:/home/ptdeboer/gif/test.gif")); 
+        	URL url = Thread.currentThread().getContextClassLoader().getResource("animated/animated_test.gif"); 
+        	
+            ImageSequence image = ImageUtil.loadAnimatedGif(url); 
             
-            int numIcons=20; 
+            int numIcons=6;
+            double speeds[]={-2,-1,-0.5,0.5,1,2}; 
             final List<AnimatedIcon> icons=new ArrayList<AnimatedIcon>(numIcons); 
             image.setLoopCount(3); 
-
             
             //animicon = new AnimatedIcon("file:/home/ptdeboer/gif/test.gif");
-            
             //animicon.setImageObserver(animicon.new AnimationObserver());
             
             JFrame frame=new JFrame() 
@@ -77,7 +78,7 @@ public class TestAnimatedIcons
             for (int i=0;i<numIcons;i++)
             {
                 AnimatedIcon animIcon=new AnimatedIcon(image);
-                double speed=-1.1+(double)i/5;
+                double speed=speeds[i];
                 animIcon.setAnimationSpeed(speed);
                 
                 icons.add(animIcon);   

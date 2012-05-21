@@ -27,12 +27,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.uva.vlet.Global;
+import nl.uva.vlet.gui.icons.AnimatedIcon;
+import nl.uva.vlet.gui.icons.IconProvider;
 import nl.uva.vlet.gui.util.gif.NS2GifDecoder;
+import nl.uva.vlet.util.ResourceLoader;
 
 //import com.sun.media.jai.codec.ByteArraySeekableStream;
 //import com.sun.media.jai.codec.ImageDecodeParam;
@@ -137,6 +141,11 @@ public class ImageUtil
 //        return new ImageSequence(images); 
 //    }
 
+	public static ImageSequence loadAnimatedGif(ClassLoader optClassLoader,String urlstr) throws Exception
+	{
+		return loadAnimatedGif(ResourceLoader.getDefault().resolveUrl(optClassLoader, urlstr)); 
+	}
+
     /** 
      * Loads legacy Netscape 2.0 animated Gificon and decodes it which seems to be 
      * the animated gif standard nowdays! 
@@ -200,6 +209,7 @@ public class ImageUtil
         
         return newImage; 
     }
+
 
 
     

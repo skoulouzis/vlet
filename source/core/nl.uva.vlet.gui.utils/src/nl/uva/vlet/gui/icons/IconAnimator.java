@@ -25,13 +25,11 @@ package nl.uva.vlet.gui.icons;
 
 import java.awt.Component;
 import java.awt.Image;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 
 import nl.uva.vlet.Global;
 
@@ -191,14 +189,24 @@ public class IconAnimator implements Runnable
     protected int updateAll()
     {
         // thread safe (?) iterator 
-        Iterator<IconInfo> iterator = this.icons.iterator(); 
+    	
+        Iterator<IconInfo> iterator;
+        synchronized(this.icons)
+    	{
+        	iterator = this.icons.iterator(); 
+    	}
         
         int nextWaitTime=1000;  
         int waitTime=0; 
         
         while(mustStop==false && iterator.hasNext())
         {
-            IconInfo next = iterator.next();
+            IconInfo next=null; 
+            synchronized(iterator)
+            {
+            	next = iterator.next();
+            }
+            
             if (next.icon.hasStopped()==false)
             {
                 if (next.needsUpdate(System.currentTimeMillis()))
