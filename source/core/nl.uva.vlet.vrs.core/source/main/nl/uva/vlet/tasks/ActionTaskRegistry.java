@@ -25,10 +25,18 @@ package nl.uva.vlet.tasks;
 
 import java.util.Vector;
 
-import nl.uva.vlet.Global;
+import nl.uva.vlet.ClassLogger;
 
 public class ActionTaskRegistry
 {
+	// === static === //
+	
+	private static ClassLogger logger; 
+	{
+		logger=ClassLogger.getLogger(ActionTaskRegistry.class); 
+	}
+	// ==== instance === // 
+	
     /** Current actionTasks running in this JVM */ 
 	private Vector<ActionTask> actionTasks=new Vector<ActionTask>();
 	
@@ -64,25 +72,25 @@ public class ActionTaskRegistry
 	
 	public void debugPrintTasks()
 	{
-        Global.infoPrintln("ActionTask","--- Running Tasks ---"); 
+        logger.infoPrintf("%s\n","ActionTask","--- Running Tasks ---"); 
 
         for (ActionTask task:actionTasks)
         {
         	Thread t=task.getFirstThread(); 
         	
-            Global.infoPrintln("ActionTask","--- "+task); 
-            Global.infoPrintln("ActionTask"," isAlive= "+task.isAlive());
+            logger.infoPrintf("%s\n","ActionTask","--- "+task); 
+            logger.infoPrintf("%s\n","ActionTask"," isAlive= "+task.isAlive());
             if (t==null)
             {
-            	 Global.infoPrintln("ActionTask"," No Threads!");
+            	 logger.infoPrintf("%s\n","ActionTask"," No Threads!");
             }
             else
             {
-	            Global.infoPrintln("ActionTask"," thread state ="+t.getState());
+	            logger.infoPrintf("%s\n","ActionTask"," thread state ="+t.getState());
 	            StackTraceElement[] stack = t.getStackTrace(); 
 	            for (StackTraceElement element:stack)
 	            {
-	                Global.infoPrintln("ActionTask"," - "+element);
+	                logger.infoPrintf("%s\n","ActionTask"," - "+element);
 	            }
             }
         }
@@ -96,7 +104,7 @@ public class ActionTaskRegistry
             {
                 if (task.isAlive())
                 {
-                   Global.infoPrintln(ActionTask.class,"Stopping:"+task);
+                   logger.infoPrintf("%s\n",ActionTask.class,"Stopping:"+task);
                    task.stopTask();
                    task.interrupt();
                 }
@@ -156,7 +164,7 @@ public class ActionTaskRegistry
         }
         catch (InterruptedException e)
         {
-            System.err.println("***Error: Exception:"+e); 
+            logger.logException(ClassLogger.ERROR,e,"***Error: Exception:"+e); 
             e.printStackTrace();
         } 
         

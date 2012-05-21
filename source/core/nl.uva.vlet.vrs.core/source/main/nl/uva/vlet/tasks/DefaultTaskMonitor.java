@@ -23,12 +23,9 @@
 
 package nl.uva.vlet.tasks;
 
-import java.util.Formatter;
-import java.util.Locale;
 import java.util.Vector;
 
-
-import nl.uva.vlet.Global; 
+import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlInterruptedException;
 
 
@@ -361,7 +358,7 @@ public class DefaultTaskMonitor implements ITaskMonitor, ISubTaskMonitor
      */
     public void setIsCancelled()
     {
-        Global.debugPrintln(this,">>> setIsCancelled() Called for: "+this); 
+    	Global.debugPrintf(this,">>> setIsCancelled() Called for:%s\n ",this); 
         this.mustStop = true;
     }
     

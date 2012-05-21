@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.tasks;
 
-import java.util.logging.Handler;
 import java.util.logging.Level;
 
 import nl.uva.vlet.logging.FormattingLogger;
@@ -44,7 +43,7 @@ public class TaskLogger extends FormattingLogger
         super(name);
         this.handler=new RecordingLogHandler(); 
         this.addHandler(handler);
-        // default level=info, b ut default logPrintf uses "ALL" anyway: 
+        // default level=info, but default logPrintf uses "ALL" anyway: 
         this.setLevel(defaultLevel);  
     } 
 

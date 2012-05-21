@@ -24,7 +24,6 @@
 package nl.uva.vlet.tasks;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.error.InitializationError;
 import nl.uva.vlet.exception.VlException;
 
@@ -436,7 +435,7 @@ public abstract class ActionTask implements Runnable
      */
     final public void interrupt()
     {
-        Global.debugPrintln("ActionTask","*** Interrupting:"+this);
+        logger.debugPrintf("ActionTask:%s\n","*** Interrupting:"+this);
         
         for (Thread thread:threads)
     		if (thread!=null) 
@@ -450,7 +449,7 @@ public abstract class ActionTask implements Runnable
      */
     final public void join() throws InterruptedException
     {
-    	join(0);  
+    	join(0);
     }
     
     /** 
