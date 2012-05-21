@@ -47,7 +47,7 @@
             <descriptors>
               <descriptor>bin.xml</descriptor>
             </descriptors>
-          <outputDirectory>output/</outputDirectory>
+          <outputDirectory>target/</outputDirectory>
           <workDirectory>target/assembly/work</workDirectory>
           </configuration>
 
