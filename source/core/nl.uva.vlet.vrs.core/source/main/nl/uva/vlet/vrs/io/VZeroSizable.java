@@ -29,9 +29,9 @@ import nl.uva.vlet.exception.VlException;
  * Single method interface to detect whether the length of a resource 
  * can be set to zero. 
  * Some resources or file systems cannot set the length, but can truncate 
- * or reset the file size. 
- * This a legacy method used for file optimization in the case where deleting and 
- * recreating the file takes longer then resetting the file size to zero.
+ * or reset the file size to zero. 
+ * This a legacy interface used for optimization in the case where deleting and 
+ * recreating the file takes longer then just resetting the file size to zero.
  * <p>  
  * This method can be used when the meta data attributes of the resource
  * needs to be kept, but a new (empty) resource needs to be created before writing to it. 
