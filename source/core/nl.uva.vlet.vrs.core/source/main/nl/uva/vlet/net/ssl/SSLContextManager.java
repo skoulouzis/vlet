@@ -89,7 +89,7 @@ public class SSLContextManager
     // initialized values:
     private SSLContext sslContext=null; 
     private SSLServerSocketFactory serverSocketFactory=null;
-    private SSLSocketFactory socketFactory=null;
+    private SSLSocketFactory clientSocketFactory=null;
     
     private KeyStore _privateKeystore=null;
     private KeyManager identityKeyManager=null;
@@ -98,7 +98,7 @@ public class SSLContextManager
     public SSLContextManager(Properties inputConfig) throws Exception
     {
         serverSocketFactory = null;
-        socketFactory = null;
+        clientSocketFactory = null;
         config=inputConfig;  
         initSSLContext(); 
     }
@@ -213,7 +213,7 @@ public class SSLContextManager
 
     public SSLServerSocketFactory getServerSocketFactory() throws SSLException
     {
-        if(socketFactory != null)
+        if(clientSocketFactory != null)
         {
             String msg="Trying to use a client initialized ContextWrapper to create server socket factory.\n";
             logger.errorPrintf("%s\n",msg); 
@@ -233,10 +233,10 @@ public class SSLContextManager
             throw new SSLException(msg); 
         }
         
-        if(socketFactory == null)
+        if(clientSocketFactory == null)
             //socketFactory = new TimeoutSSLSocketFactory(sslContext.getSocketFactory(), null);
-            socketFactory = new ExtSocketFactory(sslContext,sslContext.getSocketFactory());
-        return socketFactory;
+            clientSocketFactory = new ExtSocketFactory(sslContext,sslContext.getSocketFactory());
+        return clientSocketFactory;
     }
 
     
