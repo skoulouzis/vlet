@@ -28,7 +28,6 @@ import java.util.Vector;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.actions.ActionMenuMapping;
-import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.exception.NotImplementedException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.tasks.ITaskMonitor;
