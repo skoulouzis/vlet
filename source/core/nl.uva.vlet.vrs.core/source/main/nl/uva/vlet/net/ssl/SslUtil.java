@@ -265,12 +265,12 @@ public class SslUtil
     }
 
 
-    public static SSLSocket openSSLV3Socket(String host, int port) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, VlException, Exception 
+    public static SSLSocket openSSLv3Socket(String host, int port) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, VlException, Exception 
     {
-        return openSSLV3Socket(CertificateStore.getDefault().createSSLContext("SSLv3"),host,port,-1); 
+        return openSSLv3Socket(CertificateStore.getDefault().createSSLContext("SSLv3"),host,port,-1); 
     }
 
-    public static SSLSocket openSSLV3Socket(SSLContext context,String host, int port,int timeout) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, VlException, Exception 
+    public static SSLSocket openSSLv3Socket(SSLContext context,String host, int port,int timeout) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, VlException, Exception 
     {
         SSLSocketFactory sslFactory = context.getSocketFactory(); 
 
@@ -415,7 +415,7 @@ public class SslUtil
         String sslErrorMessage=null;
 
         // SSLv3 is used by WMS and LB 
-        SSLSocket socket=SslUtil.openSSLV3Socket(context,host,port,10000); 
+        SSLSocket socket=SslUtil.openSSLv3Socket(context,host,port,10000); 
 
         try
         {

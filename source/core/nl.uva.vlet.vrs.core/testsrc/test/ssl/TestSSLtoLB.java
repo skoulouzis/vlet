@@ -40,7 +40,7 @@ public class TestSSLtoLB
     {
         try
         {
-            Socket socket = SslUtil.openSSLV3Socket("wms.grid.sara.nl",9000);
+            Socket socket = SslUtil.openSSLv3Socket("wms.grid.sara.nl",9000);
             InputStream inps=socket.getInputStream();
             inps.close(); 
             
