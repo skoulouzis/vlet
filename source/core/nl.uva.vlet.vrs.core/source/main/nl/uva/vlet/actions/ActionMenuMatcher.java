@@ -289,7 +289,7 @@ public class ActionMenuMatcher
 
 					if ((subName!=null) && (matchedSubMenus.contains(subName)==false))
 					{
-						Global.debugPrintln(this,"adding submenu:"+subName); 
+						Global.debugPrintf(this,"adding submenu:%s\n",subName); 
 						
 						matchedSubMenus.add(subName);
 					}
@@ -336,7 +336,7 @@ public class ActionMenuMatcher
 		
 		if (mappings.size()==0)
 		{
-			Global.warnPrintln(this,"Warning: Empty Submenu for:"+subMenu);
+			Global.warnPrintf(this,"Warning: Empty Submenu for:%s\n",subMenu);
 			return null; 
 		}
 		
@@ -364,7 +364,7 @@ public class ActionMenuMatcher
 	private void Debug(String msg)
 	{
 		//Global.errorPrintln(this,msg);
-		Global.debugPrintln(this,msg); 
+		Global.debugPrintf(this,"%s\n",msg); 
 	}
 
 }

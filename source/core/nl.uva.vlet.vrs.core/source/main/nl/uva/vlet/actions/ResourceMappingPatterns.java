@@ -184,7 +184,7 @@ class ResourceMappingPatterns
 		private void Debug(String msg)
 		{
 			//Global.errorPrintln(this,msg); 
-			Global.debugPrintln(this,msg); 
+			Global.debugPrintf(this,"%s\n",msg); 
 		}
 	}
 	
@@ -294,7 +294,7 @@ class ResourceMappingPatterns
 		private void Debug(String msg)
 		{
 			// Global.errorPrintln(this,msg); 
-			Global.debugPrintln(this,msg); 
+			Global.debugPrintf(this,"%s\n",msg); 
 		}
 		
 		public String toString()
@@ -407,7 +407,7 @@ class ResourceMappingPatterns
 		private void Debug(String msg)
 		{
 			//Global.errorPrintln(this,msg); 
-			Global.debugPrintln(this,msg); 
+			Global.debugPrintf(this,"%s\n",msg);
 		}
 		
 		public String toString()
@@ -530,7 +530,7 @@ class ResourceMappingPatterns
 		if ((this.hasSelectionMode(SELECTION_NONE)) && (numSelections<=0)) 
 			return true; 
 		
-		int numMatches=0;
+		//int numMatches=0;
 		boolean matchall=true;    // For All:(match==true) 
 		@SuppressWarnings("unused")
 		boolean matchany=false;   // Exists: (match==true) 
@@ -554,7 +554,7 @@ class ResourceMappingPatterns
 			{
 				// matches; 
 				matchany=true;
-				numMatches++; 
+				//numMatches++; 
 			}
 			else
 			{
@@ -668,7 +668,7 @@ class ResourceMappingPatterns
 	private void Debug(String msg)
 	{
 		//Global.errorPrintln(this,msg); 
-		Global.debugPrintln(this,msg); 
+		Global.debugPrintf(this,"%s\n",msg);
 	}
 
 	/** Factory method for MimeType patterns */ 
