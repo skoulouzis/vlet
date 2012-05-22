@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
-import java.util.logging.Level;
 
 import javax.naming.NamingException;
 
@@ -38,8 +37,8 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.util.SSHUtil;
 import nl.uva.vlet.util.bdii.ServiceInfo.ServiceInfoType;
 import nl.uva.vlet.util.bdii.info.glue.GlueConstants;
@@ -594,7 +593,6 @@ public class BdiiService
             }
             else
             {
-                this.putInServiceCache(info);
                 // block further requests: put nill object.
                 info=ServiceInfo.createNill(ServiceInfoType.SRMV11,hostname);
                 this.putInServiceCache(info);
