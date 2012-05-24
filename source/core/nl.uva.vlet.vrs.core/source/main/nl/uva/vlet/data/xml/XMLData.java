@@ -164,7 +164,7 @@ public class XMLData
 
 	public Node createXMLNode(Document domDoc,VAttribute attr)
 	{
-		String name=attr.getName(); 
+		String name=attr.getName();
 		String value=attr.getStringValue(); // Cast to String representation !  
 		VAttributeType type=attr.getType();
 		boolean editable=attr.isEditable(); 
@@ -458,7 +458,7 @@ public class XMLData
 				if ((enumValues!=null) && (enumValues.size()>0))
 					attr=new VAttribute(attrName,enumValues.toArray(),valueStr);
 				else
-					attr=new VAttribute(attrType,attrName,valueStr);
+					attr=VAttribute.createFromString(attrType,attrName,valueStr); //new VAttribute(attrType,attrName,valueStr);
 
 				debugPrintf(" - new Attribute=%s\n",attr); 
 
