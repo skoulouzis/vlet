@@ -28,12 +28,20 @@ package nl.uva.vlet.data;
  */
 public enum VAttributeType
 {
-	// === Java Native types === //
+    // ------------------------
+	// Support All Native types 
+    // ------------------------
     BOOLEAN,
-    INT,
-    LONG, 
-    FLOAT, 
-    DOUBLE,
+    INT,    // INT32
+    LONG,   // INT64
+    FLOAT,  // float32
+    DOUBLE, // float64
+    
+    // ------------------
+    // Object types 
+    // ------------------
+    
+    // NUMBER *any* number 
     STRING,
     // === Enum === //
     ENUM,
