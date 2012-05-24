@@ -46,7 +46,6 @@ import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.data.VAttributeType;
-import nl.uva.vlet.exception.VAttributeNotEditableException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.font.FontUtil;
 import nl.uva.vlet.gui.panels.fields.AttrEnumField;
@@ -300,7 +299,7 @@ public class AttributePanel extends JPanel
         for (int i=0;i<len;i++)
         {
             VAttribute attr=attributes.elementAt(i);
-            String value=attr.getValue();  
+            String value=attr.getStringValue();  
             String name=attr.getName(); 
             VAttributeType type = attr.getType(); 
             boolean isSection= VAttribute.isSectionName(name); 
@@ -667,7 +666,7 @@ public class AttributePanel extends JPanel
 				
 				if ((newattr!=null) && (source instanceof JTextField))
 				{
-					String valtxt=newattr.getValue(); 
+					String valtxt=newattr.getStringValue(); 
 					((JTextField)source).setText(valtxt);
 					setAttribute(attributeName,valtxt);
 					
@@ -730,7 +729,7 @@ public class AttributePanel extends JPanel
         	String oldValue=null; 
         	
         	// check for new value: 
-        	oldValue = attributes.getValue(name); 
+        	oldValue = attributes.getStringValue(name); 
 				
         	if ((oldValue!=null) && (oldValue.compareTo(value)!=0)) 
         	{
