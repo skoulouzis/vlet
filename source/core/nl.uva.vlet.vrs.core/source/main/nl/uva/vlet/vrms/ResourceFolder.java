@@ -24,9 +24,7 @@
 package nl.uva.vlet.vrms;
 
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICONURL;
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
 
 import java.io.ByteArrayInputStream;
@@ -34,7 +32,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Vector;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
@@ -47,7 +44,6 @@ import nl.uva.vlet.exception.ResourceDeletionFailedException;
 import nl.uva.vlet.exception.ResourceTypeMismatchException;
 import nl.uva.vlet.exception.ResourceTypeNotSupportedException;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VlXMLDataException;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
@@ -55,7 +51,6 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.LinkNode;
 import nl.uva.vlet.vrs.VComposite;
 import nl.uva.vlet.vrs.VCompositeDeletable;
-import nl.uva.vlet.vrs.VCompositeNode;
 import nl.uva.vlet.vrs.VDeletable;
 import nl.uva.vlet.vrs.VDuplicatable;
 import nl.uva.vlet.vrs.VEditable;
@@ -162,7 +157,7 @@ public class ResourceFolder extends LogicalFolderNode<VNode>
     	String value=null; 
     	
     	if (attr!=null)
-    		value=attr.getValue();
+    		value=attr.getStringValue();
     	
     	if (StringUtil.isEmpty(value))
     		attributes.put(new VAttribute(name,newValue)); 
@@ -221,7 +216,7 @@ public class ResourceFolder extends LogicalFolderNode<VNode>
 		// concurrent modifications ? 
 		if (attributes==null)
 			return null; 
-		return this.attributes.getValue(VAttributeConstants.ATTR_ICONURL); 
+		return this.attributes.getStringValue(VAttributeConstants.ATTR_ICONURL); 
 	}
 
 	public void setLogicalParent(VNode node) throws ResourceTypeMismatchException
@@ -261,7 +256,7 @@ public class ResourceFolder extends LogicalFolderNode<VNode>
 	
 	public String getName()
 	{
-		return attributes.getValue(ATTR_NAME);  
+		return attributes.getStringValue(ATTR_NAME);  
 	}
 	
 	public String getMimeType() throws VlException

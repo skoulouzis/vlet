@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.vrms;
 
-import java.lang.reflect.Array;
 import java.util.Vector;
 
 import nl.uva.vlet.Global;
@@ -78,7 +77,7 @@ public abstract class LogicalFolderNode<T extends VNode> extends VCompositeNode 
 	@Override
     public String getIconURL()
     {
-        return this.attributes.getValue(VAttributeConstants.ATTR_ICONURL); 
+        return this.attributes.getStringValue(VAttributeConstants.ATTR_ICONURL); 
     }
     
     public void setIconURL(String iconUrl)

@@ -23,24 +23,26 @@
 
 package nl.uva.vlet.vrms;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+
 import java.io.File;
 import java.util.Vector;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
-import nl.uva.vlet.MessageStrings;
 import nl.uva.vlet.data.BooleanHolder;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.NotImplementedException;
 import nl.uva.vlet.exception.ResourceCreationFailedException;
 import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.ResourceTypeMismatchException;
 import nl.uva.vlet.exception.ResourceTypeNotSupportedException;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.ResourceWriteAccessDeniedException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFSClient;
@@ -48,7 +50,6 @@ import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.LinkNode;
-import nl.uva.vlet.vrs.VComposite;
 import nl.uva.vlet.vrs.VCompositeNode;
 import nl.uva.vlet.vrs.VEditable;
 import nl.uva.vlet.vrs.VNode;
@@ -56,7 +57,6 @@ import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 import nl.uva.vlet.vrs.VRSFactory;
 import nl.uva.vlet.vrs.VRenamable;
-import nl.uva.vlet.vrs.VResourceSystem;
 
 
 /**
@@ -298,7 +298,7 @@ final public class MyVLe extends VCompositeNode implements VEditable,
 			return false;
 
 		String name=attr.getName();
-		String strval=attr.getValue(); 
+		String strval=attr.getStringValue(); 
 
 		if (name==null) 
 			return false;

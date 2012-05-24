@@ -442,7 +442,7 @@ public class LogicalResourceNode extends VNode implements
 
     public String getResourceType() 
     {
-        return resourceAttributes.getValue(ATTR_TYPE); 
+        return resourceAttributes.getStringValue(ATTR_TYPE); 
     }
 
     protected void setTargetPath(String val)
@@ -521,12 +521,12 @@ public class LogicalResourceNode extends VNode implements
         OutputStream outp=((VStreamWritable)storageNode).getOutputStream(); 
         
         try
-        {
+        { 
             //BUUGGY this.properties.storeToXML(outp,"VRS.LinkNode");
-            if (useXML)
+            //if (useXML)
                 writeAsXmlTo(outp); 
-            else
-                resourceAttributes.store(outp,"VL-e Resource description of type:"+this.getType());
+            //else
+            //    resourceAttributes.store(outp,"VL-e Resource description of type:"+this.getType());
             
             try 
             { 
@@ -594,7 +594,7 @@ public class LogicalResourceNode extends VNode implements
         if (this.isServerConfigType())
             return null; 
 
-        return MimeTypes.getDefault().getMimeType(resourceAttributes.getValue(ATTR_PATH)); 
+        return MimeTypes.getDefault().getMimeType(resourceAttributes.getStringValue(ATTR_PATH)); 
     }
 
     /** Override: Get TARGET MimeType.  */ 
@@ -614,7 +614,7 @@ public class LogicalResourceNode extends VNode implements
     
     public String getTargetIconURL()
     {
-        String val=resourceAttributes.getValue(ATTR_ICONURL);
+        String val=resourceAttributes.getStringValue(ATTR_ICONURL);
 
         return val; 
     }
@@ -808,7 +808,7 @@ public class LogicalResourceNode extends VNode implements
 
     public String getTargetScheme()
     {
-        return resourceAttributes.getValue(ATTR_SCHEME); 
+        return resourceAttributes.getStringValue(ATTR_SCHEME); 
     }
     
 
@@ -831,7 +831,7 @@ public class LogicalResourceNode extends VNode implements
      */ 
     public String getTargetUsername()
     {
-        return this.resourceAttributes.getValue(VAttributeConstants.ATTR_USERNAME); 
+        return this.resourceAttributes.getStringValue(VAttributeConstants.ATTR_USERNAME); 
     }  
     
     /**
@@ -839,7 +839,7 @@ public class LogicalResourceNode extends VNode implements
      */ 
     public String getTargetVO()
     {
-        return this.resourceAttributes.getValue(VAttributeConstants.ATTR_VO_NAME);
+        return this.resourceAttributes.getStringValue(VAttributeConstants.ATTR_VO_NAME);
     }  
 
     /**
@@ -849,8 +849,8 @@ public class LogicalResourceNode extends VNode implements
      */ 
     public String getTargetUserInfo()
     {
-        String userstr=resourceAttributes.getValue(ATTR_USERNAME);
-        String vostr=resourceAttributes.getValue(VAttributeConstants.ATTR_VO_NAME);
+        String userstr=resourceAttributes.getStringValue(ATTR_USERNAME);
+        String vostr=resourceAttributes.getStringValue(VAttributeConstants.ATTR_VO_NAME);
 
         // Make sure to create ServerInfo compatible User Info Strings !*/ 
         return ServerInfo.createUserinfo(userstr,vostr); 
@@ -858,22 +858,22 @@ public class LogicalResourceNode extends VNode implements
 
     public String getTargetHostname()
     {
-        return resourceAttributes.getValue(ATTR_HOSTNAME); 
+        return resourceAttributes.getStringValue(ATTR_HOSTNAME); 
     }
 
     public String getTargetPath()
     {
-        return resourceAttributes.getValue(ATTR_PATH); 
+        return resourceAttributes.getStringValue(ATTR_PATH); 
     }
 
     public String getTargetQuery()
     {
-        return resourceAttributes.getValue(ATTR_URI_QUERY); 
+        return resourceAttributes.getStringValue(ATTR_URI_QUERY); 
     }
 
     public String getTargetFragment()
     {
-        return resourceAttributes.getValue(ATTR_URI_FRAGMENT); 
+        return resourceAttributes.getStringValue(ATTR_URI_FRAGMENT); 
     }    
     /**
      * Checks whether remote resource is composite or not.
@@ -890,7 +890,7 @@ public class LogicalResourceNode extends VNode implements
         //check again: 
         this.updateTargetAttributes(false); 
 
-        String val=resourceAttributes.getValue(ATTR_TARGET_IS_COMPOSITE);
+        String val=resourceAttributes.getStringValue(ATTR_TARGET_IS_COMPOSITE);
 
         if (val!=null)
         {
@@ -1099,7 +1099,7 @@ public class LogicalResourceNode extends VNode implements
             // Legacy Bug: 
             // Type of attribute wasn't always stored or stored as Boolean Type.    
             // should be fixed now XML is used (still changeable though) 
-            String str=resourceAttributes.getValue(ATTR_TARGET_IS_COMPOSITE); 
+            String str=resourceAttributes.getStringValue(ATTR_TARGET_IS_COMPOSITE); 
 
             Boolean value; 
 
@@ -1183,11 +1183,11 @@ public class LogicalResourceNode extends VNode implements
         // Legacy update Pre 0.9 update: 
         {
             // remove <0.9 attributes: 
-            String str=resourceAttributes.getValue("serverAttributes");
+            String str=resourceAttributes.getStringValue("serverAttributes");
             if (str!=null)
                 resourceAttributes.remove("serverAttributes");
 
-            str=resourceAttributes.getValue("extraAttributes");
+            str=resourceAttributes.getStringValue("extraAttributes");
             if (str!=null)
                 resourceAttributes.remove("extraAttributes");
         }
@@ -1571,7 +1571,7 @@ public class LogicalResourceNode extends VNode implements
                 // Link Schemes are editable but must be updated 
                 // to reflect 'current' registered schemes !
                 editable=true;
-                String value=attr.getValue(); 
+                String value=attr.getStringValue(); 
                 // Create Schemes Enumerate 
                 String schemes[]=this.getRegisteredSchemes();
                 attr=VAttribute.createEnumerate(name,schemes,value); 
