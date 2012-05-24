@@ -23,6 +23,20 @@
 
 package nl.uva.vlet.vrs.tools;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM_TYPES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CREATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_GID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISSYMBOLICLINK;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LENGTH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MODIFICATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PERMISSIONS_STRING;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SYMBOLICLINKTARGET;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UNIX_FILE_MODE;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
@@ -34,7 +48,6 @@ import nl.uva.vlet.util.cog.GridProxy;
 import nl.uva.vlet.vfs.VChecksum;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSClient;
-import static nl.uva.vlet.data.VAttributeConstants.*; 
 
 /** 
  * URI 'stat' command. 
@@ -325,7 +338,7 @@ public class URIStat
             VAttribute attr=attrs.get(name);
             String value="";
             if (attr!=null)
-                value=attr.getValue(); 
+                value=attr.getStringValue(); 
             
             if (quoted)
                 System.out.printf(" %"+maxWidth+"s='%s'\n",name,value);
