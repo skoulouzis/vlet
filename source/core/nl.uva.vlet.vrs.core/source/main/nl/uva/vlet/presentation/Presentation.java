@@ -23,11 +23,33 @@
 
 package nl.uva.vlet.presentation;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ATTEMPTS;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CREATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_DEST_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_DEST_URL;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_FAULT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICON;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_INDEX;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LENGTH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MAX_WALL_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MIMETYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MODIFICATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NODE_TEMP_DIR;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PERMISSIONS_STRING;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SOURCE_FILENAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SOURCE_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SOURCE_URL;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_STATUS;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+
 import java.awt.Color;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -35,13 +57,9 @@ import java.util.TimeZone;
 import javax.swing.JTable;
 
 import nl.uva.vlet.data.StringList;
-import nl.uva.vlet.presentation.Presentation.AttributePresentation;
 import nl.uva.vlet.vfs.VFS;
-import nl.uva.vlet.vjs.VJS;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VRS;
-
-import static nl.uva.vlet.data.VAttributeConstants.*;
 
 /**
  * Create custom Presentation how to show a VNode and store settings so it can
@@ -258,6 +276,26 @@ public class Presentation
             return str + val;
     }
 
+    /** format number to 0000-9999 format */
+    public static String to4decimals(long val)
+    {
+        String str = "";
+
+        if (val < 0)
+        {
+            str = "-";
+            val = -val;
+        }
+
+        if (val < 10)
+            return str = "000" + val;
+        else if (val < 100)
+            return str + "00" + val;
+        else if (val < 1000)
+            return str + "0" + val;
+        else
+            return str + val;
+    }
     /**
      * Returns time string relative to current time in millis since 'epoch'. If,
      * for example, the date is 'today' it will print 'today hh:mm:ss' if the
@@ -656,8 +694,13 @@ public class Presentation
         int seconds = gmtTime.get(GregorianCalendar.SECOND);
         int millies = gmtTime.get(GregorianCalendar.MILLISECOND);
 
-        return "" + year + "-" + to2decimals(month) + "-" + to2decimals(day) + " " + to2decimals(hours) + ":"
-                + to2decimals(minutes) + ":" + to2decimals(seconds) + "." + to3decimals(millies);
+        return to4decimals(year) + "-" 
+                + to2decimals(month) + "-" 
+                + to2decimals(day) + " " 
+                + to2decimals(hours) + ":"
+                + to2decimals(minutes) + ":" 
+                + to2decimals(seconds) + "." 
+                + to3decimals(millies);
     }
 
     /** Convert Normalized DateTime string to millis since epoch */
