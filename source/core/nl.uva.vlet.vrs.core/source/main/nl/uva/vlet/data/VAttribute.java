@@ -95,6 +95,10 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
      */
     public static VAttribute createFrom(VAttributeType type, String name, Object value)
     {
+        // null value is allowed: 
+        if (value==null)
+            return new VAttribute(type,name, null); 
+        
         VAttributeType objType = VAttributeType.getObjectType(value, null);
         if (objType != type)
             throw new Error("Incompatible Object Type. Specified type=" + type + ", object type=" + objType);
