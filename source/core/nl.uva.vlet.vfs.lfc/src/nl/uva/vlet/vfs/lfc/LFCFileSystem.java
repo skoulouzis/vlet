@@ -35,9 +35,9 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VRLList;
 import nl.uva.vlet.exception.NotImplementedException;
 import nl.uva.vlet.exception.ResourceCreationFailedException;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlConfigurationError;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.glite.lfc.LFCConfig;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.util.bdii.ServiceInfo;
@@ -50,7 +50,6 @@ import nl.uva.vlet.vfs.lfc.LFCFSConfig.ReplicaSelectionMode;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRSContext;
 
 
@@ -147,7 +146,7 @@ public class LFCFileSystem extends FileSystemNode
         if (listAttr == null)
             return new StringList(); 
 
-        String listStr = listAttr.getValue();
+        String listStr = listAttr.getStringValue();
         // emptry string "" results in String[0] list ! 
         if (StringUtil.isEmpty(listStr))
             return new StringList();
@@ -198,7 +197,7 @@ public class LFCFileSystem extends FileSystemNode
         if (listAttr == null)
             return null;
 
-        String listStr = listAttr.getValue();
+        String listStr = listAttr.getStringValue();
         // emptry string "" results in String[0] list ! 
         if (StringUtil.isEmpty(listStr))
             return null; 
@@ -237,7 +236,7 @@ public class LFCFileSystem extends FileSystemNode
     {
         VAttribute attr = this.getServerInfo().getAttribute(LFCFSConfig.ATTR_GENERATED_DIRNAME);
         if ((attr!=null) && (attr.getStringValue()!=null))
-            return attr.getValue(); 
+            return attr.getStringValue(); 
         
         return "generated"; 
     }
@@ -251,7 +250,7 @@ public class LFCFileSystem extends FileSystemNode
         VAttribute attr = this.getServerInfo().getAttribute(LFCFSConfig.ATTR_GENERATED_SUBDIR_DATE_SCHEME); 
         
         if ((attr!=null) && (attr.getStringValue()!=null))
-            return attr.getValue(); 
+            return attr.getStringValue(); 
         
         return "generated"; 
     }
@@ -385,7 +384,7 @@ public class LFCFileSystem extends FileSystemNode
       VAttribute attr = this.getServerInfo().getAttribute(LFCFSConfig.ATTR_REPLICA_SELECTION_MODE);
 
       if (attr!=null)
-          return ReplicaSelectionMode.createFromAttributeValue(attr.getValue()); 
+          return ReplicaSelectionMode.createFromAttributeValue(attr.getStringValue()); 
       
       throw new VlConfigurationError("Couldn't get Replica Selection Mode"); 
  
@@ -396,7 +395,7 @@ public class LFCFileSystem extends FileSystemNode
        VAttribute attr = this.getServerInfo().getAttribute(LFCFSConfig.ATTR_REPLICA_CREATION_MODE);
 
        if (attr!=null)
-           return ReplicaCreationMode.createFromAttributeValue(attr.getValue()); 
+           return ReplicaCreationMode.createFromAttributeValue(attr.getStringValue()); 
        
        throw new VlConfigurationError("Couldn't get Replica Creation mode");  
     }

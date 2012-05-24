@@ -112,7 +112,7 @@ public class LFCFSFactory extends VFSFactory
         info.matchTemplate(LFCFSConfig.createDefaultServerAttributes(context,attrs),true);
         VAttribute prefSEs=info.getAttribute(LFCFSConfig.ATTR_PREFERREDSSES);
         // Bug in previous version: strip out white spaces: 
-        String listStr=StringUtil.stripWhiteSpace(prefSEs.getValue()); 
+        String listStr=StringUtil.stripWhiteSpace(prefSEs.getStringValue()); 
         prefSEs.setValue(listStr); 
         info.setAttribute(prefSEs); // update! 
         
