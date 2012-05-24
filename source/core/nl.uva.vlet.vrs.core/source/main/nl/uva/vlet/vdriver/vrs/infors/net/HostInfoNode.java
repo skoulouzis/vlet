@@ -56,7 +56,7 @@ public class HostInfoNode extends CompositeServiceInfoNode<VNode>
 
     public String getName()
     {
-        String hostname=this.attributes.getValue(ATTR_DNS_HOSTNAME); 
+        String hostname=this.attributes.getStringValue(ATTR_DNS_HOSTNAME); 
         // String ipaddr=this.attributes.getValue(ATTR_IP_ADDRESS);
         if (hostname==null)
             return getBasename();
@@ -70,7 +70,7 @@ public class HostInfoNode extends CompositeServiceInfoNode<VNode>
     
     public String getDNSHostname() 
     {
-        return this.attributes.getValue(ATTR_DNS_HOSTNAME); 
+        return this.attributes.getStringValue(ATTR_DNS_HOSTNAME); 
     }
 
     public void setIPAdress(byte[] ip)
@@ -85,7 +85,7 @@ public class HostInfoNode extends CompositeServiceInfoNode<VNode>
     
     public String getIPAdress() 
     {
-        return this.attributes.getValue(ATTR_IP_ADDRESS);  
+        return this.attributes.getStringValue(ATTR_IP_ADDRESS);  
     }
 
     @Override

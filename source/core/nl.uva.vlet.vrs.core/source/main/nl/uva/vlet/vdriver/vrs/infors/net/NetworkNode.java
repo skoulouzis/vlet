@@ -23,6 +23,9 @@
 
 package nl.uva.vlet.vdriver.vrs.infors.net;
 
+import static nl.uva.vlet.vdriver.vrs.infors.InfoConstants.ATTR_NETWORK_ADRESS;
+import static nl.uva.vlet.vdriver.vrs.infors.InfoConstants.NETWORK_INFO;
+
 import java.net.UnknownHostException;
 
 import nl.uva.vlet.Global;
@@ -30,16 +33,12 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.NotImplementedException;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.vdriver.vrs.infors.CompositeServiceInfoNode;
-import nl.uva.vlet.vdriver.vrs.infors.grid.InfoNode;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.LinkNode;
 import nl.uva.vlet.vrs.VEditable;
 import nl.uva.vlet.vrs.VNode;
-import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
-import static nl.uva.vlet.vdriver.vrs.infors.InfoConstants.*;
 
 public class NetworkNode extends CompositeServiceInfoNode implements VEditable 
 {
@@ -125,7 +124,7 @@ public class NetworkNode extends CompositeServiceInfoNode implements VEditable
 
     public String getNetworkAddress()
     {
-        String str=this.attributes.getValue(ATTR_NETWORK_ADRESS);
+        String str=this.attributes.getStringValue(ATTR_NETWORK_ADRESS);
         if (str==null)
             return null; 
         
@@ -138,7 +137,7 @@ public class NetworkNode extends CompositeServiceInfoNode implements VEditable
     /** Returns nr. of UNsignificant bits in network address range. */  
     public int getNetworkBits()
     {
-        String str=this.attributes.getValue(ATTR_NETWORK_ADRESS);
+        String str=this.attributes.getStringValue(ATTR_NETWORK_ADRESS);
         if (str==null)
             return 0x00ff; 
         
@@ -154,7 +153,7 @@ public class NetworkNode extends CompositeServiceInfoNode implements VEditable
     {
         if (attr.getName().equals(ATTR_NETWORK_ADRESS))
         {
-            return setAddress(attr.getValue()); 
+            return setAddress(attr.getStringValue()); 
         }
         else
         {
