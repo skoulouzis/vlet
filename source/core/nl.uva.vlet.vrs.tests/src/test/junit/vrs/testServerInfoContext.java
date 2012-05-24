@@ -154,7 +154,7 @@ public class testServerInfoContext extends VTestCase
             System.out.println("name=" + name);
 
             String lfcname = "lfc." + name;
-            String defaultVal = defAttr.getValue();
+            String defaultVal = defAttr.getStringValue();
             String value1 = null;
             String value2 = null;
 
@@ -184,7 +184,7 @@ public class testServerInfoContext extends VTestCase
         for (VAttribute defAttr : defaultAttributes)
         {
             String name = defAttr.getName();
-            String defaultVal = defAttr.getValue();
+            String defaultVal = defAttr.getStringValue();
 
             String value1 = null;
             String value2 = null;
