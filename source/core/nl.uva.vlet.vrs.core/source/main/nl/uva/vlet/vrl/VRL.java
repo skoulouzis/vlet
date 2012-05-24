@@ -28,15 +28,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Hashtable;
 
-import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.util.URLUTF8Encoder;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
@@ -1099,15 +1097,23 @@ public final class VRL implements Cloneable, Serializable,
         return toString().hashCode(); 
     }
     
+    // @see #toNormalizedString()
+    public String toString()
+    {
+        return toNormalizedString();
+    }
+
     /**
      * This method returns the DECODED URI string. 
      * For an URI compatible string (with %XX encodeing) 
-     * use toURI().toString() ! 
+     * use toURI().toString() or toURIString() ! 
      *  
      * Also, Locations are URI compatible but not all URI Strings 
      * are VRL Strings! <br>
-     */  
-    public String toString()
+
+     * @return
+     */
+    public String toNormalizedString()
     {
     	// suport relative VRLs!
     	String str="";
