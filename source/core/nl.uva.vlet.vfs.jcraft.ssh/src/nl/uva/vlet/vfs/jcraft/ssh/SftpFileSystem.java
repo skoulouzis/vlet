@@ -1621,7 +1621,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 		if (attr==null) 
 			return getDefaultKnownHostsFile();
 		else
-			return attr.getValue();
+			return attr.getStringValue();
 	}
 	
 	public String getSSHConfigDir()
@@ -1633,7 +1633,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 		if (attr==null) 
 			return getDefaultSSHDir();
 		else
-			return attr.getValue();
+			return attr.getStringValue();
 	}
 	
 	public boolean getAllowUserInterAction()
