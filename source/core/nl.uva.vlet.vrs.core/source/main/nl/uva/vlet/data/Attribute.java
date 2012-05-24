@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import nl.uva.vlet.ClassLogger;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vrl.VRL;
 
@@ -60,7 +61,19 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 	// ========================================================================
 	// Class Methods 
 	// ========================================================================
-	
+
+
+    public static Attribute createFrom(String name, Object value)
+    {
+        VAttributeType type=VAttributeType.getObjectType(value,null); 
+       
+        if (type!=null)
+            return new Attribute(type,name,value);
+        
+        // support for Any ? 
+        return new Attribute(VAttributeType.STRING,name,value.toString());     
+    }
+
 //	/**
 //	 * Parses a name=value statement 
 //	 * Optionally this supports a type
@@ -68,7 +81,7 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 //	 * @param stat
 //	 * @return
 //	 */
-//	public static Attribute parseAssignment(String stat)
+//	public staticVAttribute parseAssignment(String stat)
 //	{
 //		String strs[] = stat.split("[ ]*=[ ]*");
 //
@@ -84,7 +97,7 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 //	 *  Performance note: since this factory just tries a lot of different
 //	 *  methods to parse/check the object value, this method is not efficient. 
 //	 */
-//	public static Attribute createFrom(String keystr, Object value)
+//	public staticVAttribute createFrom(String keystr, Object value)
 //	{
 //	    return new Attribute(keystr,value); 
 //	}
@@ -160,42 +173,7 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
         }
     }
     
-	/**
-	 * Check Object class and return matched Attribute Type or defaultType
-	 * if object class is not supported.
-	 */
-    public static VAttributeType getObjectType(Object object,VAttributeType defaultType) 
-    {
-        if (object==null)
-            return defaultType; 
-        
-        if (object instanceof Boolean)
-            return VAttributeType.BOOLEAN;
 
-        if (object instanceof Integer)
-            return VAttributeType.INT;
-
-        if (object instanceof Long)
-            return VAttributeType.LONG;
-        
-        if (object instanceof Float)
-            return VAttributeType.FLOAT;
-        
-        if (object instanceof Double)
-            return VAttributeType.DOUBLE;
-        
-        if (object instanceof String)
-            return VAttributeType.STRING;
-        
-        if (object instanceof Date)
-            return VAttributeType.TIME;
-        
-        if (object instanceof VRL)
-            return VAttributeType.VRL; 
-        
-        return defaultType; 
-    }
-    
 	private static Object duplicateValue(VAttributeType type,Object object)
 	{
 	    if (object==null)
@@ -219,8 +197,9 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 				return new String((String)object);
 			default:
 			{
+			    // works for VRL:
 				if (object instanceof Duplicatable)
-					return ((Duplicatable)object).duplicate(false); 
+					return ((Duplicatable<?>)object).duplicate(false); 
 					
 				throw new Error("Cannot clone/duplicate value object:"+object); 
 			}
@@ -288,7 +267,7 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 	/** index into enumValues[] so that: enumAvalues[enumIndex]==value */
 	private int enumIndex = 0;
 
-	private boolean changed=false; 
+	private boolean changed=false;
 
 	/** 
 	 * Main init method to be called by other constructors. <br>
@@ -305,7 +284,7 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 
 	private void checkValueType(VAttributeType type,Object value)
 	{
-	    VAttributeType objType=getObjectType(value,VAttributeType.STRING);  
+	    VAttributeType objType=VAttributeType.getObjectType(value,VAttributeType.STRING);  
 	    
         // DateTime is stored as String; 
         if (type==VAttributeType.TIME && objType==VAttributeType.STRING)
@@ -317,6 +296,13 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 	    
 	    if (objType!=type) 
 	        throw new Error("Object type is not the same as expected. Expected="+type+",parsed="+objType); 
+	    
+	    // no nesting!
+	    if (value instanceof Attribute)
+	        throw new Error("Attribute as value!"); 
+
+	    if (value instanceof VAttribute)
+	        throw new Error("VAttribute as value!"); 
 	}
 	
 	/** Initialize as Enum Type */
@@ -577,14 +563,21 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
         this.type=type; 
     }
     
-    // master setter: 
+    /** 
+     * Master _setValue method. All set* methods must call this one.  
+     */
     private void _setValue(VAttributeType type,Object object) 
     {
         this.checkValueType(type,object);
         this.type=type;
         this.value=object;
+        this.changed=true;
     }
     
+    public void setValue(Object newValue)
+    {
+        _setValue(type,newValue); 
+    }
     public void setValue(int intVal)  
     {
         _setValue(VAttributeType.INT,new Integer(intVal));  
@@ -740,6 +733,17 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 		}
 	}
 	
+   public VRL getVRL() throws VRLSyntaxException
+   {
+       if (this.value==null)
+           return null; 
+       
+       if (this.type==VAttributeType.VRL)
+           return (VRL)value; 
+       // auto cast 
+       return new VRL(this.getStringValue()); 
+   }
+	
 	/** Ignore case only makes sense for String like Attributes */ 
 	public int compareToIgnoreCase(Attribute attr2) 
 	{
@@ -772,14 +776,18 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 		{
 			case INT:
 			case LONG:
+			 // use long both for int,long and time (millis!) 
+                if (this.getLongValue() < attr.getLongValue())
+                    return -1;
+                else if (this.getLongValue() > attr.getLongValue())
+                    return 1;
+                else
+                    return 0;
 			case TIME:
-				// use long both for int,long and time (millis!) 
-				if (this.getLongValue() < attr.getLongValue())
-					return -1;
-				else if (this.getLongValue() > attr.getLongValue())
-					return 1;
-				else
-					return 0;
+			    // compare using normalized data time string (are sortable) 
+			    String dts1=this.getNormalizedDateTimStringValue(); 
+			    String dts2=this.getNormalizedDateTimStringValue();
+			    return dts1.compareTo(dts2); 
 				//break;
 			case FLOAT:
 				if (this.getFloatValue() < attr.getFloatValue())
@@ -836,12 +844,17 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
         _setValue(type,value); 
     }
     
-
 	public Date getDateValue()
 	{
 		return Presentation.createDateFromNormalizedDateTimeString(getStringValue());
 	}
 
+	/** Return normalized date time string value as defined in Presentation. */ 
+	public String getNormalizedDateTimStringValue()
+    {
+	    return getStringValue();
+    }
+	
 	public boolean isEnumType()
 	{
 		if (this.type==VAttributeType.ENUM) 
@@ -856,7 +869,6 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
           return false; 
        
        return ( name.startsWith("[") ||  name.startsWith("-["));
-       
     }
 
 	@Override
@@ -891,4 +903,5 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
     {
         return StringList.createFrom(getStringValue(),regExp);
     }
+
 }
