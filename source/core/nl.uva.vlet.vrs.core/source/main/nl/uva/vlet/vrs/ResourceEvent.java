@@ -382,7 +382,7 @@ public class ResourceEvent implements Serializable
         if (this.attributes!=null)
             for (VAttribute attr:attributes)
                 if (attr.hasName(name))
-                    return attr.getValue();
+                    return attr.getStringValue();
         return null; 
     }
     
