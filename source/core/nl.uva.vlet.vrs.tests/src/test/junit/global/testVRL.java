@@ -30,15 +30,14 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrl.VRLUtil;
 import nl.uva.vlet.vrs.VRS;
 
 /**
- * Experimental Unit Class Tester
- * 
+ * Test VRLs
  * @author P.T. de Boer
  */
 public class testVRL extends TestCase
