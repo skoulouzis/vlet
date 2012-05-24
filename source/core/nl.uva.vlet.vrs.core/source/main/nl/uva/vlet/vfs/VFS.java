@@ -186,7 +186,7 @@ public class VFS extends VRS
                 else if (perm.compareTo("Misc")==0)
                 {
                 	misc=true; 
-                	String str=attr.getValue();  
+                	String str=attr.getStringValue();  
                 	
                 	if (StringUtil.equals(str,VACL.SETUID)) 
                 		mode=mode|04000; 

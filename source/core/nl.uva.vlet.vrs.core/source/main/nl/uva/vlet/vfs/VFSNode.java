@@ -23,7 +23,32 @@
 
 package nl.uva.vlet.vfs;
 
-import static nl.uva.vlet.data.VAttributeConstants.*;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHECKSUM_TYPES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_EXISTS;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_GID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISDIR;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISFILE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISHIDDEN;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISREADABLE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISSYMBOLICLINK;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISWRITABLE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LENGTH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MIMETYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MODIFICATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NRCHILDS;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PARENT_DIRNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PERMISSIONS_STRING;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SYMBOLICLINKTARGET;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_USERNAME;
 
 import java.util.Vector;
 
@@ -546,11 +571,11 @@ public abstract class VFSNode extends VNode implements VRenamable, VEditable, VD
         String name = attr.getName();
 
         if (name.compareTo(ATTR_NAME) == 0)
-            return renameTo(attr.getValue(), false); // default Name
+            return renameTo(attr.getStringValue(), false); // default Name
         // attribute = Basename
         // !
         else if (name.compareTo(ATTR_PATH) == 0)
-            return renameTo(attr.getValue(), true); // default Name attribute =
+            return renameTo(attr.getStringValue(), true); // default Name attribute =
         // Basename !
         else
             return false;
