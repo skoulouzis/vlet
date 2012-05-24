@@ -23,6 +23,19 @@
 
 package nl.uva.vlet.gui.editors;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_DIRNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICONURL;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SHOW_SHORTCUT_ICON;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_URI_FRAGMENT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_URI_QUERY;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -31,11 +44,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Iterator;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -45,7 +55,6 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.Messages;
@@ -332,8 +341,8 @@ public class ResourceEditorController implements ActionListener, WindowListener,
     
     protected void updateUriFields()
     {
-        String fraq=resourceAttributes.getValue(ATTR_URI_FRAGMENT); 
-        String query=resourceAttributes.getValue(ATTR_URI_QUERY); 
+        String fraq=resourceAttributes.getStringValue(ATTR_URI_FRAGMENT); 
+        String query=resourceAttributes.getStringValue(ATTR_URI_QUERY); 
         
         boolean hasUriAttrs=( StringUtil.notEmpty(fraq) || StringUtil.notEmpty(query)); 
         boolean supported=false; 
@@ -613,8 +622,8 @@ public class ResourceEditorController implements ActionListener, WindowListener,
 		}
 	     // Mandatory attributes!
 
-		String name=attrs.getValue(ATTR_NAME);
-		String targetScheme=attrs.getValue(ATTR_SCHEME);
+		String name=attrs.getStringValue(ATTR_NAME);
+		String targetScheme=attrs.getStringValue(ATTR_SCHEME);
 	 	StringList schemes=new StringList(context.getRegistry().getDefaultSchemeNames()); 
 	 	
 	 	if (targetScheme==null)
