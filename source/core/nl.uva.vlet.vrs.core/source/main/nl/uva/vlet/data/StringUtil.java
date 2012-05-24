@@ -140,15 +140,18 @@ public class StringUtil
     /** NULL proof compare method */
     public static int compare(String s1, String s2, boolean ignoreCase)
     {
+        // if (s1) < (s2) return negative
+        // if (s1) > (s2) return positive 
+        
         if (s1 == null)
             if (s2 == null)
                 return 0;
             else
-                // null << (not)null ?
+                // null < (not)null ?
                 return -1;
 
         if (s2 == null)
-            // (not) null >> null ?
+            // (not) null > null ?
             return 1;
 
         if (ignoreCase)
