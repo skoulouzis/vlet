@@ -23,12 +23,10 @@
 
 package test.gui;
 
-import java.awt.Component;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import junit.extensions.jfcunit.JFCTestCase;
@@ -38,8 +36,6 @@ import junit.extensions.jfcunit.eventdata.AbstractMouseEventData;
 import junit.extensions.jfcunit.eventdata.MouseEventData;
 import junit.extensions.jfcunit.eventdata.StringEventData;
 import junit.extensions.jfcunit.finder.ComponentFinder;
-import junit.extensions.jfcunit.finder.DialogFinder;
-import junit.extensions.jfcunit.finder.NamedComponentFinder;
 import nl.uva.vlet.gui.editors.ResourceEditor;
 import nl.uva.vlet.gui.panels.fields.AttrParameterField;
 
