@@ -133,7 +133,7 @@ public class ReplicaInfo
      
         if (attrs.containsKey(VAttributeConstants.ATTR_STATUS))
         {
-            String val=attrs.getValue(VAttributeConstants.ATTR_STATUS);
+            String val=attrs.getStringValue(VAttributeConstants.ATTR_STATUS);
             if (val!=null)
                 if (val.equals(ReplicaStatus.ERROR.toString()))
                     setError(true);
