@@ -25,9 +25,9 @@ package nl.uva.vlet.vrms;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Proxy.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.Proxy.Type;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,6 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInitializationException;
 import nl.uva.vlet.net.ssl.CertificateStore;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 
 /** 
@@ -193,7 +192,7 @@ public class ConfigManager
             return false; 
         
         String name=attr.getName();
-        String strval=attr.getValue(); 
+        String strval=attr.getStringValue(); 
         
         if (name==null)
             return false;
@@ -208,32 +207,32 @@ public class ConfigManager
         }
         else if (name.compareTo(GlobalConfig.PROP_SKIP_FLOPPY_SCAN)==0)
         {
-            vrsContext.setUserProperty(GlobalConfig.PROP_SKIP_FLOPPY_SCAN,attr.getValue());
+            vrsContext.setUserProperty(GlobalConfig.PROP_SKIP_FLOPPY_SCAN,attr.getStringValue());
             refresh.value=true; 
             return true; 
         }
         else if (name.compareTo(GlobalConfig.PROP_PASSIVE_MODE)==0)
         {
             refresh.value=true;  
-            vrsContext.setUserProperty(GlobalConfig.PROP_PASSIVE_MODE,attr.getValue()); 
+            vrsContext.setUserProperty(GlobalConfig.PROP_PASSIVE_MODE,attr.getStringValue()); 
             return true; 
         }
         else if (name.compareTo(GlobalConfig.PROP_BDII_HOSTNAME)==0)
         {
             refresh.value=true;  
-            vrsContext.setUserProperty(GlobalConfig.PROP_BDII_HOSTNAME,attr.getValue()); 
+            vrsContext.setUserProperty(GlobalConfig.PROP_BDII_HOSTNAME,attr.getStringValue()); 
             return true; 
         }
         else if (name.compareTo(GlobalConfig.PROP_BDII_PORT)==0)
         {
             refresh.value=true;  
-            vrsContext.setUserProperty(GlobalConfig.PROP_BDII_PORT,attr.getValue()); 
+            vrsContext.setUserProperty(GlobalConfig.PROP_BDII_PORT,attr.getStringValue()); 
             return true; 
         }
         else if (name.compareTo(GlobalConfig.PROP_USER_CONFIGURED_VOS)==0)
         {
             refresh.value=true;  
-            vrsContext.setUserProperty(GlobalConfig.PROP_USER_CONFIGURED_VOS,attr.getValue()); 
+            vrsContext.setUserProperty(GlobalConfig.PROP_USER_CONFIGURED_VOS,attr.getStringValue()); 
             return true; 
         }
         
