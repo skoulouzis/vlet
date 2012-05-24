@@ -383,16 +383,19 @@ public class QSort
                 String v1="";
                 String v2=""; 
                 
-                if (a1!=null)
-                    v1=a1.getValue(); 
-                if (a2!=null)
-                    v2=a2.getValue(); 
-    
-                
-                if (this.ignoreCase) 
-                    result=v1.compareToIgnoreCase(v2); 
+                if (a1==null) 
+                    if (a2==null)
+                        result=0;
+                    else
+                        result=-1; 
                 else
-                    result=v1.compareTo(v2); 
+                    if (a2==null)
+                        result=1;
+                    else
+                        if (ignoreCase)
+                            result=a1.compareToIgnoreCase(a2); 
+                        else
+                            result=a1.compareTo(a2);
                 
                 i++;
             }
