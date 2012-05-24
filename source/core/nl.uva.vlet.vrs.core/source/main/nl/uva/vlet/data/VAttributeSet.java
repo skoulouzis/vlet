@@ -29,20 +29,19 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.xml.XMLData;
-import nl.uva.vlet.exception.VAttributeNotEditableException;
-import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VlXMLDataException;
 import nl.uva.vlet.vrl.VRL;
-
-import java.util.Properties;
 
 /**
  *  A VAttributeSet is implemented as an OrdenedHashtable with extra
@@ -126,7 +125,8 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     /** Optional set Name */ 
     protected String setName=""; 
     
-    protected void init(Vector<VAttribute> attrs)
+    // List<?> also matches Vector and ArrayList !  
+    protected void init(List<VAttribute> attrs)
     {
        if (attrs==null)
        {
@@ -219,10 +219,18 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
             String keystr=key.toString(); 
             Object value=map.get(key);
             
-            // Use VAtribute Factory: 
-            VAttribute attr = VAttribute.createFrom(keystr,value);
-            this.put(attr); 
+            VAttribute attr; 
+            if (value instanceof VAttribute)
+            {
+                attr=((VAttribute)value).duplicate();
+            }
+            else
+            {
+                // Use VAtribute Factory: 
+                attr = VAttribute.createFrom(keystr,value);
+            }
             
+            this.put(attr); 
             index++; 
          }
     }
@@ -316,10 +324,10 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     }
 
     /**
-     * Returns String value of Attribute with name 'name'
+     * Returns Object value of Attribute with name 'name'
      * Returns null if the attribute is not in the set. 
      */ 
-    public String getValue(String name)
+    public Object getValue(String name)
     {
         VAttribute attr=get(name);
         
@@ -354,7 +362,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
             logger.debugPrintf("Returning:%s=%s\n",name,attr.getStringValue());
         }
         
-        return attr.getValue();
+        return attr.getStringValue();
     }
 
     
@@ -415,29 +423,30 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     }
     
     /**
-     *  Helper method used by the set() methods. 
-     * @throws VAttributeNotEditableException
+     * Helper method used by the set() methods. 
+     * Retruns old value. 
      */ 
-    private Object set(VAttributeType type, String name, String val)
+    private Object _set(VAttributeType type, String name, Object val)
     {
         VAttribute orgAttr = this.get(name); 
         
         if (orgAttr==null)
         {
             // set: put new Editable Attribute with specified type: 
-            VAttribute attr = new VAttribute(type,name,val);
+            VAttribute attr = VAttribute.createFrom(type,name,val);
             attr.setEditable(true);
             this.put(attr); 
             return null; 
         }
         else
         {
+            Object oldValue=orgAttr.toObject(); 
             // this method will change the Attribute 
-            // and update the 'changed' flag 
-            orgAttr.setValue(val);
+            // and update the 'changed' flag but keeps original type! 
+            orgAttr.setValue(val.toString()); // use String
             
             /** Return Value as Object which type matches the VAttribute Type */ 
-            return orgAttr.toObject(); 
+            return oldValue; 
         }
     }
     /**
@@ -453,24 +462,24 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     
     public String set(String name, String val) 
     {
-        String oldvalue=getValue(name); 
-        set(VAttributeType.STRING,name,val);
+        String oldvalue=getStringValue(name); 
+        _set(VAttributeType.STRING,name,val);
         return oldvalue; 
     }
     
     public Boolean set(String attrName, boolean val)
     {
-        return (Boolean)set(VAttributeType.BOOLEAN,attrName,""+val); 
+        return (Boolean)_set(VAttributeType.BOOLEAN,attrName,new Boolean(val)); 
     }
     
     public Integer set(String attrName, int val) 
     {
-        return (Integer)set(VAttributeType.INT,attrName,""+val); 
+        return (Integer)_set(VAttributeType.INT,attrName,new Integer(val)); 
     }
     
     public Long set(String attrName, long val)
     {
-        return (Long)set(VAttributeType.LONG,attrName,""+val);
+        return (Long)_set(VAttributeType.LONG,attrName,new Long(val));
     }
 
     
@@ -483,17 +492,17 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
             
        return attr.getBooleanValue();
     }
-    /**
-     * Old method to store VAttributeSets are flat property files with 
-     * extra type information (%type and %enum).
-     * 
-     * @deprecated. Will switch to storeAsXML soon !
-     */ 
-    public void store(OutputStream outp, String comments) throws VlIOException
-    {
-        //storeAsXML(outp,comments);
-         storeOld(outp,comments); 
-    }
+//    /**
+//     * Old method to store VAttributeSets are flat property files with 
+//     * extra type information (%type and %enum).
+//     * 
+//     * @deprecated. Will switch to storeAsXML soon !
+//     */ 
+//    public void store(OutputStream outp, String comments) throws VlIOException
+//    {
+//        //storeAsXML(outp,comments);
+//         storeOld(outp,comments); 
+//    }
     /**
      * as XML file. 
      */
@@ -502,77 +511,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
         XMLData xmlData=new XMLData();
         xmlData.writeAsXML(outp,this,comments); 
     }
-    /**
-     * Currently VAttributeSets are stored as flat property files with 
-     * extra type information (%type and %enum).
-     */ 
-    public void storeOld(OutputStream outp, String comments) throws VlIOException
-    {
-        Properties props=new Properties(); 
-        
-        VAttribute attrs[]; 
-        String attributeOrder[];
-        
-        // make sure to fetch data Syncrhonized 
-        
-        synchronized(this)
-        {
-            attrs=toArray();
-            attributeOrder=this.getOrdenedKeyArray();
-        }
-        
-        
-        if (setName==null)
-            setName="";
-        
-        // Set Meta Attributes: 
-        
-        props.put(ATTR_SETNAME,setName);
-        props.put("%attributeOrder",new StringList(attributeOrder).toString(",")); 
-        
-        
-        // flatten Attribute to Type Value pairs (optional Enum list). 
-        for (VAttribute attr:attrs)
-        {
-            String name=attr.getName(); 
-            String value=attr.getValue();
-            VAttributeType type=attr.getType();
-            //boolean editable=attr.isEditable(); 
-            
-            if ((name!=null) && (value!=null))
-            {   
-               props.put(name,value);
-               props.put(attr.getName()+"%type",""+type);
-               // editable
-               //props.put(attr.getName()+"%isEditable",""+editable);
-               
-               // arg, have to put enum values there also ! 
-               if (type==VAttributeType.ENUM); 
-               {
-                   String vals[]=attr.getEnumValues(); 
-                   if (vals!=null)
-                   {
-                      String enumstr=vals[0]; 
-                   
-                      for (int i=1;i<vals.length;i++) 
-                      {
-                          enumstr+=","+vals[i];
-                      }
-                      props.put(name+"%enumValues",enumstr);
-                   }
-               }
-            }
-        }
-        
-        try
-        {
-            props.store(outp,comments+"\n#VAttributeSet:"+setName);
-        }
-        catch (IOException e)
-        {
-            throw new VlIOException("IOException:"+e,e);  
-        } 
-    }
+   
         
     /**
      * Read VAttributeSet from InputStream. 
@@ -797,9 +736,9 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
               VAttribute newAttr=templateSet.get(name); 
               VAttribute oldAttr=get(name);
               // force set: 
-              String oldVal=oldAttr.getValue();
+              Object oldVal=oldAttr.getValue();
               
-              if (StringUtil.isEmpty(oldVal)==false)
+              if ((oldVal!=null) && StringUtil.isEmpty(oldVal.toString())==false)
               {
                   newAttr.forceSetValue(oldAttr.getValue());
               }
