@@ -24,6 +24,13 @@
 package nl.uva.vlet.vrs;
 
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PASSIVE_MODE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_USERNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_VO_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.AUTH_SCHEME;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.MessageStrings;
 import nl.uva.vlet.data.StringList;
@@ -34,8 +41,6 @@ import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.SecretStore;
 import nl.uva.vlet.vrms.SecretStore.Secret;
-
-import static nl.uva.vlet.data.VAttributeConstants.*;
 
 /** 
  * Server (Resource) Info class to keep record of Server Resources.
@@ -175,7 +180,7 @@ public class ServerInfo
         init(context,null); 
         this._serverAttributes=set.duplicate();  
         // update key 
-        String value=set.getValue(ATTR_SERVER_ID);
+        String value=set.getStringValue(ATTR_SERVER_ID);
         
         if (StringUtil.isEmpty(value))
         {
@@ -295,7 +300,7 @@ public class ServerInfo
         VAttribute attr= _serverAttributes.get(name);
         if (attr==null)
         	return null;
-        return attr.getValue(); 
+        return attr.getStringValue(); 
     }
     
     /**
