@@ -35,12 +35,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeType;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.actions.ActionCommand;
 import nl.uva.vlet.gui.actions.ActionCommandType;
@@ -207,7 +205,7 @@ public class VTableController implements MouseListener, MouseMotionListener
                 
                    masterBrowser.notifyHyperLinkEvent(event);
                 }
-                catch (VlException ex)
+                catch (Exception ex)
                 {
                     masterBrowser.handle(ex); 
                 }
