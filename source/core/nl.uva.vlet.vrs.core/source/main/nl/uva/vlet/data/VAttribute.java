@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.exception.VAttributeNotEditableException;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vrl.VRL;
@@ -88,6 +87,17 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 	    return new VAttribute(keystr,value); 
 	}
 	
+	/**
+	 * Type safe factory method. Object must have specified type 
+	 */
+	public static VAttribute createFrom(VAttributeType type,String name, Object value)
+	{
+	    VAttributeType objType=VAttributeType.getObjectType(value,null);
+	    if (objType!=type)
+	        throw new Error("Incompatible Object Type. Specified type="+type+", object type="+objType); 
+	    
+	    return new VAttribute(type,name,value.toString()); 
+	}
 
 	public static VAttribute createEnumerate(String name, String values[],
 			String value)
@@ -866,7 +876,6 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 				else
 					return 1; // this >> null  
 			//break;
-
 		}
 	}
 
@@ -880,6 +889,12 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 		setValue((b == true) ? "true" : "false");
 	}
 
+	public void setValueByObject(Object val)
+	{
+	    // currently string representation is used: 
+	    setValue(val.toString()); 
+	}
+	 
 	/** Will be changed to VAttribute help data base */ 
 	public void setHelpText(String str)
 	{
@@ -1003,5 +1018,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     {
         return StringList.createFrom(getStringValue(),regExp);
     }
+
+   
 
 }
