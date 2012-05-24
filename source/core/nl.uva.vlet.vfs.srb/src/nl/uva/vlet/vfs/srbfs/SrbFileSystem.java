@@ -663,7 +663,7 @@ public class SrbFileSystem extends FileSystemNode
 		VAttribute attr=getUserDomainAttribute(srbfs,user);
 
 		if (attr!=null) 
-			return attr.getValue(); 
+			return attr.getStringValue(); 
 
 		return null; 
 
@@ -728,11 +728,11 @@ public class SrbFileSystem extends FileSystemNode
 
 			if (isDir==false)
 			{
-				accStr=set.getValue(SRBMetaDataSet.ACCESS_CONSTRAINT);
+				accStr=set.getStringValue(SRBMetaDataSet.ACCESS_CONSTRAINT);
 			}
 			else
 			{
-				accStr=set.getValue(SRBMetaDataSet.DIRECTORY_ACCESS_CONSTRAINT);
+				accStr=set.getStringValue(SRBMetaDataSet.DIRECTORY_ACCESS_CONSTRAINT);
 			}
 			// recursive=set.getBooleanValue(VAttribute.ATTR_RECURSIVE,recursive); 
 			/*
@@ -754,8 +754,8 @@ public class SrbFileSystem extends FileSystemNode
 			else if (accStr.compareTo(ACCESS_NONE)==0)
 				permStr="n";
 
-			String userName=set.getValue(SRBMetaDataSet.USER_NAME); 
-			String domainName=set.getValue(SRBMetaDataSet.USER_DOMAIN);
+			String userName=set.getStringValue(SRBMetaDataSet.USER_NAME); 
+			String domainName=set.getStringValue(SRBMetaDataSet.USER_DOMAIN);
 
 			Debug("setting permission of:"+file.getPath()+" user="+userName+","
 					+" domainName="+domainName
@@ -945,7 +945,7 @@ public class SrbFileSystem extends FileSystemNode
 		if ((acl==null) || (acl.length==0) || (acl[0].length==0)) 
 			return false; 
 
-		String accessStr=acl[0][2].getValue();
+		String accessStr=acl[0][2].getStringValue();
 
 		Debug("acl[0][2]="+accessStr);
 
@@ -967,7 +967,7 @@ public class SrbFileSystem extends FileSystemNode
 			//throw new VlException("Server didn't return valid ACL list for:"+srbnode); 
 			return false; 
 
-		String accessStr=acl[0][2].getValue();
+		String accessStr=acl[0][2].getStringValue();
 
 		Debug("acl[0][2]="+accessStr);
 

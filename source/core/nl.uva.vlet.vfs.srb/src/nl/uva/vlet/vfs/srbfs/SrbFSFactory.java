@@ -23,7 +23,14 @@
 
 package nl.uva.vlet.vfs.srbfs;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ACCESS_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CREATION_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_DATA_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NRACLENTRIES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_OWNER;
+
 import java.io.IOException;
+
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
@@ -33,15 +40,12 @@ import nl.uva.vlet.exception.ResourceCreationFailedException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.VFS;
 import nl.uva.vlet.vfs.VFSFactory;
-import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRSContext;
-
 import edu.sdsc.grid.io.srb.SRBFile;
 import edu.sdsc.grid.io.srb.SRBFileSystem;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 /**
  * Implementation of SRBFS. 
  * VFS interface to remote SRB servers. 
@@ -298,7 +302,7 @@ public class SrbFSFactory extends VFSFactory
             
             // check URI attribute: 
             if (uriAttrs!=null)
-                value=uriAttrs.getValue(srbname); 
+                value=uriAttrs.getStringValue(srbname); 
                 
             // check context: (including vletrc.prop settings!) 
             if (StringUtil.isEmpty(value)==true)

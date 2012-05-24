@@ -28,7 +28,6 @@ import static nl.uva.vlet.data.VAttributeConstants.ATTR_PASSIVE_MODE;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_USERNAME;
 import static nl.uva.vlet.data.VAttributeConstants.AUTH_SCHEME;
-
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
@@ -192,7 +191,7 @@ public class SrbConfig
                 if ((attr=attrSet.get("srb."+attrName))!=null)
                 {
                     // strip "srb." from attrname 
-                    String attrValue=attr.getValue(); 
+                    String attrValue=attr.getStringValue(); 
                     
                     VAttribute orgAttr = info.getAttribute(attrName);
                     VAttribute newAttr; 

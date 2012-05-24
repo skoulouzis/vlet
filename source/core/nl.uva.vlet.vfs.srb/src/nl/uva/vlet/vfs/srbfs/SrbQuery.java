@@ -23,6 +23,8 @@
 
 package nl.uva.vlet.vfs.srbfs;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LENGTH;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -31,7 +33,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.vrl.VRL;
-
 import edu.sdsc.grid.io.MetaDataCondition;
 import edu.sdsc.grid.io.MetaDataField;
 import edu.sdsc.grid.io.MetaDataGroup;
@@ -42,7 +43,6 @@ import edu.sdsc.grid.io.srb.SRBFile;
 import edu.sdsc.grid.io.srb.SRBFileSystem;
 import edu.sdsc.grid.io.srb.SRBMetaDataRecordList;
 import edu.sdsc.grid.io.srb.SRBMetaDataSet;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 /**
  *  SRBQuery Query Class. 
  *  This class is under construction and therefore not well structurized...
@@ -638,7 +638,7 @@ public class SrbQuery
             
             records[i] = new SRBMetaDataRecordList(
                     SRBMetaDataSet.getField(data[i][j].getName()),
-                    data[i][j].getValue()); 
+                    data[i][j].getStringValue()); 
             
               // SRBMetaDataSet.getField(SRBMetaDataSet.SIZE ),numDataFields);
        
@@ -646,7 +646,7 @@ public class SrbQuery
             {
                  
                 records[i].addRecord(SRBMetaDataSet.getField(data[i][j].getName()),
-                        data[i][j].getValue());
+                        data[i][j].getStringValue());
                 
                 
             }

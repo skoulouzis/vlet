@@ -23,6 +23,10 @@
 
 package nl.uva.vlet.vfs.srbfs;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_DIRNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NRACLENTRIES;
+
 import java.io.IOException;
 import java.net.URI;
 
@@ -31,29 +35,16 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.NotImplementedException;
-import nl.uva.vlet.exception.ResourceAlreadyExistsException;
-import nl.uva.vlet.exception.ResourceCreationFailedException;
-import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
-import nl.uva.vlet.exception.ResourceWriteAccessDeniedException;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
-import nl.uva.vlet.vdriver.vfs.localfs.LDir;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFSNode;
-import nl.uva.vlet.vfs.VFSTransfer;
 import nl.uva.vlet.vfs.VFile;
-import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.VRSContext;
-
-
-import edu.sdsc.grid.io.GeneralFile;
-import edu.sdsc.grid.io.local.LocalFile;
 import edu.sdsc.grid.io.srb.SRBFile;
 import edu.sdsc.grid.io.srb.SRBFileSystem;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 /**
  * Implementation of SrbDir
  * 
@@ -196,7 +187,7 @@ public class SrbDir extends VDir
             if (attr==null) 
                 Global.errorPrintln(this,"null dirname attribute!");
                 
-            dirpath=attr.getValue(); 
+            dirpath=attr.getStringValue(); 
             
             // default to directory 
             nodes[i] = new SrbDir(server,dirpath); 
@@ -205,7 +196,7 @@ public class SrbDir extends VDir
         for (int i = 0; i < numFiles; i++)
         {
         	// dirname is name of parent directory of file 
-            String dirpath=fileSets[i].get(ATTR_DIRNAME).getValue(); 
+            String dirpath=fileSets[i].get(ATTR_DIRNAME).getStringValue(); 
             VAttribute nameAttr=fileSets[i].get(ATTR_NAME);
             String name="?";
            
@@ -216,7 +207,7 @@ public class SrbDir extends VDir
             }
             else
             {
-            	name=nameAttr.getValue();
+            	name=nameAttr.getStringValue();
             	 //new file:
                 nodes[numDirs+i] = new SrbFile(server,dirpath+VRL.SEP_CHAR+name); 
             }

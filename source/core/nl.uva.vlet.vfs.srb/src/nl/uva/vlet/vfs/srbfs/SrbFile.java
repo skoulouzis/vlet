@@ -144,12 +144,12 @@ VStreamWritable,VRandomAccessable,VRenamable,VResizable
 
     		if (name.compareTo(SrbConfig.ATTR_RESOURCE)==0)
     		{
-    			setResource(attr.getValue());
+    			setResource(attr.getStringValue());
     			return true; 
     		}
     		else if (name.compareTo(ATTR_DATA_TYPE)==0)
     		{
-    			this.srbnode.setDataType(attr.getValue());
+    			this.srbnode.setDataType(attr.getStringValue());
     			return true; 
     		}
     	}
