@@ -23,6 +23,10 @@
 
 package nl.uva.vlet.data;
 
+import java.util.Date;
+
+import nl.uva.vlet.vrl.VRL;
+
 /** 
  * Basic Attribute Types.  
  */
@@ -50,5 +54,48 @@ public enum VAttributeType
     VRL, 
     /** TIME has DATE information and is stored as normalized date-time string. */  
     TIME;
-   
+    
+    //=========================================================================
+    //
+    //=========================================================================
+    
+    /**
+     * Check Object class and return matched Attribute Type or defaultType
+     * if object class is not supported.
+     */
+    public static VAttributeType getObjectType(Object object,VAttributeType defaultType) 
+    {
+        if (object==null)
+            return defaultType; 
+        
+        if (object instanceof Boolean)
+            return VAttributeType.BOOLEAN;
+
+        if (object instanceof Integer)
+            return VAttributeType.INT;
+
+        if (object instanceof Long)
+            return VAttributeType.LONG;
+        
+        if (object instanceof Float)
+            return VAttributeType.FLOAT;
+        
+        if (object instanceof Double)
+            return VAttributeType.DOUBLE;
+        
+        if (object instanceof String)
+            return VAttributeType.STRING;
+        
+        if (object instanceof Date)
+            return VAttributeType.TIME;
+        
+        if (object instanceof VRL)
+            return VAttributeType.VRL; 
+        
+        if (object instanceof Enum)
+            return VAttributeType.ENUM;
+        
+        return defaultType; 
+    }
+    
 }
