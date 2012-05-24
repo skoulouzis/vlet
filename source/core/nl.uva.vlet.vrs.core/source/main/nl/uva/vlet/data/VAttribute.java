@@ -929,6 +929,9 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
      */
     public Object toObject()
     {
+    	if (value==null)
+    		return null; 
+    	
         try
         {
             switch (this.type)
