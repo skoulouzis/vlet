@@ -23,16 +23,21 @@
 
 package nl.uva.vlet.gui.proxynode.impl.proxy;
 
-import java.util.HashMap;
-import java.util.Map;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICONURL;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISCOMPOSITE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISEDITABLE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MIMETYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_RESOURCE_TYPES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SHOW_SHORTCUT_ICON;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TARGET_IS_COMPOSITE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
-import static nl.uva.vlet.data.VAttributeConstants.*; 
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInternalError;
@@ -42,7 +47,6 @@ import nl.uva.vlet.gui.proxynode.ProxyNode;
 import nl.uva.vlet.gui.view.ViewFilter;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.proxy.vrs.ProxyVRS;
-import nl.uva.vlet.util.MimeTypes;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.VLogicalResource;
 import nl.uva.vlet.vrms.VResourceLink;
@@ -400,7 +404,8 @@ public class ProxyWrapNode extends ProxyNode
             attr = this.getAttribute(ATTR_RESOURCE_TYPES);
             if (attr==null) 
                 return null;
-            return new StringList(attr.getValue().split(",")).toArray();
+            // use StringList from attr? 
+            return new StringList(attr.getStringValue().split(",")).toArray();
         }
         catch (VlException e)
         {
