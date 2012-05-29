@@ -26,6 +26,7 @@ package nl.uva.vlet.gui.tree;
 import java.util.List;
 
 import javax.swing.tree.TreePath;
+
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
@@ -122,14 +123,14 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
     					{
     						// name attribute change, but it is NOT a rename! 
     						// (OID hasn't changed) 
-    					    node.updateName(attr.getValue()); 
+    					    node.updateName(attr.getStringValue()); 
                             
     					}
     					else if (attr.hasName(VAttributeConstants.ATTR_ICONURL))
                         {
                             // name attribute change, but it is NOT a rename! 
                             // (OID hasn't changed) 
-    					    node.updateIconURL(attr.getValue()); 
+    					    node.updateIconURL(attr.getStringValue()); 
                         }
     				}
     				break; 
