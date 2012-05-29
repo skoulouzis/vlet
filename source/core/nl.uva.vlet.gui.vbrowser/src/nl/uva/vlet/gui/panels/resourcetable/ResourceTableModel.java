@@ -24,7 +24,6 @@
 package nl.uva.vlet.gui.panels.resourcetable;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -282,7 +281,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 	    VAttribute attr=getAttribute(rowKey,attrName); 
 	    if (attr==null)
 	        return null; 
-	    return attr.getValue(); 
+	    return attr.getStringValue(); 
     }
 	
 	public String getAttrStringValue(int row, String attrName)
@@ -290,7 +289,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 	    VAttribute attr=getAttribute(row,attrName); 
         if (attr==null)
             return null; 
-        return attr.getValue(); 
+        return attr.getStringValue(); 
 	}
 	
 	public boolean setValue(String key,String attrName,String value)
