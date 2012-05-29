@@ -22,8 +22,6 @@
 // source: 
 
 package nl.uva.vlet.gui.panels.attribute;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -33,7 +31,6 @@ import java.awt.event.FocusListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,6 +42,9 @@ import javax.swing.border.BevelBorder;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.GuiSettings;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -164,7 +164,7 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
                   {
                       attrValueField = new JTextArea();
                       attrScrollPane.setViewportView(attrValueField);
-                      attrValueField.setText(attribute.getValue());
+                      attrValueField.setText(attribute.getStringValue());
                       attrValueField.setBorder(BorderFactory
                         .createEtchedBorder(BevelBorder.LOWERED));
                       attrValueField.setEditable(this.editable);
