@@ -29,8 +29,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlConfigurationError;
-import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrms.ConfigManager;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRSContext;
 
@@ -248,7 +246,7 @@ public class LFCFSConfig
                
                if (obj!=null) 
                {
-                   orgAttr.forceSetValue(obj.toString()); 
+                   orgAttr.setValue(obj.toString()); // store as String.  
                    Global.infoPrintln(LFCFSConfig.class,"Using context property:"+key+"="+obj); 
                }
                
@@ -263,7 +261,7 @@ public class LFCFSConfig
                if (uriAttr!=null)
                {
                    Global.infoPrintln(LFCFSConfig.class,"Using URI attribute:"+key+"="+obj); 
-                   orgAttr.forceSetValue(uriAttr.getValue());
+                   orgAttr.setValue(uriAttr.getValue());
                }
            }
            // return updated set: 
@@ -287,7 +285,7 @@ public class LFCFSConfig
             if (uriAttr!=null)
             {
                 Global.infoPrintln(LFCFSConfig.class,"Using URI attribute:"+key+"="+uriAttr); 
-                orgAttr.forceSetValue(uriAttr.getValue());
+                orgAttr.setValue(uriAttr.getValue());
             }
         }
     }
