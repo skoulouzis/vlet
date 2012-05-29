@@ -199,7 +199,7 @@ public class SrbConfig
                     if (orgAttr!=null)
                     {
                         sInfo("Updating Property from URI:"+attr); 
-                        orgAttr.forceSetValue(attr.getValue());
+                        orgAttr.setValue(attr.getValue());
                         newAttr=orgAttr; 
                     }
                     else

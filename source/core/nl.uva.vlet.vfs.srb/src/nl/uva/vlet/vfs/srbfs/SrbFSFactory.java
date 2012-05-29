@@ -313,7 +313,7 @@ public class SrbFSFactory extends VFSFactory
             {
                 if (StringUtil.isEmpty(value)==false)
                 {
-                    orgAttr.forceSetValue(value); 
+                    orgAttr.setValue(value); 
                 }
                 orgAttr.setEditable(true);
             }
