@@ -116,7 +116,7 @@ public class VAttributeCellRenderer implements TableCellRenderer
         else if (value instanceof VAttribute)
         {
             VAttribute attr=(VAttribute)value;
-            String strval=attr.getValue();
+            String strval=attr.getStringValue();
             
             Presentation pres=null; 
             
@@ -145,7 +145,7 @@ public class VAttributeCellRenderer implements TableCellRenderer
             if (renderer instanceof JLabel)
             {
                 JLabel label=(JLabel)renderer;
-                label.setToolTipText(attr.getValue());
+                label.setToolTipText(attr.getStringValue());
                  
                 if (attr.getType()==VAttributeType.VRL)
                 {
