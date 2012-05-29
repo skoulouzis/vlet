@@ -32,15 +32,16 @@ public class testStringUtil
 {
 
     @Test
-    public void testStringIsNonWhiteSpace()
+    public void testStringUtl_IsNonWhiteSpace()
     {
         Assert.assertFalse("isNonWhiteSpace: NULL String should return FALSE",StringUtil.isNonWhiteSpace(null));
         Assert.assertFalse("isNonWhiteSpace: Empty String should return FALSE",StringUtil.isNonWhiteSpace("")); 
+        Assert.assertFalse("isNonWhiteSpace: Empty String should return FALSE",StringUtil.isNonWhiteSpace(" ")); 
         Assert.assertFalse("isNonWhiteSpace: Single Tab String should return FALSE",StringUtil.isNonWhiteSpace("\t")); 
         Assert.assertFalse("isNonWhiteSpace: Single NewLine String should return FALSE",StringUtil.isNonWhiteSpace("\n")); 
         Assert.assertFalse("isNonWhiteSpace: Double Tab String should return FALSE",StringUtil.isNonWhiteSpace("\t\t")); 
         Assert.assertFalse("isNonWhiteSpace: Double NewLine String should return FALSE",StringUtil.isNonWhiteSpace("\n\n"));
-        
+        Assert.assertFalse("isNonWhiteSpace: Double NewLine String should return FALSE",StringUtil.isNonWhiteSpace("\t \n \n "));
         Assert.assertTrue("isNonWhiteSpace: Single char should return TRUE",StringUtil.isNonWhiteSpace("a"));
         Assert.assertTrue("isNonWhiteSpace: Spaced Single char should return TRUE",StringUtil.isNonWhiteSpace(" a"));
         Assert.assertTrue("isNonWhiteSpace: Spaced Single char should return TRUE",StringUtil.isNonWhiteSpace("a "));
@@ -48,7 +49,7 @@ public class testStringUtil
     }
     
     @Test
-    public void testStringUtilCompare()
+    public void testStringUtil_Compare()
     {   
         doStringUtilCompare("aap","noot"); 
         doStringUtilCompare("noot","aap");
