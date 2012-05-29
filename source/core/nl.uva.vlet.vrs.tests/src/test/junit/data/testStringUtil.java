@@ -28,7 +28,7 @@ import nl.uva.vlet.data.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class testString 
+public class testStringUtil 
 {
 
     @Test
@@ -50,25 +50,25 @@ public class testString
     @Test
     public void testStringUtilCompare()
     {   
-        testStringUtilCompare("aap","noot"); 
-        testStringUtilCompare("noot","aap");
-        testStringUtilCompare("aap","aap"); 
-        testStringUtilCompare("",""); 
-        testStringUtilCompare("","aap"); 
-        testStringUtilCompare("aap","");
-        testStringUtilCompare(null,""); 
-        testStringUtilCompare("",null); 
-        testStringUtilCompare(null,null); 
-        testStringUtilCompare(null,"aap"); 
-        testStringUtilCompare("aap",null);
+        doStringUtilCompare("aap","noot"); 
+        doStringUtilCompare("noot","aap");
+        doStringUtilCompare("aap","aap"); 
+        doStringUtilCompare("",""); 
+        doStringUtilCompare("","aap"); 
+        doStringUtilCompare("aap","");
+        doStringUtilCompare(null,""); 
+        doStringUtilCompare("",null); 
+        doStringUtilCompare(null,null); 
+        doStringUtilCompare(null,"aap"); 
+        doStringUtilCompare("aap",null);
         //
-        testStringUtilCompare("aap","Aap"); 
-        testStringUtilCompare("noot","nooT");
-        testStringUtilCompare("Aap","aap"); 
-        testStringUtilCompare("nooT","noot");
+        doStringUtilCompare("aap","Aap"); 
+        doStringUtilCompare("noot","nooT");
+        doStringUtilCompare("Aap","aap"); 
+        doStringUtilCompare("nooT","noot");
     }
     
-    public void testStringUtilCompare(String s1,String s2)
+    public void doStringUtilCompare(String s1,String s2)
     {
         int v1;
         int vign1; 

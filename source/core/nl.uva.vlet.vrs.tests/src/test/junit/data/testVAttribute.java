@@ -239,40 +239,42 @@ public class testVAttribute
     public void testStringValueConstructors() throws VRLSyntaxException
     {   
         // test simple String based constructors and match against object value 
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","true",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","false",new Boolean(false));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","True",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","False",new Boolean(false));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","TRUE",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"name","FALSE",new Boolean(false));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean1","true",new Boolean(true));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean2","false",new Boolean(false));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean3","True",new Boolean(true));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean4","False",new Boolean(false));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean5","TRUE",new Boolean(true));
+        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean6","FALSE",new Boolean(false));
         //
-        testStringValueConstructor(VAttributeType.INT,"name1","0", new Integer(0));
-        testStringValueConstructor(VAttributeType.INT,"name2","1", new Integer(1));
-        testStringValueConstructor(VAttributeType.INT,"name3","-1", new Integer(-1));
-        testStringValueConstructor(VAttributeType.INT,"name4",""+Integer.MAX_VALUE,new Integer(Integer.MAX_VALUE));  
-        testStringValueConstructor(VAttributeType.INT,"name4",""+Integer.MIN_VALUE,new Integer(Integer.MIN_VALUE));  
-        testStringValueConstructor(VAttributeType.LONG,"name1","0",new Long(0));
-        testStringValueConstructor(VAttributeType.LONG,"name2","1",new Long(1));
-        testStringValueConstructor(VAttributeType.LONG,"name3","-1",new Long(-1));
-        testStringValueConstructor(VAttributeType.LONG,"name4",""+Long.MAX_VALUE,new Long(Long.MAX_VALUE));  
-        testStringValueConstructor(VAttributeType.LONG,"name5",""+Long.MIN_VALUE,new Long(Long.MIN_VALUE));  
+        testStringValueConstructor(VAttributeType.INT,"integer1","0", new Integer(0));
+        testStringValueConstructor(VAttributeType.INT,"integer2","1", new Integer(1));
+        testStringValueConstructor(VAttributeType.INT,"integer3","-1", new Integer(-1));
+        testStringValueConstructor(VAttributeType.INT,"integer4",""+Integer.MAX_VALUE,new Integer(Integer.MAX_VALUE));  
+        testStringValueConstructor(VAttributeType.INT,"integer5",""+Integer.MIN_VALUE,new Integer(Integer.MIN_VALUE));  
+        testStringValueConstructor(VAttributeType.LONG,"long1","0",new Long(0));
+        testStringValueConstructor(VAttributeType.LONG,"long2","1",new Long(1));
+        testStringValueConstructor(VAttributeType.LONG,"long3","-1",new Long(-1));
+        testStringValueConstructor(VAttributeType.LONG,"long4",""+Long.MAX_VALUE,new Long(Long.MAX_VALUE));  
+        testStringValueConstructor(VAttributeType.LONG,"long5",""+Long.MIN_VALUE,new Long(Long.MIN_VALUE));  
         // watch out for rounding errors from decimal to IEEE floats/doubles !
-        testStringValueConstructor(VAttributeType.FLOAT,"name","0.0",new Float(0.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"name","1.0",new Float(1.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"name","-1.0",new Float(-1.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"name",""+Float.MAX_VALUE,new Float(Float.MAX_VALUE));
-        testStringValueConstructor(VAttributeType.FLOAT,"name",""+Float.MIN_VALUE,new Float(Float.MIN_VALUE));
+        testStringValueConstructor(VAttributeType.FLOAT,"float1","0.0",new Float(0.0));
+        testStringValueConstructor(VAttributeType.FLOAT,"float2","1.0",new Float(1.0));
+        testStringValueConstructor(VAttributeType.FLOAT,"float3","-1.0",new Float(-1.0));
+        testStringValueConstructor(VAttributeType.FLOAT,"float4",""+Float.MAX_VALUE,new Float(Float.MAX_VALUE));
+        testStringValueConstructor(VAttributeType.FLOAT,"float5",""+Float.MIN_VALUE,new Float(Float.MIN_VALUE));
         // todo: check rounding errors
-        testStringValueConstructor(VAttributeType.DOUBLE,"name","0.0",new Double(0.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"name","1.0",new Double(1.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"name","-1.0",new Double(-1.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"name","-1.123456",new Double(-1.123456));
-        testStringValueConstructor(VAttributeType.DOUBLE,"name",""+Double.MAX_VALUE,new Double(Double.MAX_VALUE));
-        testStringValueConstructor(VAttributeType.DOUBLE,"name",""+Double.MIN_VALUE,new Double(Double.MIN_VALUE));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double1","0.0",new Double(0.0));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double2","1.0",new Double(1.0));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double3","-1.0",new Double(-1.0));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double4","-1.123456",new Double(-1.123456));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double5",""+Double.MAX_VALUE,new Double(Double.MAX_VALUE));
+        testStringValueConstructor(VAttributeType.DOUBLE,"double6",""+Double.MIN_VALUE,new Double(Double.MIN_VALUE));
         // STRING
-        testStringValueConstructor(VAttributeType.STRING,"name","value","value");
-        testStringValueConstructor(VAttributeType.STRING,"name","","");
-
+        testStringValueConstructor(VAttributeType.STRING,"string1","value","value");
+        testStringValueConstructor(VAttributeType.STRING,"string2","","");
+        // allow NULL 
+        testStringValueConstructor(VAttributeType.STRING,"string3",null,null);
+        
         // DATETIME
         long millies=System.currentTimeMillis(); 
         Date dateVal=Presentation.createDate(millies); 
@@ -294,13 +296,21 @@ public class testVAttribute
         Assert.assertEquals("Attribute name must match",name,attr.getName()); 
         Assert.assertTrue("isType() must return true for attr:"+attr,attr.isType(type)); 
         
-        testObjectValue(attr,objectValue); 
+        checkObjectValueType(attr,objectValue); 
     }
 
     // test whether object has matching type and native value 
-    public void testObjectValue(VAttribute attr,Object objValue)
+    void checkObjectValueType(VAttribute attr,Object objValue)
     {
         VAttributeType type=getObjectVAttributeType(objValue);
+        VAttributeType type2=VAttributeType.getObjectType(objValue,null); 
+        Assert.assertEquals("VAttributeType.getObjectType() and unit test getObjectType() must agree.",type,type2);
+        if (objValue==null)
+        {
+            Assert.assertNull("NULL object msut have NULL type.",objValue);
+            return; // NULL value.  
+        }
+        
         Assert.assertTrue("Object type must be:"+type,attr.isType(type)); 
 
         // check native value type! 
@@ -320,6 +330,9 @@ public class testVAttribute
                 break; 
             case DOUBLE:
                 Assert.assertTrue("getDoubleValue() must match native type!",(attr.getDoubleValue()==((Double)objValue))); 
+                break;
+            case STRING:
+                Assert.assertTrue("getStringValue() must match native type!",(attr.getStringValue()==((String)objValue))); 
                 break; 
             case VRL:
                 try
@@ -334,6 +347,8 @@ public class testVAttribute
             case TIME:
                 Assert.assertTrue("getDateValue() must match native type!", compareDateValues(attr.getDateValue(),(Date)objValue)); 
                 break; 
+            default:
+                Assert.fail("Can not check type:"+type); 
 
         }
         
@@ -342,15 +357,34 @@ public class testVAttribute
 
     private boolean compareDateValues(Date val1,Date val2)
     {
+        boolean result=false; 
+
         if (val1==val2)
-            return true;
+            result=true; 
         
-        if ( val1.toString().equals(val2.toString()) ) 
-            return true; 
+        if (result==false)
+        {
+            if ( val1.toString().equals(val2.toString()) ) 
+                result=true; 
+        }
+       
+        String unistr1=Presentation.createNormalizedDateTimeString(val1); 
+        String unistr2=Presentation.createNormalizedDateTimeString(val2); 
+
+        // also Compare Presentation string implementations. 
+        if (result)
+        {
+            Assert.assertEquals("Normalize date/time strings should be equal",unistr1,unistr2); 
+        }
+        else
+        {
+            Assert.assertEquals("Normalize date/time strings should NOT be equal",unistr1,unistr2); 
+        }
         
-        return false; 
+        return result; 
     }
 
+    // Unit test implementation: Different then VAttributeType to assert similar implementations
     public VAttributeType getObjectVAttributeType(Object obj)
     { 
         if (obj instanceof Boolean)
@@ -387,32 +421,31 @@ public class testVAttribute
         // create STRING type: 
         VAttribute vrlStrAttr=new VAttribute(VAttributeType.STRING,"testvrl",vrlstr);
         // object value must match with String object. 
-        testObjectValue(vrlStrAttr,vrlstr); // check String Value 
+        checkObjectValueType(vrlStrAttr,vrlstr); // check String Value 
         
         // create VRL type: 
         VAttribute vrlAttr=new VAttribute("testvrl",vrl); 
         // object value must match with VRL object. 
-        testObjectValue(vrlAttr,vrl); // check VRL Value 
+        checkObjectValueType(vrlAttr,vrl); // check VRL Value 
     }
     
     @Test
-    public void testCompare()
+    public void testVAttributeStringCompare()
     {
-        testStringAttrCompare("aap","noot"); 
-        testStringAttrCompare("noot","aap");
-        testStringAttrCompare("aap","aap"); 
-        testStringAttrCompare("",""); 
-        testStringAttrCompare("","aap"); 
-        testStringAttrCompare("aap","");
-        testStringAttrCompare(null,""); 
-        testStringAttrCompare("",null); 
-        testStringAttrCompare(null,null); 
-        testStringAttrCompare(null,"aap"); 
-        testStringAttrCompare("aap",null); 
-
+        doVAttributeStringCompare("aap","noot"); 
+        doVAttributeStringCompare("noot","aap");
+        doVAttributeStringCompare("aap","aap"); 
+        doVAttributeStringCompare("",""); 
+        doVAttributeStringCompare("","aap"); 
+        doVAttributeStringCompare("aap","");
+        doVAttributeStringCompare(null,""); 
+        doVAttributeStringCompare("",null); 
+        doVAttributeStringCompare(null,null); 
+        doVAttributeStringCompare(null,"aap"); 
+        doVAttributeStringCompare("aap",null); 
     }
     
-    void testStringAttrCompare(String val1,String val2)
+    void doVAttributeStringCompare(String val1,String val2)
     {
         int strComp=StringUtil.compare(val1,val2); 
         VAttribute a1=new VAttribute("name",val1); 
@@ -420,6 +453,38 @@ public class testVAttribute
         int attrComp=a1.compareTo(a2); 
         
         Assert.assertEquals("VAttribute compareTo() must result in same value a String compareTo()!",strComp,attrComp);
+    }   
+    
+    @Test
+    public void testVAttributeIntCompare()
+    {
+        doVAttributeIntLongCompare(0,0); 
+        doVAttributeIntLongCompare(-1,0); 
+        doVAttributeIntLongCompare(0,-1); 
+        doVAttributeIntLongCompare(-1,-1);
         
+        doVAttributeIntLongCompare(0,0); 
+        doVAttributeIntLongCompare(1,0); 
+        doVAttributeIntLongCompare(0,1); 
+        doVAttributeIntLongCompare(1,1);
+    }
+    
+    void doVAttributeIntLongCompare(int val1,int val2)
+    {
+        int intComp=Integer.compare(val1, val2);  
+        VAttribute a1=new VAttribute("name1",val1); 
+        VAttribute a2=new VAttribute("name2",val2); 
+        int attrComp=a1.compareTo(a2); 
+        Assert.assertEquals("VAttribute (int)compareTo() must result in same value a Integer compareTo()!",intComp,attrComp);
+       
+        long lval1=val1,lval2=val2; 
+        int longComp=Long.compare(lval1, lval2);  
+        a1=new VAttribute("name1",lval1); 
+        a2=new VAttribute("name2",lval2); 
+        attrComp=a1.compareTo(a2); 
+        Assert.assertEquals("VAttribute (long)compareTo() must result in same value a Long compareTo()!",longComp,attrComp);
+        
+        // paranoia: 
+        Assert.assertEquals("Integet.compare() and Long.compare() do not match!",intComp,longComp); 
     }   
 }
