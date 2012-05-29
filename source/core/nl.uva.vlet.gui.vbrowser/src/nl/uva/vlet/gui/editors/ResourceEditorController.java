@@ -520,7 +520,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
             VAttribute attr = this.resourceAttributes.get(name); 
             if (attr!=null) 
             {
-            	attr.forceSetValue(field.getValue()); // update attribute 
+            	attr.setValue(field.getValue()); // update attribute 
                 resourceAttributes.put(attr); //store/update
             }
             else
@@ -1000,7 +1000,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
 	    	
 		this.setHasChanged(true);
 	    	 
-		confAttr.forceSetValue(attr.getValue()); 
+		confAttr.setValue(attr.getValue()); 
 		resourceAttributes.put(confAttr);
     }
 	
@@ -1066,7 +1066,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
             VAttribute attr = this.serverConfigurationAttrs.get(name); 
             if (attr!=null) 
             {
-            	attr.forceSetValue(field.getValue()); // update attribute 
+            	attr.setValue(field.getValue()); // update attribute 
             	serverConfigurationAttrs.put(attr); //store/update
             }
             else
@@ -1103,7 +1103,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
     	
     	this.setHasChanged(true);
     	 
-    	confAttr.forceSetValue(attr.getValue()); 
+    	confAttr.setValue(attr.getValue()); 
     	serverConfigurationAttrs.put(confAttr); 
     	
     }
