@@ -547,6 +547,70 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     }
 
     /**
+     * Return value as actual Java Object with the specified type. This will
+     * return an object with a type compatible with VAttributeType class.
+     */
+    public Object getValueObject()
+    {
+        if (value==null)
+            return null; 
+        
+        try
+        {
+            switch (this.type)
+            {
+                case BOOLEAN:
+                    return new Boolean(value);
+                case INT:
+                    return new Integer(value);
+                case LONG:
+                    return new Long(value);
+                case FLOAT:
+                    return new Float(value);
+                case DOUBLE:
+                    return new Double(value);
+                case ENUM:
+                    return new String(value);
+                case STRING:
+                    return new String(value);// duplicate !
+                case VRL:
+                    return new VRL(value);
+                case TIME:
+                    return getDateValue();
+                default:
+                {
+                    // OOpsy
+                    Global.errorPrintf(this, "***Error: toObject(): Attribute type not supported:%s\n", this);
+                    return null;
+                }
+
+            }
+        }
+        // interpret errors:
+        catch (VRLSyntaxException e)
+        {
+            // low level error:
+            Global.errorPrintf(this, "***Error: toObject(): Syntax Error for VRL:%s\n", this);
+            return null;
+        }
+        catch (NumberFormatException e)
+        {
+            // low level error:
+            Global.errorPrintf(this, "***Error: toObject(): Syntax Error for:%s\n", value);
+            Global.errorPrintf(this, "*** Error: toObject():%s\n", e.getMessage());
+            return null;
+
+        }
+        catch (Throwable e)
+        {
+            // low level error:
+            Global.errorPrintf(this, "***Error: toObject(): Object conversion error for:%s", value);
+            Global.errorPrintStacktrace(e);
+            return null;
+        }
+    }
+    
+    /**
      * Return Value as String. To Actual get the typed object used
      * getValueObject()
      */
@@ -719,9 +783,9 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     }
 
     /**
-     * Return true if this VAttribute is editable. This mean that the setValue()
-     * methods can be used to change the value. Note that VAttribute by default
-     * or NOT editable. use setEditable() to change this.
+     * Return true if this VAttribute is editable. 
+     * No checking is done when a value is set.
+     * Even if an attribute is not editable, setValue(...) still can be called.  
      */
     public boolean isEditable()
     {
@@ -922,69 +986,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return helpText;
     }
 
-    /**
-     * Return value as actual Java Object with the specified type. This will
-     * return an object with a type compatible with VAttributeType class.
-     */
-    public Object toObject()
-    {
-    	if (value==null)
-    		return null; 
-    	
-        try
-        {
-            switch (this.type)
-            {
-                case BOOLEAN:
-                    return new Boolean(value);
-                case INT:
-                    return new Integer(value);
-                case LONG:
-                    return new Long(value);
-                case FLOAT:
-                    return new Float(value);
-                case DOUBLE:
-                    return new Double(value);
-                case ENUM:
-                    return new String(value);
-                case STRING:
-                    return new String(value);// duplicate !
-                case VRL:
-                    return new VRL(value);
-                case TIME:
-                    return getDateValue();
-                default:
-                {
-                    // OOpsy
-                    Global.errorPrintf(this, "***Error: toObject(): Attribute type not supported:%s\n", this);
-                    return null;
-                }
-
-            }
-        }
-        // interpret errors:
-        catch (VRLSyntaxException e)
-        {
-            // low level error:
-            Global.errorPrintf(this, "***Error: toObject(): Syntax Error for VRL:%s\n", this);
-            return null;
-        }
-        catch (NumberFormatException e)
-        {
-            // low level error:
-            Global.errorPrintf(this, "***Error: toObject(): Syntax Error for:%s\n", value);
-            Global.errorPrintf(this, "*** Error: toObject():%s\n", e.getMessage());
-            return null;
-
-        }
-        catch (Throwable e)
-        {
-            // low level error:
-            Global.errorPrintf(this, "***Error: toObject(): Object conversion error for:%s", value);
-            Global.errorPrintStacktrace(e);
-            return null;
-        }
-    }
+   
 
     /** Return value as Date Object */
     public Date getDateValue()
@@ -1000,7 +1002,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return false;
     }
 
-    // old method. 
+    /** @deprecated use setValue(...) */ 
     public void forceSetValue(String valstr)
     {
         this.setValue(valstr);
