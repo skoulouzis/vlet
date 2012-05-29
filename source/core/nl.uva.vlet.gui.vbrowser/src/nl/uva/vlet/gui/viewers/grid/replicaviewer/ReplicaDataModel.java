@@ -255,7 +255,7 @@ public class ReplicaDataModel extends ResourceTableModel
                 continue; 
             String statStr=statAttr.getStringValue(); 
             if (statStr.equals(ReplicaStatus.NEW.toString()))
-                    ses.add(seAttr.getValue());
+                    ses.add(seAttr.getStringValue());
         }
         
         return ses.toArray(); 
@@ -274,7 +274,7 @@ public class ReplicaDataModel extends ResourceTableModel
             String statStr=statAttr.getStringValue(); 
             
             if (statStr.equals(ReplicaStatus.DELETE.toString()))
-                ses.add(seAttr.getValue());
+                ses.add(seAttr.getStringValue());
         }
         
         return ses.toArray(); 
@@ -290,10 +290,10 @@ public class ReplicaDataModel extends ResourceTableModel
             VAttribute seAttr=this.getAttribute(i,ATTR_STORAGE_ELEMENT); 
             if ((statAttr==null) || (seAttr==null))
                 continue; 
-            String statStr=statAttr.getValue(); 
+            String statStr=statAttr.getStringValue(); 
             
             if (statStr.equals(ReplicaStatus.UNREGISTER.toString()))
-                ses.add(seAttr.getValue());
+                ses.add(seAttr.getStringValue());
         }
         
         return ses.toArray(); 
