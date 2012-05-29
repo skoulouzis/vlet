@@ -23,24 +23,20 @@
 
 package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_INDEX;
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_JOBID;
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME; 
-import static nl.uva.vlet.data.VAttributeConstants.ATTR_STATUS;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_ERROR_TEXT;
-
-
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_INDEX;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_JOBID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_STATUS;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel;
-import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
@@ -206,7 +202,7 @@ public class JobStatusDataModel extends ResourceTableModel
         if (attr==null)
             return true; 
         
-        String txt=attr.getValue(); 
+        String txt=attr.getStringValue(); 
         
         if (StringUtil.equals(txt,STATUS_UNKNOWN))
             return true;
