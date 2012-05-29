@@ -1134,7 +1134,7 @@ public class ServerInfo
            if (this._serverAttributes.containsKey(name))
            {
                VAttribute orgAttr=this.getAttribute(name);
-               orgAttr.forceSetValue(attr.getValue()); 
+               orgAttr.setValue(attr.getValue()); 
                this._serverAttributes.put(orgAttr); 
            }
            else if (append)
