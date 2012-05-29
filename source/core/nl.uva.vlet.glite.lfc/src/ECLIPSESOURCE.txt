@@ -7,7 +7,7 @@ code from the g-Eclipse project.
 
 Refactoring and updating, including a lot of bug fixing and adding more
 LFC Features, have been done by: 
- - Piter T. de Boer (ptdeboer@pccuva.nl) 
+ - Piter T. de Boer (ptdeboer at gmail dot com) 
  - Spiros Koulouzis. 
 
 See http://www.vl-e.nl
