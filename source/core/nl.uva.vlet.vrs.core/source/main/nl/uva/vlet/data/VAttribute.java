@@ -550,7 +550,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
      * Return Value as String. To Actual get the typed object used
      * getValueObject()
      */
-    public Object getValue()
+    public String getValue()
     {
         return value;
     }
