@@ -75,7 +75,7 @@ public class AttrParameterField extends JTextField implements IAttributeField
 	
 	public void updateFrom(VAttribute attr) 
 	{
-		setText(attr.getValue()); 
+		setText(attr.getStringValue()); 
 	}
 	
 	public void setEditable(boolean editable)
