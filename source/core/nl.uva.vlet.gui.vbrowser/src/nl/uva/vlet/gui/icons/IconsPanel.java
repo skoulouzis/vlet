@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.gui.icons;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -36,7 +35,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VRLList;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.actions.KeyMappings;
@@ -739,7 +737,7 @@ public class IconsPanel extends BrowserJPanel implements IProxyNodeEventListener
         {
             if (attr.hasName(VAttributeConstants.ATTR_ICONURL))
             {
-                bicon.updateIconURL(attr.getValue()); 
+                bicon.updateIconURL(attr.getStringValue()); 
             }
         }
         
