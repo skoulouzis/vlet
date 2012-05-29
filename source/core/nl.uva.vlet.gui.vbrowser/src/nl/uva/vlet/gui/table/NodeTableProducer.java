@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.gui.table;
 
-import java.awt.Point;
 import java.util.Vector;
 
 import nl.uva.vlet.Global;
@@ -41,11 +40,9 @@ import nl.uva.vlet.gui.proxynode.ViewNodeFactory;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
-import nl.uva.vlet.tasks.ITaskSource;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.EventType;
 import nl.uva.vlet.vrs.ResourceEvent;
-import nl.uva.vlet.vrs.ResourceEventListener;
 
 /**
  * Produces table data. 
@@ -379,7 +376,7 @@ public class NodeTableProducer extends ProxyDataProducer implements
         if (attr.getName().compareTo(VAttributeConstants.ATTR_ICON) == 0)
         {
             headerName=VAttributeConstants.ATTR_ICON; 
-            String url = attr.getValue();
+            String url = attr.getStringValue();
             // use default icon for now
             obj = pnode.getDefaultIcon(16,false);
         }
@@ -387,7 +384,7 @@ public class NodeTableProducer extends ProxyDataProducer implements
         {
             // Icon and IconUrl have the same column! 
             headerName=VAttributeConstants.ATTR_ICON; 
-            String url = attr.getValue();
+            String url = attr.getStringValue();
             obj=UIGlobal.getIconProvider().renderIcon(url,16); 
         }
         else
