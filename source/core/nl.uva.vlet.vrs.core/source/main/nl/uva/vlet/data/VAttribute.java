@@ -667,7 +667,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 
     // Formatters/Stringifiers
 
-    /** For printing to stdout only. This is NOT a serializer */
+    /** For (debug) printing to stdout only. This is NOT a serializer */
     public String toString()
     {
         String enumStr = "";
@@ -971,6 +971,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     {
         setValue((b == true) ? "true" : "false");
     }
+    
     /** Will be changed to VAttribute help data base */
     public void setHelpText(String str)
     {
@@ -978,15 +979,13 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     }
 
     /**
-     * Return (mini) help text for ToolTip text Implementation might be changed
-     * in the future to a generic VAttribute Help Text database
+     * Return (mini) help text for ToolTip text Implementation.
+     * Will be moved to VAttribute help database. 
      */
     public String getHelpText()
     {
         return helpText;
     }
-
-   
 
     /** Return value as Date Object */
     public Date getDateValue()
@@ -1034,7 +1033,4 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     {
         return StringList.createFrom(getStringValue(), regExp);
     }
-
-  
-
 }

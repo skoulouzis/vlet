@@ -137,7 +137,7 @@
 //    
 //    public static VAttribute createFrom(String name, Object value)
 //    {
-//        VAttributeType type=getObjectType(value,null);
+//        VAttributeType type=VAttributeType.getObjectType(value,null);
 //        if (type!=null)
 //            return new VAttribute(type,name,value); 
 //        // default to string type: 
@@ -338,3 +338,4 @@
 //    }
 //
 //}
+////
