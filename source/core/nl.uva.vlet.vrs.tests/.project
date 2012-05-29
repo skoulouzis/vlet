@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
 	<name>nl.uva.vlet.vrs.tests</name>
-	<comment>@key 3230303630343131207672732E4D61696E2F70746465626F6572 </comment>
+	<comment></comment>
 	<projects>
 		<project>nl.uva.vlet.vrs.core</project>
 	</projects>
