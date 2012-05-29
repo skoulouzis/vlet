@@ -214,7 +214,7 @@ public class VTableController implements MouseListener, MouseMotionListener
             else
             {
                 // action click on BIG attribute text, show:  
-                if ((attr!=null) &&(attr.getValue().length()>Presentation.getBigStringSize())) 
+                if ((attr!=null) &&(attr.getStringValue().length()>Presentation.getBigStringSize())) 
                     AttributeViewer.viewAttribute(attr);
             }
             
