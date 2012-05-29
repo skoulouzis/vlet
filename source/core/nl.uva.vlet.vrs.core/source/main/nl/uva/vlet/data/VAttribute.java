@@ -90,6 +90,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     {
         return new VAttribute(attrType,attrName,valueStr); 
     }
+    
     /**
      * Type safe factory method. Object must have specified type
      */
@@ -283,37 +284,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         this.helpText = source.helpText;
         this.changed = false; // new Attribute: reset 'changed' flag.
     }
-
-    /** Constructor to create a 'int' typed,but nameless(!), VAttribute */
-    public VAttribute(int val)
-    {
-        init(null, val);
-    }
-
-    /** Constructor to create a 'long' typed,but nameless(!), VAttribute */
-    public VAttribute(long val)
-    {
-        init(null, val);
-    }
-
-    /** Constructor to create a 'float' typed,but nameless(!), VAttribute */
-    public VAttribute(float val)
-    {
-        init(null, val);
-    }
-
-    /** Constructor to create a 'double' typed,but nameless(!), VAttribute */
-    public VAttribute(double val)
-    {
-        init(null, val);
-    }
-
-    /** Constructor to create a 'boolean' typed and named VAttribute */
-    public VAttribute(String name, boolean val)
-    {
-        init(name, val);
-    }
-
+   
     /** Constructor to create a 'int' typed and named VAttribute */
     public VAttribute(String name, int val)
     {
@@ -579,7 +550,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
      * Return Value as String. To Actual get the typed object used
      * getValueObject()
      */
-    public String getValue()
+    public Object getValue()
     {
         return value;
     }
@@ -670,10 +641,23 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return _setValue(val);
     }
 
+    public Object setValue(Object newValue)
+    {
+        return _setValue(newValue,true); 
+    }
+    
+    /**
+     * New setter: set value by object. 
+     * if updateType==false, the object will be cast to the original type! 
+     */
+    public Object setValue(Object newValue, boolean updateType)
+    {
+        return _setValue(newValue,updateType); 
+    }
+
     /** Actual setter. */
     protected String _setValue(String val)
     {
-
         String orgVal = value;
         if (val == null)
             value = ""; // null not allowed => auto cast
@@ -696,7 +680,22 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         this.changed = true;
         return orgVal;
     }
-
+    
+   
+    protected Object _setValue(Object newValue,boolean updateType)
+    {
+        Object oldValue=this.value; 
+        
+        if (newValue==null)
+            this.value=null; 
+        else
+            this.value=newValue.toString(); 
+     
+        this.type=VAttributeType.getObjectType(newValue, VAttributeType.STRING); 
+        
+        return oldValue; 
+    }
+    
     public boolean isType(VAttributeType otherType)
     {
         return this.getType().equals(otherType);
@@ -1001,7 +1000,7 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return false;
     }
 
-    // ...
+    // old method. 
     public void forceSetValue(String valstr)
     {
         this.setValue(valstr);
