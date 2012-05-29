@@ -94,7 +94,7 @@ public class AttrEnumField extends JComboBox implements IAttributeField
 
 	public void updateFrom(VAttribute attr) 
 	{
-		this.setValue(attr.getValue());
+		this.setValue(attr.getStringValue());
 	}
 	
 //	public void setEditable(boolean flag)
