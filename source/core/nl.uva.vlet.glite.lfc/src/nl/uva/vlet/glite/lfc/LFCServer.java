@@ -1,23 +1,12 @@
 /*
- * Copyright 2006-2011 The Virtual Laboratory for e-Science (VL-e) 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License").  
- * You may not use this file except in compliance with the License. 
- * For details, see the LICENCE.txt file location in the root directory of this 
- * distribution or obtain the Apache Licence at the following location: 
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Initial development of the original code was made for the
+ * g-Eclipse project founded by European Union
+ * project number: FP6-IST-034327  http://www.geclipse.eu/
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License.
- * 
- * See: http://www.vl-e.nl/ 
- * See: LICENCE.txt (located in the root folder of this distribution). 
- * ---
- * $Id: LFCServer.java,v 1.4 2011-04-18 12:30:40 ptdeboer Exp $  
- * $Date: 2011-04-18 12:30:40 $
+ * Contributors:
+ *    Mateusz Pabis (PSNC) - initial API and implementation
+ *    Piter T. de boer - Refactoring to standalone API and bugfixing.  
+ *    Spiros Koulouzis - Refactoring to standalone API and bugfixing.  
  */ 
 // source: 
 
@@ -35,7 +24,51 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import nl.uva.vlet.glite.lfc.internal.*;
+import nl.uva.vlet.glite.lfc.internal.AbstractCnsResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsAddReplicaRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsAddReplicaResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsChmodRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsChmodResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsCloseDirRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsCloseDirResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsConstants;
+import nl.uva.vlet.glite.lfc.internal.CnsCreatGRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsCreatGResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsDelReplicaRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsDelReplicaResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsFileSizeRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsFileSizeResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsGStatRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsGStatResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsGetCommentRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsGetReplicaRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsGetReplicaResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsLinkStatRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsLinkStatResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsListLinkRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsListReplicaRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsListReplicaResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsLongResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsMessage;
+import nl.uva.vlet.glite.lfc.internal.CnsMkdirRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsOpenDirRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsReadDirRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsReadDirResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsReadLinkRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsRenameRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsRmdirRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsSetCommentRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsSetCommentResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsSingleStringResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsStringListResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsSymLinkRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsUnlinkRequest;
+import nl.uva.vlet.glite.lfc.internal.CnsUnlinkResponse;
+import nl.uva.vlet.glite.lfc.internal.CnsVoidResponse;
+import nl.uva.vlet.glite.lfc.internal.FileDesc;
+import nl.uva.vlet.glite.lfc.internal.GSSTokenRecv;
+import nl.uva.vlet.glite.lfc.internal.GSSTokenSend;
+import nl.uva.vlet.glite.lfc.internal.ReplicaDesc;
 
 import org.globus.gsi.CertUtil;
 import org.globus.gsi.GSIConstants;

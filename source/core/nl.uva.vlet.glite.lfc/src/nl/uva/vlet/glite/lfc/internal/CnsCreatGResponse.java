@@ -1,26 +1,13 @@
 /*
- * Copyright 2006-2011 The Virtual Laboratory for e-Science (VL-e) 
- * 
- * Licensed under the Apache License, Version 2.0 (the "License").  
- * You may not use this file except in compliance with the License. 
- * For details, see the LICENCE.txt file location in the root directory of this 
- * distribution or obtain the Apache Licence at the following location: 
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Initial development of the original code was made for the
+ * g-Eclipse project founded by European Union
+ * project number: FP6-IST-034327  http://www.geclipse.eu/
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
- * limitations under the License.
- * 
- * See: http://www.vl-e.nl/ 
- * See: LICENCE.txt (located in the root folder of this distribution). 
- * ---
- * $Id: CnsCreatGResponse.java,v 1.2 2011-04-18 12:30:38 ptdeboer Exp $  
- * $Date: 2011-04-18 12:30:38 $
+ * Contributors:
+ *    Mateusz Pabis (PSNC) - initial API and implementation
+ *    Piter T. de boer - Refactoring to standalone API and bugfixing.  
+ *    Spiros Koulouzis - Refactoring to standalone API and bugfixing.  
  */ 
-// source: 
-
 package nl.uva.vlet.glite.lfc.internal;
 
 import java.io.DataInputStream;
@@ -28,10 +15,6 @@ import java.io.IOException;
 
 import nl.uva.vlet.glite.lfc.LFCError;
 import nl.uva.vlet.glite.lfc.LFCServer;
-import nl.uva.vlet.glite.lfc.internal.AbstractCnsResponse;
-import nl.uva.vlet.glite.lfc.internal.CnsConstants;
-import nl.uva.vlet.glite.lfc.internal.CnsLinkStatRequest;
-import nl.uva.vlet.glite.lfc.internal.FileDesc;
 
 
 

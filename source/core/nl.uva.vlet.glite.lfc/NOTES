@@ -4,12 +4,14 @@
 #
 # Developers notes for the Pure Java LFC Implementation as used by VLET. 
 #
-# Based upon code from G-Eclipse. Added more LFC features and fixed bugs. 
-# Also improved error handling and error text. 
-#
-# Updated by: 
-#  - Piter T. de Boer
-#  - Spiros Koulouzis  
+# Based upon code from G-Eclipse. Refactored to standalone API. 
+# Added more LFC features and fixed bugs. 
+# Also improved error handling and error text.
+# 
+# Constributors: 
+#  - Mateusz Pabis (PSNC) - initial API and implementation
+#  - Piter T. de Boer - Refactored to standalone API + bugfixing
+#  - Spiros Koulouzis - Debugging and improvements
 #
 
 Version 0.1: 
@@ -33,7 +35,10 @@ Version 0.5:
 Version 1.0.0: 
 - Updated logging and error messages. 
 - API is mature enough for 1.0 Release ! 
- 
+
+Version 1.0.1: 
+- Move to sourceforge and updated comments. 
+
 See ReleaseNotes for more features/bugs fixes. 
 
 Cheers, 
