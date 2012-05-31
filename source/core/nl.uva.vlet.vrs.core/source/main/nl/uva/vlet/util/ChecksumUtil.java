@@ -70,12 +70,12 @@ public class ChecksumUtil
 
             Adler32 adler = new Adler32();
             cis = new CheckedInputStream(in, adler);
-            int readNum = 0;
-            while (readNum >=0 )
+            int numRead = 0;
+            while (numRead >=0 )
             {
-                readNum = cis.read(buffer);
+                numRead = cis.read(buffer);
                 // bug: 
-                if (readNum==0)
+                if (numRead==0)
                 {
                     // microsleep
                     try
@@ -123,10 +123,26 @@ public class ChecksumUtil
             while (numRead != -1)
             {
                 numRead = in.read(buffer);
-                if (numRead > 0)
+                if (numRead >= 0)
                 {
                     md5.update(buffer, 0, numRead);
                 }
+                
+                // bug: 
+                if (numRead==0)
+                {
+                    // microsleep
+                    try
+                    {
+                        Thread.sleep(10);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        ClassLogger.getLogger(ChecksumUtil.class).logException(ClassLogger.ERROR,e,"Sleep interrupted!\n");
+                    } 
+                }
+                
+                
             }
 
             return md5.digest();
