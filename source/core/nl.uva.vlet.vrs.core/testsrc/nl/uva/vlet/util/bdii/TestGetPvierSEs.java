@@ -26,8 +26,6 @@ package nl.uva.vlet.util.bdii;
 import java.util.ArrayList;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.util.bdii.BdiiService;
-import nl.uva.vlet.util.bdii.StorageArea;
 
 public class TestGetPvierSEs
 {
@@ -37,8 +35,8 @@ public class TestGetPvierSEs
      */
     public static void main(String[] args)
     {
-        Global.setDebug(true);
-
+        Global.getLogger().setLevelToDebug();
+        
         getSEs();
     }
 
@@ -49,15 +47,34 @@ public class TestGetPvierSEs
         {
             BdiiService bdii = new BdiiService("bdii.grid.sara.nl", 2170);
             ArrayList<StorageArea> sas = bdii.getVOStorageAreas("pvier",null,false);
-            sas.get(0).getHostname();
+            for (int i=0;i<sas.size();i++)
+            {
+                System.out.printf(" #%d=%s:%s\n",i,sas.get(i).getHostname(),sas.get(i).getStoragePath());
+            }
         }
-
         catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        
+        String host="srm.grid.sara.nl";
+        System.out.printf("--- Test Get Single SE:%s---\n",host); 
+        
+        try
+        {
+            BdiiService bdii = new BdiiService("bdii.grid.sara.nl", 2170);
+            ArrayList<StorageArea> sas = bdii.getVOStorageAreas("pvier",host,false);
+            
+            for (int i=0;i<sas.size();i++)
+            {
+                System.out.printf(" #%d=%s:%s\n",i,sas.get(i).getHostname(),sas.get(i).getStoragePath());
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
     }
 
 }
