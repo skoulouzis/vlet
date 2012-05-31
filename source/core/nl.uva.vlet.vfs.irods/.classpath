@@ -6,7 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
 	<classpathentry kind="lib" path="lib/commons-exec-1.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/gsi-classes.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.7.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/maven-ant-tasks-2.1.0.jar"/>
