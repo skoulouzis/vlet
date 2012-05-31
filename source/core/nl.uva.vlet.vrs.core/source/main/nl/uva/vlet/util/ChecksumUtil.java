@@ -30,6 +30,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.zip.Adler32;
 import java.util.zip.CheckedInputStream;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 
@@ -70,9 +71,22 @@ public class ChecksumUtil
             Adler32 adler = new Adler32();
             cis = new CheckedInputStream(in, adler);
             int readNum = 0;
-            while (readNum >0 )
+            while (readNum >=0 )
             {
                 readNum = cis.read(buffer);
+                // bug: 
+                if (readNum==0)
+                {
+                    // microsleep
+                    try
+                    {
+                        Thread.sleep(10);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        ClassLogger.getLogger(ChecksumUtil.class).logException(ClassLogger.ERROR,e,"Sleep interrupted!\n");
+                    } 
+                }
             }
             checksum = cis.getChecksum().getValue();
         }
@@ -88,7 +102,8 @@ public class ChecksumUtil
             }
             catch (IOException e)
             {
-                throw new nl.uva.vlet.exception.VlIOException(e);
+                //ignore and continue
+                ClassLogger.getLogger(ChecksumUtil.class).logException(ClassLogger.WARN,e,"Exception when closing stream.\n");
             }
         }
         return checksum;
