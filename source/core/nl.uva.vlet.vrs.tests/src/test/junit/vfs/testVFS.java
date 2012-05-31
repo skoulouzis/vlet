@@ -41,7 +41,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import junit.framework.Assert;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.IntegerHolder;
 import nl.uva.vlet.data.StringHolder;
@@ -86,6 +85,9 @@ import nl.uva.vlet.vrs.io.VRandomReadable;
 import nl.uva.vlet.vrs.io.VRandomReader;
 import nl.uva.vlet.vrs.io.VResizable;
 import nl.uva.vlet.vrs.io.VZeroSizable;
+
+import org.junit.Assert;
+
 import test.junit.TestSettings;
 import test.junit.VTestCase;
 
@@ -306,8 +308,7 @@ public class testVFS extends VTestCase
 
     public void testFirst() throws VlException
     {
-        //testListDirIterator(); 
-        // testRenameWithSpaces(); 
+        testVChecksum(); 
     }
 
     /**

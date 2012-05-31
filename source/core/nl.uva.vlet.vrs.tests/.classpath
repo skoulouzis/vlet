@@ -17,7 +17,6 @@
 	<classpathentry kind="src" path="/nl.uva.vlet.vfs.irods"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.jcraft.ssh"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.glite.lfc"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/jfcunit.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

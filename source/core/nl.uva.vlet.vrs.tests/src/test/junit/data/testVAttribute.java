@@ -105,12 +105,12 @@ public class testVAttribute
     {
         // text exception: 
         //testPresentationDateTimeString("000000-00-00 00:00:00.000");
-        testPresentationDateTimeString("0001-01-01 00:00:00.000");
-        testPresentationDateTimeString("1970-01-13 01:23:45.678");  
-        testPresentationDateTimeString("999999-12-31 23:59:59.999");  
+        doPresentationDateTimeString("0001-01-01 00:00:00.000");
+        doPresentationDateTimeString("1970-01-13 01:23:45.678");  
+        doPresentationDateTimeString("999999-12-31 23:59:59.999");  
     }
     
-    public void testPresentationDateTimeString(String datestr)
+    public void doPresentationDateTimeString(String datestr)
     {
         Date date=Presentation.createDateFromNormalizedDateTimeString(datestr);
         String reversestr=Presentation.createNormalizedDateTimeString(date); 
@@ -121,7 +121,7 @@ public class testVAttribute
     public void testValueConstructors()
     {
         TestValues tValues=new TestValues(); 
-        testValueConstructors(tValues); 
+        doTestValueConstructors(tValues); 
         
         tValues=new TestValues(
                 true,
@@ -134,7 +134,7 @@ public class testVAttribute
                 new VRL("file:","user","localhost",-1,"/tmp/stuff/","query","fragment"),    
                 Presentation.createDateFromNormalizedDateTimeString("1970-01-13 01:23:45.678")
                 );
-        testValueConstructors(tValues); 
+        doTestValueConstructors(tValues); 
 
         // empty: neutral (legal) 
         tValues=new TestValues(
@@ -148,7 +148,7 @@ public class testVAttribute
                 new VRL("ref:",null,null,0,"",null,null),    
                 Presentation.createDateFromNormalizedDateTimeString("0001-01-01 00:00:00.000")
                 );
-        testValueConstructors(tValues); 
+        doTestValueConstructors(tValues); 
 
         // minimum/null (allowed) 
         tValues=new TestValues(
@@ -163,7 +163,7 @@ public class testVAttribute
                 Presentation.createDate(1)
                 );
         
-        testValueConstructors(tValues); 
+        doTestValueConstructors(tValues); 
         
         // max (allowed) 
         tValues=new TestValues(
@@ -184,11 +184,11 @@ public class testVAttribute
                         Presentation.createDateFromNormalizedDateTimeString("0001-01-01 00:00:00.000")
                 );
         
-        testValueConstructors(tValues); 
+        doTestValueConstructors(tValues); 
     }
 
   
-    public void testValueConstructors(TestValues tValues)
+    public void doTestValueConstructors(TestValues tValues)
     {
         double epsd=Double.MIN_NORMAL; 
         float epsf=Float.MIN_NORMAL; 
@@ -239,54 +239,54 @@ public class testVAttribute
     public void testStringValueConstructors() throws VRLSyntaxException
     {   
         // test simple String based constructors and match against object value 
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean1","true",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean2","false",new Boolean(false));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean3","True",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean4","False",new Boolean(false));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean5","TRUE",new Boolean(true));
-        testStringValueConstructor(VAttributeType.BOOLEAN,"boolean6","FALSE",new Boolean(false));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean1","true",new Boolean(true));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean2","false",new Boolean(false));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean3","True",new Boolean(true));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean4","False",new Boolean(false));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean5","TRUE",new Boolean(true));
+        doTestStringValueConstructor(VAttributeType.BOOLEAN,"boolean6","FALSE",new Boolean(false));
         //
-        testStringValueConstructor(VAttributeType.INT,"integer1","0", new Integer(0));
-        testStringValueConstructor(VAttributeType.INT,"integer2","1", new Integer(1));
-        testStringValueConstructor(VAttributeType.INT,"integer3","-1", new Integer(-1));
-        testStringValueConstructor(VAttributeType.INT,"integer4",""+Integer.MAX_VALUE,new Integer(Integer.MAX_VALUE));  
-        testStringValueConstructor(VAttributeType.INT,"integer5",""+Integer.MIN_VALUE,new Integer(Integer.MIN_VALUE));  
-        testStringValueConstructor(VAttributeType.LONG,"long1","0",new Long(0));
-        testStringValueConstructor(VAttributeType.LONG,"long2","1",new Long(1));
-        testStringValueConstructor(VAttributeType.LONG,"long3","-1",new Long(-1));
-        testStringValueConstructor(VAttributeType.LONG,"long4",""+Long.MAX_VALUE,new Long(Long.MAX_VALUE));  
-        testStringValueConstructor(VAttributeType.LONG,"long5",""+Long.MIN_VALUE,new Long(Long.MIN_VALUE));  
+        doTestStringValueConstructor(VAttributeType.INT,"integer1","0", new Integer(0));
+        doTestStringValueConstructor(VAttributeType.INT,"integer2","1", new Integer(1));
+        doTestStringValueConstructor(VAttributeType.INT,"integer3","-1", new Integer(-1));
+        doTestStringValueConstructor(VAttributeType.INT,"integer4",""+Integer.MAX_VALUE,new Integer(Integer.MAX_VALUE));  
+        doTestStringValueConstructor(VAttributeType.INT,"integer5",""+Integer.MIN_VALUE,new Integer(Integer.MIN_VALUE));  
+        doTestStringValueConstructor(VAttributeType.LONG,"long1","0",new Long(0));
+        doTestStringValueConstructor(VAttributeType.LONG,"long2","1",new Long(1));
+        doTestStringValueConstructor(VAttributeType.LONG,"long3","-1",new Long(-1));
+        doTestStringValueConstructor(VAttributeType.LONG,"long4",""+Long.MAX_VALUE,new Long(Long.MAX_VALUE));  
+        doTestStringValueConstructor(VAttributeType.LONG,"long5",""+Long.MIN_VALUE,new Long(Long.MIN_VALUE));  
         // watch out for rounding errors from decimal to IEEE floats/doubles !
-        testStringValueConstructor(VAttributeType.FLOAT,"float1","0.0",new Float(0.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"float2","1.0",new Float(1.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"float3","-1.0",new Float(-1.0));
-        testStringValueConstructor(VAttributeType.FLOAT,"float4",""+Float.MAX_VALUE,new Float(Float.MAX_VALUE));
-        testStringValueConstructor(VAttributeType.FLOAT,"float5",""+Float.MIN_VALUE,new Float(Float.MIN_VALUE));
+        doTestStringValueConstructor(VAttributeType.FLOAT,"float1","0.0",new Float(0.0));
+        doTestStringValueConstructor(VAttributeType.FLOAT,"float2","1.0",new Float(1.0));
+        doTestStringValueConstructor(VAttributeType.FLOAT,"float3","-1.0",new Float(-1.0));
+        doTestStringValueConstructor(VAttributeType.FLOAT,"float4",""+Float.MAX_VALUE,new Float(Float.MAX_VALUE));
+        doTestStringValueConstructor(VAttributeType.FLOAT,"float5",""+Float.MIN_VALUE,new Float(Float.MIN_VALUE));
         // todo: check rounding errors
-        testStringValueConstructor(VAttributeType.DOUBLE,"double1","0.0",new Double(0.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"double2","1.0",new Double(1.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"double3","-1.0",new Double(-1.0));
-        testStringValueConstructor(VAttributeType.DOUBLE,"double4","-1.123456",new Double(-1.123456));
-        testStringValueConstructor(VAttributeType.DOUBLE,"double5",""+Double.MAX_VALUE,new Double(Double.MAX_VALUE));
-        testStringValueConstructor(VAttributeType.DOUBLE,"double6",""+Double.MIN_VALUE,new Double(Double.MIN_VALUE));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double1","0.0",new Double(0.0));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double2","1.0",new Double(1.0));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double3","-1.0",new Double(-1.0));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double4","-1.123456",new Double(-1.123456));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double5",""+Double.MAX_VALUE,new Double(Double.MAX_VALUE));
+        doTestStringValueConstructor(VAttributeType.DOUBLE,"double6",""+Double.MIN_VALUE,new Double(Double.MIN_VALUE));
         // STRING
-        testStringValueConstructor(VAttributeType.STRING,"string1","value","value");
-        testStringValueConstructor(VAttributeType.STRING,"string2","","");
+        doTestStringValueConstructor(VAttributeType.STRING,"string1","value","value");
+        doTestStringValueConstructor(VAttributeType.STRING,"string2","","");
         // allow NULL 
-        testStringValueConstructor(VAttributeType.STRING,"string3",null,null);
+        doTestStringValueConstructor(VAttributeType.STRING,"string3",null,null);
         
         // DATETIME
         long millies=System.currentTimeMillis(); 
         Date dateVal=Presentation.createDate(millies); 
-        testStringValueConstructor(VAttributeType.TIME,"name",Presentation.createNormalizedDateTimeString(millies),dateVal);  
+        doTestStringValueConstructor(VAttributeType.TIME,"name",Presentation.createNormalizedDateTimeString(millies),dateVal);  
         // VRL 
         String vrlStr="file://user@host.domain:1234/Directory/A File/";
         VRL vrl=new VRL(vrlStr);
-        testStringValueConstructor(VAttributeType.VRL,"name","file://user@host.domain:1234/Directory/A File/",vrl);
+        doTestStringValueConstructor(VAttributeType.VRL,"name","file://user@host.domain:1234/Directory/A File/",vrl);
                
     }
     
-    public void testStringValueConstructor(VAttributeType type,String name,String value,Object objectValue) 
+    public void doTestStringValueConstructor(VAttributeType type,String name,String value,Object objectValue) 
     {
         // basic constructor tests 
         VAttribute attr=VAttribute.createFromString(type,name,value);
@@ -385,7 +385,7 @@ public class testVAttribute
     }
 
     // Unit test implementation: Different then VAttributeType to assert similar implementations
-    public VAttributeType getObjectVAttributeType(Object obj)
+    VAttributeType getObjectVAttributeType(Object obj)
     { 
         if (obj instanceof Boolean)
             return VAttributeType.BOOLEAN;
@@ -467,6 +467,9 @@ public class testVAttribute
         doVAttributeIntLongCompare(1,0); 
         doVAttributeIntLongCompare(0,1); 
         doVAttributeIntLongCompare(1,1);
+        
+        doVAttributeIntLongCompare(-1,1);
+        doVAttributeIntLongCompare(1,-1);
     }
     
     void doVAttributeIntLongCompare(int val1,int val2)
