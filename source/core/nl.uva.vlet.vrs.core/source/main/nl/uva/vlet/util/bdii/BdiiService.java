@@ -297,30 +297,35 @@ public class BdiiService
     public ArrayList<StorageArea> getVOStorageAreas(String vo, String optHostname, boolean includeSRMV1)
             throws VlException
     {
+        //todo: cleanup,restructure. 
+        
         ArrayList<StorageArea> sas = null;
-
-        // check full query from cache
-        if (optHostname == null)
+        
+        String cacheid=vo+"-"+includeSRMV1; 
+        
+        synchronized (this.cachedVOStorageAreas)
         {
-            synchronized (this.cachedVOStorageAreas)
+            if (!useCaching)
+                return null;
+            
+            if (vo == null)
+                return null;
+            
+            sas = cachedVOStorageAreas.get(cacheid);
+            
+            if (sas != null)
             {
-                if (!useCaching)
-                    return null;
-
-                if (vo == null)
-                    return null;
-
-                sas = cachedVOStorageAreas.get(vo);
-                if (sas != null)
-                {
-                    logger.debugPrintf("Returing cached StorageAreas for VO:%s\n", vo);
-                    return sas;
-                }
+                logger.debugPrintf("Returing cached StorageAreas for VO:%s\n", vo);
+            
+                // filter out optHostname 
+                if (optHostname==null)
+                    return sas; 
+                else
+                    return filterSAsForHost(sas,optHostname);
             }
         }
-
+        
         // Not in cache so let's start
-
         String versionStr = "*";
         if (includeSRMV1 == false)
             versionStr = "2.2*";
@@ -330,11 +335,11 @@ public class BdiiService
         // All the vo paths for a vo. The key for this map is the SE hostname.
         Map<String, String> voPaths = query.getVoInfoPaths(vo);
 
-        // TODO Move this query in differant method.These are only neeed when
-        // browsing, for LFC this is just more time
-        // All the sites. This is not getting them one by one it performs ONE
+        // todo:  move this query in different method. This are only needed when
+        // browsing LFC,  this take more time. 
+        // This method is not getting SEs one by one it performs ONE
         // query and gets back ALL sites. We'll need them later for adding
-        // location and coordinate attributes
+        // location and coordinate attributes. 
         ArrayList<GlueObject> sites = query.getSitesForGlueObjects(srmServices);
 
         // We also need them later for adding backend implementations (DPM,etc)
@@ -476,11 +481,28 @@ public class BdiiService
 
                     sas.add(sa);
                 }
-//                logger.setLevel(Level.OFF);
             }
         }
+        
+        if (optHostname==null)
+            return sas;
+        
+        return filterSAsForHost(sas,optHostname); 
+    }
 
-        return sas;
+    private ArrayList<StorageArea> filterSAsForHost(ArrayList<StorageArea> sas, String optHostname)
+    {
+        if (optHostname==null)
+            return sas;
+        
+        ArrayList<StorageArea> sassel=new ArrayList<StorageArea>(); 
+        
+        for (int i=0;i<sas.size();i++)
+            if (sas.get(i).getHostname().compareToIgnoreCase(optHostname)==0) 
+                sassel.add(sas.get(i)); 
+        
+        return sassel; 
+        
     }
 
     private ServiceInfo createSRMServiceInfo(GlueObject srmService) throws VlException
