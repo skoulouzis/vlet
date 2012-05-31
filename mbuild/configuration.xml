@@ -229,11 +229,13 @@
             <param name="scm.path" value="core"/>
         </antcall>
     	
-    	 <antcall target="buildComponent">
+    	<!-- causes JCE exceptions! 
+    	  <antcall target="buildComponent">
             <param name="name" value="nl.uva.vlet.vfs.irods"/>
 	        <param name="version" value=""/>
             <param name="scm.path" value="core"/>
-        </antcall>
+          </antcall>
+    	--> 
     	
     	<!-- moved to vrs core as internal vdriver:
     	<antcall target="buildComponent">
