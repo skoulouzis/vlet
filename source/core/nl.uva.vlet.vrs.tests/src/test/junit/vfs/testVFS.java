@@ -2291,7 +2291,6 @@ public class testVFS extends VTestCase
     public void testVChecksum() throws VlException
     {
         VFile remoteFile = getRemoteTestDir().createFile("testChecksum.txt");
-
         remoteFile.setContents(TEST_CONTENTS);
 
         if (remoteFile instanceof VChecksum)
@@ -2302,15 +2301,15 @@ public class testVFS extends VTestCase
             String[] types = checksumRemoteFile.getChecksumTypes();
 
             String calculated;
-            String feached;
+            String fetched;
             for (int i = 0; i < types.length; i++)
             {
-                message("Testing: " + types[i]);
+                message("Testing checksum type:" + types[i]);
                 // check if both methods retun the same checksum
                 calculated = ChecksumUtil.calculateChecksum(remoteIn, types[i]);
-                feached = checksumRemoteFile.getChecksum(types[i]);
-                message("-----------------calculated Checksum: " + calculated + " feached Checksum: " + feached);
-                assertEquals(calculated, feached);
+                fetched = checksumRemoteFile.getChecksum(types[i]);
+                message(" -> calculated Checksum:" + calculated + " fetched Checksum:" + fetched);
+                Assert.assertEquals("Wrong checksum",calculated, fetched);
 
                 // now change the file and check if the checksum has also
                 // chanded
@@ -2318,11 +2317,12 @@ public class testVFS extends VTestCase
                 remoteFile.setContents("Changed contents");
                 remoteFile = getRemoteTestDir().getFile("testChecksum.txt");
 
-                feached = checksumRemoteFile.getChecksum(types[i]);
-                assertNotSame(feached, initialChecksum);
+                String newFetched = checksumRemoteFile.getChecksum(types[i]);
+                message(" -> Updated: new checksum:"+newFetched);
+                Assert.assertNotSame("New checksum should be different (type="+types[i]+")",newFetched, initialChecksum);
 
-                // download the file and compare it aginst the remote
-                VFile result = remoteFile.copyTo(localTempDir);
+                // download the file and compare it against the remote
+                VFile result = remoteFile.copyTo(localTempDir); 
                 LFile localFile = (LFile) result;
 
                 if (localFile instanceof VChecksum)
@@ -2330,20 +2330,19 @@ public class testVFS extends VTestCase
                     VChecksum checksumLocalFile = (VChecksum) localFile;
                     checksumRemoteFile = (VChecksum) remoteFile;
 
-                    message("Getting " + types[i] + " from local file");
+                    message(" -> checking checksum type:" + types[i] + " from local file");
                     String localChecksum = checksumLocalFile.getChecksum(types[i]);
-                    message("Getting " + types[i] + " from remote file");
+                    message(" -> checking checksum type:" + types[i] + " from remote file");
                     String remoteChecksum = checksumRemoteFile.getChecksum(types[i]);
 
-                    message("localChecksum: " + localChecksum + " remoteChecksum: " + remoteChecksum);
+                    message(" - > localChecksum: " + localChecksum + " remoteChecksum: " + remoteChecksum);
                     assertEquals(localChecksum, remoteChecksum);
                 }
                 // Check exception
                 try
                 {
                     String remoteChecksum = checksumRemoteFile.getChecksum("NON EXISTING ALGORITHM");
-
-                    message("Checksum: " + remoteChecksum);
+                    message(" -> *** Got invalid checksum:" + remoteChecksum);
                 }
                 catch (Exception ex)
                 {
@@ -2353,7 +2352,7 @@ public class testVFS extends VTestCase
                     }
                     else
                     {
-                        message("Correct exeption!!: " + ex.getMessage());
+                        message(" -> Correct exeption!!: " + ex.getMessage());
                     }
                 }
                 localFile.delete();
