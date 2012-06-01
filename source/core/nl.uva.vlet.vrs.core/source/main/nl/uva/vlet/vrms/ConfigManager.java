@@ -793,5 +793,10 @@ public class ConfigManager
         this.vrsContext.getGridProxy().loadCertificates(); 
         
     }
+
+    public String getProxyFilename()
+    {
+        return this.vrsContext.getGridProxy().getProxyFilename();
+    }
     
 }
