@@ -42,18 +42,18 @@ import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 
 /** 
- * Extended SocketFactory. Takes Default (Java) SSLSocketFactory, but enables it to 
+ * Extended (SSL) SocketFactory. Takes Default (Java) SSLSocketFactory, but enables it to 
  * work with custom SSLContext and settings. 
  * 
  * @author Piter T. de Boer
  */
-public class ExtSocketFactory extends SSLSocketFactory 
+public class ExtSSLSocketFactory extends SSLSocketFactory 
 {
     static ClassLogger logger;
     
     static
     {
-        logger = ClassLogger.getLogger(ExtSocketFactory.class);
+        logger = ClassLogger.getLogger(ExtSSLSocketFactory.class);
         //logger.setLevelToDebug(); 
     }
 
@@ -100,7 +100,7 @@ public class ExtSocketFactory extends SSLSocketFactory
     
     private boolean enableRC4=false;
 
-    public ExtSocketFactory(SSLContext sslContext,SSLSocketFactory socketFactory)
+    public ExtSSLSocketFactory(SSLContext sslContext,SSLSocketFactory socketFactory)
     {
         this.sslFactory=socketFactory;
         this.sslContext=sslContext; 

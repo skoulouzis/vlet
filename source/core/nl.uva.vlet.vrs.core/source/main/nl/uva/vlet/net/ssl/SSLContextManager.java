@@ -39,7 +39,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
@@ -47,9 +46,6 @@ import javax.net.ssl.X509TrustManager;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.net.ssl.CertificateStore;
-import nl.uva.vlet.net.ssl.ExtSocketFactory;
-import nl.uva.vlet.net.ssl.MyX509KeyManager;
 import nl.uva.vlet.util.cog.GridProxy;
 
 /** 
@@ -71,9 +67,9 @@ public class SSLContextManager
     
     public static final String PROP_CREDENTIALS_PROXY_FILE     = "gridProxyFile";
     public static final String PROP_SSL_PROTOCOL               = "sslProtocol";
-    public static final String PROP_KEYSTORE_PASSWD            = "privateKeystorePassword"; 
-    public static final String PROP_KEYSTORE_PRIVATE_KEY_ALIAS = "privateKeystoreKeyAlias";
-    public static final String PROP_KEYSTORE_LOCATION          = "privateKeystoreLocation";
+    public static final String PROP_PRIVATE_KEYSTORE_PASSWD    = "privateKeystorePassword"; 
+    public static final String PROP_PRIVATE_KEYSTORE_KEY_ALIAS = "privateKeystoreKeyAlias";
+    public static final String PROP_PRIVATE_KEYSTORE_LOCATION  = "privateKeystoreLocation";
     public static final String PROP_CACERTS_LOCATION           = "cacertsLocation";
     public static final String PROP_CACERTS_PASSWORD           = "cacertsPassword";
     public static final String PROP_USE_PROXY_AS_IDENTITY      = "enableProxyIdentity"; 
@@ -89,7 +85,7 @@ public class SSLContextManager
     // initialized values:
     private SSLContext sslContext=null; 
     private SSLServerSocketFactory serverSocketFactory=null;
-    private SSLSocketFactory clientSocketFactory=null;
+    private ExtSSLSocketFactory clientSocketFactory=null;
     
     private KeyStore _privateKeystore=null;
     private KeyManager identityKeyManager=null;
@@ -119,17 +115,17 @@ public class SSLContextManager
     
     private String getPrivateKeystorePasswd()
     {
-        return getConfigProperty(PROP_KEYSTORE_PASSWD,KEYSTORE_DEFAULT_PASSWD); 
+        return getConfigProperty(PROP_PRIVATE_KEYSTORE_PASSWD,KEYSTORE_DEFAULT_PASSWD); 
     }
 
     public String getPrivateKeystoreLocation()
     {
-        return getConfigProperty(PROP_KEYSTORE_LOCATION,null); 
+        return getConfigProperty(PROP_PRIVATE_KEYSTORE_LOCATION,null); 
     }
     
     public String getPrivateKeyAlias()
     {
-        return getConfigProperty(PROP_KEYSTORE_PRIVATE_KEY_ALIAS,KEYSTORE_DEFAULT_PRIVATE_KEY_ALIAS);    
+        return getConfigProperty(PROP_PRIVATE_KEYSTORE_KEY_ALIAS,KEYSTORE_DEFAULT_PRIVATE_KEY_ALIAS);    
     }
 
 
@@ -224,7 +220,7 @@ public class SSLContextManager
         return serverSocketFactory;
     }
 
-    public SSLSocketFactory getSocketFactory() throws SSLException
+    public ExtSSLSocketFactory getSocketFactory() throws SSLException
     {
         if(serverSocketFactory != null)
         {
@@ -235,7 +231,7 @@ public class SSLContextManager
         
         if(clientSocketFactory == null)
             //socketFactory = new TimeoutSSLSocketFactory(sslContext.getSocketFactory(), null);
-            clientSocketFactory = new ExtSocketFactory(sslContext,sslContext.getSocketFactory());
+            clientSocketFactory = new ExtSSLSocketFactory(sslContext,sslContext.getSocketFactory());
         return clientSocketFactory;
     }
 
@@ -407,12 +403,12 @@ public class SSLContextManager
 
     private void _updatePrivateKeyStore(KeyStore keystore,String privateKeyAlias,String passwd,String keystoreLocation) 
     {
-        this.config.setProperty(PROP_KEYSTORE_PRIVATE_KEY_ALIAS,privateKeyAlias);
-        this.config.setProperty(PROP_KEYSTORE_PASSWD,passwd);
+        this.config.setProperty(PROP_PRIVATE_KEYSTORE_KEY_ALIAS,privateKeyAlias);
+        this.config.setProperty(PROP_PRIVATE_KEYSTORE_PASSWD,passwd);
         if (StringUtil.isEmpty(keystoreLocation)) 
-            this.config.remove(PROP_KEYSTORE_LOCATION); 
+            this.config.remove(PROP_PRIVATE_KEYSTORE_LOCATION); 
         else
-            this.config.setProperty(PROP_KEYSTORE_LOCATION,keystoreLocation);
+            this.config.setProperty(PROP_PRIVATE_KEYSTORE_LOCATION,keystoreLocation);
         
         this._privateKeystore=keystore;
     }

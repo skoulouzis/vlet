@@ -33,8 +33,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
@@ -43,15 +43,14 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.dialog.CaCertDialog;
 import nl.uva.vlet.dialog.WarningDialog;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.net.ssl.CertificateStore.CaCertOptions;
 import nl.uva.vlet.util.cog.GridProxy;
-import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrl.VRLUtil;
+import nl.uva.vlet.vrs.VRSContext;
 
 /**
  * 
@@ -212,7 +211,7 @@ public class SslUtil
     {
         try
         {
-            sun.net.www.protocol.https.HttpsURLConnectionImpl.setDefaultSSLSocketFactory(new ExtSocketFactory(context,context.getSocketFactory()));
+            sun.net.www.protocol.https.HttpsURLConnectionImpl.setDefaultSSLSocketFactory(new ExtSSLSocketFactory(context,context.getSocketFactory()));
             //sun.net.www.protocol.https.HttpsURLConnectionImpl.setDefaultSSLSocketFactory(context.getSocketFactory());
             // sun.net.www.protocol.https.HttpsURLConnectionImpl.setDefaultAllowUserInteraction(true); 
         } 
@@ -550,6 +549,37 @@ public class SslUtil
     private static String createServerKeyID(String host, int port, int k)
     {
         return ""+host+":"+port+"-"+k;
+    }
+    
+    public static ExtSSLSocketFactory createGSSSocketFactory(VRSContext context) throws Exception
+    {
+        // ---
+        // try to create GSS compatible SSL Socket Factory. 
+        // ---
+        
+        Properties sslProps = new Properties();
+        sslProps.setProperty(SSLContextManager.PROP_SSL_PROTOCOL, "SSLv3");
+        // if identification is needed. 
+        sslProps.setProperty(SSLContextManager.PROP_USE_PROXY_AS_IDENTITY,"true"); 
+        
+       // sslProps.setProperty(nl.uva.vlet.grid.ssl.SSLContextWrapper.PROP_INIT_PROXY_PRIVATE_KEY, "false");
+       // sslProps.setProperty("axis.socketSecureFactory", "org.glite.security.trustmanager.axis.AXISSocketFactory");
+       // sslProps.setProperty(nl.uva.vlet.grid.ssl.SSLContextWrapper.PROP_INIT_PROXY_PRIVATE_KEY, "false");
+
+        // sslProps.setProperty("axis.socketSecureFactory",
+        // "org.glite.security.trustmanager.axis.AXISSocketFactory");
+        // if needed: 
+        String proxyFilename=context.getConfigManager().getProxyFilename(); 
+        CertificateStore cacert = context.getConfigManager().getCertificateStore();
+        
+        sslProps.setProperty(SSLContextManager.PROP_CACERTS_LOCATION,cacert.getKeyStoreLocation());
+        sslProps.setProperty(SSLContextManager.PROP_CREDENTIALS_PROXY_FILE, proxyFilename);
+        
+        // init context and return ssl factory. 
+        SSLContextManager ctxManager = new SSLContextManager(sslProps);
+        ctxManager.initSSLContext(); 
+        
+        return ctxManager.getSocketFactory(); 
     }
 
 }
