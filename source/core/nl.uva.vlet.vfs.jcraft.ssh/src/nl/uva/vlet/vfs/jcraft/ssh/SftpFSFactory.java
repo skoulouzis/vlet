@@ -23,19 +23,21 @@
 
 package nl.uva.vlet.vfs.jcraft.ssh;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ACCESS_TIME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_GID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UNIX_FILE_MODE;
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttributeConstants;
-import nl.uva.vlet.exception.VlAuthenticationException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.VFS;
 import nl.uva.vlet.vfs.VFSFactory;
-import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 
 public class SftpFSFactory extends VFSFactory
 {
@@ -94,15 +96,15 @@ public class SftpFSFactory extends VFSFactory
         if (port<=0) 
             port=VRS.DEFAULT_SSH_PORT;
         
-        Debug("Server     ="+info.getHostname()+":"+info.getPort());
-        Debug("User       ="+info.getUsername()); 
+        debugPrintf("Server     =%s\n",info.getHostname()+":"+info.getPort());
+        debugPrintf("User       =%s\n",info.getUsername()); 
         
         //***
         // be carefull with the passwd and passphrase fields ! 
         //***
         
-        Debug("passwd     ="+((info.getPassword()!=null)?"yes":"no"));
-        Debug("passphrase ="+((info.getPassphrase()!=null)?"yes":"no"));
+        debugPrintf("passwd     =%s\n",((info.getPassword()!=null)?"yes":"no"));
+        debugPrintf("passphrase =%s\n",((info.getPassphrase()!=null)?"yes":"no"));
         
         SftpFileSystem server=SftpFileSystem.createFor(context,info);
         
@@ -111,9 +113,9 @@ public class SftpFSFactory extends VFSFactory
     
      
 
-    private void Debug(String msg)
+    private void debugPrintf(String format,Object... args)
     {
-        Global.debugPrintln(this,msg); 
+        ClassLogger.getLogger(SftpFSFactory.class).debugPrintf(format,args); 
     }
     
     /**

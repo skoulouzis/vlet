@@ -38,7 +38,7 @@ import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
 
-import nl.uva.vlet.Global;
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringHolder;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
@@ -65,7 +65,6 @@ import nl.uva.vlet.vrs.net.VOutgoingTunnelCreator;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.HostKeyRepository;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -82,9 +81,15 @@ import com.jcraft.jsch.UserInfo;
 public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCreator, VShellChannelCreator
 {
     // === class stuff
-    
+    private static ClassLogger logger; 
     private static Hashtable<String, SftpFileSystem> servers = new Hashtable<String, SftpFileSystem>();
 
+    static
+    {
+        logger=ClassLogger.getLogger(SftpFileSystem.class);
+        //logger.setLevelToDebug();
+    }
+    
     private static String createServerID(String host, int port, String user)
     {
         // must use default port in ServerID ! 
@@ -171,7 +176,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
         public String uiPromptPassfield(String message)
     	{
-           
             StringHolder secretHolder=new StringHolder(null); 
             
             boolean result=getVRSContext().getUI().askAuthentication(message,
@@ -183,7 +187,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                 return null;
         }
 
-
         public void showMessage(String message)
         {
             if (getAllowUserInterAction()==false)
@@ -194,7 +197,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             {
                 getVRSContext().getUI().showMessage(message);
             }
-            
         }
         
         public boolean promptYesNo(String message)
@@ -207,7 +209,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             {
                 return getVRSContext().getUI().askYesNo("Yes or No?",message, false);
             }
-        	
         }
     }
     
@@ -260,10 +261,8 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     // ======================================================================= 
     
     // === instanceSSH_FX_OK
-
     //private String hostname = null;
     //private int port = DEFAULT_SSH_PORT;
-    
 
     private ChannelSftp sftpChannel;
 
@@ -285,24 +284,18 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     
     private void init(ServerInfo info) throws VlException
     {
-        Debug("init for:" + info.getUsername() + "@" + getHostname() + ":" + getPort());
+        logger.debugPrintf(">>> init for: %s@%s:%d\n",info.getUsername(),getHostname(),getPort());
 
         this.userInfo = new VLUserInfo(); 
-        
         this.serverID = createServerID(getHostname(), getPort(), info.getUsername());
-
         this.connect(); 
     }
 
-    /**
-     *  
-     */
     public SftpFileSystem(VRSContext context,ServerInfo info, VRL location) throws VlException
     {
     	super(context,info);
-    	
         init(info);
-        Debug("New:" + this);
+        logger.debugPrintf("new SftpFileSystem():%s\n",this);
     }
 
     public String getUsername()
@@ -370,7 +363,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
         VRL vrl = new VRL(VRS.SFTP_SCHEME, user, host, port, path);
 
-        Debug("getPath:" + path);
+        logger.debugPrintf("getPath():%s\n",path);
         
         SftpATTRS attrs = null;
         
@@ -432,17 +425,14 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                          return new SftpDir(this, vrl);
                      }
                  }
-                 
              }
              catch (Exception e)
              {
-                 Debug("??? Exception when resolving link:"+vrl+" Exception="+e); 
+                 logger.logException(ClassLogger.WARN,e, "Exception when resolving link:%s\n",vrl); 
              }
         }
-        
         // default: return as file
         return new SftpFile(this, vrl);
-       
     }
 
     public void myDispose()
@@ -455,18 +445,16 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
           }
           catch (VlException e) 
           {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+              logger.logException(ClassLogger.INFO,e, "Exception during disconnect().\n");  
           }
           
           servers.remove(this);
-          
         }
     }
 
     public String[] list(String path) throws VlException
     {
-        Debug("listing:" + path);
+        logger.debugPrintf("listing:%s\n",path);
         
         try
         {
@@ -501,8 +489,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                 }
                 else
                 {
-                    Global.errorPrintln(this,"ls() returned unknown entry[" + index + "]="
-                            + entry.getClass().getCanonicalName());
+                    logger.warnPrintf("ls() returned unknown entry[%d]=%s\n",index,entry.getClass().getCanonicalName());
                     childs[index] = null;
                 }
 
@@ -510,13 +497,11 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             }
 
             return childs;
-
         }
         catch (SftpException e)
         {
             throw convertException(e,"Could not list contents of remote path:"+path);
         }
-
     }
 
     private void checkState() throws VlException
@@ -527,9 +512,8 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             {
                if (this.session.isConnected() == false)
                {
-                   Global.errorPrintln(this, "Session disconnected: reconnecting:"
-                           + this);
-                 
+                   // not really an error, reconnect usually succeeds. If reconnect fails -> throw exception 
+                   logger.errorPrintf("Session disconnected: reconnecting:%s\n",this); 
                    session = jschInstance.getSession(userInfo.getUsername(), getHostname(),
                            getPort());
                    session.setUserInfo(userInfo);
@@ -544,9 +528,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                        
                if  ((this.sftpChannel==null) || this.sftpChannel.isConnected()==false)
                {
-                   Global.errorPrintln(this, "Channel closed: reconnecting:"
-                           + this);
- 
+                   logger.errorPrintf("Channel closed: reconnecting:%s\n",this); 
                    this.sftpChannel = (ChannelSftp) session.openChannel("sftp");
                    sftpChannel.connect();
                 }
@@ -564,8 +546,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
     public boolean existsPath(String path, boolean checkDir) throws VlException
     {
-    	Debug("existsPath:"+path); 
-    	
         try
         {
             synchronized(serverMutex)
@@ -616,17 +596,16 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                 		}
                 	}
                 }
-            } 
+            } // synchronized
         }
-        
         catch (Exception e)
         {
             if (e instanceof SftpException)
             {
                SftpException ex=(SftpException)e;
                
-               //Global.messagePrintln(this,"after existsPath, session="+this.session.isConnected());
-               //Global.messagePrintln(this,"after existsPath, channel="+this.sftpChannel.isConnected());
+               //logger.messagePrintln(this,"after existsPath, session="+this.session.isConnected());
+               //logger.messagePrintln(this,"after existsPath, channel="+this.sftpChannel.isConnected());
                
                // SftpException reason 2=no such file ! 
                if (ex.id==2) 
@@ -641,13 +620,12 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     {
         try
         {
-            
            synchronized(serverMutex)
            {
         	   checkState(); 
                // jCraft has a tranfer interface ! 
-               SftpTransferMonitor monitor=new SftpTransferMonitor(transfer); 
-              this.sftpChannel.put(localfilepath,remotefilepath,monitor);
+        	   SftpTransferMonitor monitor=new SftpTransferMonitor(transfer); 
+        	   this.sftpChannel.put(localfilepath,remotefilepath,monitor);
            }
         }
         catch(Exception e)
@@ -691,7 +669,8 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         }
         catch (Exception e)
         {
-        	; // ignore  
+            // ok.
+        	logger.logException(ClassLogger.DEBUG,e,"No attributes for (direectory doesn't exists):%s\n",dirpath);   
         }
 
         // exists:  
@@ -722,29 +701,9 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         }
     }
 
-    private void checkAndCreateParentDir(String dirname, boolean force) throws VlException
-	{
-		SftpATTRS parentAttrs=null; 
-		
-		try
-        {
-        	// check existing parent: 
-            parentAttrs = this.getSftpAttrs(dirname,force);
-        }
-        catch (Exception e)
-        {
-        	; // ignore 
-        }
-        
-        // create parent first 
-        if (parentAttrs==null)
-        	createDir(dirname,force); 
-	}
-
 	public VFile createFile(String filepath, boolean force) throws VlException
     {
         SftpATTRS attrs=null;
-        
         // checkAndCreateParentDir(VRL.dirname(filepath),force); 
         
         try
@@ -776,16 +735,16 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         // create new: 
         // write null bytes
         byte nulbuf[] = new byte[0];
-
-        OutputStream out;
         
         try
         {
+            OutputStream output; 
+            
         	synchronized(this.serverMutex)
         	{
         		checkState(); 
 
-        		OutputStream output= this.sftpChannel.put(filepath,ChannelSftp.OVERWRITE);
+        		output= this.sftpChannel.put(filepath,ChannelSftp.OVERWRITE);
             	output.write(nulbuf);
             	output.flush();
             	output.close();
@@ -807,7 +766,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         {
 			throw this.convertException(e,"Could not create file:"+filepath);
 		}
-
     }
    
     public SftpATTRS getSftpAttrs(String filepath) throws VlException
@@ -841,19 +799,9 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         }
     }
 
-    /*public int isOwner()
-     {
-     SftpATTRS attrs=getSftpAttrs(path);
-     attrs.getPermissions();
-     attrs.getUId(); 
-
-     }*/
-
     public SftpATTRS getSftpAttrs(String path,boolean resolveLink) throws VlException
     {
-    	Debug("getSftpAttrs:"+path); 
-    	
-        try 
+       try 
         {
             synchronized(serverMutex)
             {
@@ -875,12 +823,10 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             		else
             			return sftpChannel.stat(path);
             	}
-
             }
         }
         catch (Exception e)
         {
-        	
         	//System.err.println("Exception when statting:"+path);
             throw convertException(e,"Could not stat remote path:"+path);
         }
@@ -888,8 +834,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
     private ChannelSftp createNewFTPChannel() throws VlException
 	{
-    	Debug("createNewChannel:"+this); 
-    	
 		try
 		{
 	    	ChannelSftp channel;
@@ -1106,10 +1050,8 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         else
             newPath = newName;
 
-        Global.infoPrintln(this,"rename:" + path + "->" + newPath);
+        logger.infoPrintf("rename:'%s' -> '%s'\n",path,newPath);
         
-        Debug("rename:" + path + "->" + newPath);
-
         try
         {
             synchronized(serverMutex)
@@ -1144,13 +1086,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     // ======================================================================= 
     // Misc. 
     // =======================================================================
-
-    private static void Debug(String msg)
-    {
-    	//Global.errorPrintln(SFTPServer.class,msg);
-        Global.debugPrintln(SftpFileSystem.class,msg);
-    }
-    
     
     private static String getJschErrorString(int id)
     {
@@ -1196,7 +1131,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
                 + "Channel connected=" + sftpChannel.isConnected() + "\n"
                 + "Session connected=" + session.isConnected() + "\n";
            
-            //Global.messagePrintln(this,"sftp error="+getJschErrorString(ex.id));
+            //logger.messagePrintln(this,"sftp error="+getJschErrorString(ex.id));
            
            if (ex.id==1)
                return new VlException(message+"End of file error",reason,e); 
@@ -1236,9 +1171,9 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         {
             if ((server = servers.get(serverID)) == null)
             {
-                Debug("Adding new SFTP Server:" + info.getID());
+                logger.debugPrintf("Creating new SFTP Server:%s\n",info.getID());
 
-                //Global.messagePrint("SFTPServer", ">>> Adding new SFTP Server:"
+                //logger.messagePrint("SFTPServer", ">>> Adding new SFTP Server:"
                 //        + info);
 
                 server = new SftpFileSystem(context,info,info.getServerVRL());
@@ -1372,7 +1307,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     
     public VAttribute getAttribute(VFSNode node,SftpATTRS attrs, String name, boolean isDir, boolean update) throws VlException
     {
-        Debug("getAttribute for:"+node.getPath()+":"+name); 
         
         //Optimization: only update if a SftpAttribute AND an update is requested: 
         if (name==null) 
@@ -1495,7 +1429,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 	{
         this.jschInstance = new JSch();
         ServerInfo info=this.getServerInfo();
-        String sshdir=Global.getUserHome()+"/.ssh";
+        String sshdir=getVRSContext().getConfigManager().getUserHomeLocation().getPath()+"/.ssh";
         String idFile=sshdir+"/"+getSSHIndentity();// check multiple files ? 
         try
         {
@@ -1510,8 +1444,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         }
         catch (Exception e)
         {
-        	Global.errorPrintln(this,"Error initializing jCraft SSH:"+e);
-        	Global.errorPrintStacktrace(e); 
+        	logger.logException(ClassLogger.ERROR,e,"Error initializing jCraft SSH:"+e);
         }
         
         // System.out.println("s:" + server + " p:" + port + " u:" + user);
@@ -1533,7 +1466,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             //channel.setOutputStream(new OutputLog());
             this.sftpChannel = createNewFTPChannel(); 
             
-            Debug("Connected to:" + getHostname() + ":" + getPort());
+            logger.debugPrintf("Connected to:%s:%d\n",getHostname(),getPort());
          
             // valid authentication 
             info.setHasValidAuthentication(true);
@@ -1547,7 +1480,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             	// can not get pwd() ? 
     	         throw convertException(e);
     		}
-            Debug("defaultHome="+defaultHome); 
+            logger.debugPrintf("defaultHome=%s\n",defaultHome);  
         }
         catch (JSchException e)
         {
@@ -1555,17 +1488,18 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             info.store(); // Update in registry !
             throw convertException(e);
         }
-		
         
         try
         {
-      	   HostKeyRepository hkr=jschInstance.getHostKeyRepository();
+            // ~/.ssh/known_hosts
+            //HostKeyRepository hkr=jschInstance.getHostKeyRepository();
        	   HostKey hk=session.getHostKey();
+       	   logger.debugPrintf("Got hostkey for host:%s='%s'\n",getHostname(),hk);
+       	   // check hostkey ? 
         }
         catch (Exception e)
         {
-           Global.errorPrintln(this,"Error initializing jCraft SSH:"+e);
-      	   Global.errorPrintStacktrace(e); 
+            logger.logException(ClassLogger.ERROR,e,"Error initializing jCraft SSH:"+e);
         }
 	}
 
@@ -1706,14 +1640,14 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             {
                 if (StringUtil.equalsIgnoreCase(optStr,s))
                 {
-                    Global.warnPrintln(this,"Outgoing port forwarding already exists:"+s); 
+                    logger.warnPrintf("Outgoing port forwarding already exists:%s\n",s); 
                     return; 
                 }
             }
             
             //jsch doesn it all: 
             this.session.setPortForwardingL(localPort,remoteHost,remotePort);
-            Global.errorPrintln(this,"New SSH tunnel="+optStr); 
+            logger.errorPrintf("New SSH tunnel=%s\n",optStr); 
             
         }
         catch (JSchException e)
@@ -1739,8 +1673,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     }
      
     
-    /** Creates a new outgoing SSH tunnel and return the local tunnel port 
-     * @throws VlException */ 
+    /** Creates a new outgoing SSH tunnel and return the local tunnel port. */
     public int createOutgoingTunnel(String bdiiHost, int bdiiPort) throws VlException
     {
         VlException lastEx=null;  
@@ -1758,7 +1691,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             catch (VlException e)
             {
                 lastEx=e; 
-                Global.errorPrintln(this,"Failed to create new local tunnel port:"+lport+"\n"+e); 
+                logger.logException(ClassLogger.ERROR,e,"Failed to create new local tunnel port:%d\n",lport);  
             }
         }
         
@@ -1771,6 +1704,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     public static int getFreeLocalPort()
     {
         // use randomizer for now: (is much faster!) 
+        // todo: add to config options. 
         int offset=10000; 
         int max=65535;
         int port=0;
@@ -1789,7 +1723,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     public SSHChannel createShellChannel(VRL optLocation) throws VlException
     {
         SSHChannelOptions options = new SSHChannelOptions();
-         
         
         SSHChannel sshChannel = new SSHChannel(vrsContext,
                 getUsername(),
