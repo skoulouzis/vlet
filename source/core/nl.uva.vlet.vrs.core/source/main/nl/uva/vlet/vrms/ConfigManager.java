@@ -60,23 +60,23 @@ public class ConfigManager
 {
     private static ClassLogger logger;
     
-	/** Property configuration from VLET_INSTALL/etc/vletrc.prop */ 
-    public static int CONFIG_INSTALL=0x01<<0;
-    
-    /** Property configuration from environment variable ${ENV_VAR}  */ 
-    public static int CONFIG_ENVVAR =0x01<<1;
-    
-    /** Property configuration from ~/.vletrc/vletrc.prop */ 
-    public static int CONFIG_USER   =0x01<<2;
-    
-    /**
-     * Property configuration from System.getProperty() 
-     * (specified on command line at startup) 
-     */ 
-    public static int CONFIG_SYSTEM =0x01<<3; 
-    
-    /** Property configuration from VRSContext. Set programmatically */ 
-    public static int CONFIG_CONTEXT=0x01<<4; 
+//	/** Property configuration from VLET_INSTALL/etc/vletrc.prop */ 
+//    public static int CONFIG_INSTALL=0x01<<0;
+//    
+//    /** Property configuration from environment variable ${ENV_VAR}  */ 
+//    public static int CONFIG_ENVVAR =0x01<<1;
+//    
+//    /** Property configuration from ~/.vletrc/vletrc.prop */ 
+//    public static int CONFIG_USER   =0x01<<2;
+//    
+//    /**
+//     * Property configuration from System.getProperty() 
+//     * (specified on command line at startup) 
+//     */ 
+//    public static int CONFIG_SYSTEM =0x01<<3; 
+//    
+//    /** Property configuration from VRSContext. Set programmatically */ 
+//    public static int CONFIG_CONTEXT=0x01<<4; 
 
     static
     {
