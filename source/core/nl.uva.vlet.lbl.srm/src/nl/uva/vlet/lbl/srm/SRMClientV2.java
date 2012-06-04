@@ -2286,7 +2286,13 @@ public class SRMClientV2 extends SRMClient
         // Connection Error;
         if ((causeStr.contains("Connection refused")) || (causeStr.contains("No route to host")))
         {
-            return SRMException.createConnectionException(message + "\nConnection Error:" + this.srmUri + "\nReason="
+            return SRMException.createConnectionException(message + "\nConnection error, server might be down or unreachable:" + this.srmUri + "\nReason="
+                    + cause.getMessage(), cause);
+        }
+        
+        if (causeStr.contains("Connect timed out") )
+        {
+            return SRMException.createConnectionException(message + "\nConnection setup timed out, server might be down or unreachable." + this.srmUri + "\nReason="
                     + cause.getMessage(), cause);
         }
 

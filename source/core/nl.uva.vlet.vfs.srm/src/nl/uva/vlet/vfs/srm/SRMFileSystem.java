@@ -47,16 +47,15 @@ import java.util.Vector;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
-import nl.uva.vlet.GlobalUtil;
 import nl.uva.vlet.data.StringHolder;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.ResourceAlreadyExistsException;
 import nl.uva.vlet.exception.ResourceCreationFailedException;
 import nl.uva.vlet.exception.ResourceNotFoundException;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.lbl.srm.SRMClient;
 import nl.uva.vlet.lbl.srm.SRMClientV1;
 import nl.uva.vlet.lbl.srm.SRMClientV2;
@@ -77,11 +76,9 @@ import nl.uva.vlet.vfs.VThirdPartyTransferable;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrl.VRLUtil;
 import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSClient;
 import nl.uva.vlet.vrs.VRSContext;
-import nl.vlet.uva.grid.globus.GlobusCredentialProvider;
 import nl.vlet.uva.grid.globus.GlobusUtil;
 
 import org.apache.axis.types.URI;
@@ -237,12 +234,17 @@ public class SRMFileSystem extends FileSystemNode
                 return; // already connected
         GridProxy prox=this.vrsContext.getGridProxy(); 
         
+        int port=getPort(); 
+        if (port<=0) 
+            port=VFS.getSchemeDefaultPort(VFS.SRM_SCHEME); 
+        String host=getHostname(); 
+        
         if (prox.isValid() == false)
             throw new nl.uva.vlet.exception.VlAuthenticationException("Invalid grid proxy");
         try
         {
             // check SRM V2 Client:
-            srmClient = new SRMClientV2(getHostname(), getPort(), false);
+            srmClient = new SRMClientV2(host,port, false);
             
             // Update Connection time out. 
             srmClient.setConnectionTimeout(this.vrsContext.getConfigManager().getSocketTimeOut());
@@ -259,7 +261,7 @@ public class SRMFileSystem extends FileSystemNode
         }
         catch (Exception e)
         {
-            throw convertException("Connection failed to:" + getHostname() + ";" + getPort(), e);
+            throw convertException("Could not connect to:" + host + ":" + port, e);
         }
     }
 
@@ -1498,8 +1500,7 @@ public class SRMFileSystem extends FileSystemNode
             {
                 return new ResourceAlreadyExistsException(message, cause);
             }
-
-            return new VlException("SRMException", message + "\nErrorcode=" + "\n" + ex.getMessage(), ex);
+            return new VlException("SRMException", message+"\n"+ex.getMessage(), ex);
         }
 
         String errorstr = cause.getMessage();
@@ -1510,10 +1511,12 @@ public class SRMFileSystem extends FileSystemNode
         if ((errorstr.contains("Connection refused")) || (errorstr.contains("No route to host")))
 
         {
-            return new nl.uva.vlet.exception.VlConnectionException(message + "\n" + "Connection Error:"
+            return new nl.uva.vlet.exception.VlConnectionException(message + "\n" + "Connection error. Server might be down or not reachable:"
                     + this.getHostname() + "\n" + "Reason:" + cause.getMessage(), cause);
         }
 
+       
+        
         // Check Standard Globus Exceptions:
         VlException globusEx = GlobusUtil.checkException(message, cause);
 
