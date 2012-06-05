@@ -29,8 +29,8 @@ import java.util.regex.Pattern;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.ResourceCreationFailedException;
 import nl.uva.vlet.exception.ResourceTypeNotSupportedException;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSClient;
@@ -707,6 +707,15 @@ public final class VFSClient extends VRSClient implements Serializable
     public VFileSystem openFileSystem(VRL location) throws VlException
     {
         return this.getVRSContext().openFileSystem(location);  
+    }
+
+    /**
+     * Returns user home location. When running in service or applet mode, this might not always
+     * be a user writeable location. 
+     */
+    public VDir getUserHome() throws VlException
+    {
+        return getDir(getUserHomeLocation()); 
     }
 
 
