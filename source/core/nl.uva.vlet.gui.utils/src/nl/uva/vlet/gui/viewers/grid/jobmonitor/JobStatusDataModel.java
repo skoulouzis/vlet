@@ -38,6 +38,7 @@ import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel;
+import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
@@ -272,7 +273,18 @@ public class JobStatusDataModel extends ResourceTableModel
         // add extra header attributes 
         if (list.size()>n)
             this.setAllHeaders(list);
-    }       
+    }
+
+	public VRL getJobVRL(String jobid) throws VRLSyntaxException 
+	{
+		RowData row = this.getRow(jobid);
+		if (row==null)
+			return null; 
+		VAttribute attr = row.getAttribute(ATTR_JOBVRL);
+		if (attr==null)
+			return null; 
+		return attr.getVRL(); 
+	}       
     
     
 }

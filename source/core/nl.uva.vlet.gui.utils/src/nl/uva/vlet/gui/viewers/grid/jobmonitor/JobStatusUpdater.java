@@ -29,6 +29,7 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.tasks.ActionTask;
+import nl.uva.vlet.vrl.VRL;
 
 public class JobStatusUpdater
 {
@@ -132,9 +133,13 @@ public class JobStatusUpdater
             try
             {
                 String newStatus=getJobUtil().getStatus(id,updateStatus);
+                VRL vrl=getJobUtil().getJobVRL(id); 
+                
                 logger.infoPrintf(" - new status of '%s'=%s\n",id,newStatus);
                 this.jobStatusModel.setStatus(id,newStatus);
-                   
+                
+                this.jobStatusModel.setValue(id,JobStatusDataModel.ATTR_JOBVRL,vrl.toString());
+                
                 // Auto Update Attribute Names (Update All Headers)  
                 String newAttrNames[]=getJobUtil().getJobAttrNames(id); 
                 // update headers
@@ -171,5 +176,10 @@ public class JobStatusUpdater
         return jobUtil; 
         
     }
+
+	public VRL getJobVrl(String jobid) throws VlException 
+	{
+		return getJobUtil().getJobVRL(jobid);
+	}
     
 }

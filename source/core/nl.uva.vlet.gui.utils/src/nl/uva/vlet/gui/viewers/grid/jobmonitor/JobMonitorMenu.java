@@ -10,23 +10,26 @@ import nl.uva.vlet.gui.panels.resourcetable.TablePopupMenu;
 
 public class JobMonitorMenu extends TablePopupMenu
 {
-    public static String REFRESH="Refresh"; 
-    
     private static final long serialVersionUID = 4730955073412271989L;
     private JMenuItem actionItem;
 
+    private JMenuItem openJobItem;
+    
     public JobMonitorMenu(JobMonitorController controller)
     {
         super();
         
-        actionItem=new JMenuItem("Refresh");
+        actionItem=new JMenuItem("Refresh All");
         this.add(actionItem);
-        actionItem.setActionCommand(REFRESH); 
+        actionItem.setActionCommand(JobMonitor.ACTION_REFRESH_ALL); 
+        actionItem.addActionListener(controller); 
         
         this.add(new JSeparator());
-        actionItem=new JMenuItem("Refresh");
-        this.add(actionItem);
-        actionItem.addActionListener(controller); 
+        openJobItem=new JMenuItem("Open Job");
+        this.add(openJobItem);
+        openJobItem.setActionCommand(JobMonitor.ACTION_OPEN_JOB); 
+        openJobItem.addActionListener(controller); 
+        openJobItem.setEnabled(false); 
         
         this.add(new JSeparator()); 
     }
@@ -34,6 +37,18 @@ public class JobMonitorMenu extends TablePopupMenu
     @Override
     public void updateFor(ResourceTable table, MouseEvent e,boolean canvasMenu)
     {
+    	String rowKey=table.getKeyUnder(e.getPoint()); 
+    	if (rowKey==null)
+    	{
+    		openJobItem.setEnabled(true); 
+    		rowKey="";
+    	}
+    	else
+    	{
+    		openJobItem.setEnabled(true); 
+    	}
+    	
+		openJobItem.setActionCommand(JobMonitor.ACTION_OPEN_JOB+","+rowKey); 
     }
     
 }

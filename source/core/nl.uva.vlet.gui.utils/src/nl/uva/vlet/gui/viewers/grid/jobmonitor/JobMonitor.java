@@ -36,6 +36,7 @@ import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
+import nl.uva.vlet.gui.viewers.ViewerEvent;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.presentation.Presentation;
@@ -52,9 +53,10 @@ public class JobMonitor extends ViewerPlugin
 {
     private static final long serialVersionUID = -7576499812836308887L;
 
-    public static String ACTION_REFRESH = "refresh";
+    public static String ACTION_REFRESH_ALL = "refresh";
     public static String ACTION_START = "start";
     public static String ACTION_STOP = "stop";
+    public static String ACTION_OPEN_JOB = "openJob";
 
     /** .vljids File Type */
     public static String mimetypes[] =
@@ -229,7 +231,7 @@ public class JobMonitor extends ViewerPlugin
                             refeshMi = new JMenuItem();
                             viewMenu.add(refeshMi);
                             refeshMi.setText("refresh");
-                            refeshMi.setActionCommand(ACTION_REFRESH);
+                            refeshMi.setActionCommand(ACTION_REFRESH_ALL);
                             refeshMi.addActionListener(this.controller);
                         }
                     }
@@ -315,7 +317,8 @@ public class JobMonitor extends ViewerPlugin
 	public NavigationBar getNavigationBar()
 	{
 		return this.locationToolbar;
-		
 	}
+	
+	
     
 }

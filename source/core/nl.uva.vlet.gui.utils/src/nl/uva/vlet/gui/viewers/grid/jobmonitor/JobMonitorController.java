@@ -35,6 +35,7 @@ import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
+import nl.uva.vlet.gui.viewers.ViewerEvent;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.vrl.VRL;
 
@@ -88,13 +89,26 @@ public class JobMonitorController implements ActionListener
         
         String cmdStr=e.getActionCommand(); 
         
-        if (StringUtil.equals(cmdStr,JobMonitor.ACTION_REFRESH))
-            update(true);
+        String strs[]=cmdStr.split(","); 
+        cmdStr=strs[0];
+        String argsStr=null; 
         
-        if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.REFRESH))
+        if (strs.length>1)
+        	argsStr=strs[1];
+        
+        if (StringUtil.equals(cmdStr,JobMonitor.ACTION_REFRESH_ALL))
+        {
+            update(true);
+        }
+        else if (StringUtil.equals(cmdStr,JobMonitor.ACTION_OPEN_JOB))
+        {
+        	openJob(argsStr); 
+        }
+        else if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.REFRESH))
+        {
             update(true); 
-
-        if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.LOCATION_CHANGED))
+        }
+        else if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.LOCATION_CHANGED))
         {
         	String txt = monitor.getNavigationBar().getLocationText();
         	
@@ -110,15 +124,29 @@ public class JobMonitorController implements ActionListener
 
     }
 
-    private static void debugPrintf(String format,Object... args)
+    public void openJob(String jobid) 
+    {
+    	try
+    	{
+	    	debugPrintf("Open Job:%s\n",jobid); 
+	    	VRL vrl=this.monitor.getJobMonitorDataModel().getJobVRL(jobid);
+	    	if (vrl!=null)
+	    		this.fireViewVRLEvent(vrl); 
+    	}
+    	catch (Throwable t)
+    	{
+    		handle("Couldn't get VRL of job:"+jobid,t); 
+    	}
+	}
+
+	private static void debugPrintf(String format,Object... args)
     {
         Global.errorPrintf("JobMonitor",format,args); 
     }
 
     public void stopViewer()
     {
-        
-        
+    	
     }
 
     public void updateLocation(VRL loc)
@@ -185,7 +213,7 @@ public class JobMonitorController implements ActionListener
         catch (Throwable t)
         {
             this.monitor.setViewerTitle("*** Error loading file"); 
-            ExceptionForm.show(t); 
+            
             handle("Couldn't load Job ID File:"+loc, t); 
         }
         finally
@@ -202,6 +230,7 @@ public class JobMonitorController implements ActionListener
     
     public void handle(String action,Throwable t)
     {
+    	ExceptionForm.show(t); 
         System.err.println("Exception:"+action); 
         t.printStackTrace(System.err); 
     }
@@ -215,4 +244,9 @@ public class JobMonitorController implements ActionListener
     {
         this.monitor.getJobMonitorDataModel().update(fullUpdate);  
     }
+    
+    public void fireViewVRLEvent(VRL vrl)
+	{
+    	monitor.fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(vrl));
+	}
 }

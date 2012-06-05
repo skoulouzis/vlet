@@ -92,6 +92,7 @@ public class JobUtil
             }
         }
         
+        // guess first: don't forget to update the actual VRL as returned by teh VNode!!!
         VRL vrl=createJobVrl(jobid); 
         VNode jobNode = vrsClient.openLocation(vrl); 
     
@@ -116,8 +117,6 @@ public class JobUtil
         return job; 
     }
 
-
-
 	public String[] getJobAttrNames(String id) throws VlException
     {
         return getJob(id).getJobAttributeNames(); 
@@ -132,5 +131,15 @@ public class JobUtil
     {
         this._cache.clear(); 
     }
-    
+
+    // return actual Job VRL. 
+	public VRL getJobVRL(String id) throws VlException 
+	{
+		VJob job = getJob(id);
+		if (job==null)
+			return null;
+		return job.getVRL(); 
+	}
+	
 }
+	
