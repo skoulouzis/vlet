@@ -11,11 +11,10 @@
 	<classpathentry kind="lib" path="lib/glite-wms-wmproxy-api-java.jar"/>
 	<classpathentry kind="lib" path="lib/glite-jdl-api-java.jar"/>
 	<classpathentry kind="lib" path="lib/glite-security-voms-api-java.jar"/>
-	<classpathentry kind="lib" path="lib/classad.jar"/>
-	<classpathentry kind="lib" path="lib/lb.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/classad.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lb.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vrs.core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.utils"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.gui.vbrowser"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.grid.globus"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
