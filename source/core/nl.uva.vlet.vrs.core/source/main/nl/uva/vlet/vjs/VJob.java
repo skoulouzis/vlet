@@ -187,6 +187,22 @@ public abstract class VJob extends VCompositeNode implements VEditable
         return _jobAttrNames.toArray(); 
     }
     
+    // === VJob Outputs === 
+    
+    public boolean hasOutputs() throws VlException
+    {
+    	return false; 
+    }
+    
+    /** 
+     * Return job outputs after job has successfully finished. 
+     * Only if supported by the implementation.
+     */
+    public VRL[] getOuputVRLs() throws VlException
+    {
+    	return null; 
+    }
+    
 	// === VJob interface === 
 	
 //	/** Get list of Status string this Job supports */ 
