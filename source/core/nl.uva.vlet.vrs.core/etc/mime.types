@@ -539,7 +539,7 @@ application/vlet-type-definition      types TYPES
 # 
 ##
 # GLITE jobids: 
-application/glite-jobids            vljids VLJIDS
+application/glite-jobids            vljids VLJIDS jids jobids jobIds
 application/glite-jdl               jdl JDL
 
 ##
