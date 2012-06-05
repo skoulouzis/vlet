@@ -23,7 +23,24 @@
 
 package nl.uva.vlet.vrs;
 
-import static nl.uva.vlet.data.VAttributeConstants.*; 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ATTRIBUTE_NAMES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_CHARSET;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICONURL;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISCOMPOSITE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISEDITABLE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ISVLINK;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_MIMETYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PATH;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_RESOURCE_CLASS;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_RESOURCE_TYPES;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_SCHEME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_URI_FRAGMENT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_URI_QUERY;
 
 import java.net.URI;
 import java.net.URL;
@@ -32,9 +49,8 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.util.MimeTypes;
 import nl.uva.vlet.util.ResourceLoader;
 import nl.uva.vlet.vfs.VDir;
@@ -45,7 +61,7 @@ import nl.uva.vlet.vrl.VRL;
 /**
  * The VNode class, the super class of all resource nodes in the VRS package.    
  * It can be seen as a handler object, for example a reference to 
- * a (remote) file or directory.  
+ * a (remote) file or directory or other generic resource.
  * Every VNode is associated with a VRL. 
  *  
  * @author P.T. de Boer
@@ -53,7 +69,6 @@ import nl.uva.vlet.vrl.VRL;
  * @see VFile
  * @see VDir
  */
-
 public abstract class VNode //implements IVNode
 {
     /**
@@ -74,6 +89,10 @@ public abstract class VNode //implements IVNode
             ATTR_MIMETYPE,
             ATTR_LOCATION
     };
+    
+    // ========================================================================
+    
+    // ========================================================================
     
     /** The URI Compatable VRL or which specified the resource location */ 
     private VRL _nodeVRL=null;  
@@ -250,29 +269,39 @@ public abstract class VNode //implements IVNode
    
    /**
     * Default charset for text resources 
-    * @throws VlIOException 
- * @throws VlException 
+    * @throws VlException 
     */ 
-   public String getCharSet() throws VlIOException, VlException
+   public String getCharSet() throws VlException
    {
        return ResourceLoader.CHARSET_UTF8;
    }
  
     /**
-     * Highlevel method to check whether the 
-     * node has the VComposite interface 
+     * Check whether this VNode implements the VComposite interface. 
      */ 
     public boolean isComposite()
     {
         return (this instanceof VComposite); 
     }
     
-    /** Get the names of the attributes this resource has */ 
+    /**
+     *Get the names of the all attributes this resource has.
+     *To get the subset of resource specific 
+     */ 
     public String[] getAttributeNames()
     {
         return attributeNames;
     }
-
+    
+    /** 
+     * Get the names of the resource specific attributes leaving out default attributes and
+     * optional super class attributes this resource has.
+     * This typically is the subset of getAttributeNames() minus super.getAttributeNames(); 
+     */ 
+    public String[] getResourceAttributeNames()
+    {
+        return null;
+    }
     /** 
      * Get all attributes defined by attributeNames 
      * @throws VlException 

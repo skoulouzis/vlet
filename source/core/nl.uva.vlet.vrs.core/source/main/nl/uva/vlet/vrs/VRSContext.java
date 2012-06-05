@@ -37,8 +37,8 @@ import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.data.OrdenedHashtable;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.error.InitializationError;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.util.bdii.BdiiService;
 import nl.uva.vlet.util.cog.GridProxy;
 import nl.uva.vlet.vfs.VFileSystem;
@@ -189,7 +189,10 @@ public class VRSContext implements Serializable
         vrsTransferManager=new VRSTransferManager(this); 
     }
  
-    /** Returns GridProxy object. Use this object to manipulate Grid Proxies */ 
+    /** 
+     * Returns GridProxy (wrapper) object. Use this object to manipulate Grid Proxies
+     * The GridProxy class is a wrapper for globus grid proxies. 
+     */ 
     public GridProxy getGridProxy()
     {
         if (_gridProxy==null)
@@ -198,7 +201,12 @@ public class VRSContext implements Serializable
         
         return _gridProxy;
     }
-
+    
+    /**
+     * Specify custom Grid Proxy to use for this context.
+     * Already authenticated resources won't be updated so use this method
+     * during initialization time.   
+     */
     public void setGridProxy(GridProxy prox)
     {
         this._gridProxy=prox;
@@ -208,16 +216,13 @@ public class VRSContext implements Serializable
             prox.setVRSContext(this); 
     }
 
-    /** Return initialized grid proxy as string. */ 
+    /** 
+     * Return initialized grid proxy as string. 
+     */ 
     public String getProxyAsString() throws VlException
     {
         return this.getGridProxy().getProxyAsString(); 
     }
-
-//    public void setProxyFromString(String proxyStr) throws VlException
-//    {
-//        this._gridProxy=new GridProxy(this,proxyStr); 
-//    }
 
     /**
      * Get the Registry object that this Context uses. 
@@ -253,7 +258,9 @@ public class VRSContext implements Serializable
         return virtualRoot; 
     }
     
-    /** Return Top Level Resource if it is MyVle */ 
+    /** 
+     * Return Top Level Resource if it is MyVle.  
+     */ 
     public synchronized MyVLe getMyVLe()
     {
         // if current root resource is MyVle, return that one 
@@ -911,8 +918,10 @@ public class VRSContext implements Serializable
     
     private Object bdiiMutex=new Object();
     
-    /** Returns BDII Service for this context 
-     * @throws VlException */ 
+    /** 
+     * Returns BDII Service for this context 
+     * @throws VlException
+     */ 
     public BdiiService getBdiiService() throws VlException
     {
         synchronized(bdiiMutex)

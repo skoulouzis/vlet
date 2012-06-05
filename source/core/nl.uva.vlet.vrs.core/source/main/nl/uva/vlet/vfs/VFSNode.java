@@ -288,7 +288,12 @@ public abstract class VFSNode extends VNode implements VRenamable, VEditable, VD
     {
         return false;
     }
-
+    
+    public String[] getResourceAttributeNames()
+    {   
+        return null; //getVFSAttributeNames()
+    }
+    
     /** Returns all default attributes names */
     public String[] getAttributeNames()
     {

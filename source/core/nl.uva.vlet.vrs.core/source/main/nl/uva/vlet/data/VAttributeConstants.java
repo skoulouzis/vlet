@@ -171,12 +171,15 @@ public class VAttributeConstants
 	/** Whether Job is running or not. */ 
 	public static final String ATTR_JOB_IS_RUNNING = "jobIsRunning";
 
+	///** Time of last status update */ 
+    //public static final String ATTR_JOB_ENTERED_TIME = "jobEnteredTime";
+
 	/** Time of last status update */ 
     public static final String ATTR_JOB_STATUS_UPDATE_TIME = "jobStatusUpdateTime";
 
     public static final String ATTR_JOB_SUBMISSION_TIME = "jobSubmissionTime";
     
-	public static final String ATTR_WMS_STATUS_TEXT = "wmsStatusText";
+	//public static final String ATTR_WMS_STATUS_TEXT = "wmsStatusText";
 	
 	/** Job ID as returned by the Job Manager */ 
 	public static final String ATTR_JOBID = "jobId";
@@ -278,6 +281,12 @@ public class VAttributeConstants
 
 	/** Status attribute, if implemented by resource */  
     public static final String ATTR_STATUS = "status";
+    
+    /**
+     * Extra status information. Human readable text/explanation about current job status. 
+     * For example WMS "Reason". 
+     */   
+    public static final String ATTR_JOB_STATUS_INFORMATION = "jobStatusInformation";
     
     /** Storage element used by LFC and SRM resources */ 
 	public static final String ATTR_STORAGE_ELEMENT = "storageElement";

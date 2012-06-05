@@ -23,6 +23,7 @@
 
 package nl.uva.vlet.vjs;
 
+import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
@@ -30,7 +31,6 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VCompositeNode;
 import nl.uva.vlet.vrs.VEditable;
-import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSContext;
 
 
@@ -41,13 +41,13 @@ import nl.uva.vlet.vrs.VRSContext;
  * 
  * A Status of a VJob is simplified and is limited to only one of tree:<br>
  * <ul> 
- * <li>Submitted: Pre execution 
- * <li>Running: Job is executing
- * <li>Terminated: Post execution or job has failed/canceled 
+ * <li>Submitted: Pre execution, job is being submitted to the queue or waiting in the queue.  
+ * <li>Running: Job is executing. The job is actually running on the Job (sub) System. 
+ * <li>Terminated: Post execution. Job has succeeded, has an error or is cancelled.  
  * </ul>
  * This simplification is done because not all JobManager systems support all kind 
  * of statuses.  
- * A Job is terminated if it already has executed or never will reach the status of Running. 
+ * A Job is terminated if it already executed or has failed. It will never will reach the status of Running. 
  * This could also mean that a job was Canceled or Aborted or the execution has failed. 
  * If it is not Running or not Terminated it is assumed the job has been Submitted
  * and is waiting for execution or is in the process of submission. 
@@ -57,7 +57,25 @@ import nl.uva.vlet.vrs.VRSContext;
  */
 public abstract class VJob extends VCompositeNode implements VEditable
 {
-	//====
+    // job only attribute names: 
+    static protected StringList _jobAttrNames; 
+    
+    static
+    {
+        _jobAttrNames=new StringList(new String[]{
+                VAttributeConstants.ATTR_STATUS,
+                VAttributeConstants.ATTR_JOB_IS_RUNNING,
+                VAttributeConstants.ATTR_JOB_HAS_TERMINATED,
+                VAttributeConstants.ATTR_JOB_HAS_ERROR,
+                VAttributeConstants.ATTR_ERROR_TEXT,
+                VAttributeConstants.ATTR_JOB_STATUS_INFORMATION
+        }); 
+        
+    }
+    
+    //=========================================================================
+    //
+    //=========================================================================
 	
 	protected String id; 
 	
@@ -109,10 +127,10 @@ public abstract class VJob extends VCompositeNode implements VEditable
 		return null;
 	}
 	
-//    @Override
+    @Override
     public String[] getResourceTypes()
     {
-        // TODO Auto-generated method stub
+        // possible resource types:  JDL child, Job Output folder.
         return null;
     }
 	
@@ -143,16 +161,41 @@ public abstract class VJob extends VCompositeNode implements VEditable
         
         return super.getAttribute(name); 
     }
+    
+    public String[] getAttributeNames()
+    {
+        // merge attributes
+        String[] attrs = super.getAttributeNames(); 
+        StringList list=new StringList(attrs); 
+        list.add(getJobAttributeNames()); 
+        return list.toArray(); 
+    }
+    
+    public String[] getResourceAttributeNames()
+    {
+        return getJobAttributeNames();
+    }
+    
+    /**
+     * Return Job Specific Attribute names. 
+     * Override for implementation specific job attribute names.
+     *  
+     * @return String array of attribute names
+     */
+    public String[] getJobAttributeNames()
+    {
+        return _jobAttrNames.toArray(); 
+    }
+    
 	// === VJob interface === 
 	
 //	/** Get list of Status string this Job supports */ 
 //	public abstract String getPossibleStatuses() throws VlException;
 	
 	/**
-	 * Returns implemented depended status String. Possible value for the Status 
-	 * might differ between implementations.
-	 * Us the isRunnig/isTerminated/hasError methods for explicit status checking. 
-	 * 
+	 * Returns status String. This status string is implementation depended. 
+	 * Use the isRunnig(), isTerminated() and hasError() methods for explicit status checking. 
+	 * Current status supported at the VJOb level is {Running,Terminated,Error} 
 	 */
 	public abstract String getStatus() throws VlException; 
 	
@@ -162,7 +205,7 @@ public abstract class VJob extends VCompositeNode implements VEditable
 	/** 
 	 * Terminated means either successful execution or terminated with error
 	 * or it was cancelled. 
-	 * If hasTerminated==true it will not be running or has ran already. 
+	 * If hasTerminated==true it has finished or won't be running.  
 	 */ 
 	public abstract boolean hasTerminated() throws VlException;  
 
