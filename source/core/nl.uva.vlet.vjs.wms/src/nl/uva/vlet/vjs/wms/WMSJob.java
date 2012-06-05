@@ -35,6 +35,7 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
+import nl.uva.vlet.data.VAttributeType;
 import nl.uva.vlet.exception.ResourceException;
 import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VRLSyntaxException;
@@ -168,7 +169,7 @@ public class WMSJob extends VJob
         StringList names = new StringList(); 
         
         names.add(WMSConstants.ATTR_WMS_REASON);
-        names.add(WMSConstants.ATTR_WMS_EXPECTED_UPDATE);
+        //names.add(WMSConstants.ATTR_WMS_EXPECTED_UPDATE);
         names.add(WMSConstants.ATTR_WMS_DESTINATION);
         names.add(WMSConstants.ATTR_WMS_STATE_ENTERED_TIME);
         names.add(WMSConstants.ATTR_WMS_LAST_UPDATE_TIME);
@@ -215,8 +216,17 @@ public class WMSJob extends VJob
         else if ( (StringUtil.equals(name, WMSConstants.ATTR_JOB_SUBMISSION_TIME))
                   || (StringUtil.equals(name, WMSConstants.ATTR_WMS_STATE_ENTERED_TIME)) )
         {
-            StateEnterTimesItem date = getLBJobStatus().getStateEnterTimes()[0];
-            return VAttribute.createDateSinceEpoch(name, date.getTime().getTimeInMillis());
+            StateEnterTimesItem[] times = getLBJobStatus().getStateEnterTimes(); 
+
+            if ((times==null) || (times.length<=0))
+            {
+                return VAttribute.createFrom(VAttributeType.STRING,name,null); 
+            }
+            else
+            {
+                StateEnterTimesItem date = times[0]; 
+                return VAttribute.createDateSinceEpoch(name, date.getTime().getTimeInMillis());
+            }
         }
         // VJob "Status Update" time = WMS "
         else if ( (StringUtil.equals(name, WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME)) 
@@ -230,7 +240,11 @@ public class WMSJob extends VJob
         {
             return new VAttribute(name, getLBJobStatus().getDestination());
         }
-
+//        else if (StringUtil.equals(name, WMSConstants.ATTR_WMS_EXPECTED_UPDATE))
+//        {
+//            return new VAttribute(name, getLBJobStatus().get())
+//        }
+        
         return super.getAttribute(name);
     }
 

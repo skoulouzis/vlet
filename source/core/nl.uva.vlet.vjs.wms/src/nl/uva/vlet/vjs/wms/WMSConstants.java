@@ -35,7 +35,7 @@ public class WMSConstants
     public static final String ATTR_WMS_REASON =  "wmsReason"; 
     public static final String ATTR_JOB_STATUS_INFORMATION=VAttributeConstants.ATTR_JOB_STATUS_INFORMATION;
     
-    public static final String ATTR_WMS_EXPECTED_UPDATE = "wmsExpectedUpdate";
+    //public static final String ATTR_WMS_EXPECTED_UPDATE = "wmsExpectedUpdate";
     public static final String ATTR_WMS_DESTINATION = "wmsDestination";
     // WMS "State Entered" = VJob "Submission Time". 
     public static final String ATTR_WMS_STATE_ENTERED_TIME = "wmsStateEntered";
