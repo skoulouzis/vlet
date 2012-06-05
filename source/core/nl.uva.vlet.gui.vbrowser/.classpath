@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.gftp"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.lfc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vfs.srm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/nl.uva.vlet.vjs.wms"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
