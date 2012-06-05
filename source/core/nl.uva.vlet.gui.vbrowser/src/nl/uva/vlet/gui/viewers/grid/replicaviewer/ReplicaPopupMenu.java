@@ -38,13 +38,13 @@ public class ReplicaPopupMenu extends TablePopupMenu
 {
     private static final long serialVersionUID = 4937904778804370242L;
     
-    public static final String OPEN_PARENT     = "openParent"; 
-    public static final String DELETE          = "delete";
-    public static final String UNREGISTER         = "unregister";
+    public static final String OPEN_PARENT      = "openParent"; 
+    public static final String DELETE           = "delete";
+    public static final String UNREGISTER       = "unregister";
     public static final String KEEP             = "keep";
     public static final String DELETE_SELECTION = "deleteSelection";
     public static final String KEEP_SELECTION   = "keepSelection";
-    public static final String SHOW_PROPERTIES = "showProperties"; 
+    public static final String SHOW_PROPERTIES  = "showProperties"; 
     
     // Multi action item: is updated for Replica status 
     private JMenuItem actionItem;
