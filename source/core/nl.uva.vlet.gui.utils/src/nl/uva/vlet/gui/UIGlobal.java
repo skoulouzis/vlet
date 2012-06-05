@@ -260,6 +260,7 @@ public class UIGlobal
 
 	public static IMasterUI getMasterUI()
 	{
+	    // should be VBrowser
 		return UIGlobal.getVRSContext().getUI();
 	}
 
