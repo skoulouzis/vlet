@@ -27,7 +27,10 @@ import javax.swing.AbstractListModel;
 
 import nl.uva.vlet.data.StringList;
 
-public class HeaderModel extends AbstractListModel//<String> 
+/**
+ * Simple header model for the ResourceTable.  
+ */
+public class HeaderModel extends AbstractListModel//<String>// java 1.7 
 {
     private static final long serialVersionUID = -4513306632211174045L;
     
@@ -70,7 +73,7 @@ public class HeaderModel extends AbstractListModel//<String>
     
     private void init(String vals[])
     {
-        this.values=new StringList(vals); 
+        this.values=new StringList(vals);
     }
     
     public void setValues(StringList vals)
@@ -81,43 +84,58 @@ public class HeaderModel extends AbstractListModel//<String>
     
     private void init(StringList vals)
     {
-        this.values=vals.duplicate();  
+        this.values=vals.duplicate();
     }
 
     public String[] toArray()
     {
-        return this.values.toArray(); 
+        synchronized(values)
+        {
+            return this.values.toArray(); 
+        }
     }
 
     public int indexOf(String name)
     {
-        return this.values.indexOf(name); 
+        synchronized(values)
+        {
+            return this.values.indexOf(name);
+        }
     }
 
-    /** Inserts newHeader after 'header' of before 'header'.
-     * Fires intervalAdded event */  
+    /**
+     * Inserts newHeader after 'header' of before 'header'.
+     * Fires intervalAdded event
+     */  
     public int insertHeader(String header, String newHeader,
             boolean insertBefore)
     {
         int index=-1; 
+        synchronized(this.values)
+        {
         
-        if (insertBefore)
-            index=this.values.insertBefore(header,newHeader); 
-        else
-            index=this.values.insertAfter(header,newHeader);
+            if (insertBefore)
+                index=this.values.insertBefore(header,newHeader); 
+            else
+                index=this.values.insertAfter(header,newHeader);
+        }
         
         this.fireIntervalAdded(this,index,index);
-        
         return index; 
     }
 
     public int remove(String value)
     {
-        int index=this.indexOf(value); 
-        if (index<0)
-            return -1;
+        int index; 
+        synchronized(values)
+        {
+            index=this.indexOf(value); 
+            if (index<0)
+                return -1;
+            
+            this.values.remove(index);
+        }
         
-        this.values.remove(index); 
         this.fireIntervalRemoved(this,index,index); 
         return index; 
     }
@@ -137,5 +155,4 @@ public class HeaderModel extends AbstractListModel//<String>
         return values.contains(name); 
     }
 
-    
 }

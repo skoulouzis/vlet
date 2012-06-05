@@ -154,7 +154,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     private Map<String,Integer> rowKeyIndex=new Hashtable<String,Integer>();
     
 	// all headers: default empty, NOT null 
-    private HeaderModel headers=new HeaderModel(); 
+    private HeaderModel headerModel=new HeaderModel(); 
     
     /** All potential headers */ 
     private StringList allHeaders=null;  
@@ -162,14 +162,14 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 	public ResourceTableModel(String[] headers)
     {
         super(); 
-        this.headers=new HeaderModel(headers); 
+        this.headerModel=new HeaderModel(headers); 
     }
 	
 	public ResourceTableModel()
 	{
 		super(); 
 		String names[]={"Dummy1","Dummy2"}; 
-		headers=new HeaderModel(names); 
+		headerModel=new HeaderModel(names); 
 		VAttributeSet dummySet=new VAttributeSet(); 
 		dummySet.set("Dummy1","value1"); 
 		dummySet.set("Dummy2","value2"); 
@@ -182,13 +182,13 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     
     public void setHeaders(String[] headers)
     {
-        this.headers.setValues(headers); 
+        this.headerModel.setValues(headers); 
         this.fireTableStructureChanged();
     }
     
     public void setHeaders(StringList headers)
     {
-        this.headers.setValues(headers);    
+        this.headerModel.setValues(headers);    
         this.fireTableStructureChanged(); 
     }
 
@@ -196,7 +196,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     @Override
 	public int getColumnCount()
 	{
-        return headers.getSize();  
+        return headerModel.getSize();  
 	}
 
 	@Override
@@ -225,7 +225,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 	        if ((rowIndex<0) || rowIndex>=this.rows.size())
                 return null;
 	        
-	        if ((columnIndex<0) || columnIndex>=this.headers.getSize())
+	        if ((columnIndex<0) || columnIndex>=this.headerModel.getSize())
                 return null;
             
     		RowData rowObj = rows.get(rowIndex); 
@@ -236,7 +236,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     			return null;
     		}
     		
-    		String header=this.headers.getElementAt(columnIndex);
+    		String header=this.headerModel.getElementAt(columnIndex);
     	
     		VAttribute attr=rowObj.getAttribute(header);
     		
@@ -387,7 +387,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 	
 	public String[] getHeaders()
 	{
-		return headers.toArray();  
+		return headerModel.toArray();  
 	}
 	
 	/** Create new Rows with empty Row Data */ 
@@ -613,7 +613,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
 
     public int getHeaderIndex(String name)
     {
-        return this.headers.indexOf(name); 
+        return this.headerModel.indexOf(name); 
     }
   
     /** Clear Data information. Keeps header information */ 
@@ -695,20 +695,24 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
   public String[] getAllHeaders()
   {
      if (allHeaders==null)
-         return this.headers.toArray(); 
+         return this.headerModel.toArray(); 
      
      return this.allHeaders.toArray(); 
   }
   
-  /** Allow editable columns by specifying all possible headers */ 
+  /**
+   * Set all allowed headers. Won't change current table layout.
+   * "All Headers" show up in the header popup menu.    
+   */ 
   public void setAllHeaders(StringList list)
   {
       this.allHeaders=list.duplicate();  
+      // no event. This only changes the header menu, not the headers themselves 
   }
 
   public HeaderModel getHeaderModel()
   {
-     return this.headers; 
+     return this.headerModel; 
   }
 
   /** 
@@ -719,7 +723,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
    * Only after the TableStructureChanged event has been handled.*/ 
   public void removeHeader(String headerName)
   {
-      this.headers.remove(headerName); 
+      this.headerModel.remove(headerName); 
       this.fireTableStructureChanged();
   }
 
@@ -734,7 +738,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
   public int insertHeader(String headerName, String newName, boolean insertBefore)
   {
       // update Table Structure
-      int index= this.headers.insertHeader(headerName, newName, insertBefore);
+      int index= this.headerModel.insertHeader(headerName, newName, insertBefore);
       this.fireTableStructureChanged();
       return index; 
   }
@@ -746,12 +750,12 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
    */ 
   public void addHeaderModelListener(ListDataListener listener)
   {
-      this.headers.addListDataListener(listener); 
+      this.headerModel.addListDataListener(listener); 
   }
   
   public void removeHeaderModelListener(ListDataListener listener)
   {
-      this.headers.removeListDataListener(listener); 
+      this.headerModel.removeListDataListener(listener); 
   }
 
   @Override

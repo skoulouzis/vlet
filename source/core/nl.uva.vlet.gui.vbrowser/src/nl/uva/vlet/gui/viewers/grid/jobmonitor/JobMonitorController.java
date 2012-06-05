@@ -26,6 +26,8 @@ package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
@@ -36,17 +38,51 @@ import nl.uva.vlet.vrl.VRL;
 
 public class JobMonitorController implements ActionListener
 {
-    private JobMonitor monitor=null; 
+    public class HeaderModelListener implements ListDataListener
+    {
+        @Override
+        public void intervalAdded(ListDataEvent e)
+        {
+            debugPrintf("Header:intervalAdded:[%d-%d]\n",e.getIndex0(),e.getIndex1());
+        }
+
+        @Override
+        public void intervalRemoved(ListDataEvent e)
+        {
+            debugPrintf("Header:intervalRemoved:[%d-%d]\n",e.getIndex0(),e.getIndex1());
+        }
+
+        @Override
+        public void contentsChanged(ListDataEvent e)
+        {
+            debugPrintf("Header:contentsChanged:[%d-%d]\n",e.getIndex0(),e.getIndex1());
+        }
+    }
+    
+    private JobMonitor monitor=null;
+
+    private HeaderModelListener headerModelListener; 
 
     public JobMonitorController(JobMonitor jobMonitor)
     {
         this.monitor=jobMonitor; 
+        this.headerModelListener=new HeaderModelListener();
+        
+        // chick'n and eggs:. Can only add listener after ResouceTable had bene created. ! 
+        //HeaderModel headerModel = this.monitor.getResourceTable().getHeaderModel();
+        // check headers actions: 
+        //headerModel.addListDataListener(headerModelListener); 
     }
 
+    protected HeaderModelListener getHeaderModelListener()
+    {
+        return headerModelListener; 
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {   
-        debug("Action:"+e);
+        debugPrintf("Action:%s\n",e);
         
         String cmdStr=e.getActionCommand(); 
         
@@ -58,9 +94,9 @@ public class JobMonitorController implements ActionListener
 
     }
 
-    private static void debug(String msg)
+    private static void debugPrintf(String format,Object... args)
     {
-        Global.errorPrintf("JobMonitor","%s\n",msg);
+        Global.errorPrintf("JobMonitor",format,args); 
     }
 
     public void stopViewer()
@@ -156,7 +192,7 @@ public class JobMonitorController implements ActionListener
     
     protected void updateJobIds(StringList ids)
     {
-        this.monitor.getJobMonitorDataModel().updateJobids(ids); 
+        this.monitor.getJobMonitorDataModel().setJobids(ids); 
     }
     
     protected void update(boolean fullUpdate)

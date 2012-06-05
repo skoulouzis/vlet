@@ -23,17 +23,27 @@
 
 package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 
-import nl.uva.vlet.Global;
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringList;
+import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.tasks.ActionTask;
 
 public class JobStatusUpdater
 {
+    private static ClassLogger logger; 
+    {
+        logger=ClassLogger.getLogger(JobStatusUpdater.class);
+        logger.setLevelToDebug(); 
+    }
+    // ========================================================================
+    
     private JobStatusDataModel jobStatusModel =null; 
-    private ActionTask updateTask=null; 
-    private boolean stopUpdateTask=false;
+    private ActionTask updateTask=null;
+    private ActionTask updateAttrsTask=null; 
+
+    private boolean stopUpdateTasks=false;
     private JobUtil jobUtil; 
     
     public JobStatusUpdater(JobStatusDataModel model)
@@ -44,43 +54,74 @@ public class JobStatusUpdater
     /** Start update in background */ 
     public void doUpdate(final boolean fullUpdate)
     {
-        debug("JobStatusUpdater: starting!"); 
+        logger.infoPrintf(">>> JobStatusUpdater.doUpdate(): starting! <<<\n"); 
         
-        this.stopUpdateTask=false; 
+        this.stopUpdateTasks=false; 
         
         this.updateTask=new ActionTask(null,"JobStatusUpdater.updateTask()")
         {
             @Override
             protected void doTask() throws VlException
             {
-                update(fullUpdate); 
+                bgUpdate(fullUpdate); 
             }
 
             @Override
             public void stopTask()
             {
-                stopUpdateTask=true; 
+                stopUpdateTasks=true; 
             }
         };
         
         this.updateTask.startTask(); 
         
     }
+  
+    /** Start update in background */ 
+    public void doUpdateAttributes(final String[] attributeNames)
+    {
+        logger.infoPrintf(">>> doUpdateAttributes: starting! <<<\n"); 
+        this.stopUpdateTasks=false; 
+        
+        this.updateAttrsTask=new ActionTask(null,"JobStatusUpdater.doUpdateAttributes()")
+        {
+            @Override
+            protected void doTask() throws VlException
+            {
+                bgUpdate(false,attributeNames); 
+            }
+
+            @Override
+            public void stopTask()
+            {
+                stopUpdateTasks=true; 
+            }
+        };
+        
+        this.updateAttrsTask.startTask(); 
+    }
     
-    private void update(boolean fullUpdate)
+    private void bgUpdate(boolean fullUpdate)
+    {
+        String attrNames[]=null; 
+        if (fullUpdate)
+            attrNames=this.jobStatusModel.getHeaders();
+        bgUpdate(true,attrNames);
+    }
+    
+    private void bgUpdate(boolean updateStatus,String attrNames[])
     {   
         StringList ids=jobStatusModel.getJobIds();
         
         for (String id:ids)
         {
-            
-            if (stopUpdateTask)
+            if (stopUpdateTasks)
             {
-                debug(" *** Interrrupted: Must Stop *** ");
+                logger.warnPrintf(" *** Interrrupted: Must Stop *** \n");
                 break;
             }
             
-            debug(" - updating status of job:"+id); 
+            logger.debugPrintf("Updating status of: %s\n",id); 
             
             // Pre Fetch: 
             this.jobStatusModel.setQueryBusy(id,true);
@@ -90,14 +131,26 @@ public class JobStatusUpdater
             
             try
             {
-                String newStatus=getJobUtil().getStatus(id,fullUpdate);
-                debug(" -  new status:"+newStatus);
+                String newStatus=getJobUtil().getStatus(id,updateStatus);
+                logger.infoPrintf(" - new status of '%s'=%s\n",id,newStatus);
                 this.jobStatusModel.setStatus(id,newStatus);
+                   
+                // Auto Update Attribute Names (Update All Headers)  
+                String newAttrNames[]=getJobUtil().getJobAttrNames(id); 
+                // update headers
+                jobStatusModel.addExtraHeaders(newAttrNames); 
                 
+                // Update all VAttribute currently shown in table.
+                if (attrNames!=null)
+                {
+                    VAttribute attrs[]=getJobUtil().getAttributes(id,attrNames);
+                    jobStatusModel.updateJobAttributes(id,attrs);
+                }
+               
             }
             catch (Exception e)
             {
-                debug(" -  *** Exception:"+e);
+                logger.logException(ClassLogger.ERROR,e,"Couldn't update status of job:%s\n",id); 
                 this.jobStatusModel.setStatus(id,JobStatusDataModel.STATUS_ERROR);
                 this.jobStatusModel.setErrorText(id,e.getMessage());
             }
@@ -107,13 +160,9 @@ public class JobStatusUpdater
         }
     }
 
-    private void debug(String msg)
-    {
-        Global.errorPrintf(this,"%s\n",msg); 
-    }
-
     public JobUtil getJobUtil()
     {
+        // implementation independed Job Status Util
         if (jobUtil==null)
         {
             this.jobUtil=new JobUtil(UIGlobal.getVRSContext());  

@@ -28,7 +28,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -70,7 +69,7 @@ public class TableMouseListener implements MouseListener
         Component comp=(Component)e.getSource();
         Point clickPoint=e.getPoint(); 
        
-        debug("MouseClicked:"+e);
+        debugPrintf("MouseClicked:%s\n",e);
         
         //boolean ctrl=((e.getModifiersEx() & e.CTRL_DOWN_MASK) !=0);
         
@@ -85,7 +84,7 @@ public class TableMouseListener implements MouseListener
             }
             else
             {
-                debug("No Column Header name!:"+e);
+                debugPrintf("No Column Header name!:%s\n",e);
             }
         }
         else if (comp.equals(table))
@@ -108,9 +107,9 @@ public class TableMouseListener implements MouseListener
         }
     }
 
-    private void debug(String msg)
+    private void debugPrintf(String format,Object... args)
     {
-      Global.debugPrintln(this,msg); 
+      Global.debugPrintf(this,format,args); 
     }
 
     @Override

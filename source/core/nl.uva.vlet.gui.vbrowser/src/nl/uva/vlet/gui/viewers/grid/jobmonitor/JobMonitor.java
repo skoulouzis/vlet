@@ -18,7 +18,7 @@
  * ---
  * $Id: JobMonitor.java,v 1.4 2011-06-07 15:15:08 ptdeboer Exp $  
  * $Date: 2011-06-07 15:15:08 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.viewers.grid.jobmonitor;
@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -36,28 +35,36 @@ import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vrl.VRL;
 
+/** 
+ * Simple Job Status viewer. 
+ * 
+ * Uses VJS and VJob interface. Doesn't know anything from implemenation. 
+ * 
+ * @author Piter T. de Boer. 
+ */
 public class JobMonitor extends ViewerPlugin
 {
-    public static String ACTION_REFRESH="refresh"; 
-    public static String ACTION_START="start"; 
-    public static String ACTION_STOP="stop"; 
-       
-    /** .vljids File Type */ 
-    public static String mimetypes[]=
-        {   
-            // typos: 
-            "application/vlemed/jobids",
-            "application/vlemed-jobids",
-            // new non vlemed: 
-            "application/glite-jobids",
-        };
+    private static final long serialVersionUID = -7576499812836308887L;
+
+    public static String ACTION_REFRESH = "refresh";
+    public static String ACTION_START = "start";
+    public static String ACTION_STOP = "stop";
+
+    /** .vljids File Type */
+    public static String mimetypes[] =
+    {
+        // typos:
+        "application/vlemed/jobids", "application/vlemed-jobids",
+        // new non vlemed:
+        "application/glite-jobids", 
+    };
+
     private JMenuBar menuBar;
     private JScrollPane jobTableSP;
     private JMenu helpMenu;
@@ -71,50 +78,95 @@ public class JobMonitor extends ViewerPlugin
     private JMenu mainJobMenu;
     private JPanel topPanel;
     private NavigationBar locationToolbar;
-
     private JobMonitorController controller;
     private ResourceTable jobTable;
+    //TableMouseListener mouseListener;
+    
+    public JobMonitor()
+    {
+        // needed for viewer registry.
+        init(false); // bean object. Do not initialize;
+    }
+    
+    /**
+     * This method should return an instance of this class which does NOT
+     * initialize it's GUI elements. This method is ONLY required by Jigloo if
+     * the superclass of this class is abstract or non-public. It is not needed
+     * in any other situation.
+     */
+    public static Object getGUIBuilderInstance()
+    {
+        return new JobMonitor(Boolean.FALSE);
+    }
 
+    /**
+     * This constructor is used by the getGUIBuilderInstance method to provide
+     * an instance of this class which has not had it's GUI elements initialized
+     * (ie, initGUI is not called in this constructor).
+     */
+    public JobMonitor(Boolean initGui)
+    {
+        super();
+        init(initGui);
+    }
+    
+    public void init(boolean initGui)
+    {
+        if (initGui)
+        {
+            this.controller = new JobMonitorController(this);
+            initGui();
+            initListeners();
+        }
+    }
+    
+    protected void initListeners()
+    {
+        //this.mouseListener=new TableMouseListener(this.jobTable); 
+        //jobTable.addMouseListener(mouseListener);
+        // Add listeners *after* Table+Model has been created ! 
+        this.jobTable.getHeaderModel().addListDataListener(controller.getHeaderModelListener()); 
+        this.jobTable.setPopupMenu(new JobMonitorMenu(this.controller)); 
+    }
+    
     @Override
-    public String[] getMimeTypes() 
+    public String[] getMimeTypes()
     {
         return mimetypes;
     }
 
-    
     @Override
     public void disposeViewer()
     {
-        if (this.controller!=null)
+        if (this.controller != null)
             this.controller.dispose();
-        
-        this.controller=null;
-        this.jobTable=null; 
+
+        this.controller = null;
+        this.jobTable = null;
     }
 
     @Override
     public String getName()
     {
-        return "JobMonitor"; 
+        return "JobMonitor";
     }
 
     @Override
     public void initViewer()
     {
-        
-        initGui(); 
+        init(true); 
     }
 
     @Override
     public void stopViewer()
     {
-        this.controller.stopViewer(); 
+        this.controller.stopViewer();
     }
 
     @Override
     public void updateLocation(VRL loc) throws VlException
     {
-        this.controller.updateLocation(loc); 
+        this.controller.updateLocation(loc);
     }
 
     protected void initGui()
@@ -126,8 +178,8 @@ public class JobMonitor extends ViewerPlugin
         this.setPreferredSize(new java.awt.Dimension(900, 300));
 
         {
-            topPanel=new JPanel();
-            this.add(topPanel,BorderLayout.NORTH);
+            topPanel = new JPanel();
+            this.add(topPanel, BorderLayout.NORTH);
             BorderLayout topPanelLayout = new BorderLayout();
             topPanel.setLayout(topPanelLayout);
             topPanel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
@@ -149,14 +201,14 @@ public class JobMonitor extends ViewerPlugin
                             mainJobMenu.add(startMi);
                             startMi.setText("start");
                             startMi.setActionCommand(ACTION_START);
-                            startMi.addActionListener(controller);  
+                            startMi.addActionListener(controller);
                         }
                         {
                             stopMi = new JMenuItem();
                             mainJobMenu.add(stopMi);
                             stopMi.setText("stop");
                             stopMi.setActionCommand(ACTION_STOP);
-                            stopMi.addActionListener(controller); 
+                            stopMi.addActionListener(controller);
                         }
                     }
                     {
@@ -168,7 +220,7 @@ public class JobMonitor extends ViewerPlugin
                             viewMenu.add(refeshMi);
                             refeshMi.setText("refresh");
                             refeshMi.setActionCommand(ACTION_REFRESH);
-                            refeshMi.addActionListener(this.controller); 
+                            refeshMi.addActionListener(this.controller);
                         }
                     }
                     {
@@ -184,13 +236,13 @@ public class JobMonitor extends ViewerPlugin
                     toolTopPanel.setLayout(toolTopPanelLayout);
                     topPanel.add(toolTopPanel, BorderLayout.CENTER);
                     {
-                        locationToolbar=new NavigationBar(NavigationBar.LOCATION_ONLY);
+                        locationToolbar = new NavigationBar(NavigationBar.LOCATION_ONLY);
                         toolTopPanel.add(locationToolbar);
-                        locationToolbar.addTextFieldListener(controller); 
-                        //no up down back, etc. 
-                        locationToolbar.setEnableNagivationButtons(false); 
-                        locationToolbar.addNavigationButtonsListener(controller);  
-                     }
+                        locationToolbar.addTextFieldListener(controller);
+                        // no up down back, etc.
+                        locationToolbar.setEnableNagivationButtons(false);
+                        locationToolbar.addNavigationButtonsListener(controller);
+                    }
                 }
             }
         }
@@ -203,86 +255,51 @@ public class JobMonitor extends ViewerPlugin
                 jobMonitorPanel.add(getJobTableSP(), BorderLayout.CENTER);
             }
         }
-
     }
-	/**
-	* This method should return an instance of this class which does 
-	* NOT initialize it's GUI elements. This method is ONLY required by
-	* Jigloo if the superclass of this class is abstract or non-public. It 
-	* is not needed in any other situation.
-	 */
-	public static Object getGUIBuilderInstance() {
-		return new JobMonitor(Boolean.FALSE);
-	}
-	
-	/**
-	 * This constructor is used by the getGUIBuilderInstance method to
-	 * provide an instance of this class which has not had it's GUI elements
-	 * initialized (ie, initGUI is not called in this constructor).
-	 */
-	public JobMonitor(Boolean initGUI) 
-	{
-		super();
-		
-		this.controller=new JobMonitorController(this);
 
-		if (initGUI)
-		    initGui(); 
-	}
-	
-	public static void main(String args[])
-	{
-	    try
+    public ResourceTable getJobTable()
+    {
+        if (jobTable == null)
         {
-	        
-	        JobMonitor jobMonitor=new JobMonitor(true);
-	        jobMonitor.startAsStandAloneApplication(new VRL("file:/home/ptdeboer/jobs/test.vljids")); 
-        }
-        catch (VlException e)
-        {
-            e.printStackTrace();
-        }
-	    
-	}
-	
-	 public ResourceTable getJobTable()
-	    {
-	        if (jobTable==null)
-	        {
-	            // empty model: 
-	            JobStatusDataModel model=new JobStatusDataModel(controller);
-	            Presentation pres=model.getPresentation();
-	            jobTable = new ResourceTable(model,pres);
-	             
-	            //jobTable.setPresentation(model.getPresentation()); 
-	            
-	            //jobTable.setPopupMenu(new ReplicaPopupMenu(this.controller));
-	            // Presentation pres = replicaTable.getPresentation(); 
-	        }
-	        
-	        return this.jobTable;
-	    }
-	 
-	 private JScrollPane getJobTableSP() 
-	 {
-	     if(jobTableSP == null) 
-	     {
-	         jobTableSP = new JScrollPane();
-             jobTableSP.setViewportView(this.getJobTable());
-	     }
-	     return jobTableSP;
-	 }
+            // empty model:
+            JobStatusDataModel model = new JobStatusDataModel(controller);
+            Presentation pres = model.getPresentation();
+            jobTable = new ResourceTable(model, pres);
 
+            // jobTable.setPresentation(model.getPresentation());
+            // jobTable.setPopupMenu(new ReplicaPopupMenu(this.controller));
+            // Presentation pres = replicaTable.getPresentation();
+        }
+
+        return this.jobTable;
+    }
+
+    private JScrollPane getJobTableSP()
+    {
+        if (jobTableSP == null)
+        {
+            jobTableSP = new JScrollPane();
+            jobTableSP.setViewportView(this.getJobTable());
+        }
+        return jobTableSP;
+    }
 
     public void updateLocationBar(VRL loc)
     {
-        this.locationToolbar.setLocationText(""+loc); 
-        
+        this.locationToolbar.setLocationText("" + loc);
+
     }
-
-
-    public JobStatusDataModel getJobMonitorDataModel()
+    
+    // Table/Model 
+    
+    protected ResourceTable getResourceTable()
     {
-        return (JobStatusDataModel)this.jobTable.getModel(); 
+        return this.jobTable; 
     }
+    
+    protected JobStatusDataModel getJobMonitorDataModel()
+    {
+        return (JobStatusDataModel) getResourceTable().getModel();
+    }
+    
 }

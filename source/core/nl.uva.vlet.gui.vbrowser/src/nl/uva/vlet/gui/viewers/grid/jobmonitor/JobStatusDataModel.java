@@ -26,6 +26,7 @@ package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_ERROR_TEXT;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_INDEX;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_JOBID;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_JOB_STATUS_INFORMATION;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
 import static nl.uva.vlet.data.VAttributeConstants.ATTR_STATUS;
 import nl.uva.vlet.ClassLogger;
@@ -43,17 +44,25 @@ import nl.uva.vlet.vrl.VRL;
 
 public class JobStatusDataModel extends ResourceTableModel
 {
-    public static final String ATTR_SELECTION="selection"; 
-    public static final String ATTR_LBHOSTNAME="jobLBHostname"; 
-    public static final String ATTR_LBPORT="jobLBPort"; 
-    public static final String ATTR_JOBNAME="jobName";
-    public static final String ATTR_JOBSTATUS=ATTR_STATUS;
+    //
+    private static final long serialVersionUID = -3186714948599037988L;
+    //
+    public static final String ATTR_SELECTION  = "selection"; 
+    public static final String ATTR_LBHOSTNAME = "lbHostname"; 
+    public static final String ATTR_LBPORT     = "lbPort"; 
+    public static final String ATTR_JOBNAME    = "jobName";
+    public static final String ATTR_JOBSTATUS   = ATTR_STATUS;
+    public static final String ATTR_JOBSTATUSINFO   = ATTR_JOB_STATUS_INFORMATION;
     
     public static final String STATUS_UNKNOWN   = "Unknown"; 
     public static final String STATUS_UPDATING = "Updating";
     public static final String STATUS_ERROR    = "Error";
     
-    private static final String ATTR_IS_BUSY = "isBusy";  
+    private static final String ATTR_IS_BUSY = "isBusy"; 
+    
+    // ========================================================================
+    //
+    // ========================================================================
     
     private StringList jobIds;
     private JobMonitorController jobController;
@@ -77,6 +86,7 @@ public class JobStatusDataModel extends ResourceTableModel
         headers.add(ATTR_LBHOSTNAME);
         headers.add(ATTR_JOBNAME);
         headers.add(ATTR_JOBSTATUS);
+        headers.add(ATTR_JOB_STATUS_INFORMATION);
         headers.add(ATTR_ERROR_TEXT);
         headers.add(ATTR_SELECTION);
         
@@ -97,7 +107,8 @@ public class JobStatusDataModel extends ResourceTableModel
         this.statusUpdater=new JobStatusUpdater(this); 
     }
 
-    public void updateJobids(StringList ids)
+    /** Remove old and update with new JobIds list */ 
+    public void setJobids(StringList ids)
     {
         this.jobIds=ids; 
         this.clearData();
@@ -131,16 +142,17 @@ public class JobStatusDataModel extends ResourceTableModel
     {   
         VAttributeSet attrs=new VAttributeSet();
         
-        VRL jobvrl=new VRL(jobid); 
+        VRL jobvrl=new VRL(jobid);
+        // actual job id as string. This is also the key! 
+        attrs.set(ATTR_JOBID,jobid); 
         attrs.set(ATTR_JOBNAME,jobvrl.getBasename()); 
         attrs.set(ATTR_LBHOSTNAME,jobvrl.getHostname()); 
         attrs.set(ATTR_LBPORT,jobvrl.getPort());    
-        attrs.set(ATTR_JOBSTATUS,"?"); 
+        attrs.set(ATTR_JOBSTATUS,"?");
         
         int index=this.addRow(jobid, attrs);
         // update index FIRST  
         this.setValue(jobid,ATTR_INDEX,""+index);
-        
     }
 
     public Presentation getPresentation()
@@ -149,18 +161,17 @@ public class JobStatusDataModel extends ResourceTableModel
         {
             this.presentation=new Presentation();
             
+            presentation.setAttributePreferredWidth(ATTR_JOBID,100,200,300); 
             presentation.setAttributePreferredWidth(ATTR_JOBNAME,100,200,300); 
             presentation.setAttributePreferredWidth(ATTR_LBHOSTNAME,100,150,250); 
             presentation.setAttributePreferredWidth(ATTR_LBPORT,40,40,40); 
-            presentation.setAttributePreferredWidth(ATTR_JOBSTATUS,100,120,200); 
+            presentation.setAttributePreferredWidth(ATTR_JOBSTATUS,100,120,160);
+            presentation.setAttributePreferredWidth(ATTR_JOBSTATUSINFO,100,120,200); 
             presentation.setAttributePreferredWidth(ATTR_INDEX,40,40,40); 
             presentation.setAttributePreferredWidth(ATTR_ERROR_TEXT,40,120,-1); 
-            
         }
         
         return this.presentation; 
-        
-        
     }
 
     private void bgUpdateJobStatus()
@@ -219,4 +230,45 @@ public class JobStatusDataModel extends ResourceTableModel
     {   
         this.setValue(id,ATTR_ERROR_TEXT,message); 
     }
+
+    public void updateJobAttributes(String id, VAttribute[] attrs)
+    {
+        if (attrs==null)
+        {
+            ; //clear?
+            return; 
+        }
+        
+        // Auto Extend: check for extra Attributes! 
+        StringList extraAttrsNames=new StringList(); 
+        for (int i=0;i<attrs.length;i++)
+        {
+            // possible due unknown VAttribute!
+            if (attrs[i]!=null)
+                extraAttrsNames.add(attrs[i].getName()); 
+        }
+        
+        // update Headers 
+        if (extraAttrsNames.size()>0)
+            addExtraHeaders(extraAttrsNames.toArray());
+        this.setValues(id, attrs); 
+    }
+
+    public void addExtraHeaders(String[] newNames)
+    {
+        String[] names = this.getAllHeaders();   
+        StringList list=new StringList(names);
+        int n=list.size();
+        
+        // O(N*N) check and add to header list (inefficient) 
+        for (String name:newNames)
+            if (list.contains(name)==false)
+                list.add(name);
+        
+        // add extra header attributes 
+        if (list.size()>n)
+            this.setAllHeaders(list);
+    }       
+    
+    
 }

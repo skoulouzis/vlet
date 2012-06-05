@@ -42,7 +42,6 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.presentation.Presentation;
 
 /** 
@@ -57,7 +56,7 @@ public class ResourceTable extends JTable
   
     // default presentation
     private Presentation presentation=null; 
-    private TablePopupMenu popupMenu=new TablePopupMenu();
+    private TablePopupMenu popupMenu=null;
     private boolean isEditable=true;
     protected int defaultColumnWidth=80;
     
@@ -116,6 +115,9 @@ public class ResourceTable extends JTable
         mouseListener = new TableMouseListener(this);
         header.addMouseListener(mouseListener);
         this.addMouseListener(mouseListener);
+        
+        // default popup menu
+        this.popupMenu=new TablePopupMenu();
 	}
 	
 	/** (re)Created columns from headers taken from DataModel */ 
@@ -182,6 +184,7 @@ public class ResourceTable extends JTable
 	{
 	    return this.mouseListener; 
 	}
+	
 	public ResourceTableModel getResourceTableModel()
 	{
 	    TableModel model = super.getModel(); 

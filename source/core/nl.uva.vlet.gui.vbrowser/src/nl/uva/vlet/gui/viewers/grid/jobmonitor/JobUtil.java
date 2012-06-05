@@ -23,6 +23,10 @@
 
 package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vjs.VJob;
 import nl.uva.vlet.vrl.VRL;
@@ -31,10 +35,17 @@ import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSClient;
 import nl.uva.vlet.vrs.VRSContext;
 
+/** 
+ * Job Status utility. 
+ *  
+ */
 public class JobUtil
 {
     private VRSClient vrsClient;
-
+    // mini cache: 
+    private Map<String,VJob> _cache=new HashMap<String,VJob>(); 
+    private boolean useCache=true; 
+    
     public JobUtil(VRSContext context)
     {
         this.vrsClient=new VRSClient(context); 
@@ -42,25 +53,71 @@ public class JobUtil
 
     public String getStatus(String jobid, boolean fullUpdate) throws VlException
     {
+        VJob job=getJob(jobid); 
+        String stat=job.getStatus();
+       
+        return stat; 
+    }
+ 
+    public String[] getJobAttributeNames(String jobId)  throws VlException
+    {
+        VJob job=getJob(jobId); 
+        return job.getAttributeNames(); 
+    }
+     
+    protected VJob getJob(String jobid) throws VlException
+    {  
+        if (useCache)
+        {
+            synchronized(this._cache)
+            {
+                if (_cache.containsKey(jobid))
+                    return _cache.get(jobid); 
+            }
+        }
+        
         VRL vrl=new VRL(jobid);
         
         // replace https -> LB scheme 
         if (vrl.hasScheme("https"))
-            vrl=vrl.copyWithNewScheme(VRS.LB_SCHEME); 
-        
+            vrl=vrl.copyWithNewScheme(VRS.LB_SCHEME);
         VNode jobNode = vrsClient.openLocation(vrl); 
-         
+    
         if ((jobNode instanceof VJob)==false)
         {
-            
             throw new nl.uva.vlet.exception.ResourceTypeMismatchException("URI is not a job URI:"+jobid
-                    +"\n. Resource Type="+jobNode.getType() );   
+                +"\n. Resource Type="+jobNode.getType() );   
+        }
+    
+        VJob job=(VJob)jobNode;
+        VRL jobVrl=job.getVRL(); 
+        
+        if (useCache)
+        {
+            synchronized(this._cache)
+            {
+                _cache.put(jobid,job); 
+                _cache.put(jobVrl.toString(),job); // double cache using resolved (!)  VRL 
+            }
         }
         
-        VJob job=(VJob)jobNode; 
-        String stat=job.getStatus();
-       
-        return stat; 
+        return job; 
+    }
+
+
+    public String[] getJobAttrNames(String id) throws VlException
+    {
+        return getJob(id).getJobAttributeNames(); 
+    }
+
+    public VAttribute[] getAttributes(String id, String[] attrNames) throws VlException
+    {
+        return getJob(id).getAttributes(attrNames);
+    }
+    
+    public void clearCache()
+    {
+        this._cache.clear(); 
     }
     
 }

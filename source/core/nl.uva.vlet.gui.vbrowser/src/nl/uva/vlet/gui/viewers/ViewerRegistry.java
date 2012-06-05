@@ -31,14 +31,12 @@ import nl.uva.vlet.actions.ActionMenuMapping;
 import nl.uva.vlet.data.OrdenedHashtable;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.viewers.IViewer;
 import nl.uva.vlet.util.PluginLoader;
 import nl.uva.vlet.util.PluginLoader.PluginInfo;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFSClient;
 import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSFactory;
 
 /**
@@ -75,7 +73,8 @@ public class ViewerRegistry
         "nl.uva.vlet.gui.viewers.grid.replicaviewer.ReplicaEditor", 
     	"nl.uva.vlet.gui.viewers.external.JavaWebStarter",
         "nl.uva.vlet.gui.viewers.x509viewer.ViewerX509",
-        "nl.uva.vlet.gui.viewers.VLTermStarter"
+        "nl.uva.vlet.gui.viewers.VLTermStarter",
+        "nl.uva.vlet.gui.viewers.grid.jobmonitor.JobMonitor"
     };
 
    
