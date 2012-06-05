@@ -169,6 +169,16 @@ public class JobMonitor extends ViewerPlugin
         this.controller.updateLocation(loc);
     }
 
+    public boolean isTool()
+    {
+    	return false;
+    }
+    
+    public boolean getAlwaysStartStandalone()
+    {
+        return true;
+    }
+    
     protected void initGui()
     {
         // JPanel has aldready a layout
@@ -301,5 +311,11 @@ public class JobMonitor extends ViewerPlugin
     {
         return (JobStatusDataModel) getResourceTable().getModel();
     }
+
+	public NavigationBar getNavigationBar()
+	{
+		return this.locationToolbar;
+		
+	}
     
 }

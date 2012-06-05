@@ -32,7 +32,9 @@ import javax.swing.event.ListDataListener;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.vrl.VRL;
 
@@ -91,6 +93,20 @@ public class JobMonitorController implements ActionListener
         
         if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.REFRESH))
             update(true); 
+
+        if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.LOCATION_CHANGED))
+        {
+        	String txt = monitor.getNavigationBar().getLocationText();
+        	
+        	try 
+        	{
+				updateLocation(new VRL(txt));
+			}
+        	catch (VRLSyntaxException ex)
+        	{
+        		handle("Not a job location:"+txt,ex); 
+        	}
+        }
 
     }
 
@@ -169,7 +185,7 @@ public class JobMonitorController implements ActionListener
         catch (Throwable t)
         {
             this.monitor.setViewerTitle("*** Error loading file"); 
-            
+            ExceptionForm.show(t); 
             handle("Couldn't load Job ID File:"+loc, t); 
         }
         finally
