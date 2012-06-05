@@ -34,8 +34,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
-import javax.xml.namespace.QName;
-
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.glite.WMLBConfig.LBConfig;
@@ -46,11 +44,9 @@ import nl.uva.vlet.vrs.VRSContext;
 import org.apache.axis.AxisEngine;
 import org.apache.axis.AxisFault;
 import org.apache.axis.MessageContext;
-import org.apache.axis.SimpleChain;
 import org.apache.axis.SimpleTargetedChain;
 import org.apache.axis.client.AxisClient;
 import org.apache.axis.configuration.SimpleProvider;
-import org.apache.axis.message.SOAPEnvelope;
 import org.apache.axis.transport.http.HTTPSender;
 import org.glite.wms.wmproxy.BaseFaultType;
 import org.glite.wsdl.services.lb.LoggingAndBookkeepingLocator;
@@ -115,10 +111,24 @@ public class LBClient
 
     public static DoneCode STATUS_DONE_FAILED = DoneCode.FAILED;
 
-    public static final QueryAttr[] QueryAttributes = { QueryAttr.CHKPTTAG, QueryAttr.DESTINATION, QueryAttr.DONECODE,
-            QueryAttr.EVENTTYPE, QueryAttr.EXITCODE, QueryAttr.HOST, QueryAttr.INSTANCE, QueryAttr.JOBID,
-            QueryAttr.LOCATION, QueryAttr.OWNER, QueryAttr.PARENT, QueryAttr.RESUBMITTED, QueryAttr.SOURCE,
-            QueryAttr.TIME, QueryAttr.USERTAG };
+    public static final QueryAttr[] QueryAttributes = 
+        { 
+            QueryAttr.CHKPTTAG, 
+            QueryAttr.DESTINATION, 
+            QueryAttr.DONECODE,
+            QueryAttr.EVENTTYPE, 
+            QueryAttr.EXITCODE, 
+            QueryAttr.HOST, 
+            QueryAttr.INSTANCE, 
+            QueryAttr.JOBID,
+            QueryAttr.LOCATION, 
+            QueryAttr.OWNER, 
+            QueryAttr.PARENT, 
+            QueryAttr.RESUBMITTED, 
+            QueryAttr.SOURCE,
+            QueryAttr.TIME, 
+            QueryAttr.USERTAG 
+        };
 
     private ArrayList<QueryAttr> indexedAttributes = new ArrayList<QueryAttr>();
 

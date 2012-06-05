@@ -37,8 +37,8 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.ResourceException;
 import nl.uva.vlet.exception.ResourceNotFoundException;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.glite.OutputInfo;
 import nl.uva.vlet.glite.WMLBConfig;
 import nl.uva.vlet.glite.WMSUtil;
@@ -145,22 +145,38 @@ public class WMSJob extends VJob
 
     public String[] getAttributeNames()
     {
-        StringList names = new StringList(super.getAttributeNames());
-
-        names.add(VAttributeConstants.ATTR_STATUS);
-        names.add(VAttributeConstants.ATTR_JOBID);
-        names.add(VAttributeConstants.ATTR_JOBURI);
-
-        names.add(WMSConstants.ATTR_REASON);
-        names.add(WMSConstants.ATTR_EXPECTED_UPDATE);
-        names.add(WMSConstants.ATTR_DESTINATION);
-        names.add(WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME);
-        names.add(WMSConstants.ATTR_JOB_SUBMISSION_TIME);
+        // merge attributes
+        String[] attrs = super.getAttributeNames(); 
+        StringList list=new StringList(attrs); 
+        list.add(getJobAttributeNames()); 
+        return list.toArray(); 
+    }
+    
+    // explicit WMS attributes:
+    public String[] getJobAttributeNames()
+    {
+        // get VJob:  
+        StringList names = new StringList(super.getJobAttributeNames()); // get list from VJob.
+        // add WMS:
+        names.add(getWMSJobAttributeNames()); 
+        return names.toArray();
+    }
+    
+ // explicit WMS attributes:
+    public String[] getWMSJobAttributeNames()
+    {
+        StringList names = new StringList(); 
+        
+        names.add(WMSConstants.ATTR_WMS_REASON);
+        names.add(WMSConstants.ATTR_WMS_EXPECTED_UPDATE);
+        names.add(WMSConstants.ATTR_WMS_DESTINATION);
+        names.add(WMSConstants.ATTR_WMS_STATE_ENTERED_TIME);
+        names.add(WMSConstants.ATTR_WMS_LAST_UPDATE_TIME);
         names.add(WMSConstants.ATTR_WMS_SERVER_HOSTNAME);
 
         return names.toArray();
     }
-
+    
     public VAttribute getAttribute(String name) throws VlException
     {
         // Check Non-mutable attributes first!
@@ -181,7 +197,8 @@ public class WMSJob extends VJob
         {
             return new VAttribute(name, new VRL(getJobUri()));
         }
-        else if (StringUtil.equals(name, WMSConstants.ATTR_REASON))
+        else if ( (StringUtil.equals(name, WMSConstants.ATTR_WMS_REASON))
+                 || (StringUtil.equals(name, WMSConstants.ATTR_JOB_STATUS_INFORMATION)) )
         {
             return new VAttribute(name, getLBJobStatus().getReason());
         }
@@ -195,20 +212,21 @@ public class WMSJob extends VJob
             // getLBJobStatus().getNetworkServer());
             return new VAttribute(name, this.getWmsServerHostname());
         }
-        else if (StringUtil.equals(name, WMSConstants.ATTR_JOB_SUBMISSION_TIME))
+        else if ( (StringUtil.equals(name, WMSConstants.ATTR_JOB_SUBMISSION_TIME))
+                  || (StringUtil.equals(name, WMSConstants.ATTR_WMS_STATE_ENTERED_TIME)) )
         {
             StateEnterTimesItem date = getLBJobStatus().getStateEnterTimes()[0];
-
             return VAttribute.createDateSinceEpoch(name, date.getTime().getTimeInMillis());
         }
-        else if (StringUtil.equals(name, WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME))
+        // VJob "Status Update" time = WMS "
+        else if ( (StringUtil.equals(name, WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME)) 
+                || (StringUtil.equals(name, WMSConstants.ATTR_WMS_LAST_UPDATE_TIME)) )
         {
-            long millis = getLBJobStatus().getStateEnterTime().getTvSec() * 1000
+            long millis = getLBJobStatus().getLastUpdateTime().getTvSec() * 1000
                     + getLBJobStatus().getStateEnterTime().getTvUsec() / 1000;
-
             return VAttribute.createDateSinceEpoch(name, millis);
         }
-        else if (StringUtil.equals(name, WMSConstants.ATTR_DESTINATION))
+        else if (StringUtil.equals(name, WMSConstants.ATTR_WMS_DESTINATION))
         {
             return new VAttribute(name, getLBJobStatus().getDestination());
         }
@@ -833,8 +851,13 @@ public class WMSJob extends VJob
     protected void fireStatusChanged(JobStatus status)
     {
         // String[] attrNames = job.getAttributeNames();
-        String attrNames[] = { VAttributeConstants.ATTR_STATUS, VAttributeConstants.ATTR_ICONURL,
-                WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME };
+        String attrNames[] = { 
+                VAttributeConstants.ATTR_STATUS, 
+                VAttributeConstants.ATTR_ICONURL,
+                // update both VJob status and WMS status: 
+                WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME,
+                WMSConstants.ATTR_WMS_LAST_UPDATE_TIME
+                };
 
         try
         {

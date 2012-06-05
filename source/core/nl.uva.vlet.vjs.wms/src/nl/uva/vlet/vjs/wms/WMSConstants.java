@@ -27,36 +27,37 @@ import nl.uva.vlet.data.VAttributeConstants;
 
 public class WMSConstants
 {
-    public static final String ATTR_REASON = VAttributeConstants.ATTR_WMS_STATUS_TEXT;
-
-    public static final String ATTR_EXPECTED_UPDATE = "wmsExpectedUpdate";
-
-    public static final String ATTR_DESTINATION = "wmsDestination";
-
-    public static final String ATTR_JOB_STATUS_UPDATE_TIME = VAttributeConstants.ATTR_JOB_STATUS_UPDATE_TIME;
-
-    public static final String ATTR_JOB_SUBMISSION_TIME = VAttributeConstants.ATTR_JOB_SUBMISSION_TIME;
-
-    public static final String TYPE_SUBMITED_JDL = "SubmittedJDL";
-
-    public static final String TYPE_CONDOR_JDL = "CondorJDL";
-
-    public static final String TYPE_MATCHED_JDL = "MatchedJDL";
-
-    public static final String JDL_TYPE = "JDL";
-
-    public static final String GLITE_JDL_MIMETYPE = "application/glite-jdl";
-
-    public static final String ATTR_WMS_SERVER_URI = "wmsServerUri";
+    // === 
+    // Attribute Constants 
+    // === 
     
+    // WMS Reason = (VJob) Status Information
+    public static final String ATTR_WMS_REASON =  "wmsReason"; 
+    public static final String ATTR_JOB_STATUS_INFORMATION=VAttributeConstants.ATTR_JOB_STATUS_INFORMATION;
+    
+    public static final String ATTR_WMS_EXPECTED_UPDATE = "wmsExpectedUpdate";
+    public static final String ATTR_WMS_DESTINATION = "wmsDestination";
+    // WMS "State Entered" = VJob "Submission Time". 
+    public static final String ATTR_WMS_STATE_ENTERED_TIME = "wmsStateEntered";
+    public static final String ATTR_JOB_SUBMISSION_TIME = VAttributeConstants.ATTR_JOB_SUBMISSION_TIME;
+    // WMS "Last Update" =  VJob "Status Update"
+    public static final String ATTR_JOB_STATUS_UPDATE_TIME = VAttributeConstants.ATTR_JOB_STATUS_UPDATE_TIME;
+    public static final String ATTR_WMS_LAST_UPDATE_TIME = "wmsLastUpdate";
+    
+    
+    // ===
+    // Types! 
+    // ===
+    public static final String TYPE_SUBMITED_JDL = "SubmittedJDL";
+    public static final String TYPE_CONDOR_JDL = "CondorJDL";
+    public static final String TYPE_MATCHED_JDL = "MatchedJDL";
+    public static final String JDL_TYPE = "JDL";
+    public static final String GLITE_JDL_MIMETYPE = "application/glite-jdl";
+    public static final String ATTR_WMS_SERVER_URI = "wmsServerUri";
     public static final String ATTR_WMS_SERVER_HOSTNAME = "wmsServerHostname";
-
     public static final String TYPE_LBRESOURCE = "LBServer";
-
     public static final String TYPE_MYJOBS = "MyJobs";
-
     public static final String TYPE_EVENT = "Event";
-
     public static final String TYPE_JDL_COMPOSITE = "jdl";
 
     // public static final String

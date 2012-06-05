@@ -31,8 +31,8 @@ import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.ResourceNotFoundException;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
 import nl.uva.vlet.tasks.ActionTask;
@@ -41,8 +41,8 @@ import nl.uva.vlet.vjs.VJS;
 import nl.uva.vlet.vjs.VJob;
 import nl.uva.vlet.vjs.VJobMonitorResource;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.ResourceSystemNode;
+import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
@@ -63,8 +63,9 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
             VAttributeConstants.ATTR_TYPE,
             VAttributeConstants.ATTR_NAME,
             WMSConstants.ATTR_JOB_SUBMISSION_TIME,
+            WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME,
             WMSConstants.ATTR_WMS_SERVER_HOSTNAME,
-            VAttributeConstants.ATTR_STATUS, WMSConstants.ATTR_REASON 
+            VAttributeConstants.ATTR_STATUS, WMSConstants.ATTR_WMS_REASON 
          };
 
     static
@@ -143,9 +144,12 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         pres.setAttributePreferredWidth(VAttributeConstants.ATTR_TYPE, 40);
         pres.setAttributePreferredWidth(VAttributeConstants.ATTR_NAME, 220);
         pres.setAttributePreferredWidth(WMSConstants.ATTR_JOB_SUBMISSION_TIME, 160);
+        pres.setAttributePreferredWidth(WMSConstants.ATTR_JOB_STATUS_UPDATE_TIME, 160);
+        pres.setAttributePreferredWidth(WMSConstants.ATTR_WMS_STATE_ENTERED_TIME, 160);
+        pres.setAttributePreferredWidth(WMSConstants.ATTR_WMS_LAST_UPDATE_TIME, 160);
         pres.setAttributePreferredWidth(WMSConstants.ATTR_WMS_SERVER_HOSTNAME, 140);
         pres.setAttributePreferredWidth(VAttributeConstants.ATTR_STATUS, 80);
-        pres.setAttributePreferredWidth(WMSConstants.ATTR_REASON, 200);
+        pres.setAttributePreferredWidth(WMSConstants.ATTR_WMS_REASON, 200);
         
         //Enable Presention level sorting: sort using jobSubmissionTime 
         pres.setAutoSort(true); 
