@@ -51,6 +51,7 @@ public class JobStatusDataModel extends ResourceTableModel
     public static final String ATTR_LBHOSTNAME = "lbHostname"; 
     public static final String ATTR_LBPORT     = "lbPort"; 
     public static final String ATTR_JOBNAME    = "jobName";
+    public static final String ATTR_JOBVRL    = "jobVrl";
     public static final String ATTR_JOBSTATUS   = ATTR_STATUS;
     public static final String ATTR_JOBSTATUSINFO   = ATTR_JOB_STATUS_INFORMATION;
     
@@ -85,6 +86,7 @@ public class JobStatusDataModel extends ResourceTableModel
         headers.add(ATTR_INDEX);
         headers.add(ATTR_LBHOSTNAME);
         headers.add(ATTR_JOBNAME);
+
         headers.add(ATTR_JOBSTATUS);
         headers.add(ATTR_JOB_STATUS_INFORMATION);
         headers.add(ATTR_ERROR_TEXT);
@@ -96,6 +98,7 @@ public class JobStatusDataModel extends ResourceTableModel
         // Add extra header to data model:
         headers.add(ATTR_LOCATION);
         headers.add(ATTR_JOBID);
+        headers.add(ATTR_JOBVRL);
         headers.add(ATTR_LBPORT);
         headers.add(ATTR_IS_BUSY);
         
@@ -142,9 +145,10 @@ public class JobStatusDataModel extends ResourceTableModel
     {   
         VAttributeSet attrs=new VAttributeSet();
         
-        VRL jobvrl=new VRL(jobid);
+        VRL jobvrl=JobUtil.createJobVrl(jobid); 
         // actual job id as string. This is also the key! 
         attrs.set(ATTR_JOBID,jobid); 
+        attrs.set(ATTR_JOBVRL,jobvrl); 
         attrs.set(ATTR_JOBNAME,jobvrl.getBasename()); 
         attrs.set(ATTR_LBHOSTNAME,jobvrl.getHostname()); 
         attrs.set(ATTR_LBPORT,jobvrl.getPort());    

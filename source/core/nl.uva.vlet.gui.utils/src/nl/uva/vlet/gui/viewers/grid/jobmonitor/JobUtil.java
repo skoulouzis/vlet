@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nl.uva.vlet.data.VAttribute;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vjs.VJob;
 import nl.uva.vlet.vrl.VRL;
@@ -41,6 +42,21 @@ import nl.uva.vlet.vrs.VRSContext;
  */
 public class JobUtil
 {
+    public static VRL createJobVrl(String jobid) throws VRLSyntaxException
+    {
+    	VRL vrl=new VRL(jobid);
+        
+        // replace https -> LB scheme 
+        if (vrl.hasScheme("https"))
+            vrl=vrl.copyWithNewScheme(VRS.LB_SCHEME);
+        
+		return vrl; 
+	}
+
+    // ========================================================================
+    //
+    // ========================================================================
+    
     private VRSClient vrsClient;
     // mini cache: 
     private Map<String,VJob> _cache=new HashMap<String,VJob>(); 
@@ -76,11 +92,7 @@ public class JobUtil
             }
         }
         
-        VRL vrl=new VRL(jobid);
-        
-        // replace https -> LB scheme 
-        if (vrl.hasScheme("https"))
-            vrl=vrl.copyWithNewScheme(VRS.LB_SCHEME);
+        VRL vrl=createJobVrl(jobid); 
         VNode jobNode = vrsClient.openLocation(vrl); 
     
         if ((jobNode instanceof VJob)==false)
@@ -105,7 +117,8 @@ public class JobUtil
     }
 
 
-    public String[] getJobAttrNames(String id) throws VlException
+
+	public String[] getJobAttrNames(String id) throws VlException
     {
         return getJob(id).getJobAttributeNames(); 
     }
