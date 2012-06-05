@@ -34,11 +34,11 @@ import nl.uva.vlet.vrs.VCompositeNode;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSContext;
 
-public class JobOutput extends VCompositeNode
+public class JobOutputNode extends VCompositeNode
 {
     private ArrayList<OutputInfo> outputInfo;
 
-    public JobOutput(VRSContext context, VRL vrl, ArrayList<OutputInfo> outputInfo)
+    public JobOutputNode(VRSContext context, VRL vrl, ArrayList<OutputInfo> outputInfo)
     {
         super(context, vrl);
         this.outputInfo = outputInfo;

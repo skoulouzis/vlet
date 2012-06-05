@@ -558,7 +558,7 @@ public class WMSJob extends VJob
             if ((WMSUtil.statusIsDone(StatName.fromString(getStatus())))
                     && (WMSUtil.statusIsCleared(StatName.fromString(getStatus())) == false))
             {
-                JobOutput jo = new JobOutput(ctx, this.getVRL().append("outputs"), getWMS().getJobOutputs(
+                JobOutputNode jo = new JobOutputNode(ctx, this.getVRL().append("outputs"), getWMS().getJobOutputs(
                         this.getJobUri()));
                 childNodes.put(jo.getVRL(), jo);
             }
@@ -762,6 +762,7 @@ public class WMSJob extends VJob
         return getWMS().getJobEvents(getJobUri());
     }
 
+    
     public ArrayList<OutputInfo> getOutputs() throws VlException
     {
         WMSJob[] chJobs = getChildJobs();
@@ -773,6 +774,24 @@ public class WMSJob extends VJob
         return null;
     }
 
+    public boolean hasOutputs() throws VlException
+    {
+    	// only check terminated node. 
+    	if (this.hasTerminated()==false)
+    		return false; 
+    	
+    	if (this.hasError())
+    		return false;
+    	
+    	ArrayList<OutputInfo> outputs = this.getOutputs(); 
+    	
+    	if ((outputs==null) || (outputs.size()<=0))
+    		return false;
+    	
+    	return true; 
+    }
+   
+   
     /**
      * Returns output info as VRL array
      * 
