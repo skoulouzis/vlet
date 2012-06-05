@@ -31,7 +31,7 @@ import java.util.Vector;
 import javax.swing.event.ListDataListener;
 import javax.swing.table.AbstractTableModel;
 
-import nl.uva.vlet.Global;
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
@@ -41,7 +41,13 @@ import nl.uva.vlet.gui.view.ViewNode;
 public class ResourceTableModel extends AbstractTableModel implements Iterable<ResourceTableModel.RowData>  
 {
     private static final long serialVersionUID = 1987175001277362948L;
+    private static ClassLogger logger; 
 
+    static
+    {
+    	logger=ClassLogger.getLogger(ResourceTableModel.class);    	
+    }
+    
     public static ResourceTableModel createDefault() 
     {
         return new ResourceTableModel(); 
@@ -232,7 +238,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     		
     		if (rowObj==null)
     		{
-    		    warn("getValueAt: Index Out of bounds!"+rowIndex+","+columnIndex); 
+    		    logger.warnPrintf("getValueAt: Index Out of bounds! [%s,%d]\n",rowIndex,columnIndex); 
     			return null;
     		}
     		
@@ -337,7 +343,9 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
         
         if (row==null)
         {
-            warn("setValueAt(): Index out of bound: "+rowNr+","+colNr+":"+value); 
+        	if (value==null)
+        		value="<NULL>";
+            logger.warnPrintf("setValueAt(): Index out of bound:[%d,%d]='%s'\n",rowNr,colNr,value.toString()); 
             return;
         }
         
@@ -487,7 +495,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
             Integer index=this.rowKeyIndex.get(key); 
             if (index==null)
             {
-                Global.warnPrintln(this,"_delRow: Invalid Row Key:"+key); 
+                logger.warnPrintf("_delRow: Invalid Row Key:%s\n",key); 
                 return -1;
             }
             
@@ -561,7 +569,6 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
             return true; 
         }
     }
-    
 
     /** Search key and return row index */ 
     public int getRowIndex(String key)
@@ -599,16 +606,6 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
                 keys[i]=rows.elementAt(i).getKey();
             return keys;
         }
-    }
-
-    private void warn(String msg)
-    {
-       Global.errorPrintln(this,msg); 
-    }
-    
-    private void debug(String msg)
-    {
-       Global.errorPrintln(this,msg); 
     }
 
     public int getHeaderIndex(String name)
