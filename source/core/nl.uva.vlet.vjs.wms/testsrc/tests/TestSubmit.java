@@ -23,6 +23,8 @@
 
 package tests;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import nl.uva.vlet.exception.VlException;
@@ -32,6 +34,9 @@ import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.util.bdii.BdiiService;
 import nl.uva.vlet.util.bdii.ServiceInfo;
 import nl.uva.vlet.util.cog.GridProxy;
+import nl.uva.vlet.vfs.VDir;
+import nl.uva.vlet.vfs.VFSClient;
+import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vjs.wms.WMSJob;
 import nl.uva.vlet.vjs.wms.WMSResource;
 import nl.uva.vlet.vrl.VRL;
@@ -40,10 +45,14 @@ import nl.uva.vlet.vrs.VRSContext;
 
 public class TestSubmit
 {
-    static String jdl = "Executable = \"/bin/bash\";\n" + "Arguments = \"-c 'echo Hello World'; echo ; env \";\n"
+    static String jdl = "Executable = \"/bin/bash\";\n" 
+            + "Arguments = \"-c 'echo Hello World'; echo ; env \";\n"
             + "Stdoutput = \"message.txt\";\n" + "StdError = \"stderror\";\n"
-            + "OutputSandbox = {\"message.txt\",\"stderror\"};\n" + "virtualorganisation = \"pvier\";\n"
-            + "requirements = other.GlueCEName == \"express\";\n" + "rank =- other.GlueCEStateEstimatedResponseTime;\n"
+            + "OutputSandbox = {\"message.txt\",\"stderror\"};\n" 
+            + "virtualorganisation = \"pvier\";\n"
+            // + "requirements = other.GlueCEName == \"express\";\n" 
+            + " Requirements = (other.GlueCEPolicyMaxWallClockTime >=30 );\n"
+            + "rank =- other.GlueCEStateEstimatedResponseTime;\n"
             + "RetryCount = 3;\n";
 
     private static BdiiService infoService;
@@ -52,7 +61,7 @@ public class TestSubmit
     {
         // Global.init();
 
-        TestWMSBrowser.startVBrowser(new String[] { "lb://wms.grid.sara.nl:9003/" });
+        //TestWMSBrowser.startVBrowser(new String[] { "lb://wms3.grid.sara.nl:9003/" });
 
         // TestWMSBrowser.startVBrowser(null);
         try
@@ -76,9 +85,14 @@ public class TestSubmit
         // Global.setDebug(true);
         GridProxy.getDefault();
         VRSContext vrsContext = UIGlobal.getVRSContext();
-
+        VFSClient vfs=new VFSClient(vrsContext); 
+                
         try
         {
+            VDir homedir=vfs.getUserHome(); 
+            
+            VFile jidfile=homedir.newFile("myjobs.jids"); 
+            
             infoService = vrsContext.getBdiiService();
 
             String VO = vrsContext.getVO();
@@ -118,9 +132,20 @@ public class TestSubmit
                 // VRL("file:///home/ptdeboer/jobs/jtest.jdl"));
 
                 message("Job ID=" + jobs[i].getJobId());
-                String jobid = jobs[i].getJobId();
             }
-
+            
+            jidfile.create(true);
+            OutputStream outps = jidfile.getOutputStream(); 
+            PrintWriter prout=new PrintWriter(outps); 
+            
+            for (int i = 0; i < num; i++)
+            {
+                String jobid = jobs[i].getJobId();
+                prout.printf("%s\n",jobid); 
+            }                
+            prout.flush();
+            prout.close(); 
+            
             // Spiros: Dead variable
             // vrls = infoService.getLBServerEndpoints(VO);
 
