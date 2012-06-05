@@ -467,19 +467,24 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
         return oldvalue; 
     }
     
-    public Boolean set(String attrName, boolean val)
+    public void set(String attrName, boolean val)
     {
-        return (Boolean)_set(VAttributeType.BOOLEAN,attrName,new Boolean(val)); 
+        _set(VAttributeType.BOOLEAN,attrName,new Boolean(val)); 
     }
     
-    public Integer set(String attrName, int val) 
+    public void set(String attrName, int val) 
     {
-        return (Integer)_set(VAttributeType.INT,attrName,new Integer(val)); 
+        _set(VAttributeType.INT,attrName,new Integer(val)); 
     }
     
-    public Long set(String attrName, long val)
+    public void set(String attrName, long val)
     {
-        return (Long)_set(VAttributeType.LONG,attrName,new Long(val));
+        _set(VAttributeType.LONG,attrName,new Long(val));
+    }
+    
+    public void set(String attrName, VRL vrl) 
+    {
+    	_set(VAttributeType.VRL,attrName,vrl);
     }
 
     
@@ -773,6 +778,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
        for (VAttribute attr:attrs)
             this.put(attr); 
    }
+
 
  
 
