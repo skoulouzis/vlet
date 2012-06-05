@@ -185,21 +185,25 @@ public class ClassLogger extends FormattingLogger
      * Warning: this method is a  legacy method which takes the source object as argument. 
      * This method is slower then the recommend logging methods.
      */
-    public void logPrintf(Level level, Object obj, String format, Object... args)
+    public void logPrintf(Level level, Object sourceObject, String format, Object... args)
     {
         if (this.isLoggable(level)==false) // slow check!
             return; 
         
-        String source=this.object2classString(obj); 
+        String source=this.object2classString(sourceObject); 
         log(level,source+":"+format,args);
     }
-  
-    public void logException(Level level,Object source, Throwable e, String format, Object[] args)
+    
+    /**
+     * Warning: this method is a  legacy method which takes the source object as argument. 
+     * This method is slower then the recommend logging methods.
+     */
+    public void logException(Level level,Object sourceObject, Throwable e, String format, Object[] args)
     {
         if (this.isLoggable(level)==false)
             return; 
 
-        String srcstr=this.object2classString(source); 
+        String srcstr=this.object2classString(sourceObject); 
         this.logException(level, e, srcstr+":"+format, args);
     }
 
