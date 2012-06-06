@@ -70,6 +70,11 @@ import org.globus.axis.transport.HTTPSSender;
 import org.globus.axis.util.Util;
 import org.w3.www._2001.XMLSchema.holders.StringArrayHolder;
 
+/**
+ * Glite Logging and Bookkeeping (L&B) API. 
+ *
+ * @author Spirous Koulouzis, Piter T. de Boer
+ */
 public class LBClient
 {
     public static class LBJobHolder

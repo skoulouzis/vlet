@@ -61,6 +61,11 @@ import org.glite.wsdl.types.lb.Event;
 import org.globus.axis.util.Util;
 import org.gridsite.www.namespaces.delegation_1.DelegationSoapBindingStub;
 
+/**
+ * Glite WMS API. 
+ *
+ * @author Spirous Koulouzis, Piter T. de Boer
+ */
 public class WMSClient
 {
     static
@@ -363,7 +368,7 @@ public class WMSClient
             info("RESULT:");
             info("=======================================================================");
             info("Your job has been successfully submitted:");
-            WMSUtil.printResult(result);
+            WMSUtil.printResult(System.out,result);
             info("=======================================================================");
         }
         // end

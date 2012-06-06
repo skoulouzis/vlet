@@ -23,13 +23,10 @@
 
 package nl.uva.vlet.glite;
 
-import java.net.URISyntaxException;
+import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-import nl.uva.vlet.Global;
-import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.glite.WMLBConfig.LBConfig;
 
 import org.apache.axis.AxisFault;
@@ -52,49 +49,60 @@ public class WMSUtil
 
     private static final String dayStr[] = { "Sun", "Mon", "Tue", "Wedn", "Thu", "Fri", "Sat" };
 
+    public static boolean equalsIgnoreCase(String val1,String val2)
+    {
+    	if (val1==null)
+    		if (val2==null)
+    			return true;
+    		else 
+    			return false;
+    	
+    	return (val1.compareToIgnoreCase(val2)==0); 
+    }
+    
     public static boolean statusIsReady(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.READY.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.READY.getValue());
     }
 
     public static boolean statusIsCancelled(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.CANCELLED.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.CANCELLED.getValue());
     }
 
     public static boolean statusIsDone(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.DONE.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.DONE.getValue());
     }
 
     public static boolean statusIsAborted(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.ABORTED.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.ABORTED.getValue());
     }
 
     public static boolean statusIsCleared(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.CLEARED.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.CLEARED.getValue());
     }
 
     public static boolean statusIsSubmitted(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.SUBMITTED.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.SUBMITTED.getValue());
     }
 
     public static boolean statusIsRunning(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.RUNNING.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.RUNNING.getValue());
     }
 
     public static boolean statusIsUnknown(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.UNKNOWN.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.UNKNOWN.getValue());
     }
 
     public static boolean statusIsWaiting(StatName status)
     {
-        return StringUtil.equalsIgnoreCase(status.getValue(), StatName.WAITING.getValue());
+        return equalsIgnoreCase(status.getValue(), StatName.WAITING.getValue());
     }
 
     public static WMSException convertException(String actionStr, Throwable e)
@@ -306,41 +314,40 @@ public class WMSUtil
         return td;
     }
 
-    public static void printResult(JobIdStructType entry)
+    public static void printResult(PrintStream out,JobIdStructType entry)
     {
         JobIdStructType children[] = null;
         int size = 0;
         if (entry != null)
         {
-            info("jobID  = [" + entry.getId() + "]");
-            info("name   = [" + entry.getName() + "]");
-            info("path   = [" + entry.getPath() + "]");
+            outPrintln(out,"jobID  = [" + entry.getId() + "]");
+            outPrintln(out,"name   = [" + entry.getName() + "]");
+            outPrintln(out,"path   = [" + entry.getPath() + "]");
 
             // children
             children = (JobIdStructType[]) entry.getChildrenJob();
             if (children != null)
             {
                 size = children.length;
-                info("number of children = [" + size + "]");
+                outPrintln(out,"number of children = [" + size + "]");
                 if (size > 0)
                 {
                     for (int i = 0; i < size; i++)
                     {
-                        info("child n. " + (i + 1));
-                        info("--------------------------------------------");
-                        printResult(children[i]);
+                        outPrintln(out,"child n. " + (i + 1));
+                        outPrintln(out,"--------------------------------------------");
+                        printResult(out,children[i]);
                     }
                 }
             }
             else
-                info("no children");
+                outPrintln(out,"no children");
         }
     }
 
-    private static void info(String msg)
+    private static void outPrintln(PrintStream out,String msg)
     {
-        Global.infoPrintln(WMSUtil.class, msg);
-
+    	out.println(msg); 
     }
 
     /** Either terminated with error, cancelled or aborted */
