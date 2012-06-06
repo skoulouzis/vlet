@@ -30,11 +30,9 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskSource;
+
 /**
- * multi threaded event notifier 
- * 
- * @author ptdeboer
- *
+ * Multi threaded VRS ResourceEvent notifier.
  */
 public class ResourceEventNotifier implements ITaskSource 
 {
@@ -221,7 +219,12 @@ public class ResourceEventNotifier implements ITaskSource
 	
 	private void schedule(ResourceEvent event)
 	{
-
+		if (notifier==null)
+		{
+			Global.errorPrintf(this,"schedule() called after notifier has been disposed\n"); 
+			return;
+		}
+		
 		synchronized(eventQueue)
 		{
 			eventQueue.add(event); 
@@ -274,10 +277,60 @@ public class ResourceEventNotifier implements ITaskSource
 		}
 	}
 
+	public static void startTestMessages()
+	{
+		Runnable tester=new Runnable()
+		{
+			public void run()
+			{
+				while(true)
+				{
+					try
+					{
+						Thread.sleep(10000);
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					} 
+					
+					for (int i=1;i<10;i++)
+						VRS.getRegistry().fireEvent(ResourceEvent.createMessageEvent(null,"*** TEST MESSAGE ***"));
+				}
+			}
+		};
+		
+		Thread thread=new Thread(tester);
+		thread.start();
+	}
+
+	public String getID()
+	{
+		return "Resource Event Notifier"; 
+	}
+
+	public void handle(Exception e)
+	{
+		Global.warnPrintf(this,"notifier exception:%s\n",e); 
+	}
+
+	public void messagePrintln(String msg)
+	{
+		Global.infoPrintf(this,"Message:%s\n",msg); 
+	}
+
+	public void setHasTasks(boolean val)
+	{
+		Global.infoPrintf(this,"Has tasks running:%s\n",val); 
+	}
+	
+	// ========================================================================
+	// Life Cycle Management
+	// ========================================================================
+	
 	/**
 	 * Stop and wake up current notifier 
 	 */ 
-
 	public synchronized void stop()
 	{
 	    if (this.notifier==null)
@@ -306,12 +359,16 @@ public class ResourceEventNotifier implements ITaskSource
 	 */
 	public synchronized void start()
 	{
+		if (this.notifier==null)
+	    {
+	        Global.errorPrintf(this,"start() called after dispose()!\n");
+	        return;
+	    }
+		
 		this.notifierThread=new Thread(notifier);
 		this.notifierThread.start();
 	}
-	
-
-	
+		
 	/**
 	 * Reset notifier. 
 	 * Stop current running notifier, clears the event queue
@@ -324,59 +381,6 @@ public class ResourceEventNotifier implements ITaskSource
 		start(); 
 	}
 	
-
-	public static void startTestMessages()
-	{
-		Runnable tester=new Runnable()
-		{
-			public void run()
-			{
-				while(true)
-				{
-					try
-					{
-						Thread.sleep(10000);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					} 
-					
-					for (int i=1;i<10;i++)
-						VRS.getRegistry().fireEvent(ResourceEvent.createMessageEvent(null,"*** TEST MESSAGE ***"));
-				}
-			}
-		};
-		
-		Thread thread=new Thread(tester);
-		thread.start(); 
-		
-	}
-
-
-	public String getID()
-	{
-		return "Resource Event Notifier"; 
-	}
-
-
-	public void handle(Exception e)
-	{
-		Global.warnPrintf(this,"notifier exception:%s\n",e); 
-	}
-
-
-	public void messagePrintln(String msg)
-	{
-		Global.infoPrintf(this,"Message:%s\n",msg); 
-	}
-
-
-	public void setHasTasks(boolean val)
-	{
-		Global.infoPrintf(this,"Has tasks running:%s\n",val); 
-	}
-
 	public void finalize()
 	{
 		dispose();
@@ -391,6 +395,7 @@ public class ResourceEventNotifier implements ITaskSource
 			this.notifierThread.interrupt();
 			this.notifierThread=null; 
 		}
+		
 		//notifier should already have been stopped :
 		if (notifier!=null)
 		{
