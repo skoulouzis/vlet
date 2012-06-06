@@ -74,7 +74,7 @@ public abstract class VJob extends VCompositeNode implements VEditable
     }
     
     //=========================================================================
-    //
+    // VNode -> VJob
     //=========================================================================
 	
 	protected String id; 
@@ -94,6 +94,11 @@ public abstract class VJob extends VCompositeNode implements VEditable
 //	{
 //		throw new nl.uva.vlet.exception.NotImplementedException("Not implemented: resume:"+this); 
 //	}
+	
+	public boolean sync() throws VlException
+	{
+		return super.sync();
+	}
 	
 	// === VEdtiable interface ===
 	
