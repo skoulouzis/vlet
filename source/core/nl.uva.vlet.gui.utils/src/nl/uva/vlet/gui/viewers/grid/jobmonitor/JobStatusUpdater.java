@@ -26,12 +26,14 @@ package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
+import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
+import nl.uva.vlet.vrs.EventType;
 import nl.uva.vlet.vrs.ResourceEvent;
 
 public class JobStatusUpdater implements ProxyResourceEventListener
@@ -117,7 +119,7 @@ public class JobStatusUpdater implements ProxyResourceEventListener
         bgUpdate(true,attrNames);
     }
     
-    private void bgUpdate(boolean updateStatus,String attrNames[])
+    private void bgUpdate(boolean fullUpdate,String attrNames[])
     {   
         StringList ids=jobStatusModel.getJobIds();
         
@@ -139,7 +141,7 @@ public class JobStatusUpdater implements ProxyResourceEventListener
             
             try
             {
-                String newStatus=getJobUtil().getStatus(id,updateStatus);
+                String newStatus=getJobUtil().getStatus(id,fullUpdate);
                 VRL vrl=getJobUtil().getJobVRL(id); 
                 
                 logger.infoPrintf(" - new status of '%s'=%s\n",id,newStatus);
@@ -194,7 +196,27 @@ public class JobStatusUpdater implements ProxyResourceEventListener
 	public void notifyProxyEvent(ResourceEvent event) 
 	{
 		logger.debugPrintf(">>> Got Event:%s\n",event); 
+		EventType type = event.getType(); 
+		VRL source = event.getSource();
+		
+		//filter out jobs
+		if (getJobUtil().isJobVRL(source)) //source.hasScheme(VRS.LB_SCHEME))
+		{
+			// search fro job using the VRL
+			String jobid=jobStatusModel.getJobIdByVrl(source); 
+			
+			if (jobid!=null)
+			{
+				if (type==EventType.SET_ATTRIBUTES)
+				{
+					VAttribute[] attrs = event.getAttributes(); 
+					VAttributeSet attrSet=new VAttributeSet(attrs);
+					// update table
+				}
+			}
+		}
 	}
+	
 
 	public void stopAll() 
 	{

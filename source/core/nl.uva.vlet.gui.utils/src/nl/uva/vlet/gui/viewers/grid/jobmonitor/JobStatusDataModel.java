@@ -42,6 +42,7 @@ import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
+import nl.uva.vlet.vrs.VRS;
 
 public class JobStatusDataModel extends ResourceTableModel
 {
@@ -281,6 +282,22 @@ public class JobStatusDataModel extends ResourceTableModel
 		if (attr==null)
 			return null; 
 		return attr.getVRL(); 
+	}
+
+	public boolean hasJobVRL(VRL source) 
+	{
+		return (getJobIdByVrl(source)!=null);
+	}
+
+	public String getJobIdByVrl(VRL vrl) 
+	{
+		// first guess jobid using vrl with "https" as scheme: 
+		String jobid=JobUtil.guessJobIdFromJobVrl(vrl); 
+		RowData row = this.getRow(jobid); 
+		if (row!=null)
+			return row.getKey();
+		
+		return null;
 	}       
     
     

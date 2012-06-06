@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import nl.uva.vlet.data.VAttribute;
+import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vjs.VJob;
@@ -55,6 +56,12 @@ public class JobUtil
 		return vrl; 
 	}
     
+	public static String guessJobIdFromJobVrl(VRL vrl)
+	{	
+		vrl=vrl.copyWithNewScheme(VRS.HTTPS_SCHEME);
+		return vrl.toString(); 
+	}
+
     private static Map<String,JobUtil> jobUtilInstances=new Hashtable<String,JobUtil>(); 
     
     public static JobUtil getJobUtil(VRSContext context)
@@ -94,6 +101,13 @@ public class JobUtil
     public String getStatus(String jobid, boolean fullUpdate) throws VlException
     {
         VJob job=getJob(jobid); 
+        if (job==null)
+        	throw new ResourceNotFoundException("Couldn' get job:"+jobid); 
+        
+        // use new sync method but only for unfinished jobs: 
+        if (fullUpdate)
+        	if (job.hasTerminated()==false)
+        		job.sync(); 
         String stat=job.getStatus();
        
         return stat; 
@@ -164,6 +178,12 @@ public class JobUtil
 			return null;
 		return job.getVRL(); 
 	}
+
+	public boolean isJobVRL(VRL vrl) 
+	{
+		return vrl.hasScheme(VRS.LB_SCHEME);
+	}
+
 	
 }
 	
