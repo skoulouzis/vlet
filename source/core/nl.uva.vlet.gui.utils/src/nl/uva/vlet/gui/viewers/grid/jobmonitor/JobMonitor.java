@@ -54,6 +54,7 @@ public class JobMonitor extends ViewerPlugin
     private static final long serialVersionUID = -7576499812836308887L;
 
     public static String ACTION_REFRESH_ALL = "refresh";
+    public static String ACTION_RELOAD = "reload";
     public static String ACTION_START = "start";
     public static String ACTION_STOP = "stop";
     public static String ACTION_OPEN_JOB = "openJob";
@@ -119,7 +120,13 @@ public class JobMonitor extends ViewerPlugin
             this.controller = new JobMonitorController(this);
             initGui();
             initListeners();
+            controller.initUpdater(getJobStatusDataModel()); 
         }
+    }
+    
+    protected JobStatusDataModel getJobStatusDataModel()
+    {
+    	return (JobStatusDataModel)this.jobTable.getModel(); 
     }
     
     protected void initListeners()
@@ -211,14 +218,14 @@ public class JobMonitor extends ViewerPlugin
                         {
                             startMi = new JMenuItem();
                             mainJobMenu.add(startMi);
-                            startMi.setText("start");
+                            startMi.setText("Start");
                             startMi.setActionCommand(ACTION_START);
                             startMi.addActionListener(controller);
                         }
                         {
                             stopMi = new JMenuItem();
                             mainJobMenu.add(stopMi);
-                            stopMi.setText("stop");
+                            stopMi.setText("Stop");
                             stopMi.setActionCommand(ACTION_STOP);
                             stopMi.addActionListener(controller);
                         }
@@ -230,10 +237,18 @@ public class JobMonitor extends ViewerPlugin
                         {
                             refeshMi = new JMenuItem();
                             viewMenu.add(refeshMi);
-                            refeshMi.setText("refresh");
+                            refeshMi.setText("Refresh");
                             refeshMi.setActionCommand(ACTION_REFRESH_ALL);
                             refeshMi.addActionListener(this.controller);
                         }
+                        {
+                            JMenuItem item = new JMenuItem();
+                            viewMenu.add(item);
+                            item.setText("Reload");
+                            item.setActionCommand(ACTION_RELOAD);
+                            item.addActionListener(this.controller);
+                        }
+
                     }
                     {
                         helpMenu = new JMenu();

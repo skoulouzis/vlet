@@ -70,7 +70,7 @@ public class JobStatusDataModel extends ResourceTableModel
     private JobMonitorController jobController;
     private Presentation presentation;
     private ActionTask updateTask;
-    private JobStatusUpdater statusUpdater; 
+    // private JobStatusUpdater statusUpdater; 
     
     public JobStatusDataModel(JobMonitorController controller)
     {
@@ -108,7 +108,7 @@ public class JobStatusDataModel extends ResourceTableModel
         // clear dummy data
         this.clearData();
         
-        this.statusUpdater=new JobStatusUpdater(this); 
+       
     }
 
     /** Remove old and update with new JobIds list */ 
@@ -129,13 +129,10 @@ public class JobStatusDataModel extends ResourceTableModel
             }
         }
         
-        this.statusUpdater.doUpdate(true);  
+      
     }
     
-    public void update(boolean fullUpdate)
-    {
-        this.statusUpdater.doUpdate(true);
-    }
+    
 
     private void handle(String msg, VRLSyntaxException e)
     {

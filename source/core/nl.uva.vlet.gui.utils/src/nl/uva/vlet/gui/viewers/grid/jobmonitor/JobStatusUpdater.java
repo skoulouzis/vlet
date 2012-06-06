@@ -29,7 +29,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
-import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventNotifier;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
@@ -40,7 +39,7 @@ public class JobStatusUpdater implements ProxyResourceEventListener
     private static ClassLogger logger; 
     {
         logger=ClassLogger.getLogger(JobStatusUpdater.class);
-        logger.setLevelToDebug(); 
+        //logger.setLevelToDebug(); 
     }
     // ========================================================================
     
@@ -49,10 +48,12 @@ public class JobStatusUpdater implements ProxyResourceEventListener
     private ActionTask updateAttrsTask=null; 
 
     private boolean stopUpdateTasks=false;
-    private JobUtil jobUtil; 
+    private JobUtil jobUtil=null;
+	private JobMonitorController controller=null; 
     
-    public JobStatusUpdater(JobStatusDataModel model)
+    public JobStatusUpdater(JobMonitorController jobMonitorController, JobStatusDataModel model)
     {
+    	this.controller=jobMonitorController;
         this.jobStatusModel=model; 
         // register as event listener: 
         ProxyVRSClient.getInstance().addResourceEventListener(this); 
@@ -192,7 +193,12 @@ public class JobStatusUpdater implements ProxyResourceEventListener
 	@Override
 	public void notifyProxyEvent(ResourceEvent event) 
 	{
-		logger.errorPrintf(">>> Got Event:%s\n",event); 
+		logger.debugPrintf(">>> Got Event:%s\n",event); 
+	}
+
+	public void stopAll() 
+	{
+		stopUpdateTasks=true; 
 	}
     
 }

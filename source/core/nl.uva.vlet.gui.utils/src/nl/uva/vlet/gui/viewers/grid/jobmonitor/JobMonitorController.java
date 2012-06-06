@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
@@ -104,9 +105,10 @@ public class JobMonitorController implements ActionListener
         {
         	openJob(argsStr); 
         }
-        else if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.REFRESH))
+        else if ( (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.REFRESH))
+        		  || (StringUtil.equals(cmdStr,JobMonitor.ACTION_RELOAD)) )
         {
-            update(true); 
+            actionReload(); 
         }
         else if (StringUtil.equals(cmdStr,NavigationBar.NavigationAction.LOCATION_CHANGED))
         {
@@ -121,10 +123,28 @@ public class JobMonitorController implements ActionListener
         		handle("Not a job location:"+txt,ex); 
         	}
         }
-
+        else if (StringUtil.equals(cmdStr,JobMonitor.ACTION_START))
+        {
+        	actionStart();
+        }
+        else if (StringUtil.equals(cmdStr,JobMonitor.ACTION_STOP)) 
+        {
+        	actionStop();
+        }
     }
 
-    public void openJob(String jobid) 
+    private void actionStop() 
+    {
+    	if (statusUpdater!=null)
+    		statusUpdater.stopAll(); 
+	}
+
+	private void actionStart() 
+	{
+		update(true);
+	}
+
+	public void openJob(String jobid) 
     {
     	try
     	{
@@ -141,12 +161,12 @@ public class JobMonitorController implements ActionListener
 
 	private static void debugPrintf(String format,Object... args)
     {
-        Global.errorPrintf("JobMonitor",format,args); 
+        Global.debugPrintf("JobMonitor",format,args); 
     }
 
     public void stopViewer()
     {
-    	
+    	actionStop();
     }
 
     public void updateLocation(VRL loc)
@@ -162,7 +182,14 @@ public class JobMonitorController implements ActionListener
     
     private Object loadMutex=new Object();
     
-    private boolean isLoading=false; 
+    private boolean isLoading=false;
+
+	private JobStatusUpdater statusUpdater=null;
+    
+    protected void actionReload()
+    {
+    	load(monitor.getVRL());
+    }
     
     protected void load(VRL loc)
     {
@@ -213,7 +240,6 @@ public class JobMonitorController implements ActionListener
         catch (Throwable t)
         {
             this.monitor.setViewerTitle("*** Error loading file"); 
-            
             handle("Couldn't load Job ID File:"+loc, t); 
         }
         finally
@@ -231,22 +257,37 @@ public class JobMonitorController implements ActionListener
     public void handle(String action,Throwable t)
     {
     	ExceptionForm.show(t); 
-        System.err.println("Exception:"+action); 
-        t.printStackTrace(System.err); 
+    	ClassLogger.getLogger(JobMonitorController.class).logException(ClassLogger.ERROR,t,"%s\n",action); 
     }
     
     protected void updateJobIds(StringList ids)
     {
-        this.monitor.getJobMonitorDataModel().setJobids(ids); 
+    	// clear 
+    	this.monitor.getJobMonitorDataModel().clearData(); 
+    	
+    	if ((ids!=null) && (ids.size()>0)) 
+    	{
+    		this.monitor.getJobMonitorDataModel().setJobids(ids); 
+    		this.statusUpdater.doUpdate(true); 
+    	}
     }
     
     protected void update(boolean fullUpdate)
     {
-        this.monitor.getJobMonitorDataModel().update(fullUpdate);  
+    	if (this.statusUpdater!=null)
+    		this.statusUpdater.doUpdate(true);
     }
     
     public void fireViewVRLEvent(VRL vrl)
 	{
     	monitor.fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(vrl));
+	}
+
+	public void initUpdater(JobStatusDataModel jobStatusDataModel) 
+	{
+    	if (this.statusUpdater!=null)
+    		this.statusUpdater.stopAll();
+		
+		this.statusUpdater=new JobStatusUpdater(this,jobStatusDataModel); 
 	}
 }

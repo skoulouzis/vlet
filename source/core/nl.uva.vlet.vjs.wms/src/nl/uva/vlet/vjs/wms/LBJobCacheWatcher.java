@@ -25,6 +25,7 @@ package nl.uva.vlet.vjs.wms;
 
 import java.util.Vector;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.tasks.ActionTask;
@@ -38,14 +39,21 @@ public class LBJobCacheWatcher implements ITaskSource
     // =======================================================================
 
     private static Vector<LBJobCacheWatcher> watchers = new Vector<LBJobCacheWatcher>();
-
+    private static ClassLogger logger; 
+    
+    static
+    {
+    	logger=ClassLogger.getLogger(LBJobCacheWatcher.class);
+    	//logger.setLevelToDebug();
+    }
+    
     protected static void register(LBJobCacheWatcher w)
     {
         synchronized (watchers)
         {
             if (watchers.contains(w))
             {
-                Global.warnPrintln(LBJobCacheWatcher.class, "*** Warning watcher already registerd for:" + w.getID());
+                logger.warnPrintf("*** Warning: watcher already registerd for:%s\n" + w.getID());
             }
 
             watchers.add(w);
@@ -110,7 +118,7 @@ public class LBJobCacheWatcher implements ITaskSource
                 ITaskMonitor monitor = this.getTaskMonitor();
                 try
                 {
-                    debug(" The task has been started ");
+                    logger.debugPrintf(" The task has been started\n");
 
                     while (mustStop == false)
                     {
@@ -123,7 +131,7 @@ public class LBJobCacheWatcher implements ITaskSource
                         }
                         catch (InterruptedException e)
                         {
-                            handle(e);
+                            logger.logException(ClassLogger.WARN,e,">>> Interupted <<<\n");
                         }
                     }
                 }
@@ -132,13 +140,13 @@ public class LBJobCacheWatcher implements ITaskSource
                     handle(e);
                 }
 
-                debug("LBJobCacheWatcher has stopped:" + getID());
+                logger.debugPrintf("LBJobCacheWatcher has stopped:%s\n",getID());
             }
 
             @Override
             public void stopTask()
             {
-                debug("Stopping LBJobCacheWatcher:" + getID());
+            	logger.debugPrintf("Stopping LBJobCacheWatcher:%s\n",getID());
                 mustStop = true;
             }
         };
@@ -171,7 +179,7 @@ public class LBJobCacheWatcher implements ITaskSource
     /** Stop threads, unregister and cleanup */
     public void disposeWatcher()
     {
-        debug(">>> DISPOSING LBJobCacheWatcher for #" + this.lbCache.getID());
+    	logger.debugPrintf(">>> DISPOSING LBJobCacheWatcher for #%s\n",this.lbCache.getID());
         // Call All background tasks!!!
         ActionTask.stopActionsFor(this, false);
 
@@ -187,14 +195,14 @@ public class LBJobCacheWatcher implements ITaskSource
     @Override
     public void messagePrintln(String msg)
     {
-        debug("Message:" + msg);
+        logger.debugPrintf("Message:%s\n",msg);
         Global.infoPrintf(this, msg);
     }
 
     @Override
     public void setHasTasks(boolean val)
     {
-        debug("Have life tasks=" + val);
+        logger.debugPrintf("Has tasks=%s\n","" + val);
         this.hasTasks = val;
     }
 
@@ -217,7 +225,7 @@ public class LBJobCacheWatcher implements ITaskSource
     {
         if ((this.notifierTask != null) && (notifierTask.isAlive()))
         {
-            warn("Notifier task already running. Will start duplicate notifier!");
+            warnPrintf("Notifier task already running. Will start duplicate notifier!\n");
             notifierTask.stopTask();// Set current to stop but do not signal!
             // start new one anyway. JobEvents Vector is synchronized.
         }
@@ -248,7 +256,7 @@ public class LBJobCacheWatcher implements ITaskSource
 
                     if (event == null)
                     {
-                        debug("--- JobNotifier No Events ---");
+                        logger.debugPrintf("--- JobNotifier No Events ---\n");
 
                         try
                         {
@@ -259,17 +267,18 @@ public class LBJobCacheWatcher implements ITaskSource
                                 jobEvents.wait(60000);
                             }
 
-                            debug("--- JobNotifier Wakeup ---");
+                            logger.debugPrintf("--- JobNotifier Wakeup ---\n");
                         }
                         catch (InterruptedException e)
                         {
-                            error("Interrupted:" + e);
+                        	// warning. 
+                            errorPrintf(">>> Interrupted <<<\n"); 
                         }
 
                     }
                     else
                     {
-                        debug("Notifying event:" + event);
+                    	logger.debugPrintf("Notifying event:%s\n",event);
 
                         notifying = true;
                         notifyStartTime = System.currentTimeMillis();
@@ -286,7 +295,7 @@ public class LBJobCacheWatcher implements ITaskSource
                     }
                 }
 
-                warn("--- JobNotifier STOPPED ---");
+                warnPrintf("--- JobNotifier STOPPED ---\n");
             }
 
             @Override
@@ -320,7 +329,6 @@ public class LBJobCacheWatcher implements ITaskSource
             catch (Throwable t)
             {
                 handle("*** Exception while notifying event:" + event, t);
-                t.printStackTrace();
             }
         }
     }
@@ -329,7 +337,7 @@ public class LBJobCacheWatcher implements ITaskSource
     {
         if ((this.notifierTask == null) || (notifierTask.isAlive() == false))
         {
-            warn("Notifier is dead. Starting new one.");
+            warnPrintf("Notifier is dead. Starting new one.\n");
             this.startNotifier();
         }
 
@@ -341,42 +349,24 @@ public class LBJobCacheWatcher implements ITaskSource
     // Miscellaneous
     // =============
 
-    private void handle(String msg, Throwable t)
+    private void warnPrintf(String msg, Object... args)
     {
-        error(msg);
-        error("Exception=%s\n", t);
+    	logger.warnPrintf(msg, args);
     }
 
-    private void debug(String msg, Object... args)
+    private void errorPrintf(String msg, Object... args)
     {
-        // todo: update to printf format:
-        if (msg.endsWith("/n") == false)
-            msg = msg + "\n";
-        Global.debugPrintf(this, msg, args);
+    	logger.errorPrintf(msg, args);
     }
 
-    private void warn(String msg, Object... args)
+    private void handle(String msg, Throwable e)
     {
-        // todo: update to printf format:
-        if (msg.endsWith("/n") == false)
-            msg = msg + "\n";
-
-        Global.warnPrintf(this, msg, args);
-    }
-
-    private void error(String msg, Object... args)
-    {
-        // todo: update to printf format:
-        if (msg.endsWith("/n") == false)
-            msg = msg + "\n";
-
-        Global.errorPrintf(this, msg, args);
+    	logger.logException(ClassLogger.ERROR,e,"%s\n", msg);
     }
 
     public void handle(Exception e)
     {
-        error("Exception:" + e);
-        Global.errorPrintStacktrace(e);
+    	logger.logException(ClassLogger.ERROR,e,"Exception:%s\n", e);
     }
 
 }

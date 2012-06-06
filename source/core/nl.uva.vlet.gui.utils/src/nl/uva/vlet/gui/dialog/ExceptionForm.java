@@ -43,14 +43,15 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.WindowRegistry;
+
 /**
  * Simple Exception Form 
  * Author P.T. de Boer 
  */
 public class ExceptionForm extends javax.swing.JDialog implements ActionListener 
 {
-	
-	
+	private static final long serialVersionUID = -4959845172597559289L;
+
 	public static void show(Exception e) 
 	{
 		show(null,e,false); 
