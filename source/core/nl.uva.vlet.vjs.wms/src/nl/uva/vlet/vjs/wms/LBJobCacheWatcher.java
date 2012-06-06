@@ -315,12 +315,12 @@ public class LBJobCacheWatcher implements ITaskSource
 
     private void notifyEvent(JobEvent event)
     {
-        IJobStatusListener[] listeners = this.lbCache.getJobListenersArray();
+        JobStatusListener[] listeners = this.lbCache.getJobListenersArray();
 
         if (listeners == null)
             return;
 
-        for (IJobStatusListener listener : listeners)
+        for (JobStatusListener listener : listeners)
         {
             try
             {

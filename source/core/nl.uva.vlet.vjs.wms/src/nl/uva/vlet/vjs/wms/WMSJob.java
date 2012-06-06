@@ -312,7 +312,8 @@ public class WMSJob extends VJob
      */
     public JobStatus getLBJobStatus(boolean forceUpdate) throws VlException
     {
-        this.cachedJobStatus = queryLBJobStatus(forceUpdate);
+    	if ((this.cachedJobStatus==null) || (forceUpdate)) 
+    		this.cachedJobStatus = queryLBJobStatus(forceUpdate);
         return this.cachedJobStatus;
     }
 
@@ -338,8 +339,17 @@ public class WMSJob extends VJob
      */
     public JobStatus queryLBJobStatus(boolean forceUpdate) throws VlException
     {
-        cachedJobStatus = this.lbResource.queryStatus(jobUri, forceUpdate);
-        return this.cachedJobStatus;
+    	if (cachedJobStatus==null)
+    	{
+    		cachedJobStatus = this.lbResource.queryJobStatus(jobUri, true);
+    	}
+    	else if (forceUpdate==true)
+    	{
+    		cachedJobStatus=this.lbResource.queryJobStatus(jobUri, forceUpdate); 
+    	}
+    	// else return cachedJobStatus; 
+    	
+    	return this.cachedJobStatus;
     }
 
     @Override
@@ -924,6 +934,12 @@ public class WMSJob extends VJob
         this.isCllectionOrDAG = b;
     }
 
+    public boolean sync()
+    {
+    	this.cachedJobStatus=null;
+    	return true; 
+    }
+    
     // public String[] getChildren()
     // {
     // String[] children = cachedJobStatus.getChildren();

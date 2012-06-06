@@ -24,6 +24,7 @@
 package nl.uva.vlet.vjs.wms;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,6 +34,9 @@ import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.glite.LBClient;
+import nl.uva.vlet.glite.WMLBConfig;
+import nl.uva.vlet.glite.WMSUtil;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
 import nl.uva.vlet.tasks.ActionTask;
@@ -52,7 +56,7 @@ import org.glite.wsdl.types.lb.JobStatus;
 /**
  * Standalone LB Resource. Doesn't have any WMS associated with it
  */
-public class LBResource extends ResourceSystemNode implements IJobStatusListener, 
+public class LBResource extends ResourceSystemNode implements JobStatusListener, 
     VPresentable, VJobMonitorResource
 {
     private static ClassLogger logger = null;
@@ -103,10 +107,10 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         }
     }
 
-    private LBJobCache lbJobCache = null;
-
-    private JobStatus cachedJobStatus = null;
-
+    boolean useCache=true; 
+    private LBJobCache _lbJobCache = null;
+    private LBClient _lbClient = null;
+   
     private WMSResource wms;
 
     // Initialize default object: also used as mutex:
@@ -114,14 +118,41 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
 
     private Presentation presentation;
 
-    public LBResource(VRSContext context, ServerInfo info)
+    public LBResource(VRSContext context, ServerInfo info) throws VlException
     {
         super(context, info);
-        this.lbJobCache = LBJobCache.getCache(context, info.getHostname());
-        this.lbJobCache.addJobListener(this);
+        if (useCache)
+        {
+        	this._lbJobCache = LBJobCache.createCache(context, info.getHostname());
+        	this._lbJobCache.addJobListener(this);
+        }
+        else
+        {
+        	String lbHostname=info.getHostname(); 
+        	// LB portnumber are always 9003. Can't use wms port! 
+        	//int lbPort=info.getPort(); 
+        	//if (lbPort<=0) 
+        	int lbPort=WMLBConfig.LB_DEFAULT_PORT; 
+        	
+        	String proxyFilename=this.getVRSContext().getGridProxy().getProxyFilename(); 
+        	
+        	try 
+        	{
+				_lbClient=WMSUtil.createLBClient(lbHostname,lbPort, proxyFilename);
+			}
+        	catch (Exception e)
+        	{
+        		throw new VlException("LBException", "Couldn't create LBClient for host:" + lbHostname, e);
+			}
+        }
         logger.debugPrintf(">>> New LBResource for:%s <<<\n", info.getHostname());
     }
 
+    public String toString()
+    {
+    	return  "<lBResource>"+getHostname(); 
+    }
+    
     public String getType()
     {
         return WMSConstants.TYPE_LBRESOURCE;
@@ -178,7 +209,6 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         }
 
         return jobs;
-
     }
 
     public void addNewJob(WMSJob job) throws VlException// throws VlException
@@ -198,30 +228,18 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
 
         ITaskMonitor monitor = ActionTask.getCurrentThreadTaskMonitor("LBResource.getNodes()", 1);
         monitor.startSubTask("query user jobs for:" + this.getHostname(), 1);
-
-        boolean done = lbJobCache.queryUserJobs(monitor, fullUpdate);
-
-        // Synchronized with asynchronous method
-        if (done == false)
-        {
-            // logger.debugPrintf("waitForQueryUserJobs(): for %s\n",
-            // getHostname());
-            lbJobCache.waitForQueryUserJobs();
-            // logger.debugPrintf("waitForQueryUserJobs(): for %s: done\n",
-            // getHostname());
-        }
-
-        // Update (re) query jobs for specific LB:
-        List<String> ids = lbJobCache.getCachedJobIDs();
-        if ((ids == null) || (ids.size() == 0))
+        List<JobStatus> jobs = queryUserJobs(monitor,fullUpdate); 
+ 
+        if ((jobs == null) || (jobs.size() == 0))
             return null;
         //
-
         Vector<WMSJob> nodes = new Vector<WMSJob>();
-        for (int i = 0; i < ids.size(); i++)
+        for (int i = 0; i < jobs.size(); i++)
         {
             // Wrap Job:
-            java.net.URI jobUri = new VRL(ids.get(i)).toURI();
+        	String id=jobs.get(i).getJobId();
+        	
+            java.net.URI jobUri = new VRL(id).toURI();
             VRL jobVrl = createJobVrl(jobUri);
             WMSJob job = new WMSJob(this, jobVrl, jobUri);
             String parentID = job.getLBJobStatus().getParentJob();
@@ -241,7 +259,7 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         return nodesArr;
     }
 
-    VRL createJobVrl(URI jobUri)
+	VRL createJobVrl(URI jobUri)
     {
         return this.getVRL().append(jobUri.getPath());
     }
@@ -260,12 +278,12 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
     public WMSJob getJob(VRL jobVrl) throws VlException
     {
         java.net.URI jobUri = this.createJobUri(jobVrl);
-        JobStatus stat = this.lbJobCache.queryJobStatus(jobUri.toString(), false);
-
-        String[] children = stat.getChildren();
+        JobStatus stat=this.queryJobStatus(jobUri, false); 
 
         if (stat != null)
         {
+            String[] children = stat.getChildren();
+
             WMSJob job = new WMSJob(this, jobVrl, jobUri, stat);
             if (children != null)
             {
@@ -276,16 +294,17 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         }
 
         throw new nl.uva.vlet.exception.ResourceNotFoundException("Couldn't query job:" + jobUri);
-    }
+    }  
 
-    public WMSJob getJobByJobID(String jobId) throws VlException
+	public WMSJob getJobByJobID(String jobId) throws VlException
     {
         try
         {
             // use cache:
             java.net.URI jobUri = new java.net.URI(jobId);
-            JobStatus stat = this.lbJobCache.queryJobStatus(jobUri.toString(), false);
-
+            
+            JobStatus stat=this.queryJobStatus(jobUri,false); 
+            
             if (stat != null)
                 return new WMSJob(this, this.createJobVrl(jobUri), jobUri, stat);
         }
@@ -306,13 +325,11 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
     @Override
     public void connect() throws VlException
     {
-
     }
 
     @Override
     public void disconnect() throws VlException
     {
-
     }
 
     @Override
@@ -343,26 +360,24 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
             throw new ResourceNotFoundException("This resource is not a job resource : "+newVRL);
     }
 
-    public JobStatus queryStatus(URI jobUri, boolean updateCache) throws VlException
-    {
-        // Micro cache:
-        this.cachedJobStatus = this.lbJobCache.queryJobStatus(jobUri.toString(), updateCache);
-        return this.cachedJobStatus;
-    }
-
     public static VRL createLBVrlForHost(String hostname)
     {
         return new VRL(VRS.LB_SCHEME, hostname.toLowerCase(), 9000, "/");
     }
 
-    public void updateJobStatuses(ITaskMonitor monitor, boolean fullUpdate)
+    public void asyncUpdateJobStatuses(ITaskMonitor monitor, boolean fullUpdate)
     {
-        this.lbJobCache.queryJobStatuses(monitor, null, fullUpdate);
+    	// async query! 
+    	if (useCache)
+    		this._lbJobCache.queryJobStatuses(monitor, null, fullUpdate);
     }
 
     public boolean jobPurged(String jobId)
     {
-        return this.lbJobCache.jobPurged(jobId);
+    	if (useCache)
+    		return this._lbJobCache.jobPurged(jobId);
+    	
+    	return true; 
     }
 
     public WMSJob[] getUserJobs(boolean fullUpdate) throws VlException
@@ -417,7 +432,7 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         try
         {
             WMSJob job = this.getJobByJobID(jobid);
-            JobStatus jobStat = job.getLBJobStatus();
+            //JobStatus jobStat = job.getLBJobStatus();
 
             if ((this.cachedJobNodes == null) || (cachedJobNodes.size() <= 0))
             {
@@ -452,17 +467,117 @@ public class LBResource extends ResourceSystemNode implements IJobStatusListener
         
         return jobs; 
     }
-
+    
+    // ====
+    // Actual Methods
+    // ====
+    
+    public JobStatus queryJobStatus(URI jobUri, boolean updateCache) throws VlException
+    {
+    	logger.debugPrintf("queryJobStatus(); lb=%s:%d, jobid='%s'\n",getHostname(),getPort(),jobUri); 
+    	
+    	JobStatus status;    	
+    	if (useCache)
+    	{
+    		status = this._lbJobCache.queryJobStatus(jobUri.toString(), updateCache);
+    	}
+    	else
+    	{
+    		status=this.directQueryJobStatus(jobUri);
+    	}
+    	
+    	logger.debugPrintf("queryJobStatus():'%s' = '%s' \n",jobUri,status); 
+    	
+    	return status; 
+    }
+    
     public String getJobStatus(String jobid) throws VlException
     {
         return this.getJobByJobID(jobid).getStatus(); 
     }
+    
+    private List<JobStatus> queryUserJobs(ITaskMonitor monitor, boolean fullUpdate) throws VlException
+	{
+    	logger.debugPrintf("queryUSerJobs() stared for:%s\n",this); 
+    	
+		boolean done=false;
+		List<JobStatus> jobs;
+	        
+        List<String> ids;
+        
+		if (useCache)
+        {
+        	done= _lbJobCache.queryUserJobs(monitor, fullUpdate);
 
+        	// Synchronized with asynchronous method
+        	if (done == false)
+        	{
+        		// logger.debugPrintf("waitForQueryUserJobs(): for %s\n",
+        		// getHostname());
+        		_lbJobCache.waitForQueryUserJobs();
+        		// logger.debugPrintf("waitForQueryUserJobs(): for %s: done\n",
+        		// getHostname());
+        	}
+            // Update (re) query jobs for specific LB:
+        	ids = _lbJobCache.getCachedJobIDs();
+        	jobs=new ArrayList<JobStatus>();
+        	for (String id:ids)
+        	{
+        		jobs.add(_lbJobCache.getCachedJobStatus(id)); 
+        	}
+
+        }
+        else
+        {
+        	jobs=directQueryUserJobs(monitor); 
+        }
+		
+        logger.debugPrintf("queryUSerJobs() returning %d user jobs\n",jobs.size()); 
+        
+        return jobs; 
+	}
+    
+    /** Direct job status query without using cache */ 
+    public JobStatus directQueryJobStatus(URI jobUri) throws VlException
+    {
+    	JobStatus stat;
+		try 
+		{
+			stat = this._lbClient.getStatus(jobUri);
+	    	return stat;
+		}
+		catch (Exception e) 
+		{
+			throw new VlException("Failed to query job:"+jobUri,e);
+		} 
+	}
+    
+    /** 
+     * Direct user jobs query without using cache 
+     * @throws VlException 
+     */ 
+    public List<JobStatus> directQueryUserJobs(ITaskMonitor monitor) throws VlException
+	{
+    	 try 
+    	 {
+			JobStatus[] lbjobs = _lbClient.getUserJobStatusses();
+			List<JobStatus> list=new ArrayList<JobStatus>(); 
+			for (JobStatus stat:lbjobs)
+			{
+				list.add(stat); 
+			}
+			return list; 
+    	 } 
+    	 catch (Exception e) 
+    	 {
+    		 throw new VlException("Failed to query User Jobs:"+this);
+    	 }
+	}
+    
     @Override
     public void dispose()
     {
-        // TODO Auto-generated method stub
-        
+    	this.cachedJobNodes.clear();
     }
 
 }

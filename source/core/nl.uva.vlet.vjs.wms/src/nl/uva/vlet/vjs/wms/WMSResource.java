@@ -38,6 +38,7 @@ import javax.naming.directory.InvalidAttributeValueException;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
+import nl.uva.vlet.data.BooleanHolder;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.ResourceNotFoundException;
@@ -681,8 +682,9 @@ public class WMSResource extends JobManagerNode implements VJDLSubmitter // ,
         if (monitor == null)
             monitor = ActionTask.getCurrentThreadTaskMonitor("getUserJobs for:" + this, 1);
 
+        BooleanHolder someFailed=new BooleanHolder(); 
         // soft query: update if necessary
-        this.updateUserJobs(monitor, fullUpdate);
+        this.updateUserJobs(monitor, fullUpdate,someFailed);
 
         // create private array
         synchronized (this.cachedWMSJobs)
@@ -997,23 +999,38 @@ public class WMSResource extends JobManagerNode implements VJDLSubmitter // ,
         /** Forward to all registered LB Clients */
         for (String key : this.myLBResources.keySet())
         {
-            this.myLBResources.get(key).updateJobStatuses(monitor, fullUpdate);
+        	//only needed when using asynchronous cache. 
+            this.myLBResources.get(key).asyncUpdateJobStatuses(monitor, fullUpdate);
         }
     }
 
-    public void updateUserJobs(ITaskMonitor monitor, boolean fullUpdate) throws VlException
+    public void updateUserJobs(ITaskMonitor monitor, boolean fullUpdate, BooleanHolder someFailed) throws VlException
     {
+    	VlException lastEx=null;
+    	
         // Collect Jobs and put them in local cached job array
-
         for (String key : this.myLBResources.keySet())
         {
-            WMSJob jobs[] = this.myLBResources.get(key).getUserJobs(fullUpdate);
-            if (jobs != null)
-                for (WMSJob job : jobs)
-                {
-                    this.cachedWMSJobs.put(job.getVRL(), job);
-                }
+        	// try each LB resource: 
+        	LBResource lb = this.myLBResources.get(key);
+        	try
+        	{
+        		WMSJob jobs[] = lb.getUserJobs(fullUpdate);
+        		if (jobs != null)
+        			for (WMSJob job : jobs)
+        			{
+        				this.cachedWMSJobs.put(job.getVRL(), job);
+        			}
+        	}
+        	catch (VlException e)
+        	{
+        		logger.logException(ClassLogger.WARN,e,"Failed to query LB:%s\n",lb);
+        		lastEx=e;
+        		if (someFailed!=null)
+        			someFailed.set(true); 
+        	}
         }
+        
     }
 
     public void notifyUpdateUserJobs(String[] jobids)

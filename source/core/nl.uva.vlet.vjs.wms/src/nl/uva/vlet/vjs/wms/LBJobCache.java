@@ -25,7 +25,6 @@ package nl.uva.vlet.vjs.wms;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -41,8 +40,8 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.glite.LBClient;
 import nl.uva.vlet.glite.WMLBConfig;
-import nl.uva.vlet.glite.WMSUtil;
 import nl.uva.vlet.glite.WMLBConfig.LBConfig;
+import nl.uva.vlet.glite.WMSUtil;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.vrs.VRSContext;
@@ -73,24 +72,24 @@ public class LBJobCache
      * Static but VRSContext bound job cache. LBJobcache may be shared amongst
      * LB and WMS Resources, but must be separated in different VRSContext's.
      */
-    private static Map<String, LBJobCache> lbJobCache = new Hashtable<String, LBJobCache>();
+    private static Map<String, LBJobCache> lbJobCaches = new Hashtable<String, LBJobCache>();
 
     /**
      * Get VRSContext bound WMSJobCache
      * 
      * @param string
      */
-    public static LBJobCache getCache(VRSContext context, String hostname)
+    protected static LBJobCache createCache(VRSContext context, String hostname)
     {
-        synchronized (lbJobCache)
+        synchronized (lbJobCaches)
         {
             String idstr = "" + context.getID() + ":" + hostname.toLowerCase();
-            LBJobCache cache = lbJobCache.get(idstr);
+            LBJobCache cache = lbJobCaches.get(idstr);
             if (cache == null)
             {
                 logger.debugPrintf(">>> NEW LBJOBCACHE for:%s <<<\n", hostname);
                 cache = new LBJobCache(context, idstr, hostname);
-                lbJobCache.put(idstr, cache);
+                lbJobCaches.put(idstr, cache);
             }
             return cache;
         }
@@ -98,11 +97,11 @@ public class LBJobCache
 
     public static void stopAndDisposeAll()
     {
-        synchronized (lbJobCache)
+        synchronized (lbJobCaches)
         {
         	// create thread save Vector 
         	Vector<LBJobCache> lbcs=new Vector<LBJobCache>(); 
-            for (LBJobCache cache : lbJobCache.values())
+            for (LBJobCache cache : lbJobCaches.values())
             {
             	lbcs.add(cache); 
             }
@@ -348,7 +347,7 @@ public class LBJobCache
      */
     private Map<String, Set<String>> wmsJobs = new Hashtable<String, Set<String>>();
 
-    private Vector<IJobStatusListener> jobListeners = new Vector<IJobStatusListener>();
+    private Vector<JobStatusListener> jobListeners = new Vector<JobStatusListener>();
 
     private String lbHostname = null;
 
@@ -416,9 +415,9 @@ public class LBJobCache
             this.watcher = null;
         }
 
-        synchronized (lbJobCache)
+        synchronized (lbJobCaches)
         {
-            lbJobCache.remove(this.getID());
+            lbJobCaches.remove(this.getID());
         }
 
         // speed up garbage collection;
@@ -691,7 +690,7 @@ public class LBJobCache
             if (lbjobs[j] == null)
                 continue;
 
-            _updateJobStatus(lbjobs[j], false); // Don't fire now
+            _queryJobStatus(lbjobs[j], false); // Don't fire now
             jobIds.add(lbjobs[j].getJobId());
         }
 
@@ -847,7 +846,7 @@ public class LBJobCache
     }
 
     // Update or Put new JobStatus into cache
-    private boolean _updateJobStatus(JobStatus jobStatus, boolean fireEvent)
+    private boolean _queryJobStatus(JobStatus jobStatus, boolean fireEvent)
     {
         if (jobStatus == null)
             return false;
@@ -960,24 +959,23 @@ public class LBJobCache
     /**
      * Create new or return cached LBClient.
      */
-    private LBClient getLBClient() throws VlException
+    protected LBClient getLBClient() throws VlException
     {
-        try
-        {
-            LBConfig lbconf = WMLBConfig.createLBConfig(lbHostname, WMLBConfig.LB_DEFAULT_PORT);
-            lbconf.setProxyfilename(this.vrsContext.getGridProxy().getProxyFilename());
-
-            if (this._lbClient == null)
-            {
-                _lbClient = new LBClient(lbconf);
-            }
-            return this._lbClient;
-
-        }
-        catch (Exception e)
-        {
-            throw new VlException("LBException", "Couldn't create LBClient for host:" + lbHostname, e);
-        }
+    	try
+    	{
+    		if (this._lbClient == null)
+    		{
+    			_lbClient=WMSUtil.createLBClient(lbHostname, 
+    					WMLBConfig.LB_DEFAULT_PORT,
+    					this.vrsContext.getGridProxy().getProxyFilename()); 
+    		}
+    		return _lbClient; 
+    	}
+    	catch (Exception e)
+    	{
+    		throw new VlException("LBException", "Couldn't create LBClient for host:" + lbHostname, e);
+    	}
+    	
     }
 
     /**
@@ -987,6 +985,8 @@ public class LBJobCache
      */
     public JobStatus queryJobStatus(String jobId, boolean fullUpdate) throws VlException
     {
+    	logger.debugPrintf(">>>ENTER:queryJobStatus for:%s\n",jobId); 
+    	
         JobElement jobEl = null;
 
         synchronized (this.jobs)
@@ -1093,7 +1093,7 @@ public class LBJobCache
                 LBClient lbclient = getLBClient();
 
                 JobStatus status = lbclient.getStatus(jobUri);
-                _updateJobStatus(status, true);
+                _queryJobStatus(status, true);
 
                 info("queryJobStatus() FINISHED JobStatus Query for  :" + jobId);
             }
@@ -1125,7 +1125,7 @@ public class LBJobCache
         return jobEl.getStatus();
     }
 
-    public void registerNewJob(String jobid)
+    protected void registerNewJob(String jobid)
     {
         try
         {
@@ -1153,7 +1153,7 @@ public class LBJobCache
     // Events/Listeners
     // ========================================================================
 
-    public void addJobListener(IJobStatusListener listener)
+    public void addJobListener(JobStatusListener listener)
     {
         synchronized (this.jobListeners)
         {
@@ -1162,7 +1162,7 @@ public class LBJobCache
         }
     }
 
-    public void removeJobListener(IJobStatusListener listener)
+    public void removeJobListener(JobStatusListener listener)
     {
         synchronized (this.jobListeners)
         {
@@ -1183,14 +1183,14 @@ public class LBJobCache
         this.watcher.fireEvent(JobEvent.createUpdateUserJobs(jobarr));
     }
 
-    protected IJobStatusListener[] getJobListenersArray()
+    protected JobStatusListener[] getJobListenersArray()
     {
-        IJobStatusListener lArr[] = null;
+        JobStatusListener lArr[] = null;
 
         // private copy:
         synchronized (this.jobListeners)
         {
-            lArr = new IJobStatusListener[this.jobListeners.size()];
+            lArr = new JobStatusListener[this.jobListeners.size()];
             lArr = this.jobListeners.toArray(lArr);
         }
 
@@ -1216,12 +1216,7 @@ public class LBJobCache
         error("Exception=" + e);
         Global.errorPrintStacktrace(e);
     }
-
-    private void debug(String msg, Object... args)
-    {
-        logger.debugPrintf(":" + lbHostname + "#" + Thread.currentThread().getId() + ":" + msg + "\n", args);
-    }
-
+   
     private void info(String msg, Object... args)
     {
         logger.infoPrintf(":" + lbHostname + "#" + Thread.currentThread().getId() + ":" + msg + "\n", args);

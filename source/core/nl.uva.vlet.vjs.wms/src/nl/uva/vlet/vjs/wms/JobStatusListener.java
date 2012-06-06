@@ -23,7 +23,7 @@
 
 package nl.uva.vlet.vjs.wms;
 
-public interface IJobStatusListener
+public interface JobStatusListener
 {
     public void notifyJobEvent(JobEvent event);
 }

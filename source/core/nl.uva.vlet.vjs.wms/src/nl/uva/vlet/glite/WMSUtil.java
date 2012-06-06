@@ -23,11 +23,14 @@
 
 package nl.uva.vlet.glite;
 
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
+import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.glite.WMLBConfig.LBConfig;
 
 import org.apache.axis.AxisFault;
 import org.glite.wms.wmproxy.BaseFaultType;
@@ -395,6 +398,14 @@ public class WMSUtil
 
         return false;
     }
+
+	public static LBClient createLBClient(String lbHostname, int lbPort,
+			String proxyFilename) throws Exception 
+	{
+		LBConfig lbconf = WMLBConfig.createLBConfig(lbHostname,lbPort);
+		lbconf.setProxyfilename(proxyFilename);
+		return new LBClient(lbconf);
+	}
     
     
 
