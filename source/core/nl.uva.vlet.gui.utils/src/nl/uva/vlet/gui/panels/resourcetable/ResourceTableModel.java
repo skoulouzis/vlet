@@ -489,7 +489,7 @@ public class ResourceTableModel extends AbstractTableModel implements Iterable<R
     // delete row from internal data structure 
     private int _delRow(String key)
     {
-        // synchronized for  ROWS and rowKeyIndex as well ! 
+        // synchronized for ROWS and rowKeyIndex as well ! 
         synchronized(rows)
         {
             Integer index=this.rowKeyIndex.get(key); 
