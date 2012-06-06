@@ -43,7 +43,7 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.icons.IconProvider;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.ViewFilter;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.proxy.vrs.ProxyVRS;

@@ -52,7 +52,7 @@ import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.dnd.VDragGestureListener;
 import nl.uva.vlet.gui.dnd.VTransferHandler;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;

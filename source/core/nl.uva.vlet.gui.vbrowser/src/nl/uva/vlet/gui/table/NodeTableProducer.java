@@ -32,11 +32,12 @@ import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
 import nl.uva.vlet.gui.proxymodel.ProxyDataProducer;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
 import nl.uva.vlet.gui.proxynode.ViewNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
@@ -51,7 +52,7 @@ import nl.uva.vlet.vrs.ResourceEvent;
  *  
  */
 public class NodeTableProducer extends ProxyDataProducer implements
-    TableDataProducer, IProxyNodeEventListener
+    TableDataProducer, ProxyResourceEventListener
 {
     
     // ===
@@ -76,7 +77,7 @@ public class NodeTableProducer extends ProxyDataProducer implements
     private synchronized void init(TablePanel panel)
     {
         this.tablePanel = panel;
-        ProxyNode.addProxyEventListener(this);
+        ProxyVRSClient.getInstance().addResourceEventListener(this);
     }
     
     
@@ -768,7 +769,7 @@ public class NodeTableProducer extends ProxyDataProducer implements
     public void dispose()
     {
         this.rootNode = null;
-        ProxyNode.removeProxyEventListener(this);
+        ProxyVRSClient.getInstance().removeResourceEventListener(this); 
     }
     
     

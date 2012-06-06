@@ -49,7 +49,7 @@ public class TestJobMonitor
         {
 
             JobMonitor jobMonitor = new JobMonitor(true);
-            jobMonitor.startAsStandAloneApplication(new VRL("file:/home/ptdeboer/myjobs.jids"));
+            jobMonitor.startAsStandAloneApplication(new VRL("file:"+Global.getUserHome()+"/myjobs.jids"));
         }
         catch (VlException e)
         {

@@ -52,13 +52,8 @@ import nl.uva.vlet.vrs.ui.IMasterUI;
 
 /** 
  * Shared Global environment for the UI objects (VBrowser, Viewers, etc.). 
- * This class is an attempt to 'cleanup' and centralize the access to 
- * VRS Objects and Context(s). 
- * Also this class assumes that the default environment is a single 
- * user environment where (VRS) Context Dependable classes can be shared.
- *  
+ * 
  * @author P.T. de Boer
- *
  */
 public class UIGlobal
 {

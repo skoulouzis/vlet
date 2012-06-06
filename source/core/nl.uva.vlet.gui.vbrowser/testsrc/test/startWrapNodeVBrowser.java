@@ -28,9 +28,10 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
 import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 import nl.uva.vlet.gui.proxynode.impl.proxy.ProxyWrapNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 
 /**
@@ -52,7 +53,7 @@ public class startWrapNodeVBrowser
         Global.init(); 
         UIGlobal.init(); 
 
-        ProxyNode.setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());  
+        ProxyVRSClient.getInstance().setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());  
         //TermGlobal.setDebug(true); 
         args=Global.parseArguments(args); 
         

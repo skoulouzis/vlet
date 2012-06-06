@@ -26,8 +26,9 @@ package nl.uva.vlet.gui.proxynode.impl.direct;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
-import nl.uva.vlet.gui.proxymodel.ProxyNodeEventNotifier;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventNotifier;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.ResourceEventListener;
 
@@ -39,12 +40,12 @@ import nl.uva.vlet.vrs.ResourceEventListener;
  * of a Resource event. 
  */ 
 
-public class ProxyTNodeCacheUpdater implements IProxyNodeEventListener
+public class ProxyTNodeCacheUpdater implements ProxyResourceEventListener
 {
     ProxyTNodeCacheUpdater()
     {
     	// auto register:
-        ProxyNodeEventNotifier.getDefault().addResourceEventListener(this); 
+        ProxyVRSClient.getInstance().addResourceEventListener(this); 
     }
     
     public void notifyProxyEvent(ResourceEvent e)

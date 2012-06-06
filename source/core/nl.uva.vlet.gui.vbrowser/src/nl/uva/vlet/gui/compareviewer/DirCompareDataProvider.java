@@ -31,8 +31,8 @@ import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.compareviewer.DirCompareTableModel.DCRowRecord;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
 

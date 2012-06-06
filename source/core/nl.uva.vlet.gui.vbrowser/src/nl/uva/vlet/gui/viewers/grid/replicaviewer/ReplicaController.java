@@ -55,7 +55,7 @@ import nl.uva.vlet.gui.panels.monitoring.TaskMonitorDialog;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
 import nl.uva.vlet.gui.panels.resourcetable.RowIterator;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.gui.widgets.NavigationBar.NavigationAction;

@@ -46,7 +46,7 @@ import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.panels.attribute.AttributePanel;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.vrl.VRL;

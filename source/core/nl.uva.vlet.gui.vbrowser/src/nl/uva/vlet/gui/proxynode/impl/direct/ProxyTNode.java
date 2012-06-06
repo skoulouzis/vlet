@@ -48,8 +48,9 @@ import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.icons.IconProvider;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.view.ViewFilter;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
@@ -368,11 +369,11 @@ public final class ProxyTNode extends ProxyNode
     	//vrsContext=UIGlobal.getVRSContext(); 
     	//guiSettings=UIGlobal.getGuiSettings(); 
     	proxyFactory=new ProxyTNodeFactory();
-    	ProxyNode.setProxyNodeFactory(proxyFactory);
+    	ProxyVRSClient.getInstance().setProxyNodeFactory(proxyFactory);
     	
     	cacheUpdater = new ProxyTNodeCacheUpdater(); 
     	
-    }
+    } 
     
     /** class initializer */ 
     public static void init()

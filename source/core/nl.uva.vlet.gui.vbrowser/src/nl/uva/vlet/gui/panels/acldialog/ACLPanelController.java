@@ -37,7 +37,7 @@ import javax.swing.JPopupMenu;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 
 public class ACLPanelController implements ActionListener, WindowListener
 {

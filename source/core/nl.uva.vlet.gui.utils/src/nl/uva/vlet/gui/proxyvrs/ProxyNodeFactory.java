@@ -21,7 +21,7 @@
  */ 
 // source: 
 
-package nl.uva.vlet.gui.proxynode;
+package nl.uva.vlet.gui.proxyvrs;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;

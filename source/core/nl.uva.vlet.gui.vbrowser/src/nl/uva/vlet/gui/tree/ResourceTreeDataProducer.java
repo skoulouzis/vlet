@@ -31,11 +31,12 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.gui.MasterBrowser;
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
 import nl.uva.vlet.gui.proxymodel.ProxyDataProducer;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
 import nl.uva.vlet.gui.proxynode.ViewNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.vrl.VRL;
@@ -49,7 +50,7 @@ import nl.uva.vlet.vrs.ResourceEvent;
  *
  */
 public class ResourceTreeDataProducer extends ProxyDataProducer 
-       implements IProxyNodeEventListener
+       implements ProxyResourceEventListener
 {
 	private int defaultIconSize=16; 
 	
@@ -64,7 +65,7 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
 		this.treeModel=model; 
 
 		// Listeners 
-		ProxyNode.addProxyEventListener(this);
+		ProxyVRSClient.getInstance().addResourceEventListener(this);
 	}
 
 	public ResourceTreeModel getModel()
@@ -308,7 +309,7 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
 	
 	public void dispose()
 	{
-		ProxyNode.removeProxyEventListener(this);
+		ProxyVRSClient.getInstance().removeResourceEventListener(this); 
 	}
 
 	public void updateRootnode(ProxyNode pnode)

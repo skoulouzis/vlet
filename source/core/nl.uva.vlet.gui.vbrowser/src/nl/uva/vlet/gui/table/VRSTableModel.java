@@ -29,7 +29,7 @@ import javax.swing.table.AbstractTableModel;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.ViewModel;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.util.QSort;

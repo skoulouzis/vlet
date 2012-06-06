@@ -21,32 +21,22 @@
  */ 
 // source: 
 
-package nl.uva.vlet.gui.proxynode;
+package nl.uva.vlet.gui.proxyvrs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.error.InitializationError;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
-
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
-import nl.uva.vlet.gui.proxymodel.ProxyNodeEventNotifier;
-import nl.uva.vlet.gui.view.ViewModel;
-import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vrl.VRL;
-//import nl.uva.vlet.vrms.LogicalResourceNode;
-//import nl.uva.vlet.vrs.LinkNode;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.ResourceEventListener;
 import nl.uva.vlet.vrs.VDeletable;
@@ -56,11 +46,9 @@ import nl.uva.vlet.vrs.VRenamable;
 /**
  * A ProxyNode is a the GUI side representation of a VNode or Resource Node.  
  * <p>
- * This class is a First attempt to create interface for ProxyNodes
+ * This class is an abstract class for ProxyNode implementations. 
  * to allow multiple 'factories' instead of the direct implementation 
- * which uses the VRS api.   
- * Also this class is intended as a stable ProxyNode interface.
- *  
+ *
  * Current Implementations are ProxyDirectNode and ProxyWSNode
  * 
  * @see ProxyNodeFactory 
@@ -72,61 +60,15 @@ public abstract class ProxyNode
 {
 	// === static fields ===
 	private static long objectCounter = 0; // for debugging
-
-	private static ProxyNodeFactory _proxyNodeFactory=null;  
-    
-    // =======================================================================
-    // Class Methods 
-    // =======================================================================
-    
-    
-    public static void setProxyNodeFactory(ProxyNodeFactory factory)
-    {
-    	_proxyNodeFactory=factory;  
-    }
-    
-    public static ProxyNodeFactory getProxyNodeFactory()
-    {
-    	if (_proxyNodeFactory==null)
-    		throw new InitializationError("Initiliziation error. Proxy Node Factory not set. Use ProxyTNode.init() first !!!"); 
-    	
-    	return _proxyNodeFactory; 
-    }
     
     public static void fireGlobalEvent(ResourceEvent event)
     {
-        // use class notifier:
-    	ProxyNodeEventNotifier.getDefault().fireEvent(event); 
+    	ProxyVRSClient.getInstance().fireEvent(event); 
     }
-    
-    /**
-     * Add Proxy Event listener. 
-     * Any listener who registers which this method is
-     * assured to receive ResoureEvents DURING Swing's
-     * main event thread so that GUI components
-     * can be handled safely. 
-     * 
-     * @param listener
-     */
-    public static void addProxyEventListener(IProxyNodeEventListener listener)
-    {
-    	ProxyNodeEventNotifier.getDefault().addResourceEventListener(listener);
-    	
-    }
-    
-    public static void removeProxyEventListener(IProxyNodeEventListener listener)
-    {
-    	ProxyNodeEventNotifier.getDefault().removeResourceEventListener(listener); 
-    }
-
-	public static void disposeClass()
-	{
-		
-	}
    
 	public static ProxyNode getVirtualRoot() throws VlException
 	{
-		 return getProxyNodeFactory().openLocation(UIGlobal.getVRSContext().getVirtualRootLocation()); 
+		return ProxyVRSClient.getInstance().getProxyNodeFactory().openLocation(UIGlobal.getVRSContext().getVirtualRootLocation()); 
 	}	
 
     public static ProxyNode[] toArray(List<ProxyNode> nodes)
@@ -135,8 +77,17 @@ public abstract class ProxyNode
         arr=nodes.toArray(arr);
         return arr;
     }
+    
+	public static ProxyNodeFactory getProxyNodeFactory() 
+	{
+		return ProxyVRSClient.getInstance().getProxyNodeFactory(); 
+	}
 
-	    
+	public static void disposeClass()
+	{
+		ProxyVRSClient.getInstance().dispose(); 
+	}
+
     // ========================================================================
     // === object fields === 
     // ========================================================================
@@ -180,7 +131,6 @@ public abstract class ProxyNode
 			// DISPOZE !!! (not yet)
 			debugPrintf(">>> DISPOSE:%s\n <<<",this);
 		} 
-		
 	}
 
 	public long getID()
@@ -191,7 +141,7 @@ public abstract class ProxyNode
 	public void fireEventTo(final ResourceEventListener receiver,
             final ResourceEvent event)
     {
-		ProxyNodeEventNotifier.getDefault().fireEventToListener(receiver,event); 
+		ProxyVRSClient.getInstance().getProxyResourceEventNotifier().fireEventToListener(receiver,event); 
     }
     
 	
@@ -278,8 +228,8 @@ public abstract class ProxyNode
 	 public void createLinkTo(VRL target) throws VlException
 	 {
 		 // need info:
-		 ProxyNode pnode=ProxyNode.getProxyNodeFactory().openLocation(target); 
-		 createLinkTo(pnode); 
+		 //ProxyNode pnode=ProxyVRSClient.getInstance().getProxyNodeFactory().openLocation(target); 
+		 //createLinkTo(pnode); 
 	 }
 	 
 	 public VAttribute[] getAttributes() throws VlException
@@ -471,6 +421,8 @@ public abstract class ProxyNode
 	//abstract public boolean locationEquals(VRL loc, boolean checkLinkTargets);
 
 	abstract public boolean isEditable() throws VlException;
+
+	
 
 	
 	

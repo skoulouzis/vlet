@@ -21,11 +21,11 @@
  */ 
 // source: 
 
-package nl.uva.vlet.gui.proxymodel;
+package nl.uva.vlet.gui.proxyvrs;
 
 import nl.uva.vlet.vrs.ResourceEvent;
 
-public interface IProxyNodeEventListener
+public interface ProxyResourceEventListener
 {
 	/** One Event to Rule them All */
 	void notifyProxyEvent(ResourceEvent event);  

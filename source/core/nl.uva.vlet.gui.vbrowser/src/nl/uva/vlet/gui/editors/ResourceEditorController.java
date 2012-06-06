@@ -61,7 +61,7 @@ import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.panels.fields.IAttributeField;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskSource;
 import nl.uva.vlet.vfs.VFS;

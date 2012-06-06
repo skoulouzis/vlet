@@ -23,7 +23,7 @@
 
 package nl.uva.vlet.gui.table;
 
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.presentation.Presentation;
 

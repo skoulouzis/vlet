@@ -44,7 +44,7 @@ import nl.uva.vlet.gui.actions.ActionCommand;
 import nl.uva.vlet.gui.actions.ActionCommandType;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.panels.attribute.AttributeViewer;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.viewers.ViewerEvent;
 import nl.uva.vlet.presentation.Presentation;

@@ -66,7 +66,7 @@ import nl.uva.vlet.gui.panels.fields.AttrParameterField;
 import nl.uva.vlet.gui.panels.fields.AttrPortField;
 import nl.uva.vlet.gui.panels.fields.AttrSchemeField;
 import nl.uva.vlet.gui.panels.fields.IAttributeField;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.vrs.ServerInfo;
 
 import com.jgoodies.forms.layout.CellConstraints;

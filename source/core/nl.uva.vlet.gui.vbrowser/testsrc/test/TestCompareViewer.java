@@ -29,8 +29,8 @@ import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.compareviewer.DirCompareController;
 import nl.uva.vlet.gui.compareviewer.DirComparePanel;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
 import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.vrl.VRL;
 
 public class TestCompareViewer

@@ -36,8 +36,8 @@ import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.panels.attribute.AttributePanel;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;
 

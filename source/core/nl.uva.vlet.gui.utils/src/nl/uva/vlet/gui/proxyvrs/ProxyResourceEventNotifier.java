@@ -21,16 +21,18 @@
  */ 
 // source: 
 
-package nl.uva.vlet.gui.proxymodel;
+package nl.uva.vlet.gui.proxyvrs;
 
 import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.ResourceEventListener;
+import nl.uva.vlet.vrs.VRSContext;
 
 /**
  * ProxyModelEventNotifier.
@@ -47,22 +49,18 @@ import nl.uva.vlet.vrs.ResourceEventListener;
  * from other threads then the GUI thread. 
  */ 
 
-public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
+public class ProxyResourceEventNotifier implements Runnable, ResourceEventListener
 {
 	// ========================================================================
 	// Static
 	// ========================================================================
 
-	private static ProxyNodeEventNotifier instance=null;
+	
+	private static ClassLogger logger; 
 	
 	static
 	{
-		instance=new ProxyNodeEventNotifier();
-	}
-
-	public static ProxyNodeEventNotifier getDefault()
-	{
-		return instance; 
+		logger=ClassLogger.getLogger(ProxyResourceEventNotifier.class);
 	}
 
 	// ========================================================================
@@ -73,7 +71,6 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
      * Event Buffer.
      * Note: must synchronize access to buffer:
      */ 
-    
      private Vector<ResourceEvent> events=new Vector<ResourceEvent>();
      
      /** Whether Notifier is running or scheduled for a run */ 
@@ -84,12 +81,12 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
       * ProxyEventListeners in this vector will receive all events for all
       * ProxyTNodes
       */
-     private Vector<IProxyNodeEventListener> proxyEventListeners = new Vector<IProxyNodeEventListener>();
+     private Vector<ProxyResourceEventListener> proxyEventListeners = new Vector<ProxyResourceEventListener>();
 
-     public ProxyNodeEventNotifier()
+     protected ProxyResourceEventNotifier(VRSContext context)
      {
     	 // ProxyModel listener listens to VRS Resource Events ! 
-    	 UIGlobal.getVRSContext().addResourceEventListener(this); 
+    	 context.addResourceEventListener(this); 
      }
     /**
      * Notify all listenerd that an event has occured. 
@@ -128,7 +125,7 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
                   // TermGlobal Event:
                   //synchronized (proxyEventListeners)
                   {
-                      for (IProxyNodeEventListener l : proxyEventListeners)
+                      for (ProxyResourceEventListener l : proxyEventListeners)
                       {
                         Debug("Notifying:" + l);
                        // TermGlobal.messagePrintln(this,">>> Notifying:"+l); 
@@ -199,7 +196,7 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
         SwingUtilities.invokeLater(this); 
     }
 
-    public void removeResourceEventListener(IProxyNodeEventListener listener)
+    public void removeResourceEventListener(ProxyResourceEventListener listener)
     {
         synchronized (proxyEventListeners)
         {
@@ -207,7 +204,7 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
         }
     }
     
-    public void addResourceEventListener(IProxyNodeEventListener listener)
+    public void addResourceEventListener(ProxyResourceEventListener listener)
     {
         synchronized (proxyEventListeners)
         {
@@ -232,6 +229,21 @@ public class ProxyNodeEventNotifier implements Runnable, ResourceEventListener
 	public void notifyResourceEvent(ResourceEvent event)
 	{
 		fireEvent(event); 
+	}
+	
+	public void dispose()
+	{
+		clear(); 
+	}
+	
+	public void clear() 
+	{
+		synchronized(events)
+		{
+			events.clear(); 
+			proxyEventListeners.clear();
+		}
+		
 	}
 
 }

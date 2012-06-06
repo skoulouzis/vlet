@@ -28,8 +28,8 @@ import java.util.Hashtable;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.proxy.vrs.ProxyVRS;
 import nl.uva.vlet.vrl.VRL;
 

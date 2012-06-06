@@ -28,10 +28,14 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventNotifier;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
+import nl.uva.vlet.vrs.ResourceEvent;
 
-public class JobStatusUpdater
+public class JobStatusUpdater implements ProxyResourceEventListener
 {
     private static ClassLogger logger; 
     {
@@ -50,6 +54,8 @@ public class JobStatusUpdater
     public JobStatusUpdater(JobStatusDataModel model)
     {
         this.jobStatusModel=model; 
+        // register as event listener: 
+        ProxyVRSClient.getInstance().addResourceEventListener(this); 
     }
 
     /** Start update in background */ 
@@ -170,7 +176,8 @@ public class JobStatusUpdater
         // implementation independed Job Status Util
         if (jobUtil==null)
         {
-            this.jobUtil=new JobUtil(UIGlobal.getVRSContext());  
+        	// get context JoUtil
+            this.jobUtil=JobUtil.getJobUtil(UIGlobal.getVRSContext());  
         }
         
         return jobUtil; 
@@ -180,6 +187,12 @@ public class JobStatusUpdater
 	public VRL getJobVrl(String jobid) throws VlException 
 	{
 		return getJobUtil().getJobVRL(jobid);
+	}
+
+	@Override
+	public void notifyProxyEvent(ResourceEvent event) 
+	{
+		logger.errorPrintf(">>> Got Event:%s\n",event); 
 	}
     
 }

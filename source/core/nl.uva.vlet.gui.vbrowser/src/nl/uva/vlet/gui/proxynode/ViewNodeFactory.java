@@ -3,6 +3,7 @@ package nl.uva.vlet.gui.proxynode;
 import java.util.List;
 
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.ViewModel;
 import nl.uva.vlet.gui.view.ViewNode;
 

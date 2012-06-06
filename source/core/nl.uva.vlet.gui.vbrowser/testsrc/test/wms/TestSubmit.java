@@ -92,6 +92,9 @@ public class TestSubmit
             VDir homedir=vfs.getUserHome(); 
             
             VFile jidfile=homedir.newFile("myjobs.jids"); 
+            jidfile.create(true);
+            OutputStream outps = jidfile.getOutputStream(); 
+            PrintWriter prout=new PrintWriter(outps); 
             
             infoService = vrsContext.getBdiiService();
 
@@ -132,18 +135,13 @@ public class TestSubmit
                 // VRL("file:///home/ptdeboer/jobs/jtest.jdl"));
 
                 message("Job ID=" + jobs[i].getJobId());
+                
+                String jobid = jobs[i].getJobId();
+                prout.printf("%s\n",jobid);
+                
+                prout.flush();
             }
             
-            jidfile.create(true);
-            OutputStream outps = jidfile.getOutputStream(); 
-            PrintWriter prout=new PrintWriter(outps); 
-            
-            for (int i = 0; i < num; i++)
-            {
-                String jobid = jobs[i].getJobId();
-                prout.printf("%s\n",jobid); 
-            }                
-            prout.flush();
             prout.close(); 
             
             // Spiros: Dead variable

@@ -30,7 +30,7 @@ import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
 import static nl.uva.vlet.data.VAttributeConstants.*; 

@@ -40,9 +40,10 @@ import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.actions.KeyMappings;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.dnd.VTransferHandler;
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
 import nl.uva.vlet.gui.proxynode.ViewNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.BrowserJPanel;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;
@@ -63,7 +64,7 @@ import nl.uva.vlet.vrs.ResourceEvent;
  * 
  */
 
-public class IconsPanel extends BrowserJPanel implements IProxyNodeEventListener,
+public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListener,
         VContainer
 {
 	private static final long serialVersionUID = 5989073867988758790L;
@@ -161,7 +162,7 @@ public class IconsPanel extends BrowserJPanel implements IProxyNodeEventListener
         // IconPanel canvas can receive contents !
         this.setTransferHandler(VTransferHandler.getDefault());
 
-        ProxyNode.addProxyEventListener(this);
+        ProxyVRSClient.getInstance().addResourceEventListener(this);
         // one buttonIconListener for all Icons
         this.buttonIconListener = new LabelIconListener(this,bc);
         this.setFocusable(true); 
@@ -751,8 +752,8 @@ public class IconsPanel extends BrowserJPanel implements IProxyNodeEventListener
         // Clean up proxy nodes ! only when ALL proxynodes are gone 
         // that class will be finalized ! 
         this.rootNode=null;
-        this.clearContents();  
-        ProxyNode.removeProxyEventListener(this);
+        this.clearContents();
+        ProxyVRSClient.getInstance().removeResourceEventListener(this); 
     }
 
 

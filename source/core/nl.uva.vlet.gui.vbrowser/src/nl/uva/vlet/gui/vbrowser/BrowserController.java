@@ -64,9 +64,10 @@ import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.dialog.SimpleDialog;
 import nl.uva.vlet.gui.dnd.DropAction;
 import nl.uva.vlet.gui.icons.IconViewType;
-import nl.uva.vlet.gui.proxymodel.IProxyNodeEventListener;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.util.proxy.GridProxyDialog;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;
@@ -107,7 +108,7 @@ import nl.uva.vlet.vrs.VRSFactory;
  * @author P.T. de Boer
  */
 public class BrowserController implements WindowListener, GridProxyListener,
-   MasterBrowser, IProxyNodeEventListener
+   MasterBrowser, ProxyResourceEventListener
 {
 	// =======================================================================
 	// Class Fields
@@ -274,7 +275,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		 
 		initViewFilter(); 
 		
-		ProxyNode.addProxyEventListener(this);
+		ProxyVRSClient.getInstance().addResourceEventListener(this);
 		
 	}
 
@@ -1894,7 +1895,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		// unregister: 
 		UIGlobal.getGridProxy().removeGridProxyListener(this); 
-		ProxyNode.removeProxyEventListener(this); 
+	    ProxyVRSClient.getInstance().removeResourceEventListener(this); 
 
 		if (this.vbrowser!=null)
 			this.vbrowser.dispose();

@@ -33,7 +33,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.ViewModel;
 import nl.uva.vlet.gui.view.ViewNode;
 import nl.uva.vlet.vrl.VRL;

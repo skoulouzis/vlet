@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
-import nl.uva.vlet.gui.proxynode.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.gui.view.ViewFilter;
 import nl.uva.vlet.gui.view.ViewModel;
 import nl.uva.vlet.tasks.ActionTask;

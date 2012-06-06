@@ -40,7 +40,8 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.Messages;
-import nl.uva.vlet.gui.proxynode.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;
@@ -419,7 +420,7 @@ public class ActionMenu extends JPopupMenu
         if (vcomp!=null) 
         {
         	VRL vrl=vcomp.getResourceRef().getVRL();
-        	pnode=ProxyNode.getProxyNodeFactory().getFromCache(vrl); 
+        	pnode=ProxyVRSClient.getInstance().getProxyNodeFactory().getFromCache(vrl); 
         }
         
         return pnode; 

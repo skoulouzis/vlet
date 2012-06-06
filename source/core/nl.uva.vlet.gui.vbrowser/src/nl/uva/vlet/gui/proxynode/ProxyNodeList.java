@@ -25,6 +25,8 @@ package nl.uva.vlet.gui.proxynode;
 
 import java.util.Vector;
 
+import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+
 public class ProxyNodeList extends Vector<ProxyNode>
 {
 	private static final long serialVersionUID = 3156726387218280584L;

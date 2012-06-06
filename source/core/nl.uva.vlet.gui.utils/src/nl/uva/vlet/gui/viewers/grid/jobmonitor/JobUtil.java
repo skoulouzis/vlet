@@ -24,6 +24,7 @@
 package nl.uva.vlet.gui.viewers.grid.jobmonitor;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import nl.uva.vlet.data.VAttribute;
@@ -38,7 +39,7 @@ import nl.uva.vlet.vrs.VRSContext;
 
 /** 
  * Job Status utility. 
- *  
+ * Returns Implemenation  
  */
 public class JobUtil
 {
@@ -46,13 +47,36 @@ public class JobUtil
     {
     	VRL vrl=new VRL(jobid);
         
-        // replace https -> LB scheme 
+        // replace https -> LB scheme. WMS implementation should do the rest. 
+    	// note that JobVRL mights be updated when the VNode (VJob) object is returned!
         if (vrl.hasScheme("https"))
             vrl=vrl.copyWithNewScheme(VRS.LB_SCHEME);
         
 		return vrl; 
 	}
-
+    
+    private static Map<String,JobUtil> jobUtilInstances=new Hashtable<String,JobUtil>(); 
+    
+    public static JobUtil getJobUtil(VRSContext context)
+    {
+    	int id = context.getID(); 
+    	String keystr="jobutil-"+id; 
+    	
+    	synchronized(jobUtilInstances)
+    	{
+    		JobUtil jobUtil=jobUtilInstances.get(keystr);
+    		if (jobUtil==null)
+    		{
+    			jobUtil=new JobUtil(context); 
+    		}
+    		
+    		jobUtilInstances.put(keystr,jobUtil);
+    		
+    		return jobUtil; 
+    	}
+    	
+    }
+    
     // ========================================================================
     //
     // ========================================================================
@@ -62,7 +86,7 @@ public class JobUtil
     private Map<String,VJob> _cache=new HashMap<String,VJob>(); 
     private boolean useCache=true; 
     
-    public JobUtil(VRSContext context)
+    protected JobUtil(VRSContext context)
     {
         this.vrsClient=new VRSClient(context); 
     }
