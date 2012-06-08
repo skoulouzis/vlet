@@ -38,9 +38,10 @@ public class JobMonitorMenu extends TablePopupMenu
     public void updateFor(ResourceTable table, MouseEvent e,boolean canvasMenu)
     {
     	String rowKey=table.getKeyUnder(e.getPoint()); 
-    	if (rowKey==null)
+    	
+    	if ((rowKey==null) || (canvasMenu==true))
     	{
-    		openJobItem.setEnabled(true); 
+    		openJobItem.setEnabled(false); 
     		rowKey="";
     	}
     	else

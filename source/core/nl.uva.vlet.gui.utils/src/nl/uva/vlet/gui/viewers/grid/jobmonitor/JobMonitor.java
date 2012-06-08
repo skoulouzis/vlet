@@ -36,7 +36,6 @@ import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
-import nl.uva.vlet.gui.viewers.ViewerEvent;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.presentation.Presentation;
@@ -134,8 +133,10 @@ public class JobMonitor extends ViewerPlugin
         //this.mouseListener=new TableMouseListener(this.jobTable); 
         //jobTable.addMouseListener(mouseListener);
         // Add listeners *after* Table+Model has been created ! 
-        this.jobTable.getHeaderModel().addListDataListener(controller.getHeaderModelListener()); 
-        this.jobTable.setPopupMenu(new JobMonitorMenu(this.controller)); 
+        jobTable.getHeaderModel().addListDataListener(controller.getHeaderModelListener()); 
+        jobTable.setPopupMenu(new JobMonitorMenu(this.controller));
+        // install mouselistener in background ScrollPanel!
+        jobTableSP.addMouseListener(jobTable.getMouseListener()); 
     }
     
     @Override
