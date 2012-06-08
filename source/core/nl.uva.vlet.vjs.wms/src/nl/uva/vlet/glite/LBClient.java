@@ -69,6 +69,7 @@ import org.glite.wsdl.types.lb.holders.JobStatusArrayHolder;
 import org.globus.axis.transport.HTTPSSender;
 import org.globus.axis.util.Util;
 import org.w3.www._2001.XMLSchema.holders.StringArrayHolder;
+import org.w3c.dom.NodeList;
 
 /**
  * Glite Logging and Bookkeeping (L&B) API. 
@@ -223,6 +224,8 @@ public class LBClient
     private LoggingAndBookkeepingPortType lbService;
 
     private LBConfig lbInfo;
+
+    private NodeList childs;
 
     public LBClient(LBConfig lbConfig) throws Exception
     {
@@ -481,15 +484,27 @@ public class LBClient
             }
             catch (RemoteException e)
             {
+                // parse exception: 
+                //WMSException wmex=WMSUtil.convertException("Querying User Jobs for:"+getHostname()+":"+getPort(), e); 
+                
                 if (e instanceof AxisFault)
                 {
-                    Integer code = getErrorCode((AxisFault) e);
+                    AxisFault fault=(AxisFault)e; 
+                    Integer code = getErrorCode(fault);
                     debug("ErrorCode: " + code);
-
+                   
+                    // what is code 2 ? 
                     if (code != 2)
                     {
-                        throw e;
+                        // todo create better readable exception:
+                        throw e; 
                     }
+
+                }
+                else
+                {
+                    // GenericFault
+                    throw e; 
                 }
             }
         }
@@ -847,6 +862,11 @@ public class LBClient
         return this.lbInfo.getHostname();
     }
 
+    public int getPort()
+    {
+        return this.lbInfo.getPort(); 
+    }
+    
     public String toString()
     {
         return "lblcient:" + this.getServiceUri();

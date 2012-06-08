@@ -36,6 +36,7 @@ import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.glite.LBClient;
 import nl.uva.vlet.glite.WMLBConfig;
+import nl.uva.vlet.glite.WMSException;
 import nl.uva.vlet.glite.WMSUtil;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
@@ -227,7 +228,8 @@ public class LBResource extends ResourceSystemNode implements JobStatusListener,
         logger.debugPrintf("getNodes(): for %s\n", getHostname());
 
         ITaskMonitor monitor = ActionTask.getCurrentThreadTaskMonitor("LBResource.getNodes()", 1);
-        monitor.startSubTask("query user jobs for:" + this.getHostname(), 1);
+        String task="Query user jobs for:" + this.getHostname();
+        monitor.startSubTask(task, 1);
         List<JobStatus> jobs = queryUserJobs(monitor,fullUpdate); 
  
         if ((jobs == null) || (jobs.size() == 0))
@@ -251,7 +253,7 @@ public class LBResource extends ResourceSystemNode implements JobStatusListener,
         }
 
         monitor.updateSubTaskDone(1);
-        monitor.endSubTask("query user jobs for:" + this.getHostname());
+        monitor.endSubTask(task);
 
         WMSJob[] nodesArr = new WMSJob[nodes.size()];
         nodesArr = nodes.toArray(nodesArr);
@@ -498,7 +500,7 @@ public class LBResource extends ResourceSystemNode implements JobStatusListener,
     
     private List<JobStatus> queryUserJobs(ITaskMonitor monitor, boolean fullUpdate) throws VlException
 	{
-    	logger.debugPrintf("queryUSerJobs() stared for:%s\n",this); 
+    	logger.debugPrintf("queryUSerJobs() started for:%s\n",this); 
     	
 		boolean done=false;
 		List<JobStatus> jobs;
@@ -570,7 +572,8 @@ public class LBResource extends ResourceSystemNode implements JobStatusListener,
     	 } 
     	 catch (Exception e) 
     	 {
-    		 throw new VlException("Failed to query User Jobs:"+this);
+    	     WMSException wmex=WMSUtil.convertException("directQueryUserJobs",e); 
+    		 throw new VlException("Failed to query User Jobs:"+this,wmex);
     	 }
 	}
     

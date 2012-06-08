@@ -148,7 +148,7 @@ public class WMSClient
         }
         catch (Exception e)
         {
-            throw new WMSException("Couldn't initialize service to:" + wmsInfo.getWMSUri(), e);
+            throw new WMSException("Couldn't initialize WMS service:" + wmsInfo.getWMSUri(), e);
         }
     }
 

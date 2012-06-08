@@ -42,14 +42,14 @@ import nl.uva.vlet.data.BooleanHolder;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.ResourceNotFoundException;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlAuthenticationException;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.glite.OutputInfo;
 import nl.uva.vlet.glite.WMLBConfig;
+import nl.uva.vlet.glite.WMLBConfig.WMSConfig;
 import nl.uva.vlet.glite.WMSClient;
 import nl.uva.vlet.glite.WMSException;
-import nl.uva.vlet.glite.WMLBConfig.WMSConfig;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.util.ResourceLoader;
@@ -64,8 +64,8 @@ import nl.uva.vlet.vjs.VJDLSubmitter;
 import nl.uva.vlet.vjs.VJS;
 import nl.uva.vlet.vjs.VJob;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.ResourceSystemNode;
+import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
@@ -1006,22 +1006,37 @@ public class WMSResource extends JobManagerNode implements VJDLSubmitter // ,
 
     public void updateUserJobs(ITaskMonitor monitor, boolean fullUpdate, BooleanHolder someFailed) throws VlException
     {
+        // monitor can be optional! 
+        if (monitor == null)
+            monitor = ActionTask.getCurrentThreadTaskMonitor("updateUserJobs():(fullUpdate="+fullUpdate+"):"+this.getHostname(),1); 
+        
     	VlException lastEx=null;
     	
+    	int n=myLBResources.keySet().size();
+    	String task="Query UserJobs at "+n+" LB Resources."; 
+        monitor.startSubTask(task, n);
+        int i=0; 
+        
         // Collect Jobs and put them in local cached job array
         for (String key : this.myLBResources.keySet())
         {
         	// try each LB resource: 
         	LBResource lb = this.myLBResources.get(key);
+            monitor.logPrintf("Starting UserJobs Query for:%s\n",lb.getHostname()); 
+
         	try
         	{
         		WMSJob jobs[] = lb.getUserJobs(fullUpdate);
         		if (jobs != null)
+        	    {
         			for (WMSJob job : jobs)
         			{
         				this.cachedWMSJobs.put(job.getVRL(), job);
         			}
-        	}
+        			
+                    monitor.logPrintf(" - got #%d jobs.\n",jobs.length); 
+        	    }
+        	}        	
         	catch (VlException e)
         	{
         		logger.logException(ClassLogger.WARN,e,"Failed to query LB:%s\n",lb);
@@ -1029,8 +1044,11 @@ public class WMSResource extends JobManagerNode implements VJDLSubmitter // ,
         		if (someFailed!=null)
         			someFailed.set(true); 
         	}
+        	i++;
+        	monitor.updateSubTaskDone(i);
         }
         
+        monitor.endSubTask(task);
     }
 
     public void notifyUpdateUserJobs(String[] jobids)

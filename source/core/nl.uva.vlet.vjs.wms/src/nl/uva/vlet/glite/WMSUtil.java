@@ -27,12 +27,12 @@ import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import nl.uva.vlet.glite.Util.StringHolder;
 import nl.uva.vlet.glite.WMLBConfig.LBConfig;
 
 import org.apache.axis.AxisFault;
 import org.glite.wms.wmproxy.BaseFaultType;
 import org.glite.wms.wmproxy.JobIdStructType;
-import org.glite.wsdl.types.lb.GenericFault;
 import org.glite.wsdl.types.lb.JobStatus;
 import org.glite.wsdl.types.lb.StatName;
 import org.w3c.dom.Element;
@@ -107,14 +107,13 @@ public class WMSUtil
 
     public static WMSException convertException(String actionStr, Throwable e)
     {
-        return new WMSException(createExceptionMessage(actionStr, e), e);
-    }
-
-    public static String createExceptionMessage(String actionStr, Throwable e)
-    {
         String exName = "Exception";
         String faultMsg = "";
-
+        
+        StringHolder fcodeH=new StringHolder(); 
+        StringHolder ftextH=new StringHolder(); 
+        StringHolder fdescrH=new StringHolder(); 
+       
         // Determine super type !
         if (e instanceof org.apache.axis.AxisFault)
         {
@@ -128,22 +127,39 @@ public class WMSUtil
                 exName = "BaseFault";
                 faultMsg = WMSUtil.createBaseFaultMessage((BaseFaultType) e);
             }
-            else if (e instanceof org.glite.wsdl.types.lb.GenericFault)
-            {
-                exName = "GenericFault";
-                faultMsg = ((GenericFault) e).getDescription();
-            }
             else
-            {
+            { 
+                // parse GenericFault && AxisFault:
+                if (e instanceof org.glite.wsdl.types.lb.GenericFault)
+                {
+                    exName = "GenericFault";
+                }
+                
                 // Create Default Fault Message containing parsed details;
-                // Somehow LB Exception aren't a proper "FaultType"
+                // Somehow LB Exceptions aren't a proper "FaultType"
                 Element[] els = axisF.getFaultDetails();
+              
+                
+                // parse fault: 
+                String fullMsg="";
+                
                 for (Element el : els)
-                    faultMsg += parseFaultXML(el);
-
-                // BaseFaultType is subclass of AxisFault.
-                String dump = axisF.dumpToString();
-                faultMsg += "[Axis Fault Dump]\n" + dump;
+                    fullMsg += parseFaultXML(el,fcodeH,ftextH,fdescrH);
+                // if there is a text and a description, use fault information:
+                if ( (ftextH.getValue()!=null) && (fdescrH.getValue()!=null))
+                {
+                    faultMsg+= "FaultCode       :"+fcodeH.getValue()
+                            +"\nFaultText       :"+ftextH.getValue()
+                            +"\nFaultDescription:"+fdescrH.getValue();
+                }
+                else
+                {
+                    // BaseFaultType is subclass of AxisFault.
+                    String dump = axisF.dumpToString();
+                    if (faultMsg.endsWith("\n")==false)
+                        faultMsg+="\n";
+                    faultMsg += fullMsg+"[Axis Fault Dump]\n" + dump;
+                }
                 // +
                 // "(<"+"Exception class="+e.getClass().getCanonicalName()+">)\n"+
                 // dump;
@@ -171,12 +187,15 @@ public class WMSUtil
         {
             exName = "OperationNotAllowed";
         }
-        // Return as:
+
+        // Full error message text:
         // 
         // "While perform query on ...\n"
         // "--- [Exception] ---\n"
         // "Details...\n"
-        return actionStr + "\n[" + exName + "]\n" + faultMsg;
+        String msgStr=actionStr + "\n[" + exName + "]\n" + faultMsg;
+        
+        return new WMSException(msgStr, fcodeH.getValue(), ftextH.getValue(), fdescrH.getValue(), e);
 
     }
 
@@ -216,23 +235,35 @@ public class WMSUtil
     }
 
     // Parse Fault XML
-    private static String parseFaultXML(Node node)
+    private static String parseFaultXML(Node node, 
+            StringHolder codeHolder,
+            StringHolder textHolder,
+            StringHolder descriptionHolder)
     {
         String str = "";
 
         String name = node.getNodeName();
         // Spiros:Dead variable
         // short type=node.getNodeType();
-        String value = node.getNodeValue();
+        String value ; //= node.getNodeValue();
         value = node.getTextContent();
 
         if (name.equals("code"))
+        {
             str += "code       : " + value + "\n";
-        if (name.equals("text"))
+            codeHolder.setValue(value); 
+        }
+        else if (name.equals("text"))
+        {
             str += "text       : " + value + "\n";
-        if (name.equals("description"))
+            textHolder.setValue(value); 
+        }
+        else if (name.equals("description"))
+        {
             str += "description: " + value + "\n";
-
+            descriptionHolder.setValue(value);
+        }
+        
         NamedNodeMap attrs = node.getAttributes();
 
         if (attrs != null)
@@ -241,7 +272,7 @@ public class WMSUtil
             {
                 // check attributes ?
                 Node attr = attrs.item(i);
-                str += parseFaultXML(attr);
+                str += parseFaultXML(attr, codeHolder, textHolder, descriptionHolder);
             }
         }
 
@@ -253,7 +284,7 @@ public class WMSUtil
             NodeList childs = el.getChildNodes();
             for (int i = 0; i < childs.getLength(); i++)
             {
-                str += parseFaultXML(childs.item(i));
+                str += parseFaultXML(childs.item(i),codeHolder, textHolder, descriptionHolder);
             }
         }
 

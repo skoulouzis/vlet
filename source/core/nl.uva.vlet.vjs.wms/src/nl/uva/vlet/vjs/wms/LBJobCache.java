@@ -35,12 +35,11 @@ import java.util.Set;
 import java.util.Vector;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.glite.LBClient;
 import nl.uva.vlet.glite.WMLBConfig;
-import nl.uva.vlet.glite.WMLBConfig.LBConfig;
+import nl.uva.vlet.glite.WMSException;
 import nl.uva.vlet.glite.WMSUtil;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
@@ -349,8 +348,8 @@ public class LBJobCache
 
     private Vector<JobStatusListener> jobListeners = new Vector<JobStatusListener>();
 
-    private String lbHostname = null;
-
+    private String _lbHostname = null;
+    
     private LBJobCacheWatcher watcher = null;
 
     private String idstr;
@@ -369,7 +368,7 @@ public class LBJobCache
     protected LBJobCache(VRSContext context, String idstr, String hostname)
     {
         this.vrsContext = context;
-        this.lbHostname = hostname;
+        this._lbHostname = hostname;
         this.idstr = idstr;
         startWatcher();
     }
@@ -437,6 +436,11 @@ public class LBJobCache
         return this.lbUserJobQueryUpdateWaitTime;
     }
 
+    public String getHostname()
+    {
+        return _lbHostname;
+    }
+    
     // ========================================================================
     // Public Interface Methods
     // ========================================================================
@@ -560,13 +564,13 @@ public class LBJobCache
             if (_updateUserJobsRunning == true)
             {
                 logger.debugPrintf("\n>>>\n[#%d]:_queryUserJobs() for Query already running for:%s\n<<<\n", Thread
-                        .currentThread().getId(), lbHostname);
+                        .currentThread().getId(), getHostname());
 
                 return false;
             }
 
             logger.debugPrintf("\n>>>\n[#%d]:_queryUserJobs(): Starting new query for:%s\n<<<\n", Thread
-                    .currentThread().getId(), lbHostname);
+                    .currentThread().getId(), getHostname());
 
             // block!
             _updateUserJobsRunning = true;
@@ -608,14 +612,12 @@ public class LBJobCache
 
     private void _updateUserJobsFrom(ITaskMonitor monitor, LBClient lbClient, boolean fullQuery)
     {
-        ActionTask task = ActionTask.getCurrentThreadActionTask();
-
-        // boolean claimed=lbEl.claim(false);
-
         JobStatus[] lbjobs = null;
         String taskstr = null;
-        taskstr = "#[" + Thread.currentThread().getId() + "] Quering LB Service:" + lbClient;
+        taskstr = "JobCache: Quering LB Service:" + lbClient+" (T#[" + Thread.currentThread().getId() + "])";
 
+        String lbstr="LB:"+lbClient.getHostname()+":"+lbClient.getPort()+":(T#"+ Thread.currentThread().getId()+"]):"; 
+        
         long currentTime = System.currentTimeMillis();
         long delta = currentTime - lbUserJobQueryLastUpdateTime;
 
@@ -623,11 +625,11 @@ public class LBJobCache
         // debug(taskstr + " - last query time =" +
         // lbUserJobQueryLastUpdateTime);
         // debug(taskstr + "  - current time    =" + currentTime);
-
+        
         if ((fullQuery == false) && (delta < this.lbUserJobQueryUpdateWaitTime))
         {
             monitor.endSubTask(taskstr);
-            monitor.logPrintf(taskstr + " Using cache for LB Service:" + lbClient + "\n");
+            monitor.logPrintf("%s: - using cache for LB Service:%s\n",lbstr,lbClient);
             // debug(taskstr + " -> Skipping already queried LB Client:" +
             // lbClient);
             return;
@@ -643,36 +645,45 @@ public class LBJobCache
             // debug(taskstr + " -> Fetching NEW jobs.");
 
             lbjobs = lbClient.getUserJobStatusses();
-
             lbUserJobQueryLastUpdateTime = System.currentTimeMillis();// Done!
 
-            String logStr = " -> got #" + (lbjobs != null ? lbjobs.length : "0") + " user jobs.";
+            String numstr = ""+(lbjobs != null ? lbjobs.length : "0");
             // debug(taskstr + logStr );
-            monitor.logPrintf(taskstr + logStr+"\n");
-            monitor.endSubTask(taskstr);
+            monitor.logPrintf("%s: -> got #%s user jobs\n",lbstr,numstr);
+            monitor.endSubTask(lbstr);
             // info("Finished User Jobs Query for LBClient:" + lbClient);
 
         }
         catch (Exception e)
         {
             // Wrap exception
-            e = WMSUtil.convertException("Failed to query LB Server:" + lbClient, e);
+            WMSException wmsx = WMSUtil.convertException("Failed to query LB Server:" + lbClient, e);
 
             //
             // Update Query time also in the case of an error
             // to prevent re querying each time
             // 
             lbUserJobQueryLastUpdateTime = System.currentTimeMillis();
-
             monitor.endSubTask(taskstr);
-            monitor.logPrintf(taskstr + ": *** Exception when querying LB Service:" + lbClient + "\n");
-            monitor.logPrintf("*** Exception Message ***\n" + e.getMessage() + "\n***\n");
-            monitor.setException(e);
-
-            handle(taskstr + ": Exception when getting user jobs from:" + lbClient, e);
-
-            addException(e);
-
+            
+            String txt=""+wmsx.getFaultDescription();
+            if (txt.contains("matching jobs found but authorization failed"))
+            {
+                // Ignore. No jobs at current LB Resource. 
+                monitor.logPrintf("%s: Failed to query user jobs\n",lbstr); 
+                monitor.logPrintf("- Reason='%s'\n",txt);
+                logger.warnPrintf("%s: Failed to query user jobs. Reason=%s\n",lbstr,txt); 
+            }
+            else
+            {
+                monitor.logPrintf("%s: - *** Exception when querying LB Service ***\n",lbstr);
+                monitor.logPrintf("*** Exception Message ***\n" + wmsx.getMessage() + "\n***\n");
+                monitor.setException(wmsx);
+                handle(taskstr + ": Exception when getting user jobs from:" + lbClient, wmsx);
+                addException(wmsx);
+               
+            }
+            
             return;
         }
 
@@ -965,7 +976,7 @@ public class LBJobCache
     	{
     		if (this._lbClient == null)
     		{
-    			_lbClient=WMSUtil.createLBClient(lbHostname, 
+    			_lbClient=WMSUtil.createLBClient(getHostname(), 
     					WMLBConfig.LB_DEFAULT_PORT,
     					this.vrsContext.getGridProxy().getProxyFilename()); 
     		}
@@ -973,7 +984,7 @@ public class LBJobCache
     	}
     	catch (Exception e)
     	{
-    		throw new VlException("LBException", "Couldn't create LBClient for host:" + lbHostname, e);
+    		throw new VlException("LBException", "Couldn't create LBClient for host:" + getHostname(), e);
     	}
     	
     }
@@ -1212,21 +1223,17 @@ public class LBJobCache
         if (msg == null)
             msg = "*** Exception ***";
 
-        error(msg);
-        error("Exception=" + e);
-        Global.errorPrintStacktrace(e);
+        logger.logException(ClassLogger.ERROR,e,"LB:%s (T#%d):%s\n",
+                getHostname(),
+                Thread.currentThread().getId(),
+                msg); 
     }
    
     private void info(String msg, Object... args)
     {
-        logger.infoPrintf(":" + lbHostname + "#" + Thread.currentThread().getId() + ":" + msg + "\n", args);
+        logger.infoPrintf(":" + getHostname() + "#" + Thread.currentThread().getId() + ":" + msg + "\n", args);
     }
-
-    private void error(String msg, Object... args)
-    {
-        logger.errorPrintf(":" + lbHostname + "#" + Thread.currentThread().getId() + ":" + msg + "\n", args);
-    }
-
+ 
     /** Mark job as purged */
     public boolean jobPurged(String jobId)
     {

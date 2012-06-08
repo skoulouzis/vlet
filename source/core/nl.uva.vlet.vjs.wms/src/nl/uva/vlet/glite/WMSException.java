@@ -24,12 +24,18 @@
 package nl.uva.vlet.glite;
 
 /**
- * Generic WMS Exception wrapper. Use getCause() to get nested exception
+ * Generic WMS Exception wrapper. Use getCause() to get nested exception.
+ * If an AxisFault was detected, the field {faultCode,faultText,faultDescription} had the fault information.
  */
 public class WMSException extends Exception
 {
     private static final long serialVersionUID = 6755443017493384972L;
-
+    // === 
+    
+    protected String faultCode;
+    protected String faultText; 
+    protected String faultDescription; 
+    
     public WMSException(String msg)
     {
         super(msg);
@@ -43,6 +49,29 @@ public class WMSException extends Exception
     public WMSException(Throwable nestedException)
     {
         super(nestedException.getMessage(), nestedException);
+    }
+
+    public WMSException(String msgStr, String code, String text, String description, Throwable e)
+    {
+        super(msgStr,e);
+        this.faultCode=code;
+        this.faultText=text;
+        this.faultDescription=description;
+    }
+    
+    public String getFaultCode()
+    {
+        return faultCode; 
+    }
+    
+    public String getFaultText()
+    {
+        return faultText;
+    }
+    
+    public String getFaultDescription()
+    {
+        return faultDescription;
     }
 
 }
