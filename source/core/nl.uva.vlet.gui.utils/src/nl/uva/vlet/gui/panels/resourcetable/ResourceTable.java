@@ -109,13 +109,16 @@ public class ResourceTable extends JTable
  	    this.setRowSelectionAllowed(true);
 
  	    initColumns();
- 	    
+ 	    initListeners();
+	}
+	
+	protected void initListeners()
+	{
  	    // Listeners ! 
         JTableHeader header = this.getTableHeader();
         mouseListener = new TableMouseListener(this);
         header.addMouseListener(mouseListener);
         this.addMouseListener(mouseListener);
-        
         // default popup menu
         this.popupMenu=new TablePopupMenu();
 	}

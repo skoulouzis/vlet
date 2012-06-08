@@ -24,10 +24,12 @@
 package nl.uva.vlet.gui.panels.resourcetable;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JViewport;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -72,6 +74,7 @@ public class TableMouseListener implements MouseListener
         debugPrintf("MouseClicked:%s\n",e);
         
         //boolean ctrl=((e.getModifiersEx() & e.CTRL_DOWN_MASK) !=0);
+        Container parent = comp.getParent(); 
         
         // Show Header Popup! 
         if ((comp instanceof JTableHeader) && (GuiSettings.isPopupTrigger(e)))
@@ -96,7 +99,7 @@ public class TableMouseListener implements MouseListener
                     popupMenu.show(comp,e.getX(),e.getY());
             }
         }
-        else if (comp.equals(table.getParent()))
+        else if (comp.equals(parent))
         {
             if (GuiSettings.isPopupTrigger(e))
             {
@@ -104,6 +107,28 @@ public class TableMouseListener implements MouseListener
                 if (popupMenu!=null)
                     popupMenu.show(comp,e.getX(),e.getY());
             }
+        }
+        else if (comp instanceof javax.swing.JScrollPane)
+        {
+            // Check whether resourcepanel is embedded in a ScrollPane 
+            JViewport viewPort = ((javax.swing.JScrollPane)comp).getViewport();   
+            Component viewPortView=null;
+            if (viewPort!=null)
+                viewPortView= viewPort.getView(); 
+
+            if (viewPortView==table)
+            {
+                // show!
+                TablePopupMenu popupMenu=table.getPopupMenu(e,true); 
+                if (popupMenu!=null)
+                    popupMenu.show(comp,e.getX(),e.getY());
+            }
+            
+        }
+        else
+        {
+            // System.err.printf("Click on:%s\n",comp); 
+            // System.err.printf("Table Parent=:%s\n",table.getParent()); 
         }
     }
 
