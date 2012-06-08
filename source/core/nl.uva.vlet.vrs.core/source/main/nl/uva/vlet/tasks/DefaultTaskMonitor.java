@@ -367,7 +367,7 @@ public class DefaultTaskMonitor implements ITaskMonitor, ISubTaskMonitor
 		return this.mustStop;   
     }
     
-    // backwards compatible 
+    /** @deprecated use logPrintf(...) */
     public void addLogText(String format, Object ...args)
     {
         logPrintf(format,args); 
