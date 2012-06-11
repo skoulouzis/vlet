@@ -50,7 +50,7 @@ public class startVBrowser
           Global.parseArguments(args); 
 
           // does platform init!
-          VBrowserInit.init();
+          VBrowserInit.initPlatform();
           VBrowserFactory factory=VBrowserFactory.getInstance(); 
           
         // start browser(s)

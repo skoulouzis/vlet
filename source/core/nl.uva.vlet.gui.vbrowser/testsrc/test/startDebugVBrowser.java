@@ -50,7 +50,7 @@ public class startDebugVBrowser
       {
         ClassLogger.getRootLogger().setLevelToDebug();
 
-        VBrowserInit.init(); 
+        VBrowserInit.initPlatform(); 
         
         args=Global.parseArguments(args); 
         

@@ -49,7 +49,7 @@ public class TestJobMonitor
         try
         {
             // init platform!
-            VBrowserInit.init(); 
+            VBrowserInit.initPlatform(); 
 
             JobMonitor jobMonitor = new JobMonitor(true);
             jobMonitor.startAsStandAloneApplication(new VRL("file:"+Global.getUserHome()+"/myjobs.jids"));

@@ -33,7 +33,7 @@ import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 public class VBrowserInit
 {
 
-    public static void init() throws VlException
+    public static void initPlatform() throws VlException
     {
         // todo: better platform initialization. 
         // current order to initialize: 

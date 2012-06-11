@@ -23,8 +23,6 @@
 
 package nl.uva.vlet.gui.proxynode.impl.direct;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -34,7 +32,6 @@ import javax.swing.ImageIcon;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
-import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.NotImplementedException;
@@ -43,7 +40,6 @@ import nl.uva.vlet.exception.ResourceLinkIsBorkenException;
 import nl.uva.vlet.exception.ResourceNotEditableException;
 import nl.uva.vlet.exception.ResourceTypeMismatchException;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
@@ -57,8 +53,6 @@ import nl.uva.vlet.presentation.VPresentable;
 import nl.uva.vlet.util.QSort;
 import nl.uva.vlet.vfs.VACL;
 import nl.uva.vlet.vfs.VFSClient;
-import nl.uva.vlet.vfs.VFSNode;
-import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.LogicalResourceNode;
 import nl.uva.vlet.vrms.MyVLe;
@@ -72,8 +66,6 @@ import nl.uva.vlet.vrs.VDeletable;
 import nl.uva.vlet.vrs.VEditable;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRenamable;
-import nl.uva.vlet.vrs.io.VRandomAccessable;
-import nl.uva.vlet.vrs.io.VStreamReadable;
 
 /**
  * Proxy Object for the VRS VNodes. 
@@ -718,8 +710,8 @@ public final class ProxyTNode extends ProxyNode
                 //Presentation can overrule default View Filter: 
                 if ((pres!=null) && (pres.getAutoSort()))
             	{
-                    if (pres.getSortFields()!=null)
-                        sortFields=pres.getSortFields().toArray();
+                    if (pres.getAutoSortFields()!=null)
+                        sortFields=pres.getAutoSortFields().toArray();
                     doSort=true; //getAutoSort()==true  
             	}
             	
