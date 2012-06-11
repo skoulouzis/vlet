@@ -1021,7 +1021,7 @@ public class Presentation
     /**
      * Whether automatic sorting is allowed or that the returned order of this node should
      * be kept as-is.
-     * Optionally setAutoSortFields() to specify which fields should be used for auto sorting. s
+     * Optionally use setAutoSortFields() to specify which fields should be used for auto sorting. 
      */
     public boolean getAutoSort()
     {
