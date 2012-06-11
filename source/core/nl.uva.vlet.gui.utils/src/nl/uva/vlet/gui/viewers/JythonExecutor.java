@@ -47,8 +47,7 @@ public class JythonExecutor
 	}
 
 	public void start()
-	{
-		
+	{		
 	}
 
 	public void execute(VRL vrl)

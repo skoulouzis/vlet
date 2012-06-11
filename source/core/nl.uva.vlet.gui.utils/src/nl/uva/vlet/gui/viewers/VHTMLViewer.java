@@ -39,7 +39,6 @@ import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.gui.vhtml.VHTMLEditorPane;
-import nl.uva.vlet.gui.vhtml.VHTMLKit;
 import nl.uva.vlet.net.ssl.SslUtil;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
@@ -47,11 +46,9 @@ import nl.uva.vlet.vrs.VRS;
 
 /**
  * The (V)HTML Viewer.
- *  
  * See VHTMLEDitorPane for the real implemenation of the HTML viewer. 
  * @see VHTMLEditorPane
  * @author Piter T. de Boer
- *
  */
 public class VHTMLViewer extends InternalViewer  implements HyperlinkListener
 {
@@ -85,9 +82,6 @@ public class VHTMLViewer extends InternalViewer  implements HyperlinkListener
 
     private JScrollPane scrollPane;
 
-    /**
-     * 
-     */
     public void initGui()
     {
         {
@@ -125,15 +119,12 @@ public class VHTMLViewer extends InternalViewer  implements HyperlinkListener
             }
         }
     }
-   
 
     /** htmlPane is embedded in a scrollpane */
-    
     public boolean haveOwnScrollPane()
     {
         return true;  
     }
-   
 
     /**
      * @param location

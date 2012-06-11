@@ -24,11 +24,8 @@
 package nl.uva.vlet.gui.viewers;
 
 /**
- * Super type for simple "(J)Panel" style viewers which are only intended
- * to display a simple content type.   
- * <p>
- * Used to be the old name for ViewerPlugin's but this class has been recycled. 
- * Legacy plugins might still use this class.  
+ * Super type for plain "(J)Panel" style viewers which are only intended
+ * to display a plain content type.   
  */ 
 public abstract class ViewerPanel extends ViewerPlugin 
 {

@@ -28,10 +28,7 @@ import nl.uva.vlet.vrl.VRL;
 /** 
  * Viewer event are events origination from Viewer classes to notify
  * the MasterBrowser.
- *   
- * @author P.T. de Boer
  */
-
 public class ViewerEvent
 {
     public enum ViewerEventType
@@ -69,8 +66,7 @@ public class ViewerEvent
     public IMimeViewer getViewer()
     {
         return viewer;
-    }
-    
+    }   
     
     public String toString()
     {
@@ -109,7 +105,6 @@ public class ViewerEvent
         event.location=location; 
         return event;  
     }
-
     
     /**
      * Create HyperLink/UpdateLocation event. 
@@ -133,8 +128,6 @@ public class ViewerEvent
         return event;  
     }
     
-
-
     public static ViewerEvent createHyperLinkEvent(IMimeViewer viewer, VRL vrl, ViewOpenType openType)
     {
         ViewerEvent event=new ViewerEvent(viewer,ViewerEventType.HYPER_LINK_EVENT);
@@ -167,6 +160,5 @@ public class ViewerEvent
         
         return (openType.equals(ViewOpenType.SAME)); 
     }
-
 
 }

@@ -46,7 +46,6 @@ import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.actions.ActionMenuMapping;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.ResourceTypeMismatchException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.HyperLinkListener;
@@ -54,7 +53,6 @@ import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.util.imageutil.ImageCapturer;
 import nl.uva.vlet.util.ResourceLoader;
-import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.VNode;
@@ -265,9 +263,7 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     final public ViewerInfo getViewerInfo()
     {
         return viewerInfo;
-    }
-   
-    
+    }    
     
     final public void addHyperLinkListener(HyperLinkListener listener)
     {
@@ -279,7 +275,6 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
             else
                 Global.warnPrintf(this,"Warning: HyperlinkListener already added:%s\n",listener); 
         }
-        
     }
     
     final public void removeHyperLinkListener(HyperLinkListener listener)
@@ -302,14 +297,10 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
             return listeners; 
         }
     }
-
     
     // ========================================================================
     // Other methods
     // ========================================================================
-
-    
-    
     
     /** Perform Dynamic Action Method */
     public void doMethod(String methodName, ActionContext actionContext)
@@ -504,7 +495,6 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     {
         return false;
     }
-
     
     /**
      * Default Exception handler, notifies the task source, which spawn this

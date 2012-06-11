@@ -110,9 +110,7 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	private Properties configProperties=new Properties(); 
 	
 	// =======================================================================
-
 	// =======================================================================
-
 	boolean editable=false;
 	
 	//
@@ -445,8 +443,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 			    setBusyLoadSave(false); 
 				return; // receive stop signal BEFORE getContents...
 			}
-			
-		
 			
 			// Special Replica handling: 
 			if (vnode instanceof VReplicatable)
@@ -834,7 +830,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 		}
 	}
 
-
     protected void updateSettings()
 	{
 	    
@@ -953,7 +948,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 				this.enableEdit(true); 
 			}
 		}
-		
 	}
 
 }

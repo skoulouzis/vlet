@@ -58,16 +58,12 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
 
 /**
- * *** Jython Runner To Be ***  
- * 
- * @author Piter T. de Boer
- *
+ *Jython Runner To Be.  
+ * Not finished. 
  */
 public class JythonRunner extends ViewerPlugin implements ActionListener,
      FontToolbarListener
 {
-
-	/** serializable */ 
 	private static final long serialVersionUID = -5089094250601371894L;
 
 	public static final String jythonSettingsFile = "jythonrunner.props";
@@ -81,9 +77,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 	};
 
 	JTextArea textArea = null;
-
 	VNode vnode = null;
-
 	private boolean muststop = false;
 
 	// =======================================================================
@@ -96,50 +90,32 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 	// --- 
 
 	private JToolBar toolbar;
-
 	private JButton refreshButton;
-
 	private JScrollPane textScrollPane;
-
 	private FontToolBar fontToolbar;
-
 	private JPanel toolPanel;
-
 	private JToolBar optionsToolbar;
-
 	private JButton saveConfigButton;
-
 	private JToggleButton enableEditButton;
-
 	private JButton saveButton;
-	
 	private JButton runButton;
-
 	private JMenuBar menuBar;
-
 	private JMenuItem refreshMenuItem;
-
 	private JMenuItem saveMenuItem;
-	
 	private JMenuItem runMenuItem;
-
 	private JPanel topPanel;
 
 	private JCheckBoxMenuItem editMenuItem;
-
 	private JMenuItem saveConfigMenuItem;
 
 	private JythonExecutor jythonExecutor;
 
 	public void initGui()
 	{
-
-		// TextViewer is a JPanel: 
 		{
 			this.setLayout(new BorderLayout());
 			this.setPreferredSize(new Dimension(800,600)); 
 		}
-
 		{
 			topPanel=new JPanel(); 
 			this.add(topPanel,BorderLayout.NORTH); 
@@ -288,18 +264,14 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 				textArea.setSize(800, 600);
 				textArea.setEditable(this.editable);
 				textScrollPane.setViewportView(textArea);
-
 			}
-
 		}
-
 		// update with stored settings: 
 		{
 			loadSettings();
 			FontInfo info = getFontInfo();
 			info.updateComponentFont(this.textArea); 
 		}
-
 	}
 
 	private FontInfo getFontInfo()
@@ -353,12 +325,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 
 		setViewerTitle("Viewing:"+getVRL().getBasename());
 
-		if (location == null)
-		{
-			setText("NULL VRL");
-			return;
-		}
-
 		setBusy(true);
 
 		try
@@ -383,7 +349,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 		}
 		
 		requestFocusOnText(); 
-
 	}
 
 	private void requestFocusOnText()
@@ -490,7 +455,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 		}
 		
 		this.jythonExecutor.execute(this.getVRL()); 
-			
 	}
 
 	private void save() throws VlException
@@ -593,7 +557,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 			System.out.println("***Error: Exception:" + e);
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void viewStandAlone(VRL loc)
