@@ -56,7 +56,6 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
 	static
 	{
 		logger=ClassLogger.getLogger(ProxyResourceEventNotifier.class);
-		logger.setLevelToDebug();
 	}
 	
 	// ========================================================================
@@ -138,7 +137,7 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
           }
         }while(haveMore==true);
         
-        logger.debugPrintf("Stopping notifier: nr events processed=%d",nrEvents);
+        logger.debugPrintf("Stopping notifier: nr events processed=%d\n",nrEvents);
     }
 
     /**

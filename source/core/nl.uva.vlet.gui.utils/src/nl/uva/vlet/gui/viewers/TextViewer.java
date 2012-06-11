@@ -874,7 +874,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 			System.out.println("***Error: Exception:" + e);
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void viewStandAlone(VRL loc)
