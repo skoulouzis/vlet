@@ -25,7 +25,6 @@ package nl.uva.vlet.gui.panels.resourcetable;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -50,7 +49,22 @@ public class TableMouseListener implements MouseListener
     @Override
     public void mouseClicked(MouseEvent e)
     {
+        Component comp=(Component)e.getSource();
         
+        // click on header: 
+        if (comp instanceof JTableHeader)
+        { 
+          //  click on header
+          if (GuiSettings.isSelection(e))
+          {
+              String name=this.getColumnNameOf(e); 
+              if (name==null)
+                  return; // no column; 
+
+              table.sortColumn(name);
+              
+           }
+        }
     }
 
     @Override
@@ -69,7 +83,7 @@ public class TableMouseListener implements MouseListener
     public void mousePressed(MouseEvent e)
     {
         Component comp=(Component)e.getSource();
-        Point clickPoint=e.getPoint(); 
+        //Point clickPoint=e.getPoint(); 
        
         debugPrintf("MouseClicked:%s\n",e);
         

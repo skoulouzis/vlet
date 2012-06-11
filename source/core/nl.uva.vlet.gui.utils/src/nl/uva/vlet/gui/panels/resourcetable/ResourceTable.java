@@ -409,5 +409,10 @@ public class ResourceTable extends JTable
         this.presentation=newPresentation;
         this.refreshAll();
     }
+
+    public void sortColumn(String name)
+    {
+        ; // 
+    }
  
 }
