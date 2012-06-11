@@ -25,6 +25,7 @@ package test.wms;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.gui.vbrowser.VBrowserInit;
 import nl.uva.vlet.gui.viewers.grid.jobmonitor.JobMonitor;
 import nl.uva.vlet.vjs.wms.WMSFactory;
 import nl.uva.vlet.vrl.VRL;
@@ -44,9 +45,11 @@ public class TestJobMonitor
         {
             e.printStackTrace();
         }
-
+        
         try
         {
+            // init platform!
+            VBrowserInit.init(); 
 
             JobMonitor jobMonitor = new JobMonitor(true);
             jobMonitor.startAsStandAloneApplication(new VRL("file:"+Global.getUserHome()+"/myjobs.jids"));
