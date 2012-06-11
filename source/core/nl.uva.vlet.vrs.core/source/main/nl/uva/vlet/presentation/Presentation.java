@@ -737,7 +737,7 @@ public class Presentation
     // attribute names from child to show by default:
     protected StringList childAttributeNames = new StringList(defaultNodeAttributeNames);
 
-    protected StringList sortFields; 
+    protected StringList autoSortFields; 
     
     protected Presentation parent = null; // No hierarchical presentation (yet)
 
@@ -898,26 +898,6 @@ public class Presentation
         return timestr;
     }
 
-    /**
-     * Whether automatic sorting is allowed or that the returned order of this node should
-     * be kept as-is.
-     */
-    public boolean getAutoSort()
-    {
-        if (this.allowSort == null)
-            return true;
-
-        return this.allowSort;
-    }
-
-    /** 
-     * Specify whether nodes should be sorted automatically when fetched from this
-     * resource, or nodes should be displayed 'in order'. 
-     */
-    public void setAutoSort(boolean newVal)
-    {
-        this.allowSort = newVal;
-    }
 
     /** Whether to ignore case when sorting files */
     public boolean getSortIgnoreCase()
@@ -1008,14 +988,24 @@ public class Presentation
         this.columnsAutoResizeMode=value;  
     }
 
+
+    public Map<String, AttributePresentation> getAttributePresentations()
+    {
+        return this.attributePresentations; 
+    }
+    
+    // ==============
+    // Sort Options
+    // ==============
+
     /**
      * Returns optional attribute sort fields, by which this contents should be sorted.
      * If set the attribute names will be used to sort the contents of a resource. 
      * If sortFields are NULL, then the default Type+Name sort is used.  
      */ 
-    public StringList getSortFields()
+    public StringList getAutoSortFields()
     {
-        return this.sortFields; 
+        return this.autoSortFields; 
     }
 
     /**
@@ -1023,14 +1013,31 @@ public class Presentation
      * to sort the contents of a resource. 
      * If sortFields are null, then the default Type+Name sort is used. 
      */
-    public void setSortFields(String[] fields)
+    public void setAutoSortFields(String[] fields)
     {
-        this.sortFields=new StringList(fields); 
+        this.autoSortFields=new StringList(fields); 
+    }
+    
+    /**
+     * Whether automatic sorting is allowed or that the returned order of this node should
+     * be kept as-is.
+     * Optionally setAutoSortFields() to specify which fields should be used for auto sorting. s
+     */
+    public boolean getAutoSort()
+    {
+        if (this.allowSort == null)
+            return true;
+
+        return this.allowSort;
     }
 
-    public Map<String, AttributePresentation> getAttributePresentations()
+    /** 
+     * Specify whether nodes should be sorted automatically when fetched from this
+     * resource, or nodes should be displayed 'in order'. 
+     */
+    public void setAutoSort(boolean newVal)
     {
-        return this.attributePresentations; 
+        this.allowSort = newVal;
     }
 
 }
