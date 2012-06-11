@@ -67,7 +67,5 @@ public class UIPlatform
 	public WindowRegistry getWindowRegistry()
 	{
 	    return windowRegistry; 
-	}
-
-	
+	}	
 }

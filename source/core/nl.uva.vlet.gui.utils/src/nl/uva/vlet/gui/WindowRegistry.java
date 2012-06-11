@@ -34,7 +34,7 @@ import javax.swing.JFrame;
 import nl.uva.vlet.Global;
 
 /**
- * Window registry for Platform openened windows. 
+ * Window registry for Platform opened windows. 
  */
 public class WindowRegistry
 {
