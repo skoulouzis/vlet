@@ -34,6 +34,7 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
@@ -162,6 +163,8 @@ public class JobMonitorController implements ActionListener
 	    	    mbr=ctx.getMasterBrowser();
 	    	if (mbr!=null)
 	    	    mbr.startNewWindow(vrl);
+	    	else
+	    	    throw new VlException("No master browser found to open location:"+vrl);
 	    	
     	}
     	catch (Throwable t)
