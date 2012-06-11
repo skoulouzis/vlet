@@ -185,7 +185,7 @@ public class LBResource extends ResourceSystemNode implements JobStatusListener,
         
         //Enable Presention level sorting: sort using jobSubmissionTime 
         pres.setAutoSort(true); 
-        pres.setSortFields(new String[]{WMSConstants.ATTR_JOB_SUBMISSION_TIME}); 
+        pres.setAutoSortFields(new String[]{WMSConstants.ATTR_JOB_SUBMISSION_TIME}); 
         
         return pres;
     }
