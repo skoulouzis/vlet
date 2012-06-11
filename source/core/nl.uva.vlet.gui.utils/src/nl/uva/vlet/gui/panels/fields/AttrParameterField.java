@@ -18,7 +18,7 @@
  * ---
  * $Id: AttrParameterField.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
@@ -29,58 +29,56 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeType;
 
 /**
- * An Attribute Parameter Field is an managed Field
- * for an VAttribute
+ * An Attribute Parameter Field is an managed Field for an VAttribute
  * 
  * @author ptdeboer
- *
+ * 
  */
 public class AttrParameterField extends JTextField implements IAttributeField
 {
     private static final long serialVersionUID = -7390955302454785863L;
-    
-    // needed by jilgloo 
+
+    // needed by jilgloo
     public AttrParameterField()
     {
-       super("<AttrParameterField>");
+        super("<AttrParameterField>");
     }
 
-    /** Default is String Parameter */ 
+    /** Default is String Parameter */
     public AttrParameterField(String value)
     {
-       super(value);
+        super(value);
     }
-
 
     public AttrParameterField(String name, String value)
     {
-        super(value); 
-        this.setName(name); 
+        super(value);
+        this.setName(name);
     }
-    
+
     public String getName()
     {
-        return super.getName(); 
+        return super.getName();
     }
-    
+
     public String getValue()
     {
-        return super.getText(); 
+        return super.getText();
     }
-	
-	public VAttributeType getVAttributeType()
-	{
-		return VAttributeType.STRING;
-	}
-	
-	public void updateFrom(VAttribute attr) 
-	{
-		setText(attr.getStringValue()); 
-	}
-	
-	public void setEditable(boolean editable)
-	{
-		super.setEditable(editable); 
-	}	
-	
+
+    public VAttributeType getVAttributeType()
+    {
+        return VAttributeType.STRING;
+    }
+
+    public void updateFrom(VAttribute attr)
+    {
+        setText(attr.getStringValue());
+    }
+
+    public void setEditable(boolean editable)
+    {
+        super.setEditable(editable);
+    }
+
 }

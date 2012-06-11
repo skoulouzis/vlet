@@ -59,7 +59,6 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Attribute Panel. 
- * @author P.T. de Boer
  */
 public class AttributePanel extends JPanel
 {
@@ -165,7 +164,6 @@ public class AttributePanel extends JPanel
         init(set,isEditable); 
     }
 
-
     public AttributePanel(VAttributeSet set)
 	{
     	super(); 
@@ -228,8 +226,7 @@ public class AttributePanel extends JPanel
                 /* if ( (editable==false) 
                     ||(editable & orgAttrs[i].isEditable()) )*/
             	VAttribute attr = orgSet.elementAt(i);
-                attributes.put(attr);
-                
+                attributes.put(attr);                
             }
         }
 

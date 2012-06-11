@@ -34,18 +34,16 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
 import nl.uva.vlet.Global;
+
 /**
  * Drag Gesture listnener which receives a Drag Recognized event 
  * from the Global Drag Gesture Recoginizer.
- *  
- * @author Piter T. de Boer 
  */
 public class VDragGestureListener implements DragGestureListener
 {
     public void dragGestureRecognized(DragGestureEvent dge)
     {
     	// DnD Stuff: 
-    	
         Global.debugPrintln(this, "dragGestureRecognized:" + dge);
         int action=dge.getDragAction(); 
         // Use DragSource ? 

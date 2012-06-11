@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.gui.icons;
 
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -36,7 +35,6 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.util.ResourceLoader;
 
-
 /** 
  *  Simple Icon Renderer class
  * 
@@ -44,11 +42,7 @@ import nl.uva.vlet.util.ResourceLoader;
  */
 public class ImageRenderer
 {
-	// ==========================================================================
-	// Object
-	// ==========================================================================
     private String link_icon_url="default/linkimage.png";
-
     private Image resolvedLinkImage=null;  
 
 	/** 
@@ -56,7 +50,6 @@ public class ImageRenderer
 	 * image format.
 	 * This can increase the rendering speed.
 	 */
-
 	@SuppressWarnings("unused")
 	private Component imageSource=null;
 
@@ -113,7 +106,6 @@ public class ImageRenderer
 		int orgHeight=orgImage.getHeight(null); 
 		int prefWidth=orgWidth;
 		int prefHeight=orgHeight;
-
 
 		if (preferredSize!=null)
 		{
@@ -187,8 +179,7 @@ public class ImageRenderer
 				Image newImage = orgImage.getScaledInstance(scaleWidth,
 						scaleHeight, Image.SCALE_SMOOTH);
 
-                sync(newImage);
-                
+                sync(newImage);                
 				scaledImage=newImage; 
 			}
 		}
@@ -205,7 +196,6 @@ public class ImageRenderer
 		// Create new Icon Canvas to draw & merge linkicon and greyout pattern. 
 		// Must use full RGB+Alpha image. 
 		// 
-		
 		BufferedImage newImage = new BufferedImage(prefWidth,prefHeight,BufferedImage.TYPE_INT_ARGB);
 		Graphics2D imageGraphics = newImage.createGraphics();
 
@@ -244,7 +234,6 @@ public class ImageRenderer
 		//
 		// II) Optional LinkImage (shortcut arrow): 
 		//
-
 		if (isLink)
 		{
 			// create merged icon image + shortcut image: 
@@ -286,11 +275,8 @@ public class ImageRenderer
 //                    System.err.println("***Warning:  image NOT yet drawn");
 //                    //imageSyncer.waitForCompletion();
 //                }
-            }
-			
-			
+            }	
 		}
-
 		// === 
 		// III) Perform greyOUt (or blue out)
 		//      add mesh of pixels + make blueish

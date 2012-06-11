@@ -34,10 +34,7 @@ import javax.swing.TransferHandler;
 import nl.uva.vlet.Global;
 
 /**
- * Default VComponetn Drag Gesture listnener  
- * Drag Recognized event from the Global Drag Gesture Recoginizer.
- *  
- * @author Piter T. de Boer 
+ * Default VComponent Drag Gesture listener.d 
  */
 public class ComponentDragGestureListener implements DragGestureListener
 {

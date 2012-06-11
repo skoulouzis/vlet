@@ -18,7 +18,7 @@
  * ---
  * $Id: IAttributeField.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
@@ -28,13 +28,13 @@ import nl.uva.vlet.data.VAttributeType;
 
 public interface IAttributeField
 {
-    public String getName(); 
-    
+    public String getName();
+
     public String getValue();
 
-	public void updateFrom(VAttribute attr);
-    
-	VAttributeType getVAttributeType(); 
-	
-	void setEditable(boolean flag); 
-}   
+    public void updateFrom(VAttribute attr);
+
+    VAttributeType getVAttributeType();
+
+    void setEditable(boolean flag);
+}

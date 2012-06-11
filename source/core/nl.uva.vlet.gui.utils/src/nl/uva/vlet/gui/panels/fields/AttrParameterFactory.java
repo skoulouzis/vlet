@@ -18,12 +18,12 @@
  * ---
  * $Id: AttrParameterFactory.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
 
 public class AttrParameterFactory
 {
-    
+
 }

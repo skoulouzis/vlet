@@ -38,7 +38,6 @@ import nl.uva.vlet.vrs.Registry;
 /**
  * 	List of ResourceTransferables !  
  */
-
 public class ResourceListTransferable implements Transferable
 {
     ResourceRef refs[] = null;

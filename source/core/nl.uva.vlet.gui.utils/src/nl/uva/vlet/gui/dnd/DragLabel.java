@@ -36,28 +36,25 @@ import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;
 import nl.uva.vlet.vrl.VRL;
+
 /**
  * Simple Lable which can export a VRL as transferable. 
  * 
  * @author P.T. de Boer
  */
-
 public class DragLabel extends JLabel implements VComponent
 {
 	private static final long serialVersionUID = -4836113854851253405L;
 	
 	private DragSource dragSource;
 	private DragGestureListener dgListener;
-
-	
-	private VRL vrl; 
+ 	private VRL vrl; 
 	
 	public void setVRL(VRL vrl)
 	{
 		this.vrl=vrl; 
 	}
 	
-	  
 	public DragLabel(String s) 
 	{
 	    this.setText(s);
@@ -88,8 +85,7 @@ public class DragLabel extends JLabel implements VComponent
 	}
 
 	public void setMouseOver(boolean b)
-	{
-		
+	{		
 	}
 
 	public VContainer getVContainer()

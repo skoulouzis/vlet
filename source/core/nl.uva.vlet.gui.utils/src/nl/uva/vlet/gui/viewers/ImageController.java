@@ -33,7 +33,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
 import javax.swing.JViewport;
+
 import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.GuiSettings;
 
@@ -247,15 +249,13 @@ public class ImageController implements ComponentListener
 		}*/
 	}
 	
-	
 	private void Debug(String msg) 
 	{
 		Global.debugPrintln(this,msg); 
 	}
 
-	public void componentShown(ComponentEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void componentShown(ComponentEvent e) 
+	{
 	}
 	
 }

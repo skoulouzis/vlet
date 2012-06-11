@@ -37,13 +37,10 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 /**
- * 
- * @author ptdeboer
+ * Font Toolbar.  
  */
 public class FontToolBar extends JToolBar implements ActionListener
 {
-    // ========================================================================
-    // ========================================================================
     private static final long serialVersionUID = -7033703508793890542L;
 
     // ========================================================================
@@ -51,7 +48,7 @@ public class FontToolBar extends JToolBar implements ActionListener
 
     // text viewer attributes:
     private String fontSizes[] =
-    { "6", "7", "8", "9", "10", "11", "12", "13", "14", "16", "18", "20", "24", "36", "48" };
+        { "6", "7", "8", "9", "10", "11", "12", "13", "14", "16", "18", "20", "24", "36", "48" };
 
     private String[] fontFamilyNames;
 
@@ -62,17 +59,11 @@ public class FontToolBar extends JToolBar implements ActionListener
     // ---
 
     private JComboBox fontFamilyCB;
-
     private JComboBox fontSizeCB = null;
-
     private JLabel fontLabel;
-
     private FontToolbarListener listener;
-
     private JToggleButton antiAliasingButton;
-
     private JToggleButton boldButton;
-
     private JToggleButton italicButton;
 
     // private JToggleButton monospacedButton;

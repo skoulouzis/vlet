@@ -8,9 +8,9 @@ These are the Swing Compatible Drag and Drop classes
  @see MasterBrowser.performDrop() 
 
  For the rest the default DnD methods are used to stay Swing, and 
- more imporant, platform DnD compatible. 
+ more important, platform DnD compatible. 
  
- These Classes are under contruction as the Swing way to perform platform
+ These Classes are under construction as the Swing way to perform platform
  compatible DnD is not trivial. 
  
  Piter T. de Boer 

@@ -34,8 +34,8 @@ public interface ProxyNodeFactory
     public abstract ProxyNode openLocation(VRL loc, boolean resolveLinks) throws VlException ;
     
     /**
-     *  @deprecated Caching will not be visible in the future
-     * All code will be update to use a proper proxy model instead
+     * @deprecated Caching will not be visible in the future
+     * All code will be update to use a proper proxy model instead. 
      */  
 	public abstract ProxyNode getFromCache(VRL vrl);
 

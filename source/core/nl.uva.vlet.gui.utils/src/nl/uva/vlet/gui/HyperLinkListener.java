@@ -32,7 +32,6 @@ import nl.uva.vlet.gui.viewers.ViewerEvent;
  * The BrowserController implements this interface. 
  * @author P.T. de Boer
  */
-
 public interface HyperLinkListener
 {
     public void notifyHyperLinkEvent(ViewerEvent event);

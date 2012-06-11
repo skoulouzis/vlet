@@ -45,6 +45,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.border.BevelBorder;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
@@ -399,8 +400,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 	@Override
 	public void startViewer(VRL loc) throws VlException
 	{
-		updateLocation(loc);		// TODO Auto-generated method stub
-
+		updateLocation(loc);
 	}
 
 	@Override
@@ -419,8 +419,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
     public void initViewer()
 	{
 		initGui();
-	}		// TODO Auto-generated method stub
-
+	}	
 
 	@Override
 	public String getName()
@@ -435,7 +434,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 		// FontToolbar events are handled by that component: 
 		if ((source == this.refreshButton) || (source==this.refreshMenuItem))
 		{
-			try		// TODO Auto-generated method stub
+			try	
 
 			{
 				updateLocation(getVRL());
@@ -464,7 +463,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 			{
 				save();
 			}
-			catch (VlException ex)		// TODO Auto-generated method stub
+			catch (VlException ex)
 
 			{
 				this.handle(ex); 
@@ -504,7 +503,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 	{
 		if (val==true)
 		{
-
 			this.editable=true; 
 			this.textArea.setEditable(true); 
 			this.saveButton.setEnabled(true); 
@@ -515,7 +513,6 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 		}
 		else
 		{
-
 			this.editable=false; 
 			this.textArea.setEditable(false); 
 			this.saveButton.setEnabled(false);
@@ -565,7 +562,7 @@ public class JythonRunner extends ViewerPlugin implements ActionListener,
 		}
 		catch (VlException e)
 		{
-			Global.debugPrintln(this, "Exception when loading settings:" + e);
+			Global.logException(ClassLogger.ERROR,this,e,"Exception when loading settings from:%s\n",loc);
 			//handle(e); 
 		}
 	}

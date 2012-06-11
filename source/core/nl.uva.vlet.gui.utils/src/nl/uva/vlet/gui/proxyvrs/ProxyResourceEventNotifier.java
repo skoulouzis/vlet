@@ -29,44 +29,39 @@ import javax.swing.SwingUtilities;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
-import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.ResourceEventListener;
 import nl.uva.vlet.vrs.VRSContext;
 
 /**
- * ProxyModelEventNotifier.
  * This class buffers ResourceEvents and sends them to listeners
  * DURING the main swing event thread. 
- * This notifier synchronizes mulithreaded events to one single thread,
+ * This notifier synchronizes muli threaded events to one single thread,
  * since the GUI has only one event thread.
  * 
  * Concurrency note: This method uses the SwingUtils.invokeLater method so
  * that the ResourceListener event will be send DURING the Main GUI Event thread.
  * Access to the event buffer must sychronized. 
  * This buffer is also used as MutEx. 
- * The fireEvent method() can be used multithreaded and can be called
+ * The fireEvent method() can be used multi threaded and can be called
  * from other threads then the GUI thread. 
  */ 
-
 public class ProxyResourceEventNotifier implements Runnable, ResourceEventListener
 {
 	// ========================================================================
 	// Static
 	// ========================================================================
-
-	
 	private static ClassLogger logger; 
 	
 	static
 	{
 		logger=ClassLogger.getLogger(ProxyResourceEventNotifier.class);
+		logger.setLevelToDebug();
 	}
-
+	
 	// ========================================================================
 	// 
 	// ========================================================================
-
     /**
      * Event Buffer.
      * Note: must synchronize access to buffer:
@@ -88,73 +83,64 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
     	 // ProxyModel listener listens to VRS Resource Events ! 
     	 context.addResourceEventListener(this); 
      }
+     
     /**
      * Notify all listenerd that an event has occured. 
      * During the 'run' new events can be added to the events buffer. 
      * 
      */
-
     public void run()
     {
-           ResourceEvent event=null;
-           boolean haveMore=false;
-           int nrEvents=0; 
-            
-            do
-            {
-              //get first from vector and consume:
-              synchronized (events)
-              {
-                  if (events.size()>0)
-                  {
-                    event=events.get(0);
-                    events.remove(0);
-                    nrEvents++;
-                  }
-              }
-            
-              //assert:
-              if ((event!=null) && (proxyEventListeners != null))
-              {
-                  // callback event:
-                  if (event.getTargetListener()!=null)
-                  {
-                      event.getTargetListener().notifyResourceEvent(event);
-                  }
-                  else
-                  // TermGlobal Event:
-                  //synchronized (proxyEventListeners)
-                  {
-                      for (ProxyResourceEventListener l : proxyEventListeners)
-                      {
-                        Debug("Notifying:" + l);
-                       // TermGlobal.messagePrintln(this,">>> Notifying:"+l); 
-                          
-                        l.notifyProxyEvent(event);
-                       
-                      }
-                  }
-              }
-              
-              // check if (new) events are pending in the buffer:
-              // more events could be added
-              synchronized(events)
-              {
-                  haveMore=events.size()>0;
-                  // important: already set to false
-                  // since this was the last event
-                  notifierRunning=false;
-              }
-              
-            }while(haveMore==true);
-            
-            Global.debugPrintln(this,"Stopping notifier: nr events processed="+nrEvents);
-        } //run()
+       ResourceEvent event=null;
+       boolean haveMore=false;
+       int nrEvents=0; 
         
-    private void Debug(String msg)
-    {
-        Global.debugPrintln(this,msg);
+        do
+        {
+          //get first from vector and consume:
+          synchronized (events)
+          {
+              if (events.size()>0)
+              {
+                event=events.get(0);
+                events.remove(0);
+                nrEvents++;
+              }
+          }
+        
+          //assert:
+          if ((event!=null) && (proxyEventListeners != null))
+          {
+              // callback event:
+              if (event.getTargetListener()!=null)
+              {
+                  event.getTargetListener().notifyResourceEvent(event);
+              }
+              else
+              //synchronized (proxyEventListeners)
+              {
+                  for (ProxyResourceEventListener l : proxyEventListeners)
+                  {
+                    logger.debugPrintf(" - notifying:%s\n",l);
+                    // TermGlobal.messagePrintln(this,">>> Notifying:"+l); 
+                    l.notifyProxyEvent(event);
+                  }
+              }
+          }         
+          // check if (new) events are pending in the buffer:
+          // more events could be added
+          synchronized(events)
+          {
+              haveMore=events.size()>0;
+              // important: already set to false
+              // since this was the last event
+              notifierRunning=false;
+          }
+        }while(haveMore==true);
+        
+        logger.debugPrintf("Stopping notifier: nr events processed=%d",nrEvents);
     }
+
     /**
      * Appends event to event buffer and starts the notifier. 
      * This notifier will be started during Swings main event thread
@@ -165,16 +151,13 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
     {
         // BrowserController.notifyGlobalProxyEvent(e);
         //TermGlobal.messagePrintln(ProxyTNode.class,"fireGlobalEvent:"+event);
-     
-        Debug("fireGlobalEvent:" + event);
-        
-        boolean startNotifier=false; 
+        logger.debugPrintf("fireGlobalEvent:%s\n",event);
+        boolean startNotifier=false;
         
         // sychronized access: 
         synchronized (events)
         {
             events.add(event);
-            
             if (notifierRunning==false)
             {
                 // block further invocations:
@@ -185,14 +168,12 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
         
         if (startNotifier==false)
         {
-            Global.debugPrintln(this,"notifier already started");
+            Global.debugPrintf(this,"Notifier already running\n");
             return;
         }
-         
         // Important: Since this might NOT be the Swing GUI Thread,
         // use invokeLater:
-        Global.debugPrintln(this,"Starting notifier");
-        
+        logger.debugPrintf("Starting notifier\n");
         SwingUtilities.invokeLater(this); 
     }
 
@@ -216,9 +197,7 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
     {
         // specify listener so that during the event notificiation 
         // only that listeners is targeted:
-        
         event.setTarget(receiver); 
-       
         fireEvent(event); 
     }
 
@@ -243,7 +222,5 @@ public class ProxyResourceEventNotifier implements Runnable, ResourceEventListen
 			events.clear(); 
 			proxyEventListeners.clear();
 		}
-		
 	}
-
 }

@@ -26,12 +26,10 @@ package nl.uva.vlet.gui.view;
 import nl.uva.vlet.gui.data.ResourceRef;
 
 /** 
- * Extra component interface to detect my components from 
+ * Component interface to detect my components from 
  * the JComponents.  
  * A VContainer is a component which contains one or more 
  * Resources, like a ResourceTree or IconsPanel 
- * 
- * @author P.T. de Boer
  */
 public interface VContainer extends VComponent
 {
@@ -41,7 +39,6 @@ public interface VContainer extends VComponent
   /** Returns VComponent which matches ResourceRef */
   public VComponent getVComponent(ResourceRef ref);
 
-  public void selectAll(boolean selectValue);
-	  
+  public void selectAll(boolean selectValue);	  
   
 }

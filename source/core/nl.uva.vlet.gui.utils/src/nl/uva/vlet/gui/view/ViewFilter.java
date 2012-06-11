@@ -39,8 +39,7 @@ public class ViewFilter
     public boolean filterHidden=false;  
 
     public ViewFilter()
-    {
-        
+    {        
     }
     
     public void setSortField1(String name)

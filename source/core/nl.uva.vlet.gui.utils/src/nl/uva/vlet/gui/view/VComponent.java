@@ -27,12 +27,9 @@ import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.data.ResourceRef;
 
 /** 
- * Extra component interface to detect my components from 
+ * Component interface to detect my components from 
  * the JComponents.  
  * A VComponent (ViewComponent) is a component which points to a resource
- * like an icon or a tree node. 
- * 
- * @author P.T. de Boer
  */
 public interface VComponent
 {

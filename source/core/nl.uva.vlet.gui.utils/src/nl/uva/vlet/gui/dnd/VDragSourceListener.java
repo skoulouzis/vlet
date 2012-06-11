@@ -33,13 +33,8 @@ import java.awt.dnd.DragSourceListener;
 import nl.uva.vlet.Global;
 
 /**
- * Under construction:
- *  
  * Add this to your component if this component can
  * be a DRAG source. 
- * 
- * @author Piter T. de Boer 
- *
  */
 public class VDragSourceListener implements  DragSourceListener
 {
@@ -63,34 +58,28 @@ public class VDragSourceListener implements  DragSourceListener
 		  dragSource.addDragSourceListener(this); 
           
 	  }
+	  
 	  // Is called when ANY drag is initiated 
-       
 	  public void dragEnter(DragSourceDragEvent dsde)
       {
 	        Global.debugPrintln(this, "dragEnter:" + dsde);
-           
 	        //DragSourceContext dse = dsde.getDragSourceContext();
 	        //Transferable t = dse.getTransferable();
-            //DragSourceContext dsc = dsde.getDragSourceContext();
-            
+            //DragSourceContext dsc = dsde.getDragSourceContext();            
       }
 	  
 	  public void dragOver(DragSourceDragEvent dsde)
 	  {
           Global.debugPrintln(this, ">>> dragSource dragOver:" + dsde);
-            
           //DragSourceContext dsc = dsde.getDragSourceContext();
           //dsc.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)); 
-
 	  }
 	  
 	  public void dropActionChanged(DragSourceDragEvent dsde)
 	  {
-          int mods = dsde.getGestureModifiers();
-          
+          int mods = dsde.getGestureModifiers();          
           Global.debugPrintln(this, "dropActionChanged:" + dsde);
-          Global.debugPrintln(this, "gesture modifiers=:"+mods);
-          
+          Global.debugPrintln(this, "gesture modifiers=:"+mods); 
           DragSourceContext dsc = dsde.getDragSourceContext();
           //dsc.setCursor()
 	  }

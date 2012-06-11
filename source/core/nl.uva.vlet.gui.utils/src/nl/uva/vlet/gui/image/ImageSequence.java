@@ -45,7 +45,6 @@ import nl.uva.vlet.data.IntegerHolder;
  */
 public class ImageSequence 
 {
-    
     /**
      * Hold information per Animation Frame.
      */ 
@@ -98,11 +97,8 @@ public class ImageSequence
     
     // === // 
     protected Properties properties=new Properties(); 
-    
     protected String description = null;
-    
     protected int width = -1;
-    
     protected int height = -1;
 
     /**
@@ -228,7 +224,6 @@ public class ImageSequence
         list.add(newImage); 
         
         initImages(list,true);  
-        
     }
 
     public int getWidth() 
@@ -259,8 +254,7 @@ public class ImageSequence
     {
         debugPrintf("paintImage %s#%d: %d,%d@%s\n",sequenceName,frameNr,x,y,c); 
         g.drawImage(getFrameImage(frameNr), x, y, c);
-    }
-    
+    }    
 
     /**
      * Returns Image associated with the specified frame sequence number.
@@ -403,6 +397,5 @@ public class ImageSequence
     public Object getProperty(String name)
     {
         return properties.getProperty(name); 
-    }
-   
+    }   
 }

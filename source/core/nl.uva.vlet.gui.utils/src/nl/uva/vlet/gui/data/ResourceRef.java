@@ -35,9 +35,7 @@ import nl.uva.vlet.vrl.VRL;
  * from and to a 'known' VComponent.
  * When a resource is dragged from an external source (FireFox link) 
  * the type and mimetype might be null. 
- * 
- * @author P.T. de Boer
- *
+ * Default type of a resource is VRL URI or String. 
  */
 public class ResourceRef implements Serializable
 {
@@ -45,7 +43,7 @@ public class ResourceRef implements Serializable
 
 	private VRL vrl=null; 
 	
-	private String resourceType=null; // null is plain VRL/URI  
+	private String resourceType=null; // when null -> default to VRL/URI/String (in that order) 
 
 	private String mimeType=null; 
 	

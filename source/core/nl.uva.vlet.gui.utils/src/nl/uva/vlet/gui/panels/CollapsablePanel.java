@@ -25,16 +25,12 @@ package nl.uva.vlet.gui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import javax.swing.BorderFactory;
 
-import javax.swing.JComponent;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-/**
- *
- */
 public class CollapsablePanel extends JPanel
 {
     private static final long serialVersionUID = 2215114817505542917L;
@@ -61,8 +57,7 @@ public class CollapsablePanel extends JPanel
         {
             contentPanel=new JPanel();
             this.add(contentPanel,BorderLayout.CENTER);
-        }
-        
+        }       
     }
     
     public Container getContentPanel()
@@ -76,6 +71,5 @@ public class CollapsablePanel extends JPanel
             this.remove(contentPanel);
         this.contentPanel=container;
         this.add(container,BorderLayout.CENTER); 
-    }
-    
+    }   
 }

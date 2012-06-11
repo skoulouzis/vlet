@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.gui.vhtml;
 
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
@@ -37,15 +36,13 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.gui.viewers.ViewerPlugin;
 
 /**
  * Default HTML viewer. 
  * Uses Java internal 3.2 HTML parser. 
- * only used for backup purposes as the default HTML viewer is the Cobra viewer, 
- * However that is a GPl plugin this might be not always be available. 
+ * Only used for backup purposes as the default HTML viewer is the Lobo viewer, 
+ * However that is a GPL plugin this might be not always be available. 
  */
-
 public class VHTMLEditorPane extends JEditorPane
 {
     private static final long serialVersionUID = 667938516906888816L;
@@ -106,7 +103,6 @@ public class VHTMLEditorPane extends JEditorPane
         }
     }
 
-
     public void showPopup(MouseEvent reason, String targetHref)
     {
         JPopupMenu popup = new JPopupMenu();
@@ -116,8 +112,6 @@ public class VHTMLEditorPane extends JEditorPane
         popup.add("ref:"+targetHref);
         
         popup.show(reason.getComponent(),reason.getX(),reason.getY());
-
     }
-
 
 }

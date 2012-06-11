@@ -42,11 +42,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRSContext;
@@ -72,16 +73,12 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
 	private JLabel passphraseLabel;
 	private JButton cancelButton;
     private ServerInfo authInfo;
-
-    
     private boolean cancel=false;
 	private String message;  
     
 	/**
 	* Auto-generated main method to display this JDialog
 	*/
-	
-	
 	private void initGUI() 
     {
 		try
@@ -174,18 +171,15 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
                     cancelButton.addActionListener(this);
                 }
             }
-            
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Global.logException(ClassLogger.ERROR,this,e,"InitGUI Exception!"); 
 		}
 		// auto-resize: 
 		//this.validate(); 
         //this.setSize(this.getPreferredSize()); 
-	
 	}
-
 
     /*public AuthenticationDialog(JFrame frame) 
     {
@@ -218,22 +212,16 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
         this.messageTextField.setText(message); 
      
         this.validate(); 
-        
     }
-
 
     public AuthenticationDialog(String message,ServerInfo info) 
     {
         // super(frame);
-    	 WindowRegistry.register(this);
+    	 UIPlatform.getPlatform().getWindowRegistry().register(this);
          init(message,info); 
     }
     
-    
-   
     /**
-   
-    
     private void waitForUserInput()
     {
         try
@@ -248,11 +236,8 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
             TermGlobal.errorPrintln(this,"***Error: Exception:"+e); 
             // e.printStackTrace();
         } 
-        
     }*/
 
-  
-    
     public void waitForUserInput()
     {
        try 
@@ -267,7 +252,6 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
     	   e.printStackTrace();
        } 
     }
-
 
     public ServerInfo getAuthenticationInfo()
     {
@@ -331,13 +315,11 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
         }
         
         this.dispose(); 
-        
     }
     
     public void windowOpened(WindowEvent e)
     {
     }
-
 
     public void windowClosing(WindowEvent e)
     {
@@ -346,35 +328,27 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
         Exit(); 
     }
 
-
     public void windowClosed(WindowEvent e)
     {
     }
-
 
     public void windowIconified(WindowEvent e)
     {
     }
 
-
     public void windowDeiconified(WindowEvent e)
     {
     }
-
 
     public void windowActivated(WindowEvent e)
     {
     }
 
-
     public void windowDeactivated(WindowEvent e)
     {
     }
     
-	
-    
     // ========================================================================
-    
     // ========================================================================
     
 	public static ServerInfo askAuthentication(String message,ServerInfo info)

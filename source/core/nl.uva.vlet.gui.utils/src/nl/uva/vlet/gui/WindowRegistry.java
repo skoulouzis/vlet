@@ -32,73 +32,77 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import nl.uva.vlet.Global;
+
 /**
- * Simpel window registry to register openened windows
- * 
- * @author ptdeboer
- *
+ * Window registry for Platform openened windows. 
  */
 public class WindowRegistry
 {
-	private static Vector<Window> windows=new Vector<Window>();
-	private static WindowListener windowListener=new WindowListener()
+	private Vector<Window> windows=new Vector<Window>();
+	private WindowListener windowListener;
+	
+	private void initWindowsListener()
 	{
+	    this.windowListener=new WindowListener()
+    	{
+    		public void windowActivated(WindowEvent arg0) 
+    		{
+    		}
+    
+    		public void windowClosed(WindowEvent arg0) 
+    		{
+    		    Object win = arg0.getSource(); 
+    		    Global.debugPrintf(WindowRegistry.class,"Window closed:%s\n",win);
+    			windows.remove(win);
+    		}
+    
+    		public void windowClosing(WindowEvent arg0) 
+    		{
+    		}
+    
+    		public void windowDeactivated(WindowEvent arg0) 
+    		{
+    		}
+    
+    		public void windowDeiconified(WindowEvent arg0) 
+    		{
+    		}
+    
+    		public void windowIconified(WindowEvent arg0) 
+    		{
+    		}
+    
+    		public void windowOpened(WindowEvent arg0) 
+    		{
+    		}
+    	};
+	}
 
-		public void windowActivated(WindowEvent arg0) 
-		{
-			
-		}
-
-		public void windowClosed(WindowEvent arg0) 
-		{
-			Global.debugPrintln(this,"Window Closed:"+arg0); 
-			windows.remove(arg0.getSource());
-		}
-
-		public void windowClosing(WindowEvent arg0) 
-		{
-			Global.debugPrintln(this,"Window Closing:"+arg0);			
-		}
-
-		public void windowDeactivated(WindowEvent arg0) 
-		{
-		
-		}
-
-		public void windowDeiconified(WindowEvent arg0) 
-		{
-			
-		}
-
-		public void windowIconified(WindowEvent arg0) 
-		{
-		
-		}
-
-		public void windowOpened(WindowEvent arg0) 
-		{
-		
-			
-		}
-		
-	};
-
-	public static void register(JDialog dialog)
+	public WindowRegistry()
 	{
-
+	    init();
+	}
+	
+	protected void init()
+	{
+	    this.initWindowsListener();
+	}
+	
+	public void register(JDialog dialog)
+	{
 		windows.add(dialog);
-		Global.debugPrintln(WindowRegistry.class,"Registered Dialog:"+dialog);
+		Global.debugPrintf(WindowRegistry.class,"Registered Dialog:%s\n",dialog);
 		dialog.addWindowListener(windowListener);
 	}
 
-	public static void register(JFrame browser) 
+	public void register(JFrame browser) 
 	{
 		windows.add(browser);
-		Global.debugPrintln(WindowRegistry.class,"Registered JFrame:"+browser);
+		Global.debugPrintf(WindowRegistry.class,"Registered JFrame:%s\n",browser);
 		browser.addWindowListener(windowListener);
 	}
 	 
-	public static void showAll()
+	public void showAll()
 	{
 		for (Window win:windows)
 		{
@@ -109,8 +113,6 @@ public class WindowRegistry
 			{
 				//((JDialog)win).set.setState(JDialog.NORMAL);
 			}
-			
-		 
 			
 			win.setVisible(true); 
 			win.toFront(); 

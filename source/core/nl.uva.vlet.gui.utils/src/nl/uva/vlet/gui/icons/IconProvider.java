@@ -55,15 +55,12 @@ import nl.uva.vlet.vrs.VNode;
 /** 
  * Simple Icon provider class which searched for icons in 
  * both user and installation directories. 
- * Also checks and searches for mimetype icon 
+ * Also checks and searches for mimetype icons. 
  */ 
-
 public class IconProvider
 {
-    private static JFrame source=null;
-    
+    private static JFrame source=null;    
     private static IconProvider instance=null;
-
     private static ClassLogger logger;
 
     static
@@ -113,7 +110,6 @@ public class IconProvider
 	/** IconProvider with optional AWT Image Source */ 
 	public IconProvider(Component source) 
 	{
-
 	    // Icon Search Path: use URLs as extra classpath: 
 	    VRL vrls[]=
 	    {
@@ -215,7 +211,6 @@ public class IconProvider
 		// =============================================================================
 		// LinkNodes  
 		// =============================================================================
-
 
 		boolean showAsLink = false;
 		boolean isComposite=false; 
@@ -353,8 +348,6 @@ public class IconProvider
 				return icon;
 		}
 		
-
-		
 		// =============================================================================
 		// Default Resource Icons (File,Folder,...) 
 		// =============================================================================
@@ -460,7 +453,6 @@ public class IconProvider
         {
             iconUrl=createMimeTypeIconURLSuffix(mimetype);
         }
-
         
         if (iconUrl!=null)
         {
@@ -497,8 +489,7 @@ public class IconProvider
         
         return renderIcon(classLoader,default_icon_url,isLink,size,greyOut);
     }
-    
-	
+   	
 	/**
 	 * Returns Icon or broken image icon.
 	 * Creates ImageIcon directly from URL, works with animated GIFs as
@@ -535,7 +526,6 @@ public class IconProvider
 	{
 		return resourceLoader.getBrokenIcon(); 
 	}
-
     
     /** Returns 'AnimatedIcon' instead of plain 'Icon' */ 
     public AnimatedIcon getAnimatedIcon(String url) throws VlIOException
@@ -660,9 +650,7 @@ public class IconProvider
             logger.debugPrintf("Couldn't resolve URL:%s\n",iconURL);
             return null; 
         } 
-
-
-        
+       
 		// return url 
 		if (resolvedurl!=null)
 		{
@@ -683,11 +671,9 @@ public class IconProvider
 			{
 			    logger.debugPrintf("findImage(): Exception when constructing icon from:%s\n",iconURL);
 			}
-		
 		}
 
 		logger.debugPrintf("Did NOT find Icon:%s\n",iconURL);
-		
 		return null; 
 	}
 	
@@ -800,7 +786,6 @@ public class IconProvider
 	    }
 	}
 
-
 	/** Clear Icon Cache */ 
 	public void clearCache()
 	{
@@ -841,7 +826,4 @@ public class IconProvider
 
 		return list; 
 	}
-
-	
-
 }

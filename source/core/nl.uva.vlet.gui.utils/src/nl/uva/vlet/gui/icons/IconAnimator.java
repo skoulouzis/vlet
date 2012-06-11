@@ -34,8 +34,7 @@ import javax.swing.JComponent;
 import nl.uva.vlet.Global;
 
 /**
- * Icon Animator calling the icons 'repaint' method
- *
+ * Icon Animator calling the icons 'repaint' method. 
  */
 public class IconAnimator implements Runnable
 {
@@ -73,6 +72,9 @@ public class IconAnimator implements Runnable
         }
     }
     
+    // ================================ 
+    // ================================  
+    
     private static IconAnimator instance=null;  
     
     public static IconAnimator getDefault()
@@ -86,9 +88,8 @@ public class IconAnimator implements Runnable
         return instance;  
     }
     
-    // ================================ //
-    //  
-    // ================================ // 
+    // ================================
+    // ================================ 
     
     private List<IconInfo> icons=new Vector<IconInfo>(); //synchronized vector 
     private Thread thread;  
@@ -96,7 +97,6 @@ public class IconAnimator implements Runnable
     
     public IconAnimator()
     {
-        
     }
     
     public synchronized void start()
@@ -173,9 +173,7 @@ public class IconAnimator implements Runnable
             {
                 e.printStackTrace();
             } 
-            
         }
-        
         debugPrintf("run(): stopped! \n");
     }
     
@@ -216,8 +214,7 @@ public class IconAnimator implements Runnable
                         nextWaitTime=waitTime;
                 }
             }
-        }
- 
+        } 
         return nextWaitTime; 
     }
     
@@ -283,9 +280,7 @@ public class IconAnimator implements Runnable
         
         // start if not started: 
         start(); 
-    }
-
-    
+    } 
 
     public void dispose()
     {
@@ -302,8 +297,7 @@ public class IconAnimator implements Runnable
             for (IconInfo icon:this.icons)
                 icon.icon.setIconAnimator(null);
             icons.clear(); 
-        }
-                 
+        }                 
     }
 
     private void errorPrintf(String format,Object... args)

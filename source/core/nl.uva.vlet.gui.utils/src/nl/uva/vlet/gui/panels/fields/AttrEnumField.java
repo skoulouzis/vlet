@@ -18,7 +18,7 @@
  * ---
  * $Id: AttrEnumField.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
@@ -34,18 +34,19 @@ public class AttrEnumField extends JComboBox implements IAttributeField
 {
     private static final long serialVersionUID = -2524144091178443352L;
     private StringList values;
-    boolean enumEditable=false; // whether enum types are editable 
+    boolean enumEditable = false; // whether enum types are editable
+
     public AttrEnumField()
     {
         super();
         init();
     }
-    
+
     public AttrEnumField(String name, String[] vals)
     {
         super();
-        setName(name); 
-        setValues(vals); 
+        setName(name);
+        setValues(vals);
     }
 
     private void init()
@@ -53,67 +54,68 @@ public class AttrEnumField extends JComboBox implements IAttributeField
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         setModel(model);
     }
-    
+
     public void setValues(String[] values)
     {
-        this.values=new StringList(values);
-        
-        if (values==null)
-            values=new String[0];
-                          
+        this.values = new StringList(values);
+
+        if (values == null)
+            values = new String[0];
+
         this.setModel(new DefaultComboBoxModel(values));
     }
 
     public void addValue(String enumVal)
     {
-        ((DefaultComboBoxModel)this.getModel()).addElement(enumVal);
+        ((DefaultComboBoxModel) this.getModel()).addElement(enumVal);
     }
-    
+
     public void removeValue(String enumVal)
     {
-        ((DefaultComboBoxModel)this.getModel()).removeElement(enumVal);
+        ((DefaultComboBoxModel) this.getModel()).removeElement(enumVal);
     }
-    
+
     public void setValue(String txt)
     {
         this.getModel().setSelectedItem(txt);
     }
-    
+
     public String getName()
     {
-        return super.getName(); 
+        return super.getName();
     }
-    
+
     public String getValue()
     {
         Object obj = this.getSelectedItem();
-        if (obj !=null)
-            return obj.toString(); 
-        return null; 
+        if (obj != null)
+            return obj.toString();
+        return null;
     }
 
-	public void updateFrom(VAttribute attr) 
-	{
-		this.setValue(attr.getStringValue());
-	}
-	
-//	public void setEditable(boolean flag)
-//	{
-//		this.setEditable(flag); 
-//	}
-    
-	public VAttributeType getVAttributeType()
-	{
-		return VAttributeType.ENUM;
-	}
-	/** 
-	 * Selectable => drop down option is 'selectable'. 
-	 * optionsEditable = drop down selection entries are editable as well !  
-	 */
-	public void setEditable(boolean selectable,boolean optionsEditable)
-	{ 
-		this.setEnabled(selectable); 
-		this.setEditable(optionsEditable); 
-	}
+    public void updateFrom(VAttribute attr)
+    {
+        this.setValue(attr.getStringValue());
+    }
+
+    // public void setEditable(boolean flag)
+    // {
+    // this.setEditable(flag);
+    // }
+
+    public VAttributeType getVAttributeType()
+    {
+        return VAttributeType.ENUM;
+    }
+
+    /**
+     * Selectable => drop down option is 'selectable'. optionsEditable = drop
+     * down selection entries are editable as well !
+     */
+    public void setEditable(boolean selectable, boolean optionsEditable)
+    {
+        this.setEnabled(selectable);
+        this.setEditable(optionsEditable);
+    }
 
 }

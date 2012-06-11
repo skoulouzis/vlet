@@ -34,8 +34,10 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
+import nl.uva.vlet.gui.viewers.ViewContext;
 import nl.uva.vlet.gui.viewers.ViewerEvent;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.vrl.VRL;
@@ -150,8 +152,17 @@ public class JobMonitorController implements ActionListener
     	{
 	    	debugPrintf("Open Job:%s\n",jobid); 
 	    	VRL vrl=this.monitor.getJobMonitorDataModel().getJobVRL(jobid);
+	    	/**
 	    	if (vrl!=null)
-	    		this.fireViewVRLEvent(vrl); 
+	    		this.fireViewVRLEvent(vrl);*/
+	    	ViewContext ctx = this.monitor.getViewContext();
+	    	MasterBrowser mbr=null;
+	    	
+            if (ctx!=null)
+	    	    mbr=ctx.getMasterBrowser();
+	    	if (mbr!=null)
+	    	    mbr.startNewWindow(vrl);
+	    	
     	}
     	catch (Throwable t)
     	{

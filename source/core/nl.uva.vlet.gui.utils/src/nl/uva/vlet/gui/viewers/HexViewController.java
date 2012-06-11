@@ -24,12 +24,9 @@
 package nl.uva.vlet.gui.viewers;
 
 import java.awt.Component;
-import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetContext;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
@@ -41,16 +38,11 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.dnd.VTransferData;
-import nl.uva.vlet.gui.dnd.VTransferHandler;
-import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.vrl.VRL;
-
 
 public class HexViewController implements AdjustmentListener, KeyListener, ActionListener
 {
@@ -156,8 +148,7 @@ public class HexViewController implements AdjustmentListener, KeyListener, Actio
                     data.getTransferData(DataFlavor.stringFlavor);
                     dtde.getDropTargetContext().dropComplete(true);
                     controller.setContents(txt); 
-               }
-                
+               }                
             }
             catch (Exception e)
             {
@@ -235,9 +226,9 @@ public class HexViewController implements AdjustmentListener, KeyListener, Actio
 	}
 
 	public void keyTyped(KeyEvent e) 
-	{
-		
+	{		
 	}
+	
 	public void keyPressed(KeyEvent e)
 	{
 		int kchar=e.getKeyChar(); 
@@ -291,38 +282,32 @@ public class HexViewController implements AdjustmentListener, KeyListener, Actio
 		}
 		else if (kstr.compareToIgnoreCase("Page Down")==0)
 		{
-			hexViewer.addOffset(hexViewer.nrBytesPerView); 
-			
+			hexViewer.addOffset(hexViewer.nrBytesPerView);			
 			hexViewer.redrawContents(); 
 		}
 		else if (kstr.compareToIgnoreCase("Page Up")==0)
 		{
-			hexViewer.addOffset(-hexViewer.nrBytesPerView); 
-			
+			hexViewer.addOffset(-hexViewer.nrBytesPerView);			
 			hexViewer.redrawContents(); 
 		}
 		else if (kstr.compareToIgnoreCase("Right")==0)
 		{
-			hexViewer.addOffset(1); 
-			
+			hexViewer.addOffset(1); 			
 			hexViewer.redrawContents(); 
 		}
 		else if (kstr.compareToIgnoreCase("Left")==0)
 		{
-			hexViewer.addOffset(-1); 
-			
+			hexViewer.addOffset(-1);			
 			hexViewer.redrawContents(); 
 		}
 		else if (kstr.compareToIgnoreCase("Up")==0)
 		{
-			hexViewer.addOffset(-hexViewer.nrBytesPerLine);  
-			
+			hexViewer.addOffset(-hexViewer.nrBytesPerLine);  			
 			hexViewer.redrawContents(); 
 		}
 		else if (kstr.compareToIgnoreCase("Down")==0)
 		{
-			hexViewer.addOffset(hexViewer.nrBytesPerLine);  
-			
+			hexViewer.addOffset(hexViewer.nrBytesPerLine);  			
 			hexViewer.redrawContents(); 
 		}
 	}

@@ -69,23 +69,17 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
 
 /**
- * Simple Embedded textviewer for the VBrowser. 
- * 
- * @author Piter T. de Boer
- *
+ * Embedded textviewer for the VBrowser. 
  */
 public class TextViewer extends InternalViewer implements ActionListener,
    FontToolbarListener
 {
-	
-	/** Needed by Swing */
 	private static final long serialVersionUID = -2866218889160789305L;
-
+	// --
     private static final String viewerSettingsFile = "textviewer.props";
     private static final String viewerSettingsConfdir = ".textviewerrc";
-
     private static final String CONFIG_LINE_WRAP = "textviewer.linewrap";
-
+    
     private static final String configPropertyNames[]=
         {
             CONFIG_LINE_WRAP
@@ -110,13 +104,9 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	// ===
 	
 	private boolean loadError=false; 
-	
 	private JTextArea textArea = null;
-
 	private VNode vnode = null;
-
 	private boolean muststop = false;
-
 	private Properties configProperties=new Properties(); 
 	
 	// =======================================================================
@@ -146,15 +136,10 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	private JMenuItem saveConfigMenuItem;
 
     private ActionTask loadTask;
-
     private JCheckBoxMenuItem wrapMenuItem;
-
     private JMenuItem loadConfigMenuItem;
-
     private Vector<JRadioButton> encodingButtons;
-
     private JMenuItem enableEncodingMenuitem;
-
     private boolean _showWarningEncoding=true; 
 
 	public TextViewer()
@@ -164,7 +149,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	
 	public void initGui()
 	{
-
 		// TextViewer is a JPanel: 
 		{
 			this.setLayout(new BorderLayout());
@@ -346,9 +330,7 @@ public class TextViewer extends InternalViewer implements ActionListener,
 				textArea.setSize(800, 600);
 				textArea.setEditable(this.editable);
 				textScrollPane.setViewportView(textArea);
-
 			}
-
 		}
 
 		// update with stored settings: 
@@ -357,7 +339,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 			FontInfo info = getFontInfo();
 			info.updateComponentFont(this.textArea); 
 		}
-
 	}
 
 	protected FontInfo getFontInfo()
@@ -376,13 +357,10 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	 */
 	public void setText(String txt)
 	{
-		
 		textArea.setText(txt);
 		// needed when updating outside Event thread: 
 		textArea.revalidate(); 
-		
 	}
-
 
     protected void updateFont(FontInfo info)
     {
@@ -519,7 +497,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 		finally
 		{
 		    setBusyLoadSave(false); 
-		 
 		}
 	}
 
@@ -527,8 +504,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	{
 		this.fontToolbar.selectFont(name); 
 	}
-
-
 	   
 	protected void updateTitle()
 	{
@@ -683,7 +658,6 @@ public class TextViewer extends InternalViewer implements ActionListener,
 	    this._showWarningEncoding=false;  
 	}
 	
-
     protected void setLineWrap(boolean state)
     {
         this.textArea.setLineWrap(state);
@@ -706,9 +680,7 @@ public class TextViewer extends InternalViewer implements ActionListener,
 		{
 			return true; 
 		}
-		
 	}
-	
 	
 	protected void save() throws VlException
 	{

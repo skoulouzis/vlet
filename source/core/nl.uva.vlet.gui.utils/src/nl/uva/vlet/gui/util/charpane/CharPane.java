@@ -49,11 +49,7 @@ import nl.uva.vlet.gui.font.FontInfo;
 /**
  * Character Terminal Render Engine. 
  * Developed by Piter.NL ! 
- * 
- *
- * @author Piter T. de Boer 
  */
-
 public class CharPane extends JComponent implements ICharacterTerminal, ActionListener
 {
     private static final long serialVersionUID = -2591231291812285066L;
@@ -272,9 +268,7 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
 		public void dispose() 
 		{
 			this.textBuffer=null; // nullify object references. 
-		}
-
-		
+		}	
     }
     
     // ========================================================================
@@ -311,7 +305,6 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
     // Image, Terminals variables 
     // === 
     
-    
     private int cursorX = 0;
     private int cursorY = 0;
     boolean showCursor=true; 
@@ -334,7 +327,6 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
     private Font fontItalic;
     private Font fontItalicBold;
    
-    
     // === Curent Draw Style === 
     private int drawStyle=0; 
     private int drawForegroundIndex=-1; // no index -> use default !
@@ -414,8 +406,7 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
         fontInfo=FontInfo.getFontInfo(FontInfo.FONT_TERMINAL);
      	initFont(fontInfo); 
      	
-     	this._resizeTextBuffers(this.nr_columns,this.nr_rows);
-        
+     	this._resizeTextBuffers(this.nr_columns,this.nr_rows);        
     }
     
     /** Start timers and renderer thread is not running */ 
@@ -447,11 +438,9 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
         	refreshTimer = new Timer(10,this); 
         	refreshTimer.setInitialDelay(100); // animate 10 per second (blink)
         	refreshTimer.start(); 
-        }
-        
+        }        
     }
-    
-    
+        
     private void doRender()
     {
     	while(this.mustStop==false)
@@ -542,7 +531,6 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
     	return true;
     }
   
-
     public void drawTestScreen()
 	{
     	this.setDrawStyle(0);
@@ -568,12 +556,10 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
             	int y=9+index/78;   
             	putChar('A'+index%26,x,y);
             }
-        }
-    	
+        }    	
        
         this.setDrawStyle(0);
      
-        
         for(int y=0;y<4;y++)
         	for (int x=0;x<64;x++)
             	putChar(x+y*64,8+x,20+y); 
@@ -601,11 +587,9 @@ public class CharPane extends JComponent implements ICharacterTerminal, ActionLi
         
         //
         this.paintTextBuffer(); 
-        repaint(); 
-        
+        repaint();        
     }
- 
-   
+  
     /** Initialize font&font metrics */ 
     private void initFont(FontInfo finfo)
     {

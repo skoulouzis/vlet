@@ -14,6 +14,7 @@ public class ProxyVRSClient
 {
 	private static ProxyVRSClient instance=null; 
 
+	// one instance for now: 
 	public static synchronized ProxyVRSClient getInstance()
 	{
 		if (instance==null)
@@ -67,11 +68,10 @@ public class ProxyVRSClient
     	
     	return _proxyNodeFactory; 
     }
-	
+    
 	// ========================================================================
 	// ProxyResourceEvent interface
 	// ========================================================================
-    
 
 	public ProxyResourceEventNotifier getProxyResourceEventNotifier()
 	{
@@ -92,5 +92,4 @@ public class ProxyVRSClient
     {
 		proxyEventNotifier.fireEvent(event); 
     }
-
 }

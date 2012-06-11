@@ -34,8 +34,7 @@ import nl.uva.vlet.data.VAttributeType;
  *  - name : persistant property name ! (may not change) <br>
  *  - message : Human readable information about the property<br>
  *  - default value : 
- * */
-
+ */
 public enum GuiPropertyName
 {
     MOUSE_SELECTION_BUTTON(VAttributeType.INT,"mouseSelectionButton","Mouse selection button",MouseEvent.BUTTON1),  
@@ -47,12 +46,9 @@ public enum GuiPropertyName
     GLOBAL_SHOW_RESOURCE_TREE(VAttributeType.BOOLEAN,"showResourceTree","Default show resource tree",true),
     GLOBAL_USE_WINDOWS_ICONS(VAttributeType.BOOLEAN,"useWindowsIcons","Use windows icons",false),
     GLOBAL_LOOK_AND_FEEL(VAttributeType.STRING,"defaultLookAndFeel","Platform Look and Feel",null)
-   
     ;
-
     
     /** Attribute type is used when getting/setting VAttributes */
-    
     private VAttributeType type; 
     private String message; 
     private String name; // Property name used for storage/Attribute type 
@@ -106,5 +102,4 @@ public enum GuiPropertyName
     {
         return defaultValue;
     }
-    
-  }
+}

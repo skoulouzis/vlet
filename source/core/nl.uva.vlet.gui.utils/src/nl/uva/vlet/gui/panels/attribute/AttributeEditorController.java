@@ -33,7 +33,6 @@ import javax.swing.JFrame;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 
-
 public class AttributeEditorController implements ActionListener, WindowListener
 {
     JFrame standAloneFrame = null;
@@ -75,7 +74,6 @@ public class AttributeEditorController implements ActionListener, WindowListener
     public void actionPerformed(ActionEvent e)
     {
         {
-           
             if (e.getSource() == this.attrEditorDialog.okButton)
             {
                 // store but do not save 
@@ -105,7 +103,6 @@ public class AttributeEditorController implements ActionListener, WindowListener
 
         if (standAloneFrame != null)
             standAloneFrame.dispose();
-        
     }
 
     public void windowOpened(WindowEvent e)
@@ -119,7 +116,6 @@ public class AttributeEditorController implements ActionListener, WindowListener
 
     public void windowClosed(WindowEvent e)
     {
-       
     }
 
     public void windowIconified(WindowEvent e)
@@ -137,16 +133,5 @@ public class AttributeEditorController implements ActionListener, WindowListener
     public void windowDeactivated(WindowEvent e)
     {
     }
-
-    // Test ProxyDialog 
-
-   
-
-    /** Update fields in dialog */ 
-    /*
-    public void setSRBInfo(SRBServerInfo srbInfo)
-    {
-      //this.proxyDialog;   
-    }*/
 
 }

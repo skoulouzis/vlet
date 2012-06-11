@@ -57,8 +57,6 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
 	private String options[]; 
 	private String messageString;
 	private String selection;
-
-   
     
     public void setMessage(String text)
     {
@@ -70,8 +68,6 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
         topTextFieldLabel.setText(text); 
     }
 	
-	
-	
 	private void setParentFrame(JFrame frame)
     {
         parentFrame=frame;
@@ -81,8 +77,7 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
     {
 		super(frame);
 		initGUI();
-	}
-    
+	}    
 	
 	public SimpleNButtonDialog(JFrame frame, String title, String message, String opt1, String opt2) 
 	{
@@ -112,11 +107,8 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
 	private void init(String message,String title,String options[])
 	{
 		setTitle(title);
-		
 		this.options=options; 
-		
 		messageString=message; 
-		
 		initGUI();
 		this.topTextFieldLabel.setText(title); 
 	}
@@ -180,13 +172,14 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
             // dymanic width: 
 			this.setSize(prefSize.width+100,prefSize.height+100);       
 			
-		} catch (Exception e) { 
+		}
+		catch (Exception e) 
+		{ 
 			e.printStackTrace();
 		}
 		
 		this.setModal(true); 
 	}
-
 
     public void actionPerformed(ActionEvent e)
     {
@@ -203,8 +196,7 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
         
         // has parent frame ? 
         if (parentFrame!=null)
-            parentFrame.dispose(); 
-        
+            parentFrame.dispose();         
     }
     
     public static void displayMessage(JFrame frame,String message)
@@ -223,8 +215,7 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
   
     public static void showErrorMessage(String string)
     {
-        JOptionPane.showMessageDialog(null,string,"Error",JOptionPane.ERROR_MESSAGE); 
-        
+        JOptionPane.showMessageDialog(null,string,"Error",JOptionPane.ERROR_MESSAGE);         
         return;  
     }
     

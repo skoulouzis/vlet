@@ -36,10 +36,8 @@ import nl.uva.vlet.vrs.Registry;
 
 /**
  * Generic DnD (Drag and Drop) class. 
- *  
  * Custom VRL Transferable class
  */
-
 public class ResourceTransferable implements Transferable
 {
     ResourceRef ref = null;

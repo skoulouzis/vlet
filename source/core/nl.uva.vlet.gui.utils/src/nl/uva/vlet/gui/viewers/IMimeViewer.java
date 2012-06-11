@@ -28,14 +28,10 @@ import java.awt.Component;
 import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
+
 /**
  * Interface extraction from the ViewerPanel class to allow
  * for more Viewer Plugins.  
- * 
- * Under construction ...
- * 
- * @author P.T. de Boer
- *
  */
 public interface IMimeViewer
 {

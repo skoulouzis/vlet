@@ -83,7 +83,6 @@ public class UIGlobal
 		// Enable UI and persistant ServerInfoRegistry 
         //confMan.setPersistantUserConfiguration(true);
         confMan.loadPersistantServerConfiguration(); 
-        
         confMan.setHasUI(true);		
 	}
 	
@@ -109,8 +108,7 @@ public class UIGlobal
 	 * @throws Exception */ 
 	public static CertificateStore getUserCertificateStore() throws Exception
 	{
-	    return getVRSContext().getConfigManager().getCertificateStore();
-	    
+	    return getVRSContext().getConfigManager().getCertificateStore();   
 	}
 	
 	public static VFSClient getVFSClient()
@@ -136,9 +134,7 @@ public class UIGlobal
 	}
 	
 	public static JFrame getGlobalFrame() {return globalFrame;}
-	
-	
-	
+		
 	/** Call this to dispose and flush all global resources */ 
 	public static void shutdown()
 	{
@@ -167,7 +163,7 @@ public class UIGlobal
 
 	public static Properties loadProperties(VRL guiSettingsLocation) throws VlException
 	{
-			return getResourceLoader().loadProperties(guiSettingsLocation);
+	    return getResourceLoader().loadProperties(guiSettingsLocation);
 	}
 
 	public static ResourceLoader getResourceLoader()
@@ -214,7 +210,6 @@ public class UIGlobal
 	{
 		SwingUtilities.invokeLater(task); 
 	}
-	
 
 	/** Static method to call SwingUtil.*/
 	public static void swingInvokeLater(ActionTask task)
@@ -295,7 +290,5 @@ public class UIGlobal
     {
          VRS.getRegistry().reset(); 
          getVRSContext().reset();
-    }
- 
-	
+    }	
 }

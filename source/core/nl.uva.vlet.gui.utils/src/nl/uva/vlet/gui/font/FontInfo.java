@@ -46,8 +46,6 @@ import nl.uva.vlet.vrl.VRL;
  *  
  * FontInfo is used by the FontToolbar.   
  * Use createFont() to instantiate a new Font object using the specified Font information.
- * 
- * @author P.T. de Boer
  */
 public class FontInfo
 {
@@ -252,8 +250,7 @@ public class FontInfo
     public Font createFont()
     {
         return new Font(fontFamily,fontStyle,fontSize);
-    }
-    
+    }    
     
     public boolean isBold()
     {
@@ -374,12 +371,11 @@ public class FontInfo
     {
         return this.background; 
     }
+    
     public Color getForeground()
     {
         return this.foreground; 
-    }
-
-    
+    }   
     
     // ==============================================
     // Static FontInfo Factory 
@@ -496,8 +492,7 @@ public class FontInfo
         loadFontStylesFrom(systemLoc); 
         
         VRL userLoc=getUserFontSettingsLocation();
-        loadFontStylesFrom(userLoc);
-        
+        loadFontStylesFrom(userLoc);        
     }
     
     private static void loadFontStylesFrom(VRL fontLoc) throws VlException
@@ -505,10 +500,7 @@ public class FontInfo
         if (fontStyles==null) 
             fontStyles=new Hashtable<String,FontInfo>();
 
-
         Global.debugPrintf(FontInfo.class,"Loading fonts from:%s\n",fontLoc); 
-
-            
         VFSClient vfs=new VFSClient();
         
         if (vfs.existsDir(fontLoc)==false)

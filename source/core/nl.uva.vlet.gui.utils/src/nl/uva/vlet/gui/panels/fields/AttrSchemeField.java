@@ -18,68 +18,65 @@
  * ---
  * $Id: AttrSchemeField.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
 
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.vrs.VRS;
 
-
 public class AttrSchemeField extends AttrEnumField
 {
     private static final long serialVersionUID = 1688960537562990298L;
-   
+
     public AttrSchemeField()
     {
         super();
-        init(); 
+        init();
     }
 
-    public AttrSchemeField(String name,String values[])
+    public AttrSchemeField(String name, String values[])
     {
-      super(name,values); 
-      init(); 
+        super(name, values);
+        init();
     }
-    
+
     protected void init()
     {
-    	setInputVerifier(new InputVerifier() 
-    	{
-    	      public boolean verify(JComponent input) 
-    	      {
-    	        if (!(input instanceof AttrSchemeField))
-    	          return true; // give up focus
-    	        return ((AttrSchemeField) input).isEditValid();
-    	      }
-    	});
+        setInputVerifier(new InputVerifier()
+        {
+            public boolean verify(JComponent input)
+            {
+                if (!(input instanceof AttrSchemeField))
+                    return true; // give up focus
+                return ((AttrSchemeField) input).isEditValid();
+            }
+        });
     }
-    
-	protected boolean isEditValid() 
-	{
-		String schemes[]=VRS.getRegistry().getDefaultSchemeNames(); 
-		String scheme=VRS.getRegistry().getDefaultScheme(getValue()); 
-	
-		if (StringList.hasEntry(schemes,scheme)==false)
-		{
-			boolean keep=UIGlobal.getMasterUI().askYesNo("Not supported scheme",
-					"The scheme: '"+scheme+"' is not recognised. Keep it anyway  ? ",false); 
-			
-			if (keep)
-				return true;  
-			else
-				return false; // try again 
-	   }
-	   else
-			return true;
-	        	
-	}
-  
-  
+
+    protected boolean isEditValid()
+    {
+        String schemes[] = VRS.getRegistry().getDefaultSchemeNames();
+        String scheme = VRS.getRegistry().getDefaultScheme(getValue());
+
+        if (StringList.hasEntry(schemes, scheme) == false)
+        {
+            boolean keep = UIGlobal.getMasterUI().askYesNo("Not supported scheme",
+                    "The scheme: '" + scheme + "' is not recognised. Keep it anyway  ? ", false);
+
+            if (keep)
+                return true;
+            else
+                return false; // try again
+        }
+        else
+            return true;
+
+    }
+
 }

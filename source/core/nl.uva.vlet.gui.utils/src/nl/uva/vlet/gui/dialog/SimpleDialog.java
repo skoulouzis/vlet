@@ -37,6 +37,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import nl.uva.vlet.ClassLogger;
+import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.GuiSettings;
 
 public class SimpleDialog extends javax.swing.JDialog implements ActionListener
@@ -63,9 +65,7 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
     public void setTopLabel(String text)
     {
         topTextFieldLabel.setText(text); 
-    }
-	
-	
+    }	
 	
 	private void setParentFrame(JFrame frame)
     {
@@ -76,8 +76,7 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
     {
 		super(frame);
 		initGUI();
-	}
-    
+	}    
 	
 	private void initGUI() 
 	{
@@ -131,10 +130,9 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
 		} 
 		catch (Exception e) 
 		{
-			e.printStackTrace();
+			Global.logException(ClassLogger.ERROR,this,e,"Exception during initGUI!\n");
 		}
 	}
-
 
     public void actionPerformed(ActionEvent e)
     {
@@ -178,8 +176,7 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
         dialog.setMessage(message); 
         dialog.pack();
         GuiSettings.setToOptimalWindowSize(frame,dialog); 
-        dialog.setVisible(true);
-        
+        dialog.setVisible(true);        
     }
     
     public static void displayError(JFrame frame,String message)
@@ -218,15 +215,12 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
     public static void displayErrorMessage(String string)
     {
         JOptionPane.showMessageDialog(null,string,"Error",JOptionPane.ERROR_MESSAGE); 
-        
         return;  
     }
     
-    
     //========================================================================
     // Main 
-    //========================================================================    
-    
+    //========================================================================       
     
     public static void main(String[] args)
     {
@@ -243,11 +237,5 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
         SimpleDialog.displayMessage(null,"This Is A Massage");
         
         boolean ans=askConfirmation("Everything AOK?");
-        
-        
-        
     }
-
- 
-
 }

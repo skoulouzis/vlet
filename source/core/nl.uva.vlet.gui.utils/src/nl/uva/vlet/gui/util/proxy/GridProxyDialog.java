@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -36,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
@@ -50,30 +48,15 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 /** 
- * Grid Proxy initialization Dailog 
+ * Grid Proxy initialization Dialog 
  */
-
 public class GridProxyDialog extends javax.swing.JDialog
 {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -735019418581906785L;
-
+    
+    // ===
+    
     private JPanel proxyTabPanel;
 
     JTextField proxyLocationTextField;
@@ -99,41 +82,27 @@ public class GridProxyDialog extends javax.swing.JDialog
     JTextField topLabelTextField;
  
     JButton createButton;
-
     JPasswordField passwordTextField;
 
     private JLabel passwordLabel;
-
     private JPanel passwordPanel;
-
     private JButton cancelButton;
 
     JButton okButton;
 
     private JPanel buttonPanel;
-
     private GridProxyDialogController proxyController;
-
     private String message="Create Grid Proxy.";
-
     private JPanel gridProxyOptions;
-
     private JLabel statusLabel;
-
 	private JLabel voSupportLabel;
 
 	JCheckBox voSupportTB;
-
 	private JLabel voNameLabel;
-
 	JTextField voNameTF;
-
 	JTextField vomsACField;
-
     private JLabel voRoleLbl;
-
     JTextField voRoleTF;
-
 
     private void initGUI()
     {
@@ -556,10 +525,7 @@ public class GridProxyDialog extends javax.swing.JDialog
         {
             e.printStackTrace();
         }
-    }
-
-  
-   
+    }   
 
 //  ==========================================================================
 //  Constructor 
@@ -595,7 +561,6 @@ public class GridProxyDialog extends javax.swing.JDialog
         // Must first create ActionListener since it is used in initGui...
 
         this.proxyController = new GridProxyDialogController(context,this);
-
         initGUI();
         
         // update Gui Components depenend on the Proxy Status.
@@ -626,8 +591,7 @@ public class GridProxyDialog extends javax.swing.JDialog
 			{
 				e.printStackTrace();
 			} 
-		}
-		
+		}		
 	}
        
 //  ==========================================================================
@@ -640,7 +604,6 @@ public class GridProxyDialog extends javax.swing.JDialog
     public static void main(String[] args)
     {
        askInitProxy("Testing GridProxyDialog");
-       
     }
 
     /** blocking ask for input */ 
@@ -677,6 +640,5 @@ public class GridProxyDialog extends javax.swing.JDialog
     {
         return askInitProxy("Create Proxy."); 
     }
-
 	
 }

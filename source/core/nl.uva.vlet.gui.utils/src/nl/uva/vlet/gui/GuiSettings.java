@@ -37,7 +37,6 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JComponent;
@@ -52,23 +51,10 @@ import nl.uva.vlet.gui.font.FontInfo;
 import nl.uva.vlet.gui.font.FontUtil;
 import nl.uva.vlet.vrl.VRL;
 
-
 /**
  * Container class for global GUI configuration settings.<br>
- * Important:<br>   
- * The Properties guiProperties contains only overriden defaults. 
- * So when a save is performed only the non-default properties, or the
- * by the user specific set values are saved.
- * When rereading the guistettings file, only properties which are saved
- * will be restored.   
- * This is to create an upwards compatible user settings file which might change
- * between distributions!
- * <p>
- * The method setProperty() will set the property AND store in 
- * in the configuration file.
  * @author P.T. de Boer
  */
-
 public class GuiSettings
 {
     // =======================================================================
@@ -85,17 +71,15 @@ public class GuiSettings
     public static final String ICON_LABEL_FONT_SIZE = "gui.iconLabelFontSize";*/ 
     
     /**
-     * Default Gui Settings: will be creaton upon class initialization ! 
+     * Default Gui Settings: will be created upon class initialization ! 
      */ 
-   private static GuiSettings instance=null;  
+    private static GuiSettings defaultSettings=null;  
 
-    /** Current hardcoded defaults */
+   // === Current hardcoded defaults === // 
 
     // DragGesture is now used:
     //public static int minimal_drag_distance =5;
-
     private static int maxWindowWidth=800; 
-
     private static int maxWindowHeight=600;
 
     static 
@@ -106,11 +90,8 @@ public class GuiSettings
     private static void classInit()
     {
     	// explicit call Global init ! 
-    	
     	Global.init(); 
-    	
-    	instance=getDefault(); 
-    	
+    	defaultSettings=getDefault(); 
     	// System.setProperty("swing.aatext","false"); 
     	// System.setProperty("java.awt.RenderingHint","false"); 
     }
@@ -126,8 +107,6 @@ public class GuiSettings
      */
     private Cursor busyCursor=new Cursor(Cursor.WAIT_CURSOR);
     private Cursor defaultCursor=new Cursor(Cursor.DEFAULT_CURSOR);
-
-
 
     /// default icon label font -> moved to FonInfo.getFont("iconlabel")
     // moved to FontInfo alias 'iconlabel' 
@@ -149,13 +128,9 @@ public class GuiSettings
          
     
     public long viewer_file_size_warn_limit=(long)100*1024*1024;
-
     public int max_dialog_text_width=800;
-
     public int default_max_iconlabel_width=100;
 
-
- 
     // ===  
     // Private fields 
     // === 
@@ -178,14 +153,14 @@ public class GuiSettings
     private void initProperties()
     {
         Properties props=null; 
-        
+        VRL loc=getGuiSettingsLocation();
         try
         {
-            props = GlobalUtil.staticLoadProperties(getGuiSettingsLocation());
+            props = GlobalUtil.staticLoadProperties(loc);
         }
         catch (VlException e)
         {
-            Global.debugPrintln(this,"Warning. Error when loading guisettings:"+e); 
+            Global.logException(ClassLogger.WARN,this,e,"Warning. Error when loading guisettings:%s\n",loc); 
         }
         
         // init to defaults: 
@@ -211,11 +186,11 @@ public class GuiSettings
                  
                 if (name==null)
                 {
-                    Global.infoPrintln(this,"Warning: unknown gui property:"+key); 
+                    Global.warnPrintf(this,"Warning: unknown gui property:%s\n",key); 
                     continue; // continue for loop
                 }
                 
-                Global.debugPrintln(this,"Setting GUI property name:"+name+"to: "+valStr);
+                Global.debugPrintf(this,"Setting GUI property name:%s->%s\n",name,valStr);
                 
                 _setProperty(name,valStr,false); 
             }
@@ -224,17 +199,14 @@ public class GuiSettings
         {
               guiProperties=new Properties(); // empty property set!   
         }
-            
         //setMouseSettings(); 
         // guiProperties=new Properties(props); 
- 
     }
-    
     
     private void _setProperty(GuiPropertyName name, String valstr, boolean save)
     {
         this.guiProperties.setProperty(name.getName(),valstr); 
-        
+
         if (save==true) 
         {
             try
@@ -243,13 +215,11 @@ public class GuiSettings
             }
             catch (VlException e)
             {
-                Global.errorPrintln("GuiSettings","Could not save properties. Exception:"+e);
-                Global.errorPrintln("GuiSettings","Could save properties to:"+getGuiSettingsLocation());
+                Global.logException(ClassLogger.ERROR,this,e,"Could save properties to:%s\n",getGuiSettingsLocation());
                 
                 Global.errorPrintStacktrace(e); 
             }
         }
-        
     }
     
     private String _getProperty(GuiPropertyName name)
@@ -261,8 +231,6 @@ public class GuiSettings
         
         return (String)val; 
     }
-    
-   
     
     /**
      * saveProperties will only save properties in the Propery set. 
@@ -297,8 +265,7 @@ public class GuiSettings
     		globalSwitchLookAndFeelType(val); 
     	else
     		switchLookAndFeelType(LookAndFeels.DEFAULT); 
-    }
-        
+    }       
     
 /* "javax.swing.plaf.metal.MetalLookAndFeel"
  * "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
@@ -351,7 +318,7 @@ public class GuiSettings
     // load()/save()
   }
 
-     // === Propery Interface === 
+    // === Propery Interface === 
     
     /** Returns named boolean value */ 
     public static boolean getBoolProperty(GuiPropertyName name)
@@ -361,40 +328,37 @@ public class GuiSettings
  
     public static boolean getBooleanProperty(GuiPropertyName name)
     {
-        return new Boolean(instance._getProperty(name));  
+        return new Boolean(defaultSettings._getProperty(name));  
     }
     
     public static int getIntProperty(GuiPropertyName name)
     {
-        return new Integer(instance._getProperty(name));  
+        return new Integer(defaultSettings._getProperty(name));  
     }
     
     // setters: 
     
     public static void setProperty(GuiPropertyName name, int val)
     {
-        instance._setProperty(name,""+val,autosave);
+        defaultSettings._setProperty(name,""+val,autosave);
     }
     
     public static void setProperty(GuiPropertyName name, boolean val)
     {
-        instance._setProperty(name,""+val,autosave); 
+        defaultSettings._setProperty(name,""+val,autosave); 
     }
     
 	public static void setProperty(GuiPropertyName name, String val)
 	{
-	    instance._setProperty(name,val,autosave);		
+	    defaultSettings._setProperty(name,val,autosave);		
 	}
   
     public static String getProperty(GuiPropertyName name)
     {
-        return instance._getProperty(name); 
+        return defaultSettings._getProperty(name); 
     }
-    
-  
  
     /** This method exists because the e.isPopupTrigger() doesn't work under windows */ 
-    
     public static boolean isPopupTrigger(MouseEvent e)
     {
         if (e.isPopupTrigger())
@@ -472,21 +436,18 @@ public class GuiSettings
     {
         if (e.getButton()==getMouseSelectionButton())
             return true;
-        
-        return false; 
+        else
+            return false; 
     }
-    
-
-
     
     public static Cursor getBusyCursor()
     {
-        return instance.busyCursor;
+        return defaultSettings.busyCursor;
     }
     
     public static Cursor getDefaultCursor()
     {
-        return instance.defaultCursor;
+        return defaultSettings.defaultCursor;
     }
    
     public static Dimension getScreenSize()
@@ -499,10 +460,8 @@ public class GuiSettings
     {
        Toolkit tk = Toolkit.getDefaultToolkit(); 
        Dimension dim = tk.getScreenSize();
-       
        return new Point(dim.width/2,dim.height/2);
     }
-
     
     /** calculate optimal new window size for new Frame/Window/Dialog */ 
     public static Rectangle getOptimalWindow(Component comp)
@@ -577,7 +536,7 @@ public class GuiSettings
 
     public static void saveProperties() throws VlException
     {
-        instance.save(); 
+        defaultSettings.save(); 
     }
 
     public static void placeToCenter(Component inst)
@@ -723,13 +682,11 @@ public class GuiSettings
 	
 	public static synchronized GuiSettings getDefault()
 	{
-		if (instance==null)
-			instance=new GuiSettings(); 
+		if (defaultSettings==null)
+			defaultSettings=new GuiSettings(); 
 		
-		return instance; 
+		return defaultSettings; 
 	}
-
-	
 
 	public static void setShowResourceTree(boolean val)
 	{
@@ -749,9 +706,5 @@ public class GuiSettings
 		String lafstr=GuiSettings.getProperty(GuiPropertyName.GLOBAL_LOOK_AND_FEEL); 
 		if (lafstr!=null)	
 			GuiSettings.globalSwitchLookAndFeelType(lafstr); 
-	}
-
-	
-
-	
+	}	
 }

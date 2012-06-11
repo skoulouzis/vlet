@@ -49,7 +49,7 @@ import nl.uva.vlet.util.cog.GridProxy;
 import nl.uva.vlet.vrs.VRSContext;
 
 /**
- *  Proxy Dailog Controller
+ *  Grid Proxy Dialog Controller.
  */
 class GridProxyDialogController implements ActionListener, WindowListener, FocusListener
 {

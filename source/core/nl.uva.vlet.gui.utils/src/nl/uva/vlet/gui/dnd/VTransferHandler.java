@@ -39,7 +39,6 @@ import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
-import nl.uva.vlet.gui.dialog.SimpleDialog;
 import nl.uva.vlet.gui.util.Messages;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.VContainer;

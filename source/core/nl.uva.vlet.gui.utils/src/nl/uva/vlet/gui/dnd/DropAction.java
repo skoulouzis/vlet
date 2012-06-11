@@ -77,7 +77,6 @@ public class DropAction
         destination=dropTarget;
     }
 
-
 	public boolean isLink()
 	{
 		return StringUtil.equals(dropAction,LINK_ACTION); 
@@ -107,6 +106,4 @@ public class DropAction
         sources[0]=source;
         destination=dest;  
     }*/
-
-
 }

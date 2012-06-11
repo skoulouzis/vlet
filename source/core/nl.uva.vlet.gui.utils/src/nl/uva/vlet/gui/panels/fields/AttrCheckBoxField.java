@@ -18,7 +18,7 @@
  * ---
  * $Id: AttrCheckBoxField.java,v 1.2 2011-04-18 12:27:12 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:12 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.panels.fields;
@@ -30,50 +30,49 @@ import nl.uva.vlet.data.VAttributeType;
 
 public class AttrCheckBoxField extends JCheckBox implements IAttributeField
 {
-	private static final long serialVersionUID = 3100398728004063981L;
+    private static final long serialVersionUID = 3100398728004063981L;
 
-	// needed by jigloo
-	public AttrCheckBoxField()
-	{
-		super(); 
-	}
-	
-	public AttrCheckBoxField(String name,boolean value)
-	{
-		super();
-		this.setName(name); 
-		this.setSelected(value); 
-	}
-	
-	public String getName() 
-	{
-		return super.getName(); 
-	}
+    // needed by jigloo
+    public AttrCheckBoxField()
+    {
+        super();
+    }
 
-	public String getValue() 
-	{
-		return ""+this.isSelected();
-	}
+    public AttrCheckBoxField(String name, boolean value)
+    {
+        super();
+        this.setName(name);
+        this.setSelected(value);
+    }
 
-	public boolean getBooleanValue()
-	{
-		return this.isSelected(); 
-	}
+    public String getName()
+    {
+        return super.getName();
+    }
 
-	public void updateFrom(VAttribute attr)
-	{
-		this.setSelected(attr.getBooleanValue());
-	}
+    public String getValue()
+    {
+        return "" + this.isSelected();
+    }
 
-	public VAttributeType getVAttributeType()
-	{
-		return VAttributeType.BOOLEAN; 
-	}
+    public boolean getBooleanValue()
+    {
+        return this.isSelected();
+    }
 
-	public void setEditable(boolean flag)
-	{
-		this.setEnabled(flag); 
-	}
-	
-	
+    public void updateFrom(VAttribute attr)
+    {
+        this.setSelected(attr.getBooleanValue());
+    }
+
+    public VAttributeType getVAttributeType()
+    {
+        return VAttributeType.BOOLEAN;
+    }
+
+    public void setEditable(boolean flag)
+    {
+        this.setEnabled(flag);
+    }
+
 }

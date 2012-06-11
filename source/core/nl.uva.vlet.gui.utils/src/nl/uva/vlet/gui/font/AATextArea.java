@@ -26,9 +26,8 @@ package nl.uva.vlet.gui.font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+
 import javax.swing.JTextArea;
-
-
 
 public class AATextArea extends JTextArea 
 {

@@ -33,21 +33,17 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
-import nl.uva.vlet.util.MimeTypes;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VRS;
 
 /** 
  * 
  * Util class which handles Transfers and TranferData 
- * 
  * Implementation of TransferData
- * 
- * @author P.T. de Boer
  */
 public class VTransferData
 {
@@ -115,18 +111,15 @@ public class VTransferData
           String mimeType=UIGlobal.getMimeTypes().getMimeType(vrl.getPath()); 
           
           vrls[index]=new ResourceRef(vrl, type, mimeType);
-
-          
           index++; 
         }
 
         return vrls; 
-        
     }
 
     private static void Debug(String msg)
     {
-        Global.debugPrintln(VTransferData.class,msg); 
+        Global.debugPrintf(VTransferData.class,"%s\n",msg); 
     }
 
     public static boolean canConvertToVRLs(Transferable t)
@@ -231,7 +224,6 @@ public class VTransferData
         }
         return false;
         //return true;
-
     }
 
 	public static VRL[] getVRLsFrom(Transferable t) throws VRLSyntaxException, UnsupportedFlavorException, IOException

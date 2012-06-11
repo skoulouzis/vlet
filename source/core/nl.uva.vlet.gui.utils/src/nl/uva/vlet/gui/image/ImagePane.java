@@ -45,8 +45,7 @@ import nl.uva.vlet.vrl.VRL;
  * match the new size. 
  * This because when updating an image from a remote resource, 
  * the size might not be known yet as long as the AWT toolkit is 
- * 'decoding;  the image bytes.
- *  
+ * 'decoding;  the image bytes.  
  */ 
 public class ImagePane extends JComponent
 {
@@ -163,7 +162,6 @@ public class ImagePane extends JComponent
 					}
 				}
 
-
 				// image not done yet:
 				if (wait)
 				{
@@ -181,20 +179,15 @@ public class ImagePane extends JComponent
 						Global.errorPrintStacktrace(e);
 					}
 				}
-
 			}
-
 			debug("<<< ImageWaiter: waitForCompletion():DONE!");
-
 		}
 		
 		private void debug(String msg)
 		{
 			Global.debugPrintln(this,msg); 
 		}
-	} // imageWaiters 
-
-
+	} // imageWaiters
 	
 	// needed by swing 
 	private static final long serialVersionUID = 4745630397251453021L;
@@ -215,7 +208,6 @@ public class ImagePane extends JComponent
 	/** Height of Image, might not be same as this component's height*/ 
 	private int imageHeight=-1;
 
-
 	public ImagePane(Image source) throws ResourceException
 	{
 		init(); 
@@ -227,12 +219,10 @@ public class ImagePane extends JComponent
 		init(); 
 	}
 	
-
 	private void init()
 	{
 		
 	}
-
 
 	/**
 	 * Set new image, if waitForCompletion==true, this method
@@ -279,8 +269,7 @@ public class ImagePane extends JComponent
 
 		// image complete: swap: 
 		// swap 
-		// swap 
-		
+		// swap 		
 		if (this.image!=null)
 		{
 			image.flush(); 
@@ -489,8 +478,7 @@ public class ImagePane extends JComponent
 		
 		setImage(img,wait);
 	}
-
-
+	
 	private void debug(String msg)
 	{
 		Global.debugPrintln(this,msg); 
@@ -499,6 +487,5 @@ public class ImagePane extends JComponent
 	public Image getImage()
 	{
 		return this.image; 
-	}
-	
+	}	
 }

@@ -45,6 +45,4 @@ public interface FontToolbarListener
 
     /** will be called when user changed the antialising settings */ 
     //public void setAntiAliasing(Boolean antiAliasing); 
- 
-    
 }

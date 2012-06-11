@@ -37,40 +37,34 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 
-
+import nl.uva.vlet.ClassLogger;
+import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.font.FontUtil;
-import nl.uva.vlet.gui.panels.attribute.AttributePanel;
 
 public class AttributeEditorForm extends JDialog
 {
+    private static final long serialVersionUID = 9136623460001660679L;
+    // ---
     AttributePanel infoPanel;
-
-    private JTextField topLabelTextField;
-
     // package accesable buttons: 
-    
     JButton cancelButton;
     JButton okButton;
-
-    private JPanel buttonPanel;
-
-    private AttributeEditorController formController;
     JButton resetButton;
-
+    // data: 
     VAttribute[] originalAttributes;
-
+    // ui stuff 
+    private JTextField topLabelTextField;
+    private JPanel buttonPanel;
+    private AttributeEditorController formController;
     private String titleName;
     //private JFrame frame=null; 
     private JPanel mainPanel;
-
 	private boolean isEditable;
-    
-   
     
     private void initGUI(VAttribute attrs[])
     {
@@ -150,12 +144,9 @@ public class AttributeEditorForm extends JDialog
         }
     }
 
-   
-
 //  ==========================================================================
 //  Constructor 
 //  ==========================================================================
-    
     
     private void init(String titleName, VAttribute attrs[])
     {
@@ -194,21 +185,19 @@ public class AttributeEditorForm extends JDialog
     public AttributeEditorForm(String titleName, VAttribute attrs[]) 
     {
         super();
-        WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
         init(titleName,attrs);
     }
     
     public AttributeEditorForm() 
     {
-    	WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
         //init("Example Attribute Editor",null);
     }
-    
     
 //  ==========================================================================
 //  
 //  ==========================================================================
-    
 
     public void setAttributes(VAttribute[] attributes)
     {
@@ -291,8 +280,7 @@ public class AttributeEditorForm extends JDialog
 				}
 				catch (InterruptedException e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Global.logException(ClassLogger.ERROR,AttributeEditorForm.class,e,"--- Interupted ---\n");
 				}
  	    	}
  	    }
@@ -322,9 +310,4 @@ public class AttributeEditorForm extends JDialog
     {
         return this.infoPanel.hasChangedAttributes(); 
     }
-
-
-
-    
-    
 }

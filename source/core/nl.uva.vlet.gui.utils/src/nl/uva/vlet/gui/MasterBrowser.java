@@ -25,7 +25,6 @@ package nl.uva.vlet.gui;
 
 import javax.swing.JPopupMenu;
 
-
 import nl.uva.vlet.gui.dnd.DropAction;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.ViewModel;
@@ -38,11 +37,10 @@ import nl.uva.vlet.vrl.VRL;
  * This is mainly an interface for the BrowserController,
  * but created to shield other components from dependency
  * of the BrowserController. 
- * Other mini browsers might implement this interface like the FileSelector(tm).
+ * Other mini browsers might implement this interface like the FileSelector.
  * 
  * @author P.T. de Boer
  */
-
 public interface MasterBrowser extends HyperLinkListener, ITaskSource
 {
 	/** Get current viewfilter */ 
@@ -69,4 +67,6 @@ public interface MasterBrowser extends HyperLinkListener, ITaskSource
      * the new window will appear as new Tab. 
      */ 
     void startNewWindow(VRL vrl); 
+    
+    UIPlatform getPlatform(); 
 }

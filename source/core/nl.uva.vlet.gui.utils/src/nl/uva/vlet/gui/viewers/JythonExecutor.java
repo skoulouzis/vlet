@@ -36,19 +36,15 @@ public class JythonExecutor
 		jythonVRL=vrl;
 	}
 
-
 	public JythonExecutor(VRSContext context)
 	{
 		init(context); 
 	}
 
-
 	private void init(VRSContext context)
 	{
 		this.vrsContext=context; 
-		
 	}
-
 
 	public void start()
 	{

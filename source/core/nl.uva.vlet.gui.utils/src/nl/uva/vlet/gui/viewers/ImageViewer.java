@@ -47,13 +47,9 @@ import nl.uva.vlet.vrl.VRL;
 
 /**
  * Implementation of an Image Viewer.<br>
- *  
- * @author P.T. de Boer
  */
 public class ImageViewer extends InternalViewer 
 {
-	
-    /** */
     private static final long serialVersionUID = 5768234709523116729L;
 
     /** The mimetypes I can view */ 
@@ -172,26 +168,7 @@ public class ImageViewer extends InternalViewer
         //this.imageLabel=null; 
     }
     
-    // === Main === 
-    
-    public static void main(String args[])
-    {
-    	Global.setDebug(true); 
-    	
-        try
-        {
-            viewStandAlone(new VRL("file:///home/ptdeboer/images/galaxy1.jpg")); 
-            
-            //viewStandAlone(null);
-        }
-        catch (VlException e)
-        {
-            System.out.println("***Error: Exception:"+e); 
-            e.printStackTrace();
-        }
-
-    }
-    
+   
     @Override
     public String getName()
     {
@@ -501,11 +478,9 @@ public class ImageViewer extends InternalViewer
 					}
 				}
 			}
-		};
-		
+		};		
 		UIGlobal.swingInvokeLater(checkZoomTask); 
 	}
-	
 	
 	protected void updateNewZoomImage(Image img) throws ResourceException
 	{
@@ -536,9 +511,27 @@ public class ImageViewer extends InternalViewer
 	public void reset() 
 	{
 		this.resetZoom(); 
-		
 	}
 	
-	
+	// === Main === 
+    
+    public static void main(String args[])
+    {
+        Global.setDebug(true); 
+        
+        try
+        {
+            viewStandAlone(new VRL("file:///home/ptdeboer/images/galaxy1.jpg")); 
+            
+            //viewStandAlone(null);
+        }
+        catch (VlException e)
+        {
+            System.out.println("***Error: Exception:"+e); 
+            e.printStackTrace();
+        }
+
+    }
+    
 }
 

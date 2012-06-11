@@ -29,14 +29,11 @@ public class VHTMLKit extends HTMLEditorKit
             }
         }
     }
-    
    
     // ========================================================================
-    //
     // ========================================================================
     
     private VHTMLLinkController linkController;
-
     
     public void install(JEditorPane c) 
     {

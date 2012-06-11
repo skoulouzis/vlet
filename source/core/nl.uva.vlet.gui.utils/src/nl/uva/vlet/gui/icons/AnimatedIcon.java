@@ -48,22 +48,14 @@ public class AnimatedIcon implements Icon, Serializable
 
     // === //
     
-    protected String description; 
-    
+    protected String description;   
     protected String sequenceName;
-    
     protected int frameNr=0;
-    
     protected int loopNr=0; 
-    
     protected ImageSequence animImage;
-
     protected double animationSpeed=1.0;
-
     protected IconAnimator iconAnimator;
-
     protected boolean painted=false;
-
     private boolean hasStopped; 
     
     public AnimatedIcon(ImageSequence animImage)
@@ -137,7 +129,6 @@ public class AnimatedIcon implements Icon, Serializable
         
         if (inverse)
             loopNr=animImage.getLoopCount()-loopNr;
-        
     }
     
     public double getAnimationSpeed()
@@ -178,9 +169,7 @@ public class AnimatedIcon implements Icon, Serializable
     {
         this.animationSpeed=1;
         this.hasStopped=false; 
-    }
-    
-    
+    }    
     
     public void reverse()
     {

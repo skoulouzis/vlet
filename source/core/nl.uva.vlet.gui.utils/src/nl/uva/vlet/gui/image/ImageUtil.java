@@ -27,25 +27,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.gui.icons.AnimatedIcon;
-import nl.uva.vlet.gui.icons.IconProvider;
 import nl.uva.vlet.gui.util.gif.NS2GifDecoder;
 import nl.uva.vlet.util.ResourceLoader;
 
-//import com.sun.media.jai.codec.ByteArraySeekableStream;
-//import com.sun.media.jai.codec.ImageDecodeParam;
-//import com.sun.media.jai.codec.SeekableStream;
-//import com.sun.media.jai.codecimpl.GIFImageDecoder;
-
 public class ImageUtil
 {
-    
     public static class ImageError extends Error
     {
         public ImageError(String message)
@@ -55,8 +46,6 @@ public class ImageUtil
 
         private static final long serialVersionUID = -554788643749026422L;
     }
-    
- 
 
 //    /**
 //     * Loads gif icon and decodes it using Jai classed.
@@ -209,8 +198,5 @@ public class ImageUtil
         
         return newImage; 
     }
-
-
-
     
 }

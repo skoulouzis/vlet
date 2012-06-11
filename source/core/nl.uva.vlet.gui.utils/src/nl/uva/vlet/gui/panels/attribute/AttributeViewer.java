@@ -39,28 +39,16 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.GuiSettings;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class AttributeViewer extends JDialog implements FocusListener, ActionListener
 {
+    private static final long serialVersionUID = -7363909981672843970L;
+    // ---
     private JPanel panel;
     private JLabel attrNameLabel;
     private JTextField attrNameField;
@@ -103,7 +91,6 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
     {
     	this.editable=editbl; 
     	this.attrValueField.setEditable(editbl); 
-    	
     }
     
     public AttributeViewer(VAttribute attr)
@@ -206,9 +193,7 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
         this.validate(); // update sizet etc
         GuiSettings.setToOptimalWindowSize(this); 
        // GuiSettings.placeToCenter(this);
-        
     }
-    
     
     /**
      * Auto-generated main method to display this JDialog
@@ -226,13 +211,10 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
                 +"***********************************************\n"
                 +"***********************************************\n"
                 ),true);
-        
-        
     }
 
 	public void focusGained(FocusEvent e)
 	{
-		;
 	}
 
 	public void focusLost(FocusEvent e)
@@ -242,11 +224,7 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
 	
 	private void updateAttribute()
 	{
-		Global.debugPrintln(this,"new value="+this.attrValueField.getText()); 
-		
 		this.newAttribute=new VAttribute(attribute.getType(),attribute.getName(),attrValueField.getText());
-		
-		Global.debugPrintln(this,"new attr="+newAttribute); 
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -263,8 +241,5 @@ public class AttributeViewer extends JDialog implements FocusListener, ActionLis
 	private void exit()
 	{
 		this.setVisible(false); 
-		
 	}
-    
-
 }

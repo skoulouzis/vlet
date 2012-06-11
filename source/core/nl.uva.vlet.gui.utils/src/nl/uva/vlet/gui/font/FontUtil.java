@@ -25,6 +25,9 @@ package nl.uva.vlet.gui.font;
 
 import java.awt.Font;
 
+/**
+ * Font Utilities 
+ */
 public class FontUtil
 {
     /** Create Font Info from Font, copying font attributes like style and name.  */ 
@@ -57,5 +60,4 @@ public class FontUtil
             
         return Font.getFont(name);   
     }
-
 }

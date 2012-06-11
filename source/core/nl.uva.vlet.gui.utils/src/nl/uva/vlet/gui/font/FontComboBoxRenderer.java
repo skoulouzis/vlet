@@ -33,22 +33,17 @@ import javax.swing.ListCellRenderer;
 import nl.uva.vlet.gui.GuiSettings;
 
 /**
- * 
  * Implementation of FontComboBoxRenderer.
- * Renderers the text in the ComboBox with the font name specified. 
+ * Renders the text in the ComboBox with the font name specified. 
  * Is special component in the FontToolBar.
- *  
- * @author P.T. de Boer
+
  */
 public class FontComboBoxRenderer  extends JLabel implements ListCellRenderer
 {
+    private static final long serialVersionUID = -2462866413990104352L;
+    //===
     boolean antiAliasing=true;
     private FontToolBar fontToolBar; 
-    /**
-     * 
-     */
-    
-    private static final long serialVersionUID = -2462866413990104352L;
 
     public FontComboBoxRenderer(FontToolBar bar) 
     {
@@ -78,11 +73,8 @@ public class FontComboBoxRenderer  extends JLabel implements ListCellRenderer
             }
             
             FontInfo info=fontToolBar.getFontInfo();
-            
             setFont(new Font((String)value,info.getFontStyle(),14)); 
-            
             setText((String)value);
-            
             GuiSettings.setAntiAliasing(this,info.getAntiAliasing()); 
            
             return this;

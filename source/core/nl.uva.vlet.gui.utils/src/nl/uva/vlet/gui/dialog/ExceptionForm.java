@@ -38,11 +38,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import nl.uva.vlet.ClassLogger;
+import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 
 /**
  * Simple Exception Form 
@@ -96,25 +98,20 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
  		// next works only when not modal: 
         inst.requestFocus(); // first set focus to Dialog 
         inst.okButton.requestFocus(); // then set focus to OK 
-
 	}
-	
 
 	public static void main(String args[])
 	{
 	    VlException e1=new VlException("Original Exception","This is the original Exception");
 	    VlException e2=new VlException("Nested Exception","This is the longer Nested Exception were the message text, if to big to fit into one line"+
 	            "will be wrapped around. The dailog should also be big enough to show all text. Newline:\n This is a new line.",e1);
-	    
 	    show(e2);
 	}
-    
 	
 	// ========================================================================
 	// 
 	// ========================================================================
-    
-	
+
 	private JTextArea errorText;
 	private JPanel leftPane;
 	private JTextArea debugTextArea;
@@ -135,16 +132,14 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
 	    super(); 
 	    init(e); 
     }
-	
-	
+		
 	public void setDebugText(String txt)
 	{
 	    debugTextArea.setText(txt);
 	    debugTextArea.setSize(debugTextArea.getPreferredSize());
 	    // update viewport information:
 	}
-	
-	
+		
 	public ExceptionForm(Dialog parent, Exception e,boolean modal) 
 	{        
 		// for chained modal dailogs, parent can NOT be NULL 
@@ -154,7 +149,7 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
 	
 	private void init(Exception e)
 	{
-        WindowRegistry.register(this);
+	    UIPlatform.getPlatform().getWindowRegistry().register(this);
 		initGUI();
 		String name=e.getClass().getSimpleName();
 		
@@ -208,7 +203,6 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
 		//this.setVisible(true);
 	}
 	
-
 	private void initGUI() 
     {
 		try 
@@ -313,13 +307,10 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
 		} 
 		catch (Exception e) 
 		{
-			e.printStackTrace();
+			Global.logException(ClassLogger.ERROR,this,e,"Exception during initGUI!\n"); 
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	public void actionPerformed(ActionEvent arg0)
 	{
 		this.dispose(); 
@@ -331,9 +322,5 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
 		{
 			show((Exception)e); 
 		}
-		
 	}
-
-	
-
 }
