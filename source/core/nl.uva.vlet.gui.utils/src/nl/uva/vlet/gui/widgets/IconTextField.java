@@ -50,17 +50,14 @@ package nl.uva.vlet.gui.widgets;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
-import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.TooManyListenersException;
 
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.dnd.ComponentDragGestureListener;
 import nl.uva.vlet.gui.dnd.VTransferHandler;
 

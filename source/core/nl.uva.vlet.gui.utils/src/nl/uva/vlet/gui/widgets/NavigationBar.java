@@ -34,8 +34,6 @@ import javax.swing.JToolBar;
 
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.gui.widgets.IconTextField; 
-import nl.uva.vlet.gui.widgets.NavigationBar.NavigationAction;
 
 public class NavigationBar extends JToolBar 
 {

@@ -23,25 +23,23 @@
 
 package nl.uva.vlet.util.vlterm;
 
-import java.io.InputStream;
+import static nl.uva.vlet.util.vlterm.VT10xEmulatorDefs.CTRL_ESC;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.util.charpane.ICharacterTerminal;
 import nl.uva.vlet.gui.util.charpane.StyleChar;
-
-import static nl.uva.vlet.util.vlterm.VT10xEmulatorDefs.*;
-import static nl.uva.vlet.util.vlterm.VT10xEmulatorDefs.Token.*;
+import nl.uva.vlet.util.vlterm.VT10xEmulatorDefs.Token;
 
 /**
  * 
- * Implementatian of most VT100 codes.
+ * Implementation of most VT100 codes.
  * With some vt102, and starting with xterm. 
  * 
  * @author Piter T. de Boer
- *
  */
 public class VT10xEmulator extends Emulator
 {
@@ -71,8 +69,6 @@ public class VT10xEmulator extends Emulator
     
     int tabSize=8;
    
-   
-	
     private boolean applicationCursorKeys;
 	
     private int savedCursorX;
@@ -795,7 +791,6 @@ public class VT10xEmulator extends Emulator
     {
         return VT10xEmulatorDefs.getTokenTable(); 
     }
-
   
     private void fixmePrintf(String format,Object... args)
     {

@@ -25,7 +25,6 @@ package nl.uva.vlet.gui.viewers.x509viewer;
 
 public interface CertPanelListener 
 {
-    
     public void optionSelected();
 
 }

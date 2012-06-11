@@ -57,10 +57,6 @@ public class ViewerX509 extends ViewerPlugin implements CertPanelListener
                     "application/x-x509-crt-file", 
                     // "application/x-x509-user-cert" = user cert! (not CA) 
             };
-
-    
-    
-
     
     // ========================================================================
     //
@@ -268,7 +264,6 @@ public class ViewerX509 extends ViewerPlugin implements CertPanelListener
             UIGlobal.showException(e);
         }
         disposeJFrame();
-
     }
 
     /**

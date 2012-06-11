@@ -1443,7 +1443,5 @@ public class VLTerm extends JFrame implements  Runnable
 		persistantProperties.putAll(this.sessionProperties);
 		saveConfig(); 
 	}
-
-
   
 }

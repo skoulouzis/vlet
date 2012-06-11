@@ -25,8 +25,6 @@ package nl.uva.vlet.gui.viewers.external;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -36,25 +34,14 @@ import javax.swing.border.BevelBorder;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exec.ExternalToolDB;
-import nl.uva.vlet.exec.LocalExec;
 import nl.uva.vlet.exec.LocalProcess;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.VNode;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 /** Wrapper plugin for external tools */ 
 public class JavaWebStarter extends ViewerPlugin implements ActionListener
 {
@@ -112,7 +99,6 @@ public class JavaWebStarter extends ViewerPlugin implements ActionListener
                 okB.addActionListener(this); 
             }
         }
-
     }
     
     @Override
@@ -124,7 +110,6 @@ public class JavaWebStarter extends ViewerPlugin implements ActionListener
     @Override
     public void stopViewer()
     {
-        
     }
 
     @Override
@@ -174,7 +159,6 @@ public class JavaWebStarter extends ViewerPlugin implements ActionListener
     @Override
     public void disposeViewer()
     {
-        
     }
 
     @Override
@@ -186,7 +170,4 @@ public class JavaWebStarter extends ViewerPlugin implements ActionListener
             exitViewer(); 
         }
     }
-    
-   
-    
 }

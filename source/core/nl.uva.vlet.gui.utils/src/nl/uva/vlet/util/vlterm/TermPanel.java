@@ -29,8 +29,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.KeyEvent;
-import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
@@ -320,8 +318,6 @@ public class TermPanel extends JPanel implements ComponentListener
 	public void resetGraphics() 
 	{
 		charPane.resetGraphics();
-		
 	}
 
-    
 }
