@@ -23,13 +23,9 @@
 
 package nl.uva.vlet.gui.viewers.grid.replicaviewer;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListDataEvent;
@@ -41,32 +37,23 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VlInterruptedException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
-
 import nl.uva.vlet.gui.editors.ResourceEditor;
 import nl.uva.vlet.gui.panels.list.StatusStringListField;
 import nl.uva.vlet.gui.panels.monitoring.TaskMonitorDialog;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
-import nl.uva.vlet.gui.panels.resourcetable.RowIterator;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
-import nl.uva.vlet.gui.vbrowser.BrowserController;
+import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.gui.widgets.NavigationBar.NavigationAction;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
-import nl.uva.vlet.util.bdii.StorageArea;
-import nl.uva.vlet.vfs.VFSClient;
-import nl.uva.vlet.vfs.VReplicatable;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSContext;
 
 public class ReplicaController implements ActionListener, ListSelectionListener, ListDataListener
@@ -872,7 +859,7 @@ public class ReplicaController implements ActionListener, ListSelectionListener,
                     VRL parentVrl=repVrl.getParent(); 
                     // Prefetch Node! 
                     ProxyNode pnode = ProxyNode.getProxyNodeFactory().openLocation(parentVrl);
-                    BrowserController.performNewWindow(parentVrl);
+                    VBrowserFactory.getInstance().createBrowser(parentVrl); // open in new window
                 }
                 catch (VlException e)
                 {

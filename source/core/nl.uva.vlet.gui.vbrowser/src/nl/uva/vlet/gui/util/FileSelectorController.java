@@ -25,11 +25,14 @@ package nl.uva.vlet.gui.util;
 
 import javax.swing.JPopupMenu;
 
+import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.dnd.DropAction;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.ViewModel;
@@ -45,10 +48,18 @@ import nl.uva.vlet.vrl.VRL;
 public class FileSelectorController implements MasterBrowser, ITaskSource
 {
 	final FileSelector fileSelector;
-	ProxyNode selectionNode; 
-	
-	public FileSelectorController(FileSelector selector) 
+	ProxyNode selectionNode;
+    private UIPlatform platform; 
+
+	static
 	{
+        ProxyTNode.init();
+        Global.init();
+	}
+	
+	public FileSelectorController(FileSelector selector, UIPlatform platform) 
+	{
+	    this.platform=platform; 
 		this.fileSelector=selector; 
 	}
 	
@@ -211,7 +222,6 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 		};
 		
 		updateTask.startTask();
-		
 	}
 
 	protected void updateSelectionNode(ProxyNode pnode)
@@ -230,5 +240,11 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 	{
 		fileSelector.bpvalid.doClick();
 	}
+
+    @Override
+    public UIPlatform getPlatform()
+    {
+        return this.platform;
+    }
 	
 }

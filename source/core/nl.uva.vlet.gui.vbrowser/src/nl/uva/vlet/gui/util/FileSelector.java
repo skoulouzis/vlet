@@ -37,9 +37,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.tree.ResourceTree;
 import nl.uva.vlet.vrl.VRL;
 
@@ -76,15 +75,13 @@ public class FileSelector extends javax.swing.JDialog
 	
    
    
-	/** Constructor for modal dialogs */  
-	public FileSelector()
+	/** Constructor for modal dialogs 
+	 * @param uiPlatform */  
+	public FileSelector(UIPlatform platform)
 	{
 		super();
-		ProxyTNode.init();
-		Global.init();
-		
 		// Create Controller before initGUI (is needed by ResourceTree) 
-		controller = new FileSelectorController(this);		
+		controller = new FileSelectorController(this,platform);		
 		
 		initGUI();
 		initDialogParameter();

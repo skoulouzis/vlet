@@ -27,6 +27,7 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
+import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 import nl.uva.vlet.gui.vbrowser.VBrowserInit;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.viewers.ViewerRegistry;
@@ -48,7 +49,9 @@ public class startVBrowser
       {
           Global.parseArguments(args); 
 
+          // does platform init!
           VBrowserInit.init();
+          VBrowserFactory factory=VBrowserFactory.getInstance(); 
           
         // start browser(s)
       	{
@@ -64,7 +67,7 @@ public class startVBrowser
                 {
                     // urls specfied:
                     urls++; 
-                    BrowserController.performNewWindow(arg);
+                    factory.createBrowser(arg);
                 }
                 else
                 {
@@ -84,7 +87,7 @@ public class startVBrowser
             {
                 // get home LOCATION: Can also be gftp/srb/....
                 // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
-               createVBrowser(UIGlobal.getVirtualRootLocation());
+                factory.createBrowser(UIGlobal.getVirtualRootLocation());
             }
       	}
     }
@@ -100,7 +103,7 @@ public class startVBrowser
   /** Create VBrowser instance */ 
   public static BrowserController createVBrowser(VRL vrl)
   { 
- 	 return BrowserController.performNewWindow(vrl);
+ 	 return VBrowserFactory.getInstance().createBrowser(vrl); 
   }
   
   /** Register viewer */ 

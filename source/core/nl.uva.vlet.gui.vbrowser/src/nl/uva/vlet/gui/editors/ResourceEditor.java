@@ -23,33 +23,28 @@
 
 package nl.uva.vlet.gui.editors;
 
-import java.awt.BorderLayout; 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeListener;
 
@@ -58,8 +53,7 @@ import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
-import nl.uva.vlet.gui.editors.ResourceEditorController.ServerAttributeListener;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.panels.attribute.AttributePanel;
 import nl.uva.vlet.gui.panels.fields.AttrCheckBoxField;
 import nl.uva.vlet.gui.panels.fields.AttrParameterField;
@@ -67,12 +61,9 @@ import nl.uva.vlet.gui.panels.fields.AttrPortField;
 import nl.uva.vlet.gui.panels.fields.AttrSchemeField;
 import nl.uva.vlet.gui.panels.fields.IAttributeField;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
-import nl.uva.vlet.vrs.ServerInfo;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-
-import static nl.uva.vlet.data.VAttributeConstants.*; 
 
 /**
  * New Resource Editor Form for LinkNodes, ResourcNodes, etc and
@@ -248,7 +239,7 @@ public class ResourceEditor extends javax.swing.JDialog
 
 	private void init(boolean initGUI) 
 	{
-		WindowRegistry.register(this);
+	    UIPlatform.getPlatform().getWindowRegistry().register(this);
 		 
 		this.controller = new ResourceEditorController(this);
 		if (initGUI)

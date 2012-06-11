@@ -60,7 +60,7 @@ import nl.uva.vlet.gui.GuiPropertyName;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.actions.ActionCommand;
 import nl.uva.vlet.gui.actions.ActionCommandType;
 import nl.uva.vlet.gui.dialog.AboutDialog;
@@ -71,7 +71,6 @@ import nl.uva.vlet.gui.viewers.ViewerInfo;
 import nl.uva.vlet.gui.viewers.ViewerRegistry;
 import nl.uva.vlet.gui.viewers.ViewerRegistry.ViewerList;
 import nl.uva.vlet.gui.widgets.NavigationBar;
-import nl.uva.vlet.vrs.VRS;
 
 /**
  * Main VBrowser Frame <br>
@@ -217,19 +216,19 @@ public class VBrowser extends javax.swing.JFrame
     private boolean treeVisible = true;
     private boolean logVisible = true;
     private boolean isBusy;
-
-    public VBrowser()
+    
+    VBrowser(VBrowserFactory factory)
     {
         super();
-
-        WindowRegistry.register(this);
         
         logger.debugPrintf("New BrowserFrame!\n");
 
         // First initialize the Main BrowserController and then its delegate
         // helpers: The Listeners:
-        browserController = new BrowserController(this);
+        browserController = new BrowserController(this,factory);
         this.addWindowListener(browserController);
+
+        browserController.getPlatform().getWindowRegistry().register(this);
 
         // Since multiple menuItems and ToolbarItems use one
         // instance of a the same listener, these listeners must be
@@ -242,7 +241,12 @@ public class VBrowser extends javax.swing.JFrame
         // set check stuff:
         browserController.checkCredentialStatus();
     }
-
+    
+    public UIPlatform getUIPlatform()
+    {
+        return this.browserController.getPlatform(); 
+    }
+    
     BrowserController getBrowserController()
     {
         return browserController;

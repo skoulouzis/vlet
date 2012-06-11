@@ -24,10 +24,7 @@
 package nl.uva.vlet.gui.vbrowser;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
@@ -55,7 +52,7 @@ import nl.uva.vlet.gui.GuiPropertyName;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.actions.ActionCommand;
 import nl.uva.vlet.gui.actions.ActionCommandType;
 import nl.uva.vlet.gui.actions.ActionMenu;
@@ -170,12 +167,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	// =======================================================================
 	// Inner Classes
 	// =======================================================================
-
-	/**
-	 * A HistoryElement stores the WHOLE ResourceTree
-	 * 
-	 * @author P.T. de Boer
-	 */
+    
+    // 
 	private static class HistoryElement
 	{
 		VRL viewedLocation=null; 
@@ -190,9 +183,10 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		}
 	}
 
-	public static enum ViewType {
-		ICONS, ICONLIST, TABLE, SINGLEITEM
-	};
+	public static enum ViewType 
+    	{
+    		ICONS, ICONLIST, TABLE, SINGLEITEM
+    	};
 
 	// =======================================================================
 	// Instance Fields
@@ -238,6 +232,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	private VContainer lastActiveVContainer;
 
+    private VBrowserFactory factory;
+
 	// =======================================================================
 	// Constructor
 	// =======================================================================
@@ -248,12 +244,14 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	 * Default visibility for contructor and other methods are: package
 	 * 
 	 * @param sbrowser
+	 * @param factory 
 	 */
 
-	public BrowserController(VBrowser sbrowser)
+	public BrowserController(VBrowser sbrowser, VBrowserFactory factory)
 	{
 		this.vbrowser = sbrowser;
-
+		this.factory=factory; 
+		
 		if (sbrowser != null)
 			this.browserId = sbrowser.getId();
 		else
@@ -571,7 +569,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				case SHOW_ALL_WINDOWS:
 				{
 					// send windows/dialogs to front 
-					WindowRegistry.showAll();
+				    UIPlatform.getPlatform().getWindowRegistry().showAll();
 					break; 
 				}
 				case PROXYDIALOG:
@@ -897,7 +895,12 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	}
 
 
-	private void performStartVLTerm()
+	private void performNewWindow(VRL vrl)
+    {
+	    this.startNewWindow(vrl); 
+    }
+
+    private void performStartVLTerm()
 	{
 		VLTerm.newVLTerm(); 
 	}
@@ -1030,7 +1033,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	}
 
 	/** Start background view on location. */ 
-	private void asyncOpenLocation(final VRL location)
+	void asyncOpenLocation(final VRL location)
 	{
 		asyncOpenLocation(location,true,true); 
 	}
@@ -1736,70 +1739,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	// ==========================================================================
 	// Non Thread Critical Methods
 	// ==========================================================================
-
-	public static BrowserController performNewWindow(String str) throws VlException
-	{
-		return performNewWindow(new VRL(str));
-	}
-
-	public void startNewWindow(VRL vrl)
-	{
-		performNewWindow(vrl); 
-	}
-
-	public static BrowserController performNewWindow(VRL loc)
-	{
-		VBrowser vb = new VBrowser();
-
-		Point p=GuiSettings.getScreenCenter();
-		Dimension size=vb.getSize(); 
-
-		vb.setLocation(p.x-size.width/2,p.y-size.height/2);
-
-		vb.setVisible(true);
-
-		BrowserController bc = vb.getBrowserController();
-
-		VRL rootLoc=null; 
-
-		try
-		{
-			rootLoc = UIGlobal.getVRSContext().getVirtualRootLocation();
-		}
-		catch (VlException e)
-		{
-			sHandle(e); 
-		}  
-
-		if (loc == null)
-		{
-			loc = rootLoc; 
-		}
-
-		// show it */
-
-		bc.messagePrintln("New browser for:" + loc);
-
-		// start the populate in a different thread to finish the major task
-		// event ask quickly as possible ! 
-
-		bc.asyncOpenLocation(loc);
-
-		return bc; 
-	}
-
-	private static void sHandle(VlException e)
-	{
-		//          errorMessage("Exception:"+e);
-		ExceptionForm.show(e);
-
-		// Be verbose if in debug, but don't bother the user when NOT in debug mode.
-		if (Global.getDebug())
-		{
-		    Global.errorPrintStacktrace(e);
-		}
-	}
-
 
 
 	/**
@@ -3004,8 +2943,21 @@ public class BrowserController implements WindowListener, GridProxyListener,
         {
             handle(e); 
         }
-        
+    }
+
+    @Override
+    public void startNewWindow(VRL vrl)
+    {
+        factory.createBrowser(vrl); 
+    } 
+
+    public UIPlatform getPlatform()
+    {
+        return factory.getUIPlatform(); 
     }
 	
-
+    public VBrowserFactory getFactory()
+    {
+        return factory;  
+    }
 }

@@ -46,7 +46,7 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.HyperLinkListener;
 import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.gui.vhtml.VHTMLEditorPane;
 import nl.uva.vlet.gui.vhtml.VHyperListener;
@@ -90,15 +90,14 @@ public class AboutDialog extends javax.swing.JDialog implements ActionListener, 
     public AboutDialog(BrowserController bc)
     {
         super((bc!=null?BrowserController.getMasterFrame():null));
-        WindowRegistry.register(this);
-        
+        bc.getPlatform().getWindowRegistry().register(this);
         this.browserController=bc;
         init();
     }
     
     public AboutDialog()
     {
-        WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
         init(); 
     }
     

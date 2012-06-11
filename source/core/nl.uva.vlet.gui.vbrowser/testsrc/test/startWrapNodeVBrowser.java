@@ -30,9 +30,8 @@ import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 import nl.uva.vlet.gui.proxynode.impl.proxy.ProxyWrapNodeFactory;
-import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
-import nl.uva.vlet.gui.vbrowser.BrowserController;
+import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 
 /**
  * 
@@ -86,7 +85,7 @@ public class startWrapNodeVBrowser
                 {
                     // urls specfied:
                     urls++; 
-                    BrowserController.performNewWindow(arg);
+                    VBrowserFactory.getInstance().createBrowser(arg);
                 }
                 else
                 {
@@ -104,7 +103,7 @@ public class startWrapNodeVBrowser
                 // get home LOCATION: Can also be gftp/srb/....
                 // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
                 
-               BrowserController.performNewWindow(UIGlobal.getVRSContext().getVirtualRootLocation()); 
+                VBrowserFactory.getInstance().createBrowser(UIGlobal.getVRSContext().getVirtualRootLocation()); 
             }
  
             //BrowserController.performNewWindow("file:///home/ptdeboer/vfs2");

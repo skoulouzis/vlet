@@ -40,7 +40,7 @@ import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
 import nl.uva.vlet.tasks.ITaskMonitorListener;
@@ -76,14 +76,14 @@ public class TaskMonitorDialog extends javax.swing.JDialog
     public TaskMonitorDialog(JFrame frame) 
     { 
         super(frame);
-    	WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
         initGUI();
     }
     
     public TaskMonitorDialog(JFrame frame, ActionTask actionTask)
     {
         super(frame);
-    	WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
     	this.actionTask=actionTask; 
     	
         initGUI();
@@ -100,8 +100,6 @@ public class TaskMonitorDialog extends javax.swing.JDialog
     {
         try 
         {
-            
-            
             BorderLayout thisLayout = new BorderLayout();
             thisLayout.setHgap(8);
             thisLayout.setVgap(8);

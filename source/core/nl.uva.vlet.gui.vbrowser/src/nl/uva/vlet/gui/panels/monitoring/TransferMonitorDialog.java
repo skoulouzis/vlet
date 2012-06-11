@@ -39,7 +39,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.gui.WindowRegistry;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
@@ -89,7 +89,7 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
     
     private void init()
     {
-    	WindowRegistry.register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
     	this.setLocationRelativeTo(null); 
     	initGUI();
         update(); 

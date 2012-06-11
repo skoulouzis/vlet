@@ -29,16 +29,16 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton; 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
-
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 import nl.uva.vlet.vrl.VRL;
@@ -182,10 +182,16 @@ public class VBrowserApplet  extends Applet implements ActionListener
      {
         try
         {
+            // init platform first!!! 
+            UIPlatform plat=UIPlatform.getPlatform(); 
+            plat.setAppletMode(true); 
+            
+            // Applet init ! 
             UIGlobal.init(); 
             ProxyTNode.init(); 
-            
-            BrowserController.performNewWindow(UIGlobal.getVRSContext().getVirtualRootLocation());
+            VBrowserFactory fac=VBrowserFactory.createInstance(plat);
+            plat.registerBrowserFactory(fac);
+            fac.createBrowser(UIGlobal.getVRSContext().getVirtualRootLocation());
         }
         catch (VlException ex)
         {
@@ -200,14 +206,12 @@ public class VBrowserApplet  extends Applet implements ActionListener
 	 Debug("Exception:"+ex); 
 	 Global.errorPrintStacktrace(ex); 
 	 Global.debugPrintStacktrace(ex); 
-	 
      ExceptionForm.show(ex); 
  }
 
  private void Debug(String msg) 
  {
-	 println("Debug:"+msg); 
-	 
+	 println("Debug:"+msg); 	 
  }
 
  private void Error(String msg) 
@@ -218,10 +222,9 @@ public class VBrowserApplet  extends Applet implements ActionListener
  private void println(String str)
  {
 	 this.textArea.setText(textArea.getText()+str); 
- }
- 
+ } 
   // ==========================================================================
   // Static methods: 
   // ==========================================================================
-        
-}
+}        
+

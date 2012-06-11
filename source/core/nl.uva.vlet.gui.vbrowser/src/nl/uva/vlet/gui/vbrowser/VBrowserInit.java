@@ -23,10 +23,10 @@
 
 package nl.uva.vlet.gui.vbrowser;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.aboutrs.AboutRSFactory;
 import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 
@@ -35,20 +35,24 @@ public class VBrowserInit
 
     public static void init() throws VlException
     {
+        // todo: better platform initialization. 
+        // current order to initialize: 
         UIGlobal.init();
-        
-        AboutRSFactory.staticInit(); 
-        
-        // todo beter initialization 
-        ProxyTNode.init(); 
-        
+
         // Option --native ? :
         GuiSettings.enableCustomLAF(); 
+        // todo beter initialization 
+        ProxyTNode.init(); 
+ 
+        AboutRSFactory.staticInit(); 
         
-        // Filter out property arguments like -Duser=jan
-       
+        // Register VBrowser platform 
+        UIPlatform plat=UIPlatform.getPlatform();
+        plat.registerBrowserFactory(VBrowserFactory.createInstance(plat));
+        
         // prefetch MyVLe, during startup:
         ProxyTNode.getVirtualRoot();
+        
     }
     
 

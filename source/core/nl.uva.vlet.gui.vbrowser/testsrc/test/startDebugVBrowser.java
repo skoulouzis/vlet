@@ -29,8 +29,8 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
-import nl.uva.vlet.gui.vbrowser.BrowserController;
+import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
+import nl.uva.vlet.gui.vbrowser.VBrowserInit;
 
 /**
  * 
@@ -50,12 +50,7 @@ public class startDebugVBrowser
       {
         ClassLogger.getRootLogger().setLevelToDebug();
 
-        Global.init();
-        
-        ProxyTNode.init(); 
-        
-        // prefetch MyVLe, during startup:
-        ProxyTNode.getVirtualRoot();
+        VBrowserInit.init(); 
         
         args=Global.parseArguments(args); 
         
@@ -82,7 +77,7 @@ public class startDebugVBrowser
                 {
                     // urls specified:
                     urls++; 
-                    BrowserController.performNewWindow(arg);
+                    VBrowserFactory.getInstance().createBrowser(arg);
                 }
                 else
                 {
@@ -97,7 +92,7 @@ public class startDebugVBrowser
                 // get home LOCATION: Can also be gftp/srb/....
                 // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
                 
-               BrowserController.performNewWindow(UIGlobal.getVRSContext().getVirtualRootLocation()); 
+                VBrowserFactory.getInstance().createBrowser((UIGlobal.getVRSContext().getVirtualRootLocation())); 
             }
  
       	}
