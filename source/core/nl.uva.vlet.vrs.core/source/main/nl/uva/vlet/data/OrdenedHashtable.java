@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.Vector;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 
 /** 
  * Synchronized Ordened Hashtable. 

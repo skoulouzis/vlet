@@ -208,7 +208,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
      */
     private void init(Map<? extends Object,? extends Object> map)
     {
-         int index=0; 
+         //int index=0; 
          
          Set<? extends Object> keys =map.keySet();
 
@@ -231,7 +231,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
             }
             
             this.put(attr); 
-            index++; 
+            //index++; 
          }
     }
     
@@ -262,7 +262,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     {
     	if (attr==null)
     	{
-    		Global.warnPrintln(this,"Attribute is NULL!");
+    		Global.warnPrintf(this,"Attribute is NULL!\n");
     		return; 
     	}
         this.put(attr.getName(),attr); 
@@ -583,7 +583,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
                 }
                 else
                 {
-                   Global.debugPrintln(this,"Error reading property type:"+name);
+                   Global.warnPrintf(this,"Error reading property type:%s\n",name);
                 }
             }
         }

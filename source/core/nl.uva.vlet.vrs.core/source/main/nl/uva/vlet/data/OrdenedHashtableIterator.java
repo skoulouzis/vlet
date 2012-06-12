@@ -25,6 +25,7 @@ package nl.uva.vlet.data;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
 import nl.uva.vlet.Global;
 
 /** 
@@ -114,7 +115,7 @@ public class OrdenedHashtableIterator<TK,TV> implements Iterator<TV>
 			if (index<0)
 			{
 				// currentKey removed ???
-				Global.debugPrintln(this,"Iterator error: currentKey doesn't exists anymore:"+currentKey);
+				Global.debugPrintf(this,"Iterator error: currentKey doesn't exists anymore:%d\n",currentKey);
 				throw new NoSuchElementException("Iterator error: curentKey has been removed:"+currentKey); 
 			}
 
