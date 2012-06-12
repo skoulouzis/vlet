@@ -204,7 +204,7 @@ public class FileSelector extends javax.swing.JDialog
         {
             public void actionPerformed(ActionEvent e)
             {
-                // FIXME KAMEL:I have to call a refresh method
+                // KAMEL:I have to call a refresh method
                 try
                 {
                     System.out.println("REFRESH");
@@ -212,7 +212,6 @@ public class FileSelector extends javax.swing.JDialog
                 }
                 catch (VlException e1)
                 {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
 
@@ -268,7 +267,6 @@ public class FileSelector extends javax.swing.JDialog
             locationTextField.setEditable(false);
             bpvalid.setText("Open");
         }
-
     }
 
     public String getCurrentLocation()

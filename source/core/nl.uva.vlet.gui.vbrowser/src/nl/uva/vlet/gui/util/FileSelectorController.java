@@ -31,7 +31,6 @@ import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.dnd.DropAction;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.ViewModel;
@@ -52,7 +51,7 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 	static
 	{
         Global.init();
-        ProxyVNodeFactory.initPlatform();
+        // ProxyVNodeFactory.initPlatform();
 	}
 	
 	public FileSelectorController(FileSelector selector)
