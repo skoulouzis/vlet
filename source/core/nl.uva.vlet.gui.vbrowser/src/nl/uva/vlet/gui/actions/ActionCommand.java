@@ -25,10 +25,8 @@ package nl.uva.vlet.gui.actions;
 
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Vector;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.vrs.VRSFactory;

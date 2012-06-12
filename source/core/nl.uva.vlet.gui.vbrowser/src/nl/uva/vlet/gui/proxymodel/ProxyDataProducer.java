@@ -25,6 +25,7 @@ package nl.uva.vlet.gui.proxymodel;
 
 import java.util.ArrayList;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
@@ -38,23 +39,16 @@ import nl.uva.vlet.vrl.VRL;
 /** 
  * Data Producer for the ProxyModel classes. 
  * Contains common code for fetching ProxyNodes and other data. 
- *  
- * @author Piter T. de Boer 
  */
-
 public abstract class ProxyDataProducer 
 {
-	// === 
-	// 
-	// ===
-	
+    
 	public abstract class ProxyActionTask extends ActionTask
 	{
 		public ProxyActionTask(String name)
 		{
 			super(ProxyDataProducer.this.getTaskSource(),name); 
 		}
-		
 	}
 
 	// === 
@@ -78,11 +72,6 @@ public abstract class ProxyDataProducer
 	{
 		return taskSource;
 	}
-	
-//	public IProxyModel getModel()
-//	{
-//		return proxyModel; 
-//	}
 	
 	protected void doBackground (ActionTask task)
 	{
@@ -110,7 +99,7 @@ public abstract class ProxyDataProducer
 
 				if (mustStop==true)
 				{
-					Global.warnPrintln(this,"Aborting Action:"+this);
+					Global.warnPrintf(this,"Aborting Action:%s\n",this);
 					return; 
 				}
 
@@ -126,7 +115,7 @@ public abstract class ProxyDataProducer
 				        taskSource.handle(ex); 
 				    else
 				    {
-				        Global.errorPrintln(this,"Exception:"+ex);
+				        Global.logException(ClassLogger.ERROR,this,ex,"Exception during getChilds()");
 				    }
 				    
 				    mustStop=true; 
@@ -135,7 +124,7 @@ public abstract class ProxyDataProducer
 				
 				if (mustStop==true)
 				{
-					Global.warnPrintln(this,"Aborting Action:"+this);
+					Global.warnPrintf(this,"Aborting Action:%s\n",this);
 					return; 
 				}
 				
@@ -197,20 +186,19 @@ public abstract class ProxyDataProducer
 				{
 					if (mustStop==true)
 					{
-						Global.warnPrintln(this,"Aborting Action:"+this);
+						Global.warnPrintf(this,"Aborting Action:%s\n",this);
 						return; 
 					}
 					
 					if (locations[i]==null)
 					{
 					    // STILL A BUG 
-					    Global.errorPrintln(this, "getNodesFor(): NULL location #"+i+" for parent:"+parentLoc);
+					    Global.errorPrintf(this, "getNodesFor(): NULL location #"+i+" for parent:%s\n",parentLoc);
 					}
 					else
 					    nodes.add(nodeFactory.openLocation(locations[i])); 
 				}
 				
- 
 				updateChildNodesFor(parent,ProxyNode.toArray(nodes),cumulative); 
 			}
 
@@ -227,7 +215,6 @@ public abstract class ProxyDataProducer
 		// 
 		
 		doBackground(fetchTask);
-
 	}
 	
 	/** 

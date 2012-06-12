@@ -23,10 +23,6 @@
 
 package nl.uva.vlet.gui.actions;
 
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.Action;
 
 
 /**

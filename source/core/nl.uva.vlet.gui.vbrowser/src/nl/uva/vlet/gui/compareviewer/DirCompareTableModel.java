@@ -25,19 +25,17 @@ package nl.uva.vlet.gui.compareviewer;
 
 import java.util.Vector;
 
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
-import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 
 public class DirCompareTableModel extends AbstractTableModel
 {
-	public static class DCRowRecord
+    private static final long serialVersionUID = -512689734071402151L;
+
+    public static class DCRowRecord
 	{ 
 		DCTableRecord left; 
 		DCTableRecord right; 
@@ -63,17 +61,12 @@ public class DirCompareTableModel extends AbstractTableModel
 				case 6:
 					return left.getRowEntry(i-4);
 				default:
-					Error("Record has no entry at index:"+i);
+					Global.errorPrintf(this,"Record has no entry at index:%d\n",i);
 					return null; 
 			}
 		}
 
-		private void Error(String msg)
-		{
-			Global.errorPrintln(this,msg); 
-		}
-
-		public static DCRowRecord createRecord(VAttributeSet leftAttrs,VAttributeSet rightAttrs) 
+        public static DCRowRecord createRecord(VAttributeSet leftAttrs,VAttributeSet rightAttrs) 
 		{
 			DCTableRecord rec1 = new DCTableRecord(leftAttrs); 
 			DCTableRecord rec2 = new DCTableRecord(rightAttrs);
@@ -143,18 +136,10 @@ public class DirCompareTableModel extends AbstractTableModel
 
 	public void addRecord(DCRowRecord record)
 	{
-		Debug("+++ Add record:"+record); 
-		
-		int num=rows.size(); 
-		
+	    debugPrintf("+++ Add record:%s\n",record); 
+		//int num=rows.size(); 
 		rows.add(record); 
 		//this.fireTableRowsUpdated(num,num); 
-		 
-	}
-
-	private void Debug(String msg)
-	{
-		Global.errorPrintln(this,msg); 
 	}
 
 	public String getColumnName(int index)
@@ -169,5 +154,13 @@ public class DirCompareTableModel extends AbstractTableModel
 		return str; 
 	}
 	
-
+//    private void errorPrintf(String format,Object... args)
+//    {
+//        Global.errorPrintf(this,format,args);
+//    }
+    
+    private void debugPrintf(String format,Object... args)
+    {
+        Global.debugPrintf(this,format,args);
+    }
 }

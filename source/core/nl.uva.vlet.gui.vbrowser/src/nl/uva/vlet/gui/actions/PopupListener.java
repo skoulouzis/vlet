@@ -51,8 +51,8 @@ public class PopupListener implements ActionListener
     
     public void actionPerformed(ActionEvent e) 
     {
-        Global.debugPrintln("PopupListener","Action:"+e);
-        Global.debugPrintln("PopupListener","node:"+vcomp);
+        Global.debugPrintf(this,"PopupListener Action:%s\n",e);
+        Global.debugPrintf(this,"PopupListener node:%s\n",vcomp);
         
         String cmdstr=e.getActionCommand();
         ActionCommand cmd=ActionCommand.fromString(cmdstr);

@@ -25,14 +25,13 @@ package nl.uva.vlet.gui.compareviewer;
 
 import javax.swing.SwingUtilities;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
-import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.compareviewer.DirCompareTableModel.DCRowRecord;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
-import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
 
@@ -152,8 +151,7 @@ public class DirCompareDataProvider
 		
 	}
 	
-	/** Synchronize with gui event thread */
-	
+	/** Synchronize with gui event thread */	
 	private void notifyTableStructureChanged()
 	{
 		Runnable notify=new Runnable()
@@ -173,8 +171,7 @@ public class DirCompareDataProvider
 		// stand alone provider:
 		if (masterBrowser==null)
 		{	
-			Global.errorPrintln(this,"Exception:"+e);
-			Global.errorPrintStacktrace(e); 
+			Global.logException(ClassLogger.ERROR,this,e,"Exception!\n");
 		}
 		else
 			masterBrowser.handle(e); 

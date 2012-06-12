@@ -24,21 +24,18 @@
 package nl.uva.vlet.gui.compareviewer;
 
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.data.StringList;
-import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.table.VAttributeCellRenderer;
 
 public class DirCompareTable extends JTable
 {
-	private TableCellRenderer defaultCellRenderer=null; 
+    private static final long serialVersionUID = -831514324114171199L;
+    // ---
+    private TableCellRenderer defaultCellRenderer=null; 
 	
 	public DirCompareTable(DirCompareTableModel model)
 	{
@@ -62,7 +59,7 @@ public class DirCompareTable extends JTable
 	
 	public void updateTable()
 	{
-		Debug("updateTable():"+this);
+		debugPrintf("updateTable():%s\n",this);
 
 		updateHeaders();
 		updateCellRenderers();
@@ -80,7 +77,7 @@ public class DirCompareTable extends JTable
 	        for (int i=0;i<columnModel.getColumnCount();i++)
 	        {
 	            column=columnModel.getColumn(i);
-	        	Debug("Handling column:"+i+"="+column);
+	        	debugPrintf("Handling column:%d\n",column);
 	            //column.setWidth(getDefaultWidth(column.getHeaderValue().toString()));
 	            column.setCellRenderer(defaultCellRenderer);
 	        }
@@ -93,7 +90,7 @@ public class DirCompareTable extends JTable
 	 }
 	 
 	 void updateHeaders()
-	    {
+	 {
 	        TableColumn column=null; 
 	        
 	        for (int i=0;i<columnModel.getColumnCount();i++)
@@ -102,8 +99,9 @@ public class DirCompareTable extends JTable
 	            //column.setWidth(getDefaultWidth(column.getHeaderValue().toString()));
 	            column.setHeaderValue("aap"); 
 	        }
-	    }
-	private void updateColumns()
+	 }
+	 
+	void updateColumns()
 	{
 		TableColumnModel cmodel = this.getColumnModel(); 
 		int n=cmodel.getColumnCount(); 
@@ -115,12 +113,9 @@ public class DirCompareTable extends JTable
 		}
 	}
 
-
-
-	private void Debug(String msg)
+	private void debugPrintf(String format,Object... args)
 	{
-		Global.errorPrintln(this,msg); 
+	    Global.debugPrintf(this,format,args);  
 	}
-	
     
 }

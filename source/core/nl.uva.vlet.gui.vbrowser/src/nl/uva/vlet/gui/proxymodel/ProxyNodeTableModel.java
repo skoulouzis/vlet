@@ -23,17 +23,19 @@
 
 package nl.uva.vlet.gui.proxymodel;
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ICON;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_LOCATION;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_NAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel;
-import nl.uva.vlet.gui.panels.resourcetable.ResourceTableModel.RowData;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.vrl.VRL;
-import static nl.uva.vlet.data.VAttributeConstants.*; 
 
 public class ProxyNodeTableModel extends ResourceTableModel
 {

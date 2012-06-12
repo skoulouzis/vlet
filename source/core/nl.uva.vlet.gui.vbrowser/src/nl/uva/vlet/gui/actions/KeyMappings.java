@@ -34,9 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 
-import nl.uva.vlet.gui.icons.IconsPanel;
 import nl.uva.vlet.gui.view.VContainer;
-
 import sun.swing.UIAction;
 
 public class KeyMappings
@@ -124,8 +122,8 @@ public class KeyMappings
     
     public static void addZoomMappings(JComponent comp)
     {
-        InputMap inpMap = comp.getInputMap();
-        ActionMap map = comp.getActionMap();
+        //InputMap inpMap = comp.getInputMap();
+        //ActionMap map = comp.getActionMap();
       
     }
 }

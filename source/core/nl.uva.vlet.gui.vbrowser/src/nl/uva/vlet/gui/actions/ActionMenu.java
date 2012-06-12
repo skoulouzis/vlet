@@ -32,14 +32,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
 import nl.uva.vlet.Global;
+import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.actions.ActionMenuMapping;
 import nl.uva.vlet.actions.ActionMenuMatcher;
-import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
-import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.BrowserController;
@@ -412,7 +412,8 @@ public class ActionMenu extends JPopupMenu
 	}
 
 
-	static ProxyNode getPNodeFrom(VComponent vcomp)
+	@SuppressWarnings("deprecation")
+    static ProxyNode getPNodeFrom(VComponent vcomp)
     {
     	 // for additional menu options:
         ProxyNode pnode=null; 

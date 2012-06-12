@@ -25,18 +25,15 @@ package nl.uva.vlet.gui.compareviewer;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.vrl.VRL;
 
 /**
- * 
- *  Controller controler Table and DataProvider
+ *  Controller
  */
-
 public class DirCompareController implements TableModelListener
 {
 	private DirCompareDataProvider dataProvider;
@@ -63,30 +60,15 @@ public class DirCompareController implements TableModelListener
 
 	void handle(Exception e)
 	{
-		/*if (masterBrowser!=null)	
-			masterBrowser.handle(e);
-		else
-		{
-			Global.errorPrintln(this,"Exception:"+e);
-		}*/
-		
-		Global.errorPrintln(this,"Exception:"+e); 
-		Global.errorPrintStacktrace(e); 
+		Global.logException(ClassLogger.ERROR,this,e,"Exception!\n"); 
 	}
 
 	public void tableChanged(TableModelEvent e)
 	{
-	
-		Debug("tableChanged:"+e);
+		Global.debugPrintf(this,"tableChanged:%s\n",e);
 		this.compareTable.updateTable(); 
-		 
 	}
-
-	private void Debug(String msg)
-	{
-		Global.errorPrintln(this,msg); 
-	}
-
+	
 	public MasterBrowser getMasterBrowser()
 	{
 		return null; 

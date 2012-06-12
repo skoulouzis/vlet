@@ -34,7 +34,9 @@ import nl.uva.vlet.vrl.VRL;
 
 public class DirComparePanel extends ViewerPlugin
 {
-	private JPanel comparePanel;
+    private static final long serialVersionUID = 3028988443518415099L;
+    // ---
+    private JPanel comparePanel;
 	private DirCompareTable compareTabel;
 	private DirCompareController compareController;
 	private JScrollPane scrollPane;

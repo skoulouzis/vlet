@@ -23,6 +23,7 @@
 
 package nl.uva.vlet.gui.actions;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.tasks.ITaskSource;
 
@@ -63,11 +64,12 @@ public class TransferWatcher implements ITaskSource
 
     public void messagePrintln(String str)
     {
+        Global.infoPrintf(this,"%s\n",str);
     }
 
     public void handle(Exception e)
     {
-       Global.errorPrintln(this,"Error:"+e);
+        Global.logException(ClassLogger.ERROR,this,e,"Exception!\n");
     }
 
 }
