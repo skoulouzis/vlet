@@ -735,8 +735,7 @@ public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListe
         LabelIcon bicon = getLabelIcon(loc); 
         
         if (bicon==null)
-            return; 
-        // asynchronized update: icon removed.
+            return; // asynchronized update: icon removed.
             
         for (VAttribute attr:attrs)
         {
