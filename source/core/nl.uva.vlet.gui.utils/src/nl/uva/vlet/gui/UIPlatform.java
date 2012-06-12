@@ -1,5 +1,7 @@
 package nl.uva.vlet.gui;
 
+import nl.uva.vlet.gui.GuiSettings.LookAndFeelType;
+
 /** 
  * UI Platform. Typically one instance per application. 
  */
@@ -68,4 +70,38 @@ public class UIPlatform
 	{
 	    return windowRegistry; 
 	}	
+	
+	// ========================================================================
+	// UI Stuff 
+	// ========================================================================
+	
+	public GuiSettings getGlobalGuiSettings()
+	{
+	    return GuiSettings.getDefault(); 
+	}
+
+    public void switchLookAndFeel(String lafstr)
+    {
+        switchLookAndFeel(LookAndFeelType.valueOf(lafstr),true); 
+    }   
+
+	/** Switch LAF */ 
+	public void switchLookAndFeel(LookAndFeelType newtype,boolean permanent)
+	{
+	    //String oldval=getGlobalGuiSettings().getProperty(GuiPropertyName.GLOBAL_LOOK_AND_FEEL); 
+	    GuiSettings.switchLookAndFeelType(newtype); // switch
+	    if (permanent)
+	        getGlobalGuiSettings().setProperty(GuiPropertyName.GLOBAL_LOOK_AND_FEEL,newtype.toString()); 
+	}       
+    
+	/** Start Custom Look and Feel is defined */ 
+	public void startCustomLAF()
+    {
+        String lafstr=getGlobalGuiSettings().getProperty(GuiPropertyName.GLOBAL_LOOK_AND_FEEL);
+        
+        if (lafstr!=null)   
+            GuiSettings.switchLookAndFeelType(lafstr); 
+    }
+
+	
 }

@@ -510,21 +510,21 @@ public class BrowserController implements WindowListener, GridProxyListener,
 					// update global settings from preferences menu
 					// will only update this VBrowser. 
 					boolean stat = vbrowser.globalShowResourceTreeMenu.getState();
-					GuiSettings.setProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE, stat);
+					getGuiSettings().setProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE, stat);
 					vbrowser.setResourceTreeVisible(stat);
 					break;
 				}
 				case GLOBAL_SHOW_LOG_WINDOW:
 				{
 					boolean stat = vbrowser.globalShowLogWindowMenu.getState();
-					GuiSettings.setProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW, stat);
+					getGuiSettings().setProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW, stat);
 					vbrowser.setLogWindowVisible(stat);
 					break;
 				}
 				case GLOBAL_FILTER_HIDDEN_FILES:
 				{
 					boolean stat = vbrowser.globalFilterHiddenFilesMenu.getState();
-					GuiSettings.setProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES, stat);
+					getGuiSettings().setProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES, stat);
 					
 					// update filter view
 					this.initViewFilter(); 
@@ -536,7 +536,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				case GLOBAL_SET_SINGLE_ACTION_CLICK:
 				{
 					boolean stat = vbrowser.singleClickActionMenuItem.getState();
-					GuiSettings.setProperty(GuiPropertyName.SINGLE_CLICK_ACTION, stat);
+					getGuiSettings().setProperty(GuiPropertyName.SINGLE_CLICK_ACTION, stat);
 					break;
 				}
 				case HELP:
@@ -985,8 +985,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	private static void performSwitchLAF(String lafstr)
 	{
-		GuiSettings.globalSwitchLookAndFeelType(lafstr);
-
+	    UIPlatform.getPlatform().switchLookAndFeel(lafstr);
+	
 		synchronized (controllers)
 		{
 			for (BrowserController bc : controllers)
@@ -995,8 +995,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				bc.vbrowser.pack();
 			}
 		}
-
-		GuiSettings.setProperty(GuiPropertyName.GLOBAL_LOOK_AND_FEEL,lafstr); 
 	}
 
 	protected void setBusy(boolean val)
@@ -2461,7 +2459,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		viewFilter.setSortField1(VAttributeConstants.ATTR_TYPE); 
 		viewFilter.setSortField2(VAttributeConstants.ATTR_NAME);
 
-		boolean stat=GuiSettings.getBoolProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES);
+		boolean stat=getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES);
 		viewFilter.setFilterHidden(stat);
 
 		// returned update viewModel; 
@@ -2866,7 +2864,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
     
 	public VRL _resolveLogicalParentLocation(VRL viewedLocation)
 	{
-		return nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode.resolveLogicalParentLocation(viewedLocation); 
+		return nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNode.resolveLogicalParentLocation(viewedLocation); 
 	}
 	
 
@@ -2951,13 +2949,13 @@ public class BrowserController implements WindowListener, GridProxyListener,
         factory.createBrowser(vrl); 
     } 
 
-    public UIPlatform getPlatform()
-    {
-        return factory.getUIPlatform(); 
-    }
-	
     public VBrowserFactory getFactory()
     {
         return factory;  
+    }
+    
+    public GuiSettings getGuiSettings()
+    {
+        return GuiSettings.getDefault(); 
     }
 }

@@ -358,7 +358,7 @@ public class IconProvider
 		{
 			if (vnode instanceof VDir)
 			{
-				if (UIGlobal.getVRSContext().getConfigManager().getUserHomeLocation().compareTo(vnode.getVRL()) == 0)
+				if (UIGlobal.getProxyVRS().getConfigManager().getUserHomeLocation().compareTo(vnode.getVRL()) == 0)
 					iconURL = home_folder_icon_url;
 				else
 					iconURL = default_folder_icon_url;
@@ -398,7 +398,7 @@ public class IconProvider
             int size,
             boolean greyOut)
     {
-        logger.debugPrintf("createDefaultIcon [%i,%b,%b,%b]\n",size,greyOut,isComposite,isLink); 
+        logger.debugPrintf("createDefaultIcon [%d,%b,%b,%b]\n",size,greyOut,isComposite,isLink); 
 
         // for plugins, must use classLoader of plugin class ! 
         ClassLoader classLoader=getClassLoader(); 

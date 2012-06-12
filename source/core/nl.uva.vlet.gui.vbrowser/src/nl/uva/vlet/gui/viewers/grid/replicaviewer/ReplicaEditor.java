@@ -44,7 +44,7 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.list.StatusStringListField;
 import nl.uva.vlet.gui.panels.list.StatusStringListModel;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.vrl.VRL;
@@ -82,10 +82,9 @@ public class ReplicaEditor extends ViewerPlugin
     
     public static void main(String args[])
     {
-        ProxyTNode.init();
+        ProxyVNodeFactory.initPlatform();
         
-        ReplicaEditor rv=new ReplicaEditor(false);
-         
+        ReplicaEditor rv=new ReplicaEditor(false);        
         
         try
         {

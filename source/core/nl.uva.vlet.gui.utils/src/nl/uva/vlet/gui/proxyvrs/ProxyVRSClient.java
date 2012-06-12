@@ -1,7 +1,10 @@
 package nl.uva.vlet.gui.proxyvrs;
 
 import nl.uva.vlet.error.InitializationError;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.vrl.VRL;
+import nl.uva.vlet.vrms.ConfigManager;
 import nl.uva.vlet.vrs.ResourceEvent;
 import nl.uva.vlet.vrs.VRSContext;
 
@@ -69,6 +72,15 @@ public class ProxyVRSClient
     	return _proxyNodeFactory; 
     }
     
+    // ========================================================================
+    // VRS 
+    // ========================================================================
+    
+    public VRL getVirtualRootLocation() throws VlException
+    {
+        return context.getVirtualRootLocation();
+    }
+    
 	// ========================================================================
 	// ProxyResourceEvent interface
 	// ========================================================================
@@ -91,5 +103,10 @@ public class ProxyVRSClient
 	public void fireEvent(ResourceEvent event)
     {
 		proxyEventNotifier.fireEvent(event); 
+    }
+
+    public ConfigManager getConfigManager()
+    {
+        return context.getConfigManager();
     }
 }

@@ -35,6 +35,7 @@ import nl.uva.vlet.actions.ActionMenuMapping;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.net.ssl.CertificateStore;
 import nl.uva.vlet.vrl.VRL;
@@ -109,7 +110,7 @@ public class ViewerX509 extends ViewerPlugin implements CertPanelListener
     private void addCert(X509Certificate cert2, boolean save) throws Exception
     {
         //forward to ConfigManager! 
-        UIGlobal.getVRSContext().getConfigManager().addCACertificate(cert2,save); 
+        ProxyVRSClient.getInstance().getConfigManager().addCACertificate(cert2,save); 
     }
 
     @Override

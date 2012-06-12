@@ -29,15 +29,29 @@ import java.util.Hashtable;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode.WeakProxyTNodeRef;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.vrl.VRL;
-import nl.uva.vlet.vrms.LogicalResourceNode;
 import nl.uva.vlet.vrs.VNode;
 
-public class ProxyTNodeFactory  implements ProxyNodeFactory
+public class ProxyVNodeFactory  implements ProxyNodeFactory
 {
+    private static ProxyVNodeFactory instance=null; 
+    
+    public static void initPlatform()
+    {
+        ProxyVRSClient.getInstance().setProxyNodeFactory(getInstance()); 
+    } 
+    
+    public static synchronized ProxyVNodeFactory getInstance()
+    {
+        if (instance==null)
+            instance=new ProxyVNodeFactory(); 
+
+        return instance; 
+    }
+    
     /** 
      * HashMap for cached ProxyNodes.
      * This object is also used a mutex to synchronize for example 
@@ -48,10 +62,10 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
      */
 	// no weak references yet: the node are discared to fast ! 
 	//private Hashtable<String, ProxyTNode.WeakProxyTNodeRef> nodeHash = new Hashtable<String, ProxyTNode.WeakProxyTNodeRef>();
-	private Hashtable<VRL, ProxyTNode> nodeHash = new Hashtable<VRL, ProxyTNode>();
+	private Hashtable<VRL, ProxyVNode> nodeHash = new Hashtable<VRL, ProxyVNode>();
     
 	/** Get from hash or creat new one ProxyTNode */
-    public ProxyTNode openLocation(VRL loc) throws VlException
+    public ProxyVNode openLocation(VRL loc) throws VlException
     {
         return openLocation(loc, false);
     }
@@ -65,10 +79,10 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
      * @throws VlException
      */
     
-    public ProxyTNode openLocation(VRL loc, boolean resolveLinks)
+    public ProxyVNode openLocation(VRL loc, boolean resolveLinks)
        throws VlException
     {
-        ProxyTNode pnode = null;
+        ProxyVNode pnode = null;
         
         if (loc==null)
         	throw new NullPointerException("VRL can not be NULL");
@@ -100,7 +114,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
             	//
                 // Create New ProxyTNode with NULL vnode !
             	//
-                pnode=new ProxyTNode();
+                pnode=new ProxyVNode();
                 pnode.setAliasVRL(loc);    
                 // already put int the hashcode ! 
                 nodeHash.put(loc,pnode);
@@ -127,7 +141,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
             if ((pnode.vnode==null) || (pnode.mustrefresh))
             {
                 // if this happens, this can deadlock the gui. 
-                ProxyTNode.assertNotGuiThread(loc); 
+                ProxyVNode.assertNotGuiThread(loc); 
                 
                 //
                 // Note that there are only two method which create
@@ -201,13 +215,13 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
     
     
     /** Fetch from cache or return null if not in cache */ 
-    public ProxyTNode getFromCache(VRL loc) 
+    public ProxyVNode getFromCache(VRL loc) 
     {
     	if (loc==null) 
     		return null; // garbage in garbage out 
     	
     	//WeakProxyTNodeRef ref = nodeHash.get(loc.toString());
-    	ProxyTNode pnode = nodeHash.get(loc);
+    	ProxyVNode pnode = nodeHash.get(loc);
     	
     	// Fetching ProxyNode during an open location ! 
     	if ((pnode==null) || (pnode.vnode==null))
@@ -216,7 +230,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
         return pnode; 
     }
     
-    void hashRemove(ProxyTNode node)
+    void hashRemove(ProxyVNode node)
     {
         VRL loc=node.getVRL();
         
@@ -227,11 +241,11 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
     
     /** Create new ProxyNot and put it in the cache */ 
     
-    public ProxyTNode createProxyTNode(VNode node)
+    public ProxyVNode createProxyTNode(VNode node)
     { 
-        ProxyTNode pnode=null;
+        ProxyVNode pnode=null;
         //ProxyTNode.WeakProxyTNodeRef prev=null; 
-        ProxyTNode prev=null;
+        ProxyVNode prev=null;
         
         if (node.getVRL()==null)
         	throw new NullPointerException("Cannot create new ProxyNode with NULL location"); 
@@ -242,7 +256,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
             //prev=nodeHash.get(node.getLocation().toString());
             // put new one: 
             {
-                pnode=new ProxyTNode();
+                pnode=new ProxyVNode();
                 pnode.vnode=node;
                 //prev=nodeHash.put(node.getLocation().toString(),new WeakProxyTNodeRef(pnode));
                 prev=nodeHash.put(node.getVRL(),pnode);
@@ -252,7 +266,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
             if (prev!=null)
             {
                 // is allowed: cache write through/update
-                Global.debugPrintf(ProxyTNode.class,"*** Warning: Node already in cache:%s\n",pnode); 
+                Global.debugPrintf(ProxyVNode.class,"*** Warning: Node already in cache:%s\n",pnode); 
             }
         }
         
@@ -267,7 +281,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
         {
         	VRL key=keys.nextElement();
             //WeakProxyTNodeRef ref = nodeHash.get(key);
-            ProxyTNode pnode =  nodeHash.get(key); 
+            ProxyVNode pnode =  nodeHash.get(key); 
             
             if (pnode!=null)
             {
@@ -286,7 +300,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
      * or when nullpointers are encountered.
      * Use this method when as an 'assert' method when an ProxyTNode must be known 
      */  
-    public ProxyTNode assertGetNode(VRL loc) throws VlException 
+    public ProxyVNode assertGetNode(VRL loc) throws VlException 
     {
     	// this is an 'assert' method: null pointer not allowed. 
     	
@@ -296,7 +310,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
     
     	//WeakProxyTNodeRef ref = nodeHash.get(loc.toString());
     	   
-        ProxyTNode node =  nodeHash.get(loc); 
+        ProxyVNode node =  nodeHash.get(loc); 
         
         //if (ref!=null)
         //	node=ref.get(); 
@@ -310,7 +324,7 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
     /** Used for debugging/testing purposes ! */
     public ProxyNode createFrom(VNode node)
     {   
-        ProxyTNode pnode=new ProxyTNode();
+        ProxyVNode pnode=new ProxyVNode();
         pnode.vnode=node;
         if (node.getVRL()==null)
             throw new NullPointerException("VRL of node is NULL");
@@ -327,17 +341,17 @@ public class ProxyTNodeFactory  implements ProxyNodeFactory
     
     protected void resetCache()
     {
-        ProxyTNode nodes[]; 
+        ProxyVNode nodes[]; 
         
         synchronized(this.nodeHash)
         {
-            nodes=new ProxyTNode[nodeHash.size()];   
+            nodes=new ProxyVNode[nodeHash.size()];   
             nodes=nodeHash.values().toArray(nodes);
             nodeHash.clear(); 
         }
         
         // clear nodes: 
-        for (ProxyTNode node:nodes)
+        for (ProxyVNode node:nodes)
             node.dispose(); 
     }
 

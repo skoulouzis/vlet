@@ -33,7 +33,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vrl.VRL;
@@ -68,8 +67,9 @@ public abstract class ProxyNode
 
     public static ProxyNode getVirtualRoot() throws VlException
     {
-        return ProxyVRSClient.getInstance().getProxyNodeFactory()
-                .openLocation(UIGlobal.getVRSContext().getVirtualRootLocation());
+        ProxyVRSClient proxyVrs=ProxyVRSClient.getInstance();
+        VRL vrl=proxyVrs.getVirtualRootLocation(); 
+        return proxyVrs.getProxyNodeFactory().openLocation(vrl); 
     }
 
     public static ProxyNode[] toArray(List<ProxyNode> nodes)

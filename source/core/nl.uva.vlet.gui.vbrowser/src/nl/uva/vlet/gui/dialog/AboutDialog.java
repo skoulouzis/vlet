@@ -90,7 +90,7 @@ public class AboutDialog extends javax.swing.JDialog implements ActionListener, 
     public AboutDialog(BrowserController bc)
     {
         super((bc!=null?BrowserController.getMasterFrame():null));
-        bc.getPlatform().getWindowRegistry().register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
         this.browserController=bc;
         init();
     }

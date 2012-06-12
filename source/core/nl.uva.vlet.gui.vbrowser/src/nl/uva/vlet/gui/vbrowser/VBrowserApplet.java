@@ -40,7 +40,8 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.vrl.VRL;
 
 /**
@@ -188,10 +189,10 @@ public class VBrowserApplet  extends Applet implements ActionListener
             
             // Applet init ! 
             UIGlobal.init(); 
-            ProxyTNode.init(); 
-            VBrowserFactory fac=VBrowserFactory.createInstance(plat);
+            ProxyVNodeFactory.initPlatform(); 
+            VBrowserFactory fac=VBrowserFactory.getInstance(); 
             plat.registerBrowserFactory(fac);
-            fac.createBrowser(UIGlobal.getVRSContext().getVirtualRootLocation());
+            fac.createBrowser(ProxyVRSClient.getInstance().getVirtualRootLocation());
         }
         catch (VlException ex)
         {

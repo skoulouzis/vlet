@@ -8,7 +8,6 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.BrowserFactory;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.vrl.VRL;
 
@@ -16,28 +15,21 @@ public class VBrowserFactory implements BrowserFactory
 {
     private static VBrowserFactory instance=null; 
     
-    public static synchronized VBrowserFactory createInstance(UIPlatform platform)
-    {
-        if (instance==null)
-            instance=new VBrowserFactory(platform);
-        
-        return instance; 
-    }
-    
     public static VBrowserFactory getInstance()
     {
-        return instance;  
+        if (instance==null)
+            instance=new VBrowserFactory();
+        
+        return instance; 
     }
     
     // ========================================================================
     //
     // ========================================================================
     
-    private UIPlatform uiPlatform=null; 
-    
-    protected VBrowserFactory(UIPlatform platform)
+    protected VBrowserFactory()
     {
-        this.uiPlatform=platform; 
+        //singleton!
     }
     
     @Override
@@ -70,7 +62,7 @@ public class VBrowserFactory implements BrowserFactory
 
         try
         {
-            rootLoc = UIGlobal.getVRSContext().getVirtualRootLocation();
+            rootLoc = UIGlobal.getProxyVRS().getVirtualRootLocation();
         }
         catch (VlException e)
         {
@@ -97,17 +89,8 @@ public class VBrowserFactory implements BrowserFactory
 
     private void handle(VlException e)
     {
-        //          errorMessage("Exception:"+e);
         ExceptionForm.show(e);
         Global.errorPrintf(this,"Exception:%s\n",e); 
     }
-
-    public UIPlatform getUIPlatform()
-    {
-        return this.uiPlatform;
-    }
-
-  
-
 
 }

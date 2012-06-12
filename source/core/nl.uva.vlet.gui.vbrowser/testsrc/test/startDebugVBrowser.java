@@ -26,8 +26,8 @@ package test;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 import nl.uva.vlet.gui.vbrowser.VBrowserInit;
@@ -49,19 +49,17 @@ public class startDebugVBrowser
       try
       {
         ClassLogger.getRootLogger().setLevelToDebug();
-
-        VBrowserInit.initPlatform(); 
-        
         args=Global.parseArguments(args); 
-        
-        
+
+        UIPlatform plat = VBrowserInit.initPlatform(); 
+
         // Option --native ? :
   		//GuiSettings.setNativeLookAndFeel();
         
-  		// shiny swing metal look:
-  		GuiSettings.setDefaultLookAndFeel();
+        // shiny swing metal look:
+  		plat.startCustomLAF(); 
+  		
         // Filter out property arguments like -Duser=jan
-       
   		 
         // start browser(s)
       	{

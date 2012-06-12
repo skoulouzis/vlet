@@ -31,25 +31,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.exception.VRLSyntaxException;
-import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
 import nl.uva.vlet.gui.proxymodel.ProxyNodeTableModel;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.vbrowser.VBrowserInit;
 import nl.uva.vlet.vrl.VRL;
 
 public class TestProxyNodeTable
 {
     public static void main(String args[])
     {
-        ProxyTNode.init();
         
         ProxyNode pnode=null; 
         
         try
         {
+            VBrowserInit.initPlatform(); 
+            
             pnode = ProxyNode.getProxyNodeFactory().openLocation(new VRL("file:///home/ptdeboer"));
         }
         catch (Exception e)

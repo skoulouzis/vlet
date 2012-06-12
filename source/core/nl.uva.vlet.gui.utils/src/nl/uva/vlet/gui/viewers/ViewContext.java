@@ -32,7 +32,6 @@ import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.MasterBrowser;
-import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.tasks.ITaskSource;
 import nl.uva.vlet.vrl.VRL;
 
@@ -264,14 +263,7 @@ public class ViewContext
 	{
 		return (this.masterBrowser!=null);
 	}
-
-	public UIPlatform getUIPlatform()
-	{
-	    if (this.masterBrowser==null)
-	        return UIPlatform.getPlatform();
-	    
-	    return masterBrowser.getPlatform(); 
-	}
+	
 	/** 
 	 * Returns TaskSource. Default is (V)BrowserController interface.  
 	 * Can be null when started in a stand alone context. 

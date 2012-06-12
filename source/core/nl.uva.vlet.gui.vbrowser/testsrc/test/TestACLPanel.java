@@ -26,7 +26,7 @@ package test;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.acldialog.ACLPanel;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.vrl.VRL;
 
 public class TestACLPanel
@@ -46,7 +46,7 @@ public class TestACLPanel
     {
         try
         {
-            ProxyTNode.init(); 
+            ProxyVNodeFactory.initPlatform(); 
             ACLPanel.showEditor(null,new VRL(loc));
         }
         catch (VlException e)

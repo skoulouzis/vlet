@@ -36,6 +36,7 @@ import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.dialog.SimpleDialog;
 import nl.uva.vlet.gui.icons.IconProvider;
+import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.net.ssl.CertificateStore;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.util.MimeTypes;
@@ -290,5 +291,10 @@ public class UIGlobal
     {
          VRS.getRegistry().reset(); 
          getVRSContext().reset();
+    }
+
+    public static ProxyVRSClient getProxyVRS()
+    {
+        return ProxyVRSClient.getInstance();
     }	
 }

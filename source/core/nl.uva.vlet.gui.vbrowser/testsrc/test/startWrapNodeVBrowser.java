@@ -23,25 +23,18 @@
 
 package test;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNode;
 import nl.uva.vlet.gui.proxynode.impl.proxy.ProxyWrapNodeFactory;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 
-/**
- * 
- * Simple VBrowser Start Class.
- *  
- * Will be called by the 'startVBrowser' in bootstrapper.
- *  
- *  
- */
-
+// test ProxyWrap node browser:
 public class startWrapNodeVBrowser
 {
 
@@ -49,27 +42,27 @@ public class startWrapNodeVBrowser
   {
       try
       {
-        Global.init(); 
-        UIGlobal.init(); 
-
-        ProxyVRSClient.getInstance().setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());  
-        //TermGlobal.setDebug(true); 
-        args=Global.parseArguments(args); 
+          ClassLogger.getRootLogger().setLevelToDebug();
+          args=Global.parseArguments(args);
+          
+          // custom platform instance ! -> use wrap node
+          UIPlatform plat = UIPlatform.getPlatform(); 
+          
+          // Option --native ? :
+          //GuiSettings.setNativeLookAndFeel();
+          
+          // shiny swing metal look:
+          plat.startCustomLAF(); 
+          
+          ProxyVRSClient.getInstance().setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());
+          
+          Global.debugPrintln(startWrapNodeVBrowser.class,"GLOBUS_LOCATION        ="+Global.getProperty("GLOBUS_LOCATION"));
+          Global.debugPrintln(startWrapNodeVBrowser.class,"env var 'VLET_INSTALL' ="+Global.getProperty("VLET_INSTALL"));
+          Global.debugPrintln(startWrapNodeVBrowser.class,"Base installation      ="+Global.getInstallBaseDir()); 
         
-        Global.debugPrintln(startWrapNodeVBrowser.class,"GLOBUS_LOCATION        ="+Global.getProperty("GLOBUS_LOCATION"));
-        Global.debugPrintln(startWrapNodeVBrowser.class,"env var 'VLET_INSTALL' ="+Global.getProperty("VLET_INSTALL"));
-        Global.debugPrintln(startWrapNodeVBrowser.class,"Base installation      ="+Global.getInstallBaseDir()); 
-        
-        
-        // Option --native ? :
-  		//GuiSettings.setNativeLookAndFeel();
-        
-  		// shiny swing metal look:
-  		GuiSettings.setDefaultLookAndFeel();
-        // Filter out property arguments like -Duser=jan
        
   		// prefetch MyVLe, during startup:
-  		ProxyTNode.getVirtualRoot();
+  		ProxyVNode.getVirtualRoot();
   		 
         // start browser(s)
       	{
@@ -103,7 +96,7 @@ public class startWrapNodeVBrowser
                 // get home LOCATION: Can also be gftp/srb/....
                 // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
                 
-                VBrowserFactory.getInstance().createBrowser(UIGlobal.getVRSContext().getVirtualRootLocation()); 
+                VBrowserFactory.getInstance().createBrowser(UIGlobal.getProxyVRS().getVirtualRootLocation()); 
             }
  
             //BrowserController.performNewWindow("file:///home/ptdeboer/vfs2");

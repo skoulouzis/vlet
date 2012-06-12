@@ -228,7 +228,7 @@ public class VBrowser extends javax.swing.JFrame
         browserController = new BrowserController(this,factory);
         this.addWindowListener(browserController);
 
-        browserController.getPlatform().getWindowRegistry().register(this);
+        UIPlatform.getPlatform().getWindowRegistry().register(this);
 
         // Since multiple menuItems and ToolbarItems use one
         // instance of a the same listener, these listeners must be
@@ -242,11 +242,6 @@ public class VBrowser extends javax.swing.JFrame
         browserController.checkCredentialStatus();
     }
     
-    public UIPlatform getUIPlatform()
-    {
-        return this.browserController.getPlatform(); 
-    }
-    
     BrowserController getBrowserController()
     {
         return browserController;
@@ -257,6 +252,11 @@ public class VBrowser extends javax.swing.JFrame
         return browserId;
     }
 
+    GuiSettings getGuiSettings()
+    {
+        return this.browserController.getGuiSettings(); 
+    }
+    
     private void initGUI()
     {
         try
@@ -513,8 +513,8 @@ public class VBrowser extends javax.swing.JFrame
                 {
                     this.viewerScrollPane = new JScrollPane();
                 }
-                this.setLogWindowVisible(GuiSettings.getBoolProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW));
-                this.setResourceTreeVisible(GuiSettings.getBoolProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE));
+                this.setLogWindowVisible(getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW));
+                this.setResourceTreeVisible(getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE));
             }
         }
         catch (Exception e)
@@ -806,7 +806,7 @@ public class VBrowser extends javax.swing.JFrame
                     singleClickActionMenuItem.setActionCommand(ActionCommandType.GLOBAL_SET_SINGLE_ACTION_CLICK
                             .toString());
                     singleClickActionMenuItem
-                            .setState(GuiSettings.getBoolProperty(GuiPropertyName.SINGLE_CLICK_ACTION));
+                            .setState(getGuiSettings().getBoolProperty(GuiPropertyName.SINGLE_CLICK_ACTION));
                     singleClickActionMenuItem.addActionListener(bcActionListener);
                 }
                 {
@@ -824,8 +824,7 @@ public class VBrowser extends javax.swing.JFrame
                     preferencesMenu.add(globalShowLogWindowMenu);
                     globalShowLogWindowMenu.setText("Show log window");
                     globalShowLogWindowMenu.setActionCommand(ActionCommandType.GLOBAL_SHOW_LOG_WINDOW.toString());
-                    globalShowLogWindowMenu.setState(GuiSettings
-                            .getBoolProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW));
+                    globalShowLogWindowMenu.setState(getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_SHOW_LOG_WINDOW));
                     globalShowLogWindowMenu.addActionListener(bcActionListener);
                 }
                 {
@@ -833,8 +832,7 @@ public class VBrowser extends javax.swing.JFrame
                     preferencesMenu.add(globalShowResourceTreeMenu);
                     globalShowResourceTreeMenu.setText("Show resource tree");
                     globalShowResourceTreeMenu.setActionCommand(ActionCommandType.GLOBAL_SHOW_RESOURCE_TREE.toString());
-                    globalShowResourceTreeMenu.setState(GuiSettings
-                            .getBoolProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE));
+                    globalShowResourceTreeMenu.setState(getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_SHOW_RESOURCE_TREE));
                     globalShowResourceTreeMenu.addActionListener(bcActionListener);
                 }
                 {
@@ -846,8 +844,7 @@ public class VBrowser extends javax.swing.JFrame
                     globalFilterHiddenFilesMenu.setText("Filter hidden files");
                     globalFilterHiddenFilesMenu.setActionCommand(ActionCommandType.GLOBAL_FILTER_HIDDEN_FILES
                             .toString());
-                    globalFilterHiddenFilesMenu.setState(GuiSettings
-                            .getBoolProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES));
+                    globalFilterHiddenFilesMenu.setState(getGuiSettings().getBoolProperty(GuiPropertyName.GLOBAL_FILTER_HIDDEN_FILES));
                     globalFilterHiddenFilesMenu.addActionListener(bcActionListener);
                 }
                 {
@@ -879,7 +876,7 @@ public class VBrowser extends javax.swing.JFrame
                         metalLAFmenuItem.setText("Metal (Default)");
 
                         ActionCommand cmd = ActionCommand.createAction(ActionCommandType.LOOKANDFEEL,
-                                GuiSettings.LookAndFeels.METAL.toString());
+                                GuiSettings.LookAndFeelType.METAL.toString());
 
                         metalLAFmenuItem.setActionCommand(cmd.toString());
                         metalLAFmenuItem.addActionListener(bcActionListener);
@@ -890,18 +887,20 @@ public class VBrowser extends javax.swing.JFrame
                         nativeLAFmenuItem.setText("Native");
 
                         ActionCommand cmd = new ActionCommand(ActionCommandType.LOOKANDFEEL);
-                        cmd.setArgument(GuiSettings.LookAndFeels.NATIVE.toString());
+                        cmd.setArgument(GuiSettings.LookAndFeelType.NATIVE.toString());
 
                         nativeLAFmenuItem.setActionCommand(cmd.toString());
                         nativeLAFmenuItem.addActionListener(bcActionListener);
                     }
+                    
+                    if (Global.isWindows()==true)
                     {
                         nativeLAFmenuItem = new JMenuItem();
                         lafMenu.add(nativeLAFmenuItem);
                         nativeLAFmenuItem.setText("Windows");
 
                         ActionCommand cmd = new ActionCommand(ActionCommandType.LOOKANDFEEL);
-                        cmd.setArgument(GuiSettings.LookAndFeels.WINDOWS.toString());
+                        cmd.setArgument(GuiSettings.LookAndFeelType.WINDOWS.toString());
 
                         nativeLAFmenuItem.setActionCommand(cmd.toString());
                         nativeLAFmenuItem.addActionListener(bcActionListener);
@@ -913,7 +912,7 @@ public class VBrowser extends javax.swing.JFrame
                         gtkLAFmenuItem.setText("GTK");
 
                         ActionCommand cmd = new ActionCommand(ActionCommandType.LOOKANDFEEL);
-                        cmd.setArgument(GuiSettings.LookAndFeels.GTK.toString());
+                        cmd.setArgument(GuiSettings.LookAndFeelType.GTK.toString());
 
                         gtkLAFmenuItem.setActionCommand(cmd.toString());
                         gtkLAFmenuItem.addActionListener(bcActionListener);
@@ -924,7 +923,7 @@ public class VBrowser extends javax.swing.JFrame
                         lafMenuItem.setText("Plastic 3D");
 
                         ActionCommand cmd = new ActionCommand(ActionCommandType.LOOKANDFEEL);
-                        cmd.setArgument(GuiSettings.LookAndFeels.PLASTIC_3D.toString());
+                        cmd.setArgument(GuiSettings.LookAndFeelType.PLASTIC_3D.toString());
 
                         lafMenuItem.setActionCommand(cmd.toString());
                         lafMenuItem.addActionListener(bcActionListener);
@@ -935,7 +934,7 @@ public class VBrowser extends javax.swing.JFrame
                         lafMenuItem.setText("Plastic XP");
 
                         ActionCommand cmd = new ActionCommand(ActionCommandType.LOOKANDFEEL);
-                        cmd.setArgument(GuiSettings.LookAndFeels.PLASTIC_XP.toString());
+                        cmd.setArgument(GuiSettings.LookAndFeelType.PLASTIC_XP.toString());
 
                         lafMenuItem.setActionCommand(cmd.toString());
                         lafMenuItem.addActionListener(bcActionListener);

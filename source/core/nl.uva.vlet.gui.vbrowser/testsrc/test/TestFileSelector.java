@@ -33,13 +33,14 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.util.FileSelector;
 
 
-public class TestFileSelector extends JFrame {
-	
-	static FileSelector dialogVBro = new FileSelector(UIPlatform.getPlatform());
+public class TestFileSelector extends JFrame 
+{
+    private static final long serialVersionUID = 5029201673262384269L;
+    
+    static FileSelector dialogVBro = new FileSelector();
     
     public TestFileSelector() {
         super();

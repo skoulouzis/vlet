@@ -28,7 +28,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
@@ -45,8 +44,6 @@ import nl.uva.vlet.gui.Messages;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.icons.IconProvider;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
-import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
-import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.gui.view.ViewFilter;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.presentation.VPresentable;
@@ -75,28 +72,23 @@ import nl.uva.vlet.vrs.VRenamable;
  * <p>
  * This class captures most of the functionality of viewed 'VNodes'.
  * VNode is the handler or reference object, but does not store any data. The
- * ProxyTNode holds the stored (cached) data of the VNode and other Graphical
- * information like menus icons and other conveniant methods etc. 
- * <p>
-
- * <p>
- * DISCLAIMER: This class is not intended to be nicely structured...
+ * ProxyVNode holds the stored (cached) data of the VNode and other Graphical
+ * information like menus icons and other convenient methods etc. 
  */
-
-public final class ProxyTNode extends ProxyNode
+public final class ProxyVNode extends ProxyNode
 {
     private static ClassLogger logger;
     
     static
     {
-        logger=ClassLogger.getLogger(ProxyTNode.class);
+        logger=ClassLogger.getLogger(ProxyVNode.class);
     }
     
 	// private static ReferenceQueue<ProxyTNode> garbageQueue= new ReferenceQueue<ProxyTNode>(); 
 	
-	public static class WeakProxyTNodeRef extends WeakReference<ProxyTNode> 
+	public static class WeakProxyTNodeRef extends WeakReference<ProxyVNode> 
 	{
-		public WeakProxyTNodeRef(ProxyTNode referent)
+		public WeakProxyTNodeRef(ProxyVNode referent)
 		{
 			// super(referent,garbageQueue);
 			super(referent);
@@ -107,9 +99,10 @@ public final class ProxyTNode extends ProxyNode
     
     //static VRSContext vrsContext;
     
-	private static ProxyTNodeFactory proxyFactory=null;
+	private static ProxyVNodeFactory proxyFactory=null;
 
-	private static ProxyTNodeCacheUpdater cacheUpdater; 
+	@SuppressWarnings("unused")
+    private static ProxyVNodeCacheUpdater cacheUpdater; 
 	 
     // ========================================================================
     // Instance Inner Class
@@ -130,33 +123,33 @@ public final class ProxyTNode extends ProxyNode
         /** VAttribute Name usually don't change */
         private String[] attributeNames = null;
         
-        public Boolean isReadable = null;
+        //public Boolean isReadable = null;
         
-        public Boolean isAccessable = null;
+        //public Boolean isAccessable = null;
         
         /** Thread save HashishTable. so put and get should be thread save ! */
         private Hashtable<String, VAttribute> attributeHash = new Hashtable<String, VAttribute>();
         
-        public Boolean isWritable=null;
+        //public Boolean isWritable=null;
         
         // == VComposite Attributes === 
         
         /** Childs vector also as weak references ? */
-        private Vector<ProxyTNode> childsv =null; 
+        private Vector<ProxyVNode> childsv =null; 
         
         
         // == Icon/Presentation Attribuets == 
         public String iconUrl=null;
         
-        public ImageIcon imageIcon=null;
+        //public ImageIcon imageIcon=null;
 
         public Presentation presentation=null; 
 
         // == Various Interfaces == 
         
-        public Boolean isRenamable=null;
+        //public Boolean isRenamable=null;
         
-        public Boolean isDeletable=null;
+        //public Boolean isDeletable=null;
         
         public Boolean isHidden=null;
         
@@ -164,14 +157,14 @@ public final class ProxyTNode extends ProxyNode
         // == LinkNode/ResourceNode == 
         public LogicalResourceNode resourceNode=null;
         
-        private ProxyTNode linkTarget=null;
+        private ProxyVNode linkTarget=null;
 
         /** The parent pointer: the schoolbook example of a weakrefence */ 
         private WeakProxyTNodeRef proxyNodeParentRef = null;
         
         private boolean hasGetChildsException=false;
 
-        public VRL resolvedLocation; 
+       // public VRL resolvedLocation; 
         
         // == methods === 
         
@@ -219,7 +212,7 @@ public final class ProxyTNode extends ProxyNode
         		childsv.removeAllElements(); 
         	
             this.childsv = null;
-            this.isReadable = null;
+            //this.isReadable = null;
             this.proxyNodeParentRef = null;
             this.linkTarget = null;
             this.attributeNames = null;
@@ -227,70 +220,69 @@ public final class ProxyTNode extends ProxyNode
             attributeHash.clear();
         }
         
-        public void clearParentChildList()
-        {
-            if (this.proxyNodeParentRef != null)
-            {
-                ProxyTNode node = this.proxyNodeParentRef.get();
-                if (node!=null)
-                	node.clearCache(); 
-            }
-            else
-            {
-            	// see if parent is in parent cache 
-                VRL parentVRL=getVRL().getParent();
-                ProxyTNode parentNode = proxyFactory.getFromCache(parentVRL); 
-                if (parentNode!=null)
-                {
-                    parentNode.clearCache(); 
-                    // found parent in cache: update parent refence: 
-                    this.proxyNodeParentRef=new WeakProxyTNodeRef(parentNode);
-                }
-            }
-            
-        }
-        
-        // Added new node to the childs[] list:
-        public void addChilds(ProxyTNode[] newNodes)
-        {
-            if (this.childsv==null)
-            	childsv=new Vector<ProxyTNode>(); 
-            
-            // synchronized(pnode.cache.childs)
-            // can't sync around childs, object will be replaced.
-            
-            if (newNodes==null)
-            	return; 
-            
-            synchronized(childsv)
-            {
-                for (ProxyTNode node:newNodes)
-                    this.childsv.add(node); 
-            }
-            
-        }
+//        public void clearParentChildList()
+//        {
+//            if (this.proxyNodeParentRef != null)
+//            {
+//                ProxyTNode node = this.proxyNodeParentRef.get();
+//                if (node!=null)
+//                	node.clearCache(); 
+//            }
+//            else
+//            {
+//            	// see if parent is in parent cache 
+//                VRL parentVRL=getVRL().getParent();
+//                ProxyTNode parentNode = proxyFactory.getFromCache(parentVRL); 
+//                if (parentNode!=null)
+//                {
+//                    parentNode.clearCache(); 
+//                    // found parent in cache: update parent refence: 
+//                    this.proxyNodeParentRef=new WeakProxyTNodeRef(parentNode);
+//                }
+//            }
+//            
+//        }
+//        
+//        // Added new node to the childs[] list:
+//        public void addChilds(ProxyTNode[] newNodes)
+//        {
+//            if (this.childsv==null)
+//            	childsv=new Vector<ProxyTNode>(); 
+//            
+//            // synchronized(pnode.cache.childs)
+//            // can't sync around childs, object will be replaced.
+//            
+//            if (newNodes==null)
+//            	return; 
+//            
+//            synchronized(childsv)
+//            {
+//                for (ProxyTNode node:newNodes)
+//                    this.childsv.add(node); 
+//            }
+//            
+//        }
         
         /** Returns UNFiltered Childs !*/ 
-        
-        public ProxyTNode[] getChilds()
+        public ProxyVNode[] getChilds()
         {
         	if (childsv==null)
         		return null; 
         	
         	synchronized(this.childsv)
         	{
-        		ProxyTNode childs[]=new ProxyTNode[childsv.size()]; 
+        		ProxyVNode childs[]=new ProxyVNode[childsv.size()]; 
         		childs=childsv.toArray(childs);
         		return childs; 
         	}
         }
 
-		public void setParent(ProxyTNode node)
+		public void setParent(ProxyVNode node)
 		{
 			this.proxyNodeParentRef=new WeakProxyTNodeRef(node); 
 		}
 
-		public void setChilds(ProxyTNode[] childs)
+		public void setChilds(ProxyVNode[] childs)
 		{
 			if (childs==null)
 			{
@@ -307,18 +299,18 @@ public final class ProxyTNode extends ProxyNode
 			}
 
 			if (childsv==null)
-				childsv=new Vector<ProxyTNode>();
+				childsv=new Vector<ProxyVNode>();
 	            
 			synchronized(childsv)
 			{				
 				childsv.clear();
 				
-				for (ProxyTNode node:childs)
+				for (ProxyVNode node:childs)
 					this.childsv.add(node);  
 			}
 		}
 
-		public ProxyTNode getProxyNodeParent()
+		public ProxyVNode getProxyNodeParent()
 		{
 			if (proxyNodeParentRef!=null)
 				return this.proxyNodeParentRef.get(); 
@@ -326,12 +318,12 @@ public final class ProxyTNode extends ProxyNode
 			return null; 
 		}
 		
-		public ProxyTNode getLinkTarget()
+		public ProxyVNode getLinkTarget()
 		{
 			return linkTarget; 
 		}
 
-		public void setLinkTarget(ProxyTNode pnode)
+		public void setLinkTarget(ProxyVNode pnode)
 		{
 			this.linkTarget=pnode;
 		}
@@ -354,36 +346,15 @@ public final class ProxyTNode extends ProxyNode
     
     private static void initClass()
     {
-       	Global.infoPrintln(ProxyTNode.class,"--- ProxyTNode Class Init! ---");
-       	
     	// static instances moved to UIGlobal 
     	vfs=UIGlobal.getVFSClient(); 
     	//vrsContext=UIGlobal.getVRSContext(); 
     	//guiSettings=UIGlobal.getGuiSettings(); 
-    	proxyFactory=new ProxyTNodeFactory();
-    	ProxyVRSClient.getInstance().setProxyNodeFactory(proxyFactory);
     	
-    	cacheUpdater = new ProxyTNodeCacheUpdater(); 
+    	cacheUpdater = new ProxyVNodeCacheUpdater(); 
     	
+    	proxyFactory=ProxyVNodeFactory.getInstance(); 
     } 
-    
-    /** class initializer */ 
-    public static void init()
-    {
-    	;  //dummy
-    }
-    
-    public static ProxyNodeFactory getProxyNodeFactory()
-    {
-    	return proxyFactory; 
-    }
-    
-    /** @deprecated ProxyTNode will not be visible in the future  */
-    public static ProxyTNodeFactory getProxyTNodeFactory()
-    {
-    	return proxyFactory; 
-    }
-    
     // ========================================================================
     // Class Methods
     // ========================================================================
@@ -394,7 +365,7 @@ public final class ProxyTNode extends ProxyNode
     * 
     * @see proxyFactory.createProxyTNode
     */
-   protected ProxyTNode()
+   protected ProxyVNode()
    {
        super(); 
        vnode = null;
@@ -405,7 +376,6 @@ public final class ProxyTNode extends ProxyNode
     	UIGlobal.assertNotGuiThread("Cannot perform this action during gui event thread. Must open location first:"+loc); 
    }
 
-  
     
     // ========================================================================
     // Instance Fields
@@ -465,11 +435,13 @@ public final class ProxyTNode extends ProxyNode
         {
             logger.logException(ClassLogger.ERROR,e,"Error while prefetching Attributes from:%s\n",vnode);  
         }
-        
     }
-
    
-    public VNode getVNode()
+    /**
+     * Get *The* VNode!
+     * use sparsely
+     */ 
+    protected VNode getVNode()
     {
         return vnode;
     }
@@ -580,9 +552,8 @@ public final class ProxyTNode extends ProxyNode
      * @return
      * @throws VlException
      */
-    public ProxyTNode[] getChilds(ViewFilter viewFilter) throws VlException
+    public ProxyVNode[] getChilds(ViewFilter viewFilter) throws VlException
     {
-    	
     	synchronized (getChildsMutex)
     	{
     		if (cache.hasGetChildsException()==true)
@@ -594,19 +565,19 @@ public final class ProxyTNode extends ProxyNode
     		{
     			enterBusy();
     			 
-    			ProxyTNode[] nodes = _getChilds(viewFilter);
+    			ProxyVNode[] nodes = _getChilds(viewFilter);
     			cache.setHasGetChildsException(false);
     			exitBusy();
     			return nodes; 
     		}
     		catch (VlException ex1)
     		{
-        		Global.debugPrintStacktrace(ex1);
+    		    logger.logException(ClassLogger.WARN,ex1,"_getChilds() got exception=%s\n",ex1); 
     			t=ex1; 
     		}
     		catch (Throwable ex2)
     		{
-        		Global.errorPrintln(this,"Internal Error");
+        		logger.logException(ClassLogger.ERROR,ex2,"Internal Error");
     			t=ex2; 
     		}
     		
@@ -629,25 +600,25 @@ public final class ProxyTNode extends ProxyNode
      * @return
      * @throws VlException
      */
-    private ProxyTNode[] _getChilds(ViewFilter viewFilter) throws VlException
+    private ProxyVNode[] _getChilds(ViewFilter viewFilter) throws VlException
     {
     	  
     	// Enter O) 
-    	debugPrintf("*** --- --- getChilds() ENTERING for:%s\n",this);
+    	logger.debugPrintf("*** --- --- getChilds() ENTERING for:%s\n",this);
     	
         // mutex for this method: invoking it twice makes no sense:
         synchronized (getChildsMutex)
         {
         	// Pass I) 
         	
-        	debugPrintf("*** --- +++ getChilds() PASS getChildsMutex (I) for:%s\n",this); 
+            logger.debugPrintf("*** --- +++ getChilds() PASS getChildsMutex (I) for:%s\n",this); 
         	 
-        	ProxyTNode childs[]=cache.getChilds(); 
+        	ProxyVNode childs[]=cache.getChilds(); 
         	
         	// cache must be checked while in Critical Zone
             if (childs != null)
             {
-                debugPrintf("*** --- +++ getChilds() RETURNING getChildsMutex (Ia) for:%s\n",this); 
+                logger.debugPrintf("*** --- +++ getChilds() RETURNING getChildsMutex (Ia) for:%s\n",this); 
             	return filterChilds(childs,viewFilter); 
             }
             
@@ -662,7 +633,7 @@ public final class ProxyTNode extends ProxyNode
             if (vnode instanceof VResourceLink)
             {
                     VRL linkLoc = ((VResourceLink) vnode).getTargetLocation();
-                    ProxyTNode linkNode = proxyFactory.openLocation(linkLoc, false); // do
+                    ProxyVNode linkNode = proxyFactory.openLocation(linkLoc, false); // do
                     // not
                     // double
                     // resolve
@@ -671,11 +642,11 @@ public final class ProxyTNode extends ProxyNode
                     
                     if (linkNode == null) // NOT in hash: unknown
                     {
-                    	debugPrintf("*** --- +++ getChilds() RETURNING NULL LinkNode (Ib) for:"+this); 
+                        logger.debugPrintf("*** --- +++ getChilds() RETURNING NULL LinkNode (Ib) for:%s\n",this); 
                         return null;
                     }
                     
-                	debugPrintf("*** --- +++ getChilds() calling LinkNode (Ic) for:"+this); 
+                    logger.debugPrintf("*** --- +++ getChilds() calling LinkNode (Ic) for:%s\n",this); 
                     
                     return linkNode.getChilds(viewFilter); 
             }
@@ -686,12 +657,12 @@ public final class ProxyTNode extends ProxyNode
             
             if ((targetNode instanceof VComposite)==false) 
             {
-              	debugPrintf("*** --- --- getChilds() RETURNING NULL for non-vcomposite (Id) for:"+this);
+                logger.debugPrintf("*** --- --- getChilds() RETURNING NULL for non-vcomposite (Id) for:%s\n",this);
                	return null; 
             }
             else
             {
-            	debugPrintf("*** --- --- getChilds() ENTERING VCompsite (II) for :"+this);
+                logger.debugPrintf("*** --- --- getChilds() ENTERING VCompsite (II) for :%s\n",this);
             	VNode nodes[] = ((VComposite) targetNode).getNodes();
 
             	// do not sort for MyVLe !
@@ -724,7 +695,7 @@ public final class ProxyTNode extends ProxyNode
                    
             	if (nodes == null)
             	{
-            		debugPrintf("*** --- --- getChilds() RETURNING NULL childs node (IIa) for:"+this); 
+            	    logger.debugPrintf("*** --- --- getChilds() RETURNING NULL childs node (IIa) for:%s\n",this); 
             		return null;
             	}
                     
@@ -732,9 +703,9 @@ public final class ProxyTNode extends ProxyNode
             	
             	synchronized (cache)
             	{
-            		debugPrintf("*** --- +++ getChilds() ENTERING cache MUTEX (III) for:"+this); 
+            	    logger.debugPrintf("*** --- +++ getChilds() ENTERING cache MUTEX (III) for:%s\n",this); 
             		
-            		childs = new ProxyTNode[len];
+            		childs = new ProxyVNode[len];
             		int index=0; 
                         
             		for (int i = 0; i < len; i++)
@@ -757,18 +728,18 @@ public final class ProxyTNode extends ProxyNode
             		}
                                     
             		cache.setChilds(childs);
-            		debugPrintf("*** --- --- getChilds() LEAVING cache MUTEX (IIIa) for:"+this); 
+            		logger.debugPrintf("*** --- --- getChilds() LEAVING cache MUTEX (IIIa) for:%s\n",this); 
             	}// synchronized (cache)
             }//  if (targetNode instanceof VComposite)
            
         }// synchronized(this)
          
         // Passed MUTEX: childs are in cache: 
-        debugPrintf("*** --- --- getChilds() LEAVING cache MUTEX (Ie) for:"+this); 
+        logger.debugPrintf("*** --- --- getChilds() LEAVING cache MUTEX (Ie) for:%s\n",this); 
         return filterChilds(cache.getChilds(),viewFilter); 
     }
     
-    private ProxyTNode[] filterChilds(ProxyTNode[] childs, ViewFilter viewFilter)
+    private ProxyVNode[] filterChilds(ProxyVNode[] childs, ViewFilter viewFilter)
     {
         if (childs==null) 
             return null; 
@@ -778,16 +749,16 @@ public final class ProxyTNode extends ProxyNode
         if (viewFilter==null) 
             return childs; 
         
-        ProxyTNode filtered[]=new ProxyTNode[childs.length]; 
+        ProxyVNode filtered[]=new ProxyVNode[childs.length]; 
         int index=0; 
         
-        for (ProxyTNode node:childs)
+        for (ProxyVNode node:childs)
         {
             try
             {
                 if (node==null)
                 {
-                    Global.debugPrintf(this,"Need cache update: NULL child node for this:%s\n",this); 
+                    logger.debugPrintf("Need cache update: NULL child node for this:%s\n",this); 
                 }
                 //
                 // Web Service: optimizalization : first operand must be filterHidden or else
@@ -805,11 +776,11 @@ public final class ProxyTNode extends ProxyNode
             catch (VlException e)
             {
                 filtered[index++]=node; 
-                Global.debugPrintf(this,"ProxyTNode","isHidden() returned: Exception:%s",e); 
+                logger.debugPrintf("ProxyTNode","isHidden() returned: Exception:%s\n",e); 
             }
         }
         
-        ProxyTNode filtered2[]=new ProxyTNode[index];
+        ProxyVNode filtered2[]=new ProxyVNode[index];
         
         for (int i=0;i<index;i++) 
             filtered2[i]=filtered[i];
@@ -837,7 +808,7 @@ public final class ProxyTNode extends ProxyNode
     
     public int getNrOfChilds(ViewFilter filter) throws VlException
     {
-        ProxyTNode childs[] = this.getChilds(filter);
+        ProxyVNode childs[] = this.getChilds(filter);
         
         if (childs == null)
             return 0;
@@ -879,7 +850,7 @@ public final class ProxyTNode extends ProxyNode
 			}
 			catch (VlException e)
 			{
-				Global.infoPrintln(this,"Could not load link node:"+this+"\nException="+e); 
+				logger.infoPrintf("Could not load link node:%s,Exception=%s\n",this,e); 
 				
 			} 
         }
@@ -904,7 +875,7 @@ public final class ProxyTNode extends ProxyNode
         if (cache == null)
         {
             // Still possible? 
-            Global.infoPrintln(this, "Warning: node was already disposed:"+this);
+            logger.warnPrintf("disposeAndFireNodeDeleted(): Warning: node already disposed:%s\n",this);
             //debugPrintf("*** WARNINIG: _disposeAndNotifyDelete called on already disposed node !!");
         }
         else
@@ -921,7 +892,7 @@ public final class ProxyTNode extends ProxyNode
         this.dispose();
     }
     
-    public void fireChildAddedEvent(ProxyTNode node)
+    public void fireChildAddedEvent(ProxyVNode node)
     {
         // clear child list!:
         this.cache.setChilds(null); // null list retriggers getChilds();
@@ -929,7 +900,7 @@ public final class ProxyTNode extends ProxyNode
     }
     
     
-    public ProxyTNode getParent() throws VlException
+    public ProxyVNode getParent() throws VlException
     {
         if (cache.getProxyNodeParent() == null)
         {
@@ -938,7 +909,7 @@ public final class ProxyTNode extends ProxyNode
             if (parentvnode != null)
             {
             	// changed:
-            	ProxyTNode parent=proxyFactory.getFromCache(parentvnode.getLocation());
+            	ProxyVNode parent=proxyFactory.getFromCache(parentvnode.getLocation());
             	
             	// new parent: 
                 if (parent == null)
@@ -982,7 +953,7 @@ public final class ProxyTNode extends ProxyNode
         
         Vector<String> newAttrs=new Vector<String>();
         
-        debugPrintf("getAttributes:%s\n",this);
+        logger.debugPrintf("getAttributes:%s\n",this);
         
         // synchronized GetAttribute requests ?
         
@@ -1007,7 +978,7 @@ public final class ProxyTNode extends ProxyNode
         
         int numUncachedAttributes=newAttrs.size(); 
         
-        debugPrintf("#numUncachedAttributes = %d\n", numUncachedAttributes);
+        logger.debugPrintf("#numUncachedAttributes = %d\n", numUncachedAttributes);
         
         // fectch new attributes: 
         if (numUncachedAttributes > 0)
@@ -1036,17 +1007,7 @@ public final class ProxyTNode extends ProxyNode
     {
         return "<ProxyTNode:#" + getID() + ":" + this.getVRL() + ">";
     }
-    
-    private void debugPrintf(String format,Object ... args)
-    {
-        Global.debugPrintf(this, format,args); 
-    }
-    
-    private static void sDebug(String str)
-    {
-        Global.debugPrintf("ProxyTNode", "%s\n",str); 
-    }
-      
+     
     /**
      * getDefaultIcon() tries to get an icon (mimetype or otherwise). 
      * 
@@ -1092,7 +1053,7 @@ public final class ProxyTNode extends ProxyNode
     	}
     	catch (Exception e)
     	{
-    		Global.warnPrintln(this,"Could not resolve Resourcenode:"+vnode);
+    	    logger.warnPrintf("Could not resolve Resourcenode:%s\n",vnode);
     	}
     	
     	// New Icon Provider!: 
@@ -1126,7 +1087,7 @@ public final class ProxyTNode extends ProxyNode
 			} 
         	catch (VlException e) 
 			{
-				Global.infoPrintln(this,"***Warning: Couldn't load resourceLink:"+this);
+				logger.infoPrintf("***Warning: Couldn't load resourceLink:%s\n",this);
 				// use default icon 
 			}
         }
@@ -1141,11 +1102,11 @@ public final class ProxyTNode extends ProxyNode
     
     
    
-    public ProxyTNode create(String resourceType, String name) throws VlException
+    public ProxyVNode create(String resourceType, String name) throws VlException
     {
         
         VComposite vcomp=null;
-        ProxyTNode parent=null;
+        ProxyVNode parent=null;
         
         // resolve linkNode
         if (this.isResourceLink())
@@ -1170,7 +1131,7 @@ public final class ProxyTNode extends ProxyNode
         
         VNode newNode = vcomp.createNode(resourceType,name,true); 
         
-        ProxyTNode pnode=null; 
+        ProxyVNode pnode=null; 
         
         if (newNode != null)
         {
@@ -1250,7 +1211,7 @@ public final class ProxyTNode extends ProxyNode
         }
         else
         {
-            debugPrintf(">>>\n***\n*** Error: cache already empty !-> double dispose() ???\n***");
+            logger.debugPrintf(">>>\n***\n*** Error: cache already empty !-> double dispose() ???\n***\n");
         }
         
         proxyFactory.hashRemove(this);
@@ -1274,8 +1235,7 @@ public final class ProxyTNode extends ProxyNode
         {
             // ToDo: ProxyTNode Cache optimization !!
             // this is possible !
-            Global.infoPrintln(this,
-            "Warning: duplicate ProxyTNode with same Location");
+            logger.warnPrintf("Warning: duplicate ProxyTNode with same Location\n");
         }
         
         return result;
@@ -1323,14 +1283,14 @@ public final class ProxyTNode extends ProxyNode
      * Resolves a LinkNode, ResourceLocation or a .vlink resource and 
      * returns the TARGET ProxyNode
      */
-    public ProxyTNode getTargetPNode() throws VlException
+    public ProxyVNode getTargetPNode() throws VlException
     {
     	// Global.printMethodCallEntry(3); 
     	
         if (this.cache.getLinkTarget() != null) 
             return cache.getLinkTarget(); 
         
-        ProxyTNode pnode = null;
+        ProxyVNode pnode = null;
         LogicalResourceNode lnode = null;
         
         if ((this.vnode instanceof LogicalResourceNode) == false)
@@ -1355,7 +1315,7 @@ public final class ProxyTNode extends ProxyNode
         }
         
         VRL linkTarget = lnode.getTargetVRL();
-        sDebug("getLinkTarget:linkTarget=:" + linkTarget);
+        logger.debugPrintf("getLinkTarget:linkTarget=%s\n",linkTarget);
         
         if (linkTarget!=null)
         {
@@ -1445,7 +1405,7 @@ public final class ProxyTNode extends ProxyNode
         {
             // must fetch linktarget resourceTypes
         	
-            ProxyTNode node = null;
+            ProxyVNode node = null;
             
             try
             {
@@ -1587,7 +1547,7 @@ public final class ProxyTNode extends ProxyNode
         // will throw exception if node not in cache: 
         // Create Delete event with this Node as parameter
         
-        ProxyTNode pnode;
+        ProxyVNode pnode;
         
         try
         {
@@ -1646,7 +1606,7 @@ public final class ProxyTNode extends ProxyNode
     
 	public boolean delete(boolean recursiveDelete) throws VlException
 	{
-		Global.infoPrintln(this,"Really deleting (recursive="+recursiveDelete+")"+this); 
+		logger.debugPrintf("delete:%s (recursive=%s)\n",this,""+recursiveDelete);  
 		
 		boolean result=false;
 		 
@@ -1659,7 +1619,7 @@ public final class ProxyTNode extends ProxyNode
 				{
 					result = ((VCompositeDeletable) vnode).delete(true);
 					if (result==false)  
-						Global.warnPrintln(this,"Warning: (VComposite) delete resulted FALSE, but NO exception was thrown for deletion of node:"+vnode); 
+						logger.warnPrintf("Warning: (VComposite) delete resulted FALSE, but NO exception was thrown for deletion of node:%s\n",vnode); 
 
 				}
 				else
@@ -1669,7 +1629,7 @@ public final class ProxyTNode extends ProxyNode
 						result = ((VDeletable) vnode).delete();
 						
 						if (result==false)  
-							Global.warnPrintln(this,"Warning. Delete resulted FALSE, but NO exception was thrown for deletion of node:"+vnode); 
+							logger.warnPrintf("Warning. Delete resulted FALSE, but NO exception was thrown for deletion of node:%s\n",vnode); 
 
 					}
 					else
@@ -1688,7 +1648,7 @@ public final class ProxyTNode extends ProxyNode
 		if (result == true)
 		{
 			// I am not valid anymore: notify all resource listeners
-			ProxyTNode.this.disposeAndFireNodeDeleted();
+			ProxyVNode.this.disposeAndFireNodeDeleted();
 		}
 		
 		return result;  
@@ -1696,8 +1656,7 @@ public final class ProxyTNode extends ProxyNode
 	
 	protected void finalize()
 	{
-		// System.err.println("finalize:"+this); 
-		Global.infoPrintln(this,"***\n*** Finalize() called for:"+this+"\n***"); 
+	    // logger.infoPrintf("Finalizing:%s\n",this); 
 	}
 
 	public VRL renameTo(String name,boolean nameIsPath) throws VlException
@@ -1822,7 +1781,7 @@ public final class ProxyTNode extends ProxyNode
 	/** Return logical parent location if node is in cache ! */ 
 	public static VRL resolveLogicalParentLocation(VRL viewedLocation)
 	{
-		ProxyTNode pnode = proxyFactory.getFromCache(viewedLocation);
+		ProxyVNode pnode = proxyFactory.getFromCache(viewedLocation);
 		
 		if (pnode.isResourceLink())
 			try
@@ -1866,8 +1825,8 @@ public final class ProxyTNode extends ProxyNode
         
         VRL thisLoc=this.getVRL();
         
-        debugPrintf("1) locationEquals,       this =%s\n",thisLoc);
-        debugPrintf("2) locationEquals, compare to =%s\n",loc);
+        logger.debugPrintf("1) locationEquals,       this =%s\n",thisLoc);
+        logger.debugPrintf("2) locationEquals, compare to =%s\n",loc);
         
         if (loc==null) 
             return false; 
@@ -1875,7 +1834,7 @@ public final class ProxyTNode extends ProxyNode
         
         if (thisLoc.compareTo(loc)==0)
         {
-            debugPrintf("locationEquals,  found 1: location =%s\n",loc);
+            logger.debugPrintf("locationEquals,  found 1: location =%s\n",loc);
             return true;
         }
         
@@ -1890,12 +1849,12 @@ public final class ProxyTNode extends ProxyNode
         else
             resolvedLoc=loc; // keep current;
         
-        debugPrintf("3) locationEquals,  resolved loc=%s\n",resolvedLoc);
+        logger.debugPrintf("3) locationEquals,  resolved loc=%s\n",resolvedLoc);
         
         
         if (thisLoc.compareTo(resolvedLoc)==0)
         {
-            debugPrintf("locationEquals,  found 2: location alias=%s\n"+resolvedLoc);
+            logger.debugPrintf("locationEquals,  found 2: location alias=%s\n"+resolvedLoc);
             return true;
         }
         
@@ -1909,7 +1868,7 @@ public final class ProxyTNode extends ProxyNode
             {
                 linkLoc = this.getTargetVRL();
                 
-                debugPrintf("4 This linkTargetLoc     =%s\n",linkLoc);
+                logger.debugPrintf("4 This linkTargetLoc     =%s\n",linkLoc);
                 
                 if (linkLoc==null) 
                     return false; 
@@ -1917,7 +1876,7 @@ public final class ProxyTNode extends ProxyNode
                 // check plain linktarget: 
                 if ((linkLoc!=null) && (linkLoc.compareTo(resolvedLoc)==0)) 
                 {
-                    debugPrintf("locationEquals,  found 3: this linktarget equals resovled link=%s\n",resolvedLoc);
+                    logger.debugPrintf("locationEquals,  found 3: this linktarget equals resovled link=%s\n",resolvedLoc);
                     return true;
                 }
                 
@@ -1927,7 +1886,7 @@ public final class ProxyTNode extends ProxyNode
                 if (node!=null) 
                 {
                     linkLoc=node.getVRL(); // get resolved LinkNode location:
-                    debugPrintf("5 This resolved linkTargetLoc     =%s\n",linkLoc);
+                    logger.debugPrintf("5 This resolved linkTargetLoc     =%s\n",linkLoc);
                     
                 }
                 else
@@ -1939,15 +1898,15 @@ public final class ProxyTNode extends ProxyNode
                 // check against resolved loc: 
                 if ((linkLoc!=null) && (linkLoc.compareTo(resolvedLoc)==0))
                 {
-                    debugPrintf("locationEquals,  found 4: this resolved linktarget equals resovled link=%s\n",resolvedLoc);
+                    logger.debugPrintf("locationEquals,  found 4: this resolved linktarget equals resovled link=%s\n",resolvedLoc);
                     return true;
                 }
                 
             }
             catch (VlException e)
             {
-                debugPrintf("***Error: Exception:"+e); 
-            }
+                logger.logException(ClassLogger.WARN,e,"Could resolve link\n");
+            }                
         }
         
         // no checks left: 

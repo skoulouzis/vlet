@@ -29,10 +29,9 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
-import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.dnd.DropAction;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.gui.view.ViewModel;
@@ -49,22 +48,19 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 {
 	final FileSelector fileSelector;
 	ProxyNode selectionNode;
-    private UIPlatform platform; 
 
 	static
 	{
-        ProxyTNode.init();
         Global.init();
+        ProxyVNodeFactory.initPlatform();
 	}
 	
-	public FileSelectorController(FileSelector selector, UIPlatform platform) 
+	public FileSelectorController(FileSelector selector)
 	{
-	    this.platform=platform; 
 		this.fileSelector=selector; 
 	}
 	
-	
-	private void exit()
+	public void exit()
 	{
 		Message("openLocation="+this.selectionNode.getVRL().toString()); 	
 		this.fileSelector.dispose(); 
@@ -120,9 +116,9 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 				ProxyNode node;
 				
 				if (vrl==null)
-					node=ProxyNode.getProxyNodeFactory().openLocation(UIGlobal.getVRSContext().getVirtualRootLocation());
+					node=UIGlobal.getProxyVRS().getProxyNodeFactory().openLocation(UIGlobal.getProxyVRS().getVirtualRootLocation());
 				else
-					node=ProxyNode.getProxyNodeFactory().openLocation(vrl); 
+					node=UIGlobal.getProxyVRS().getProxyNodeFactory().openLocation(vrl); 
 				
 				fileSelector.resourceTree.setRootNode(node);
 			}
@@ -240,11 +236,5 @@ public class FileSelectorController implements MasterBrowser, ITaskSource
 	{
 		fileSelector.bpvalid.doClick();
 	}
-
-    @Override
-    public UIPlatform getPlatform()
-    {
-        return this.platform;
-    }
 	
 }

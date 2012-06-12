@@ -67,6 +67,5 @@ public interface MasterBrowser extends HyperLinkListener, ITaskSource
      * the new window will appear as new Tab. 
      */ 
     void startNewWindow(VRL vrl); 
-    
-    UIPlatform getPlatform(); 
+   
 }

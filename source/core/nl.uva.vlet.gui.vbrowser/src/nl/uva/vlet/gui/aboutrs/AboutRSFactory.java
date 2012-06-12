@@ -25,10 +25,6 @@ package nl.uva.vlet.gui.aboutrs;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.vfs.VFS;
-import nl.uva.vlet.vfs.VFSFactory;
-import nl.uva.vlet.vfs.VFSNode;
-import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRS;
@@ -90,7 +86,7 @@ public class AboutRSFactory extends VRSFactory
     }
 
 
-    public static void staticInit()
+    public static void initPlatform()
     {
         try
         {

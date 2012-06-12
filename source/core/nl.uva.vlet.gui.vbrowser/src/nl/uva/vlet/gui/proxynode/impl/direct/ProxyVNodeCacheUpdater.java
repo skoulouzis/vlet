@@ -24,13 +24,10 @@
 package nl.uva.vlet.gui.proxynode.impl.direct;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventListener;
-import nl.uva.vlet.gui.proxyvrs.ProxyResourceEventNotifier;
 import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.vrs.ResourceEvent;
-import nl.uva.vlet.vrs.ResourceEventListener;
 
 /**
  * Since the ProxyTNode uses a Cache, it must listen
@@ -40,9 +37,9 @@ import nl.uva.vlet.vrs.ResourceEventListener;
  * of a Resource event. 
  */ 
 
-public class ProxyTNodeCacheUpdater implements ProxyResourceEventListener
+public class ProxyVNodeCacheUpdater implements ProxyResourceEventListener
 {
-    ProxyTNodeCacheUpdater()
+    ProxyVNodeCacheUpdater()
     {
     	// auto register:
         ProxyVRSClient.getInstance().addResourceEventListener(this); 
@@ -58,7 +55,7 @@ public class ProxyTNodeCacheUpdater implements ProxyResourceEventListener
 		
         // check if node is in cache, if not ignore!
         
-        ProxyTNode node = ProxyTNode.getProxyTNodeFactory().getFromCache(e.getSource());
+        ProxyVNode node = ProxyVNodeFactory.getInstance().getFromCache(e.getSource());
         
 		if(node==null)
 		{

@@ -24,36 +24,43 @@
 package nl.uva.vlet.gui.vbrowser;
 
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.UIPlatform;
 import nl.uva.vlet.gui.aboutrs.AboutRSFactory;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 
 public class VBrowserInit
 {
 
-    public static void initPlatform() throws VlException
+    public static UIPlatform initPlatform() throws VlException
     {
         // todo: better platform initialization. 
         // current order to initialize: 
         UIGlobal.init();
 
-        // Option --native ? :
-        GuiSettings.enableCustomLAF(); 
-        // todo beter initialization 
-        ProxyTNode.init(); 
+        // ========
+        // Poxy VRS/ProxyNode (before UI Platform) 
+        // ========
+        
+        ProxyVNodeFactory.initPlatform(); 
  
-        AboutRSFactory.staticInit(); 
+        AboutRSFactory.initPlatform(); 
+        // prefetch MyVLe, during startup:
+        ProxyVNode.getVirtualRoot();     
+        
+        // ==========
+        // UIPlatform
+        // ==========
         
         // Register VBrowser platform 
         UIPlatform plat=UIPlatform.getPlatform();
-        plat.registerBrowserFactory(VBrowserFactory.createInstance(plat));
+        plat.registerBrowserFactory(VBrowserFactory.getInstance());
         
-        // prefetch MyVLe, during startup:
-        ProxyTNode.getVirtualRoot();
+        // Option --native ? :
+        plat.startCustomLAF(); 
         
+        return plat;
     }
-    
 
 }

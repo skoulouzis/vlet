@@ -29,8 +29,7 @@ import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.compareviewer.DirCompareController;
 import nl.uva.vlet.gui.compareviewer.DirComparePanel;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
-import nl.uva.vlet.gui.proxyvrs.ProxyNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.vrl.VRL;
 
 public class TestCompareViewer
@@ -38,7 +37,7 @@ public class TestCompareViewer
 	public static void main(String args[])
 	{
 		UIGlobal.init(); 
-		ProxyTNode.init(); 
+		ProxyVNodeFactory.initPlatform(); 
 		
 		JFrame frame=new JFrame();
 		DirComparePanel dcPanel = new DirComparePanel(true); 
