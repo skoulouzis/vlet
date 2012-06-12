@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
 import nl.uva.vlet.vfs.VDir;
@@ -54,7 +54,7 @@ public class testProxyNode extends TestCase
 
     static
     {
-        ProxyTNode.init();
+        ProxyVNodeFactory.initPlatform();
     }
 
     private ProxyNodeFactory proxyFactory;

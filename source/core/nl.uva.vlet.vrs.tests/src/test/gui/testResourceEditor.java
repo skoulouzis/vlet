@@ -28,8 +28,7 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.editors.ResourceEditor;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNode;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyTNodeFactory;
+import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.LogicalResourceNode;
@@ -46,11 +45,10 @@ public class testResourceEditor
     {
         // Global.setDebug(true);
         UIGlobal.init();
-        ProxyTNode.init();
+        ProxyVNodeFactory.initPlatform();
 
         try
         {
-
             VRS.getRegistry().addVRSDriverClass(nl.uva.vlet.vfs.lfc.LFCFSFactory.class);
             VRS.getRegistry().addVRSDriverClass(nl.uva.vlet.vfs.srm.SRMFSFactory.class);
 
@@ -73,11 +71,11 @@ public class testResourceEditor
 
             node.saveAtLocation(new VRL("file:///" + Global.getUserHome() + "/resourceNode1.vlink"));
 
-            ProxyNode pnode = ((ProxyTNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(node);
+            ProxyNode pnode = ((ProxyVNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(node);
             ResourceEditor.editProperties(pnode, true);
 
             node = LinkNode.loadFrom(context, new VRL("file:///" + Global.getUserHome() + "/.vletrc/myvle/001.vlink"));
-            pnode = ((ProxyTNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(node);
+            pnode = ((ProxyVNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(node);
 
             ResourceEditor.editProperties(pnode, false);
             ResourceEditor.editProperties(pnode, true);
@@ -87,11 +85,11 @@ public class testResourceEditor
 
             rfnode.setLogicalLocation(new VRL("myvle", null, "xxxx"));
 
-            pnode = ((ProxyTNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(rfnode);
+            pnode = ((ProxyVNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(rfnode);
             ResourceEditor.editProperties(pnode, true);
 
             VNode vnode = context.openLocation(new VRL("file:///" + Global.getUserHome() + "/.vletrc/myvle"));
-            pnode = ((ProxyTNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(vnode);
+            pnode = ((ProxyVNodeFactory) ProxyNode.getProxyNodeFactory()).createFrom(vnode);
             ResourceEditor.editProperties(pnode, false);
             ResourceEditor.editProperties(pnode, true);
 
