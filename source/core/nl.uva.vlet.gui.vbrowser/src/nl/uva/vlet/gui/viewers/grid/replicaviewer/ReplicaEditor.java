@@ -44,7 +44,6 @@ import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.list.StatusStringListField;
 import nl.uva.vlet.gui.panels.list.StatusStringListModel;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
-import nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNodeFactory;
 import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.gui.widgets.NavigationBar;
 import nl.uva.vlet.vrl.VRL;
@@ -79,22 +78,6 @@ public class ReplicaEditor extends ViewerPlugin
     public static final String UPDATE_SIZE_FROM_REPLICA = "Update size from Replicas";
     
     public static String schemes[] = { VRS.LFN_SCHEME,VRS.GUID_SCHEME };
-    
-    public static void main(String args[])
-    {
-        ProxyVNodeFactory.initPlatform();
-        
-        ReplicaEditor rv=new ReplicaEditor(false);        
-        
-        try
-        {
-            rv.startAsStandAloneApplication(new VRL("lfn://lfc.grid.sara.nl/grid/pvier/piter/HelloWorld.txt")); 
-        }
-        catch (VlException e)
-        {
-            e.printStackTrace();
-        }
-    }
     
     // ========================================================================
     // Instance
