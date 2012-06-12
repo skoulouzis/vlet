@@ -462,7 +462,7 @@ public final class ProxyVNode extends ProxyNode
     public VRL getVRL()
     {
     	// can happen during openLocation, this is not the place to except.  
-        if (vnode!=null) 
+        if (vnode!=null)
             return vnode.getLocation();
      
         throw new NullPointerException("Internal VNode is NULL");  
@@ -862,14 +862,11 @@ public final class ProxyVNode extends ProxyNode
         this.cache.isComposite=new Boolean(result); 
         return this.cache.isComposite;
     }
-        
-   
     
     /**
      * Private helper method to invalidize this ProxyTNode and fire an delete
      * Event
      */
-    
     public void disposeAndFireNodeDeleted() throws VlException
     {
         if (cache == null)
@@ -1010,7 +1007,6 @@ public final class ProxyVNode extends ProxyNode
     /**
      * getDefaultIcon() tries to get an icon (mimetype or otherwise). 
      * 
-     * TODO: restructure iconpath: 
      * + Non Mimetype: 
      *   - $HOME/.vletrc/icons/				  ; Custom user icons 
      *   - $VLET_INSTALL/icons/               ; Is on CLASSPATH, thus covered by ResouceLoader.getIcon())
@@ -1059,7 +1055,6 @@ public final class ProxyVNode extends ProxyNode
     	return provider.createDefaultIcon(iconNode, prefSize, selected); 
     }
    
-   
     /** 
      * Try to figure out which icon (URL) to return. 
      * This method also resolves linknodes and uses optional
@@ -1098,8 +1093,6 @@ public final class ProxyVNode extends ProxyNode
         
         return iconurl; 
     }
-    
-    
    
     public ProxyVNode create(String resourceType, String name) throws VlException
     {
@@ -1149,9 +1142,6 @@ public final class ProxyVNode extends ProxyNode
     /**
      * Clears all cached attributes. Sent an event that resource listeners
      * should check/refetch their attributes.
-     * 
-     * @throws VlException
-     * 
      */
     public void refresh()
     {
@@ -1193,16 +1183,13 @@ public final class ProxyVNode extends ProxyNode
 	{
 		this.clearCache(); 
 	}
-
 	
     /**
      * Help Garbage collector: Cleanup resources and delete from the node hash
-     */
-    
+     */   
     synchronized void dispose()
     {
         // Debug("disposing:" + getLocation());
-        
     	// remove cache 
         if (cache != null)
         {
@@ -1387,7 +1374,6 @@ public final class ProxyVNode extends ProxyNode
         return false;
     }
     
-    
     public String[] getResourceTypes()
     {
         if (cache.resourceTypes != null)
@@ -1425,6 +1411,7 @@ public final class ProxyVNode extends ProxyNode
         
         return this.cache.resourceTypes;
     }
+    
     public VAttribute[][] getACL() throws VlException
     {
         if (vnode instanceof VACL) 
@@ -1445,19 +1432,15 @@ public final class ProxyVNode extends ProxyNode
          return attrs;*/
     }
     
-    
-    
     public void setACL(VAttribute[][] acl) throws VlException
     {
         if (vnode instanceof VACL)
         {
-            
             ((VACL)vnode).setACL(acl);
             return; 
         }
         
         throw new NotImplementedException("Resource doesn't support ACLs");
-        
     }
     
     public VAttribute[] getACLEntities() throws VlException
@@ -1466,7 +1449,6 @@ public final class ProxyVNode extends ProxyNode
             return ((VACL)vnode).getACLEntities();
         
         throw new NotImplementedException("Resource doesn't support ACLs");
-        
     }
     
     public VAttribute[] createACLRecord(VAttribute entity, boolean writeThrough) throws VlException
@@ -1474,17 +1456,13 @@ public final class ProxyVNode extends ProxyNode
         if (vnode instanceof VACL) 
             return ((VACL)vnode).createACLRecord(entity,writeThrough); 
         
-        
         throw new NotImplementedException("Resource doesn't support ACLs");
-        
     }
     
     public void transfer(VRL source, VRL dest) throws VlException
     {
     }
-    
-   
-    
+
     public Presentation getPresentation()
     {
     	if  (cache.presentation!=null)
@@ -1532,15 +1510,12 @@ public final class ProxyVNode extends ProxyNode
         
         return cache.presentation;
     }
-    
    
     // ========================================================================
     // Clas Misc.
     // ========================================================================
-   
     
     /** Post Drag and Drop method to check whether a node was moved */
-    
     public static void checkAndNotifyDeletion(VRL location)
     {
         // will throw exception if node not in cache: 
@@ -1565,10 +1540,6 @@ public final class ProxyVNode extends ProxyNode
         ResourceEvent event = ResourceEvent.createDeletedEvent(location);
         fireGlobalEvent(event);
     }
-    
-   
- 
-   
     
     public boolean isMyVLe()
     {
@@ -1758,7 +1729,6 @@ public final class ProxyVNode extends ProxyNode
         //
         //fireChildAdded(getVRL(),storageLocation);
     }
-
     
     // ========================================================================
     // Class Misc.
@@ -1775,9 +1745,7 @@ public final class ProxyVNode extends ProxyNode
         proxyFactory.clearNodeHash();
         vfs.close();
     }
-
-	
-	
+    
 	 /**
      * Does a logical comparison of Locations. 
      * <p>
@@ -1886,9 +1854,7 @@ public final class ProxyVNode extends ProxyNode
                 logger.logException(ClassLogger.WARN,e,"Could resolve link\n");
             }                
         }
-        
         // no checks left: 
-        
         return false;    
     }
 
@@ -1920,7 +1886,5 @@ public final class ProxyVNode extends ProxyNode
             return new VRL[]{this.aliasVrl}; 
         
         return new VRL[]{this.aliasVrl,getVRL()};
-    }
-    
-  
+    }  
 }

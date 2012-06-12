@@ -87,9 +87,6 @@ public class ProxyVNodeFactory  implements ProxyNodeFactory
         if (loc==null)
         	throw new NullPointerException("VRL can not be NULL");
         
-        if (loc==null) 
-            return null; 
-        
         // ====================================================================
         // Although a Hastable is thread save, this object is also 
         // used as mutex when creating/manipulating proxynodes.
