@@ -1112,7 +1112,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
     {
     	if (this.serverInfo!=null)
     	{
-    		this.serverInfo.persistantDelete(); 
+    		this.serverInfo.persistentDelete(); 
     		this.serverInfo=null;
     		this.serverConfigurationAttrs=null;
     		uiUpdateServerConfigFieldsFromAttributes();
