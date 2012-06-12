@@ -25,7 +25,6 @@ package nl.uva.vlet.gui.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -178,7 +177,7 @@ public class ExceptionForm extends javax.swing.JDialog implements ActionListener
         setDebugText(VlException.getChainedStackTraceText(e));  
         
         // update to the max!
-        Dimension pref=this.errorText.getPreferredSize();
+        // Dimension pref=this.errorText.getPreferredSize();
         
         // can happen when an error occures at init time, be robuust:
         

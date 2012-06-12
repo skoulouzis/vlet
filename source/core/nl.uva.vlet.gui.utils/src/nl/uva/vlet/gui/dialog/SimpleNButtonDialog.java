@@ -52,7 +52,7 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
 	private JTextArea messageTextArea;
 	private JScrollPane textScrollPanel;
 	private JFrame parentFrame=null;
-	private int option;
+	//private int option;
 	
 	private String options[]; 
 	private String messageString;
@@ -188,9 +188,9 @@ public class SimpleNButtonDialog extends javax.swing.JDialog implements ActionLi
         
         selection=cmd; 
         
-        for (int i=0;i<options.length;i++) 
-        	if ((options[i]!=null) && (selection.compareTo(options[i])==0))
-        		option=i; 
+//        for (int i=0;i<options.length;i++) 
+//        	if ((options[i]!=null) && (selection.compareTo(options[i])==0))
+//        		option=i; 
         
         this.dispose(); 
         

@@ -277,7 +277,7 @@ public class AuthenticationDialog extends javax.swing.JDialog implements ActionL
 
     private void update(Component comp)
     {
-        Global.debugPrintln(this,"Update:"+comp); 
+        Global.debugPrintf(this,"Update:%s\n",comp); 
         
         if (comp==this.userNameTextField)
         {

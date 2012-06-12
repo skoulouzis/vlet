@@ -156,6 +156,11 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
         
     }
     
+    public boolean getOkValue()
+    {
+        return okValue;
+    }
+    
     public static void displayMessage(JFrame frame,String message)
     {
         displayMessage(frame,"Message",message);
@@ -237,5 +242,6 @@ public class SimpleDialog extends javax.swing.JDialog implements ActionListener
         SimpleDialog.displayMessage(null,"This Is A Massage");
         
         boolean ans=askConfirmation("Everything AOK?");
+        System.out.println("Answer="+ans);
     }
 }
