@@ -771,8 +771,8 @@ public class ServerInfo
         return this.vrsContext.storeServerInfo(this);
     }
 
-    /** Remove matching ServerInfo from persistant ServerInfoRegistry ! */ 
-    public void persistantDelete()
+    /** Remove matching ServerInfo from persistent ServerInfoRegistry ! */ 
+    public void persistentDelete()
     {	
     	this.vrsContext.getServerInfoRegistry().remove(this);
     }

@@ -1255,7 +1255,7 @@ public class LogicalResourceNode extends VNode implements
         {
         	ServerInfo info=this.getServerInfo(); 
         	if (info!=null)
-        		info.persistantDelete(); 
+        		info.persistentDelete(); 
         }
 
      // Notify Parent ! 
