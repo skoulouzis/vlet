@@ -137,7 +137,7 @@ public class GftpFileSystem extends FileSystemNode
     static
     {
         logger=ClassLogger.getLogger(GftpFileSystem.class); 
-        //logger.setLevelToDebug(); 
+        logger.setLevelToDebug(); 
     }
     
     /** EDG SE backwards compatibility options (HACK) attribute */
@@ -147,32 +147,25 @@ public class GftpFileSystem extends FileSystemNode
     public static final String ATTR_GFTP_DATA_CHANNEL_AUTHENTICATION = "dataChannelAuthentication";
 
     // maximum nr. of servers in the same pool
-    private static final int maximumServerPoolCount = 10;
+    //private static final int maximumServerPoolCount = 10;
 
     private static final String UNIX_GROUP = "unix.group";
-
     private static final String UNIX_OWNER = "unix.owner";
-
-    private static final String UNIX_MODE_STRING = "unix.mode.string";
-
+    //private static final String UNIX_MODE_STRING = "unix.mode.string";
     private static final String UNIX_MODE = "unix.mode";
-
-    private static final String GFTP_UNIQUE = "unique";
+    //private static final String GFTP_UNIQUE = "unique";
 
     // default server settings:
-    private static boolean default_local_data_channel_authentication = true;
-
+    //private static boolean default_local_data_channel_authentication = true;
     private static boolean default_usepassivemode = true;
-
     private static boolean default_allow3rdParty = true;
-    
     private static boolean default_useblindmode = false;
 
     // private static Hashtable<String, GftpServer> servers = new
     // Hashtable<String, GftpServer>();
 
     public static String[] attributeNames =
-    { ATTR_PASSIVE_MODE };
+        { ATTR_PASSIVE_MODE };
 
     /** Simple Data Source which produces 0 bytes ! */
     public static class NilSource implements DataSource
@@ -335,10 +328,8 @@ public class GftpFileSystem extends FileSystemNode
 
             if (cred == null)
             {
-                debug("NULL Credentials !!!");
+                logger.warnPrintf("Warning: NULL Credentials !\n");
             }
-
-            debug("GSSCredentials");
 
             // ***
             // GSI authentication doesn like SSH tunnel (host mismatch!) 
@@ -355,7 +346,7 @@ public class GftpFileSystem extends FileSystemNode
             this.features = new GftpFeatureList(newClient
                     .getFeatureList());
 
-            debug("Server Feature list=" + features);
+            logger.infoPrintf("Server Feature list '%s'=%s\n",this,features);
             
             this.putInstanceAttribute("gftpFeatureList",features.toCommaString()); 
             
@@ -376,9 +367,7 @@ public class GftpFileSystem extends FileSystemNode
             // update instance (debug) information.
             this.putInstanceAttribute(new VAttribute(ATTR_GFTP_DATA_CHANNEL_AUTHENTICATION,ldca)); 
 
-            debug(">>> GftpServer: new gftp client:" + hostname + ":"
-                    + port);
-            
+            logger.infoPrintf(">>> GftpServer: new gftp client:%s:%d\n",hostname,port); 
 
         }
         catch (UnknownHostException e)
@@ -409,8 +398,6 @@ public class GftpFileSystem extends FileSystemNode
             throw new VlServerException("Coudln't connect to:"+this+"\nReason="+e.getMessage(), e);
         }
 
-        debug("*** GFTP Client Created ***");
-
         return newClient;
     }
 
@@ -435,7 +422,7 @@ public class GftpFileSystem extends FileSystemNode
         else
             this.port = port;
 
-        debug("New GFTP Server:" + hostname + ":" + port);
+        logger.debugPrintf("New GFTP Server:%s:%d\n",hostname,port);
         
        // initShhTunnel(); 
     }
@@ -538,7 +525,7 @@ public class GftpFileSystem extends FileSystemNode
         // the default is 'false', Global specified means override !
         if (val == true)
         {
-            debug("using passive mode from Global Settings:" + val);
+            logger.debugPrintf("Using passiveMode=true from Global Settings:\n"); 
             // keep: val=true;
         }
         else
@@ -549,8 +536,8 @@ public class GftpFileSystem extends FileSystemNode
 
         // dynamic update ! 
         this.putInstanceAttribute(new VAttribute(ATTR_PASSIVE_MODE,val)); 
+        logger.debugPrintf("passiveMode=%s\n",(val?"true":"false"));
         
-        debug("passiveMode=" + val);
         return val;
     }
 
@@ -573,12 +560,12 @@ public class GftpFileSystem extends FileSystemNode
     {
         long id = Thread.currentThread().getId();
 
-        debug("setCheckMode: Thread[" + id + "]="
-                + Thread.currentThread().getName());
+//        debug("setCheckMode: Thread[" + id + "]="
+//                + Thread.currentThread().getName());
 
         if (client == null)
         {
-            debug("setCheckMode: client= null!!!");
+            //debug("setCheckMode: client= null!!!");
             throw new VlServerException("Server not connected:"
                     + this);
         }
@@ -593,7 +580,7 @@ public class GftpFileSystem extends FileSystemNode
                     // client.setType(Session.TYPE_IMAGE);
                     // _setCheckMode(client,false,false);
                     String str = client.getCurrentDir();
-                    debug("setCheckMode: getCUrrentDir()=" + str);
+                    //debug("setCheckMode: getCUrrentDir()=" + str);
 
                 }
                 catch (Exception e)
@@ -608,7 +595,7 @@ public class GftpFileSystem extends FileSystemNode
             {
                 // if (client.isPassiveMode()==getUsePassiveMode)
                 // return;
-                debug("setCheckMode: PRE setting mode...");
+                //debug("setCheckMode: PRE setting mode...");
 
                 if (usePassive() == false)
                 {
@@ -638,7 +625,7 @@ public class GftpFileSystem extends FileSystemNode
                     // _setCheckMode(client,binMode,updatePassiveMode);
                 }
 
-                debug("setCheckMode: POST setting mode...");
+                //debug("setCheckMode: POST setting mode...");
 
             }
             catch (ServerException e)
@@ -798,12 +785,10 @@ public class GftpFileSystem extends FileSystemNode
             String localfilepath, String remotefilepath)
             throws VlException
     {
-        debug("updloadFile:" + localfilepath);
+        logger.debugPrintf("updloadFile(): %s -> %s\n",localfilepath,remotefilepath);
 
         try
         {
-            GftpDir.Debug("localpath=" + localfilepath);
-            GftpDir.Debug("remotepath=" + remotefilepath);
 
             java.io.File lfile = new File(localfilepath);
             RandomAccessFile rfile = new RandomAccessFile(lfile, "r");
@@ -856,7 +841,7 @@ public class GftpFileSystem extends FileSystemNode
 
                 // Gftp does not provide transfer count:
                 long size = riofile.getNrRead();
-                debug("- current transferred size=" + size);
+                //debug("- current transferred size=" + size);
                 transfer.updateSubTaskDone(size);
 
                 if (transferState.getError() != null)
@@ -873,7 +858,7 @@ public class GftpFileSystem extends FileSystemNode
             // POST: Gftp does not provide transfer count:
             transfer.updateSubTaskDone(riofile.getNrRead());
             transfer.endSubTask("Upload GridFTP File"); 
-            debug("after put");
+            //debug("after put");
 
         }
         catch (ServerException e)
@@ -903,8 +888,7 @@ public class GftpFileSystem extends FileSystemNode
             String remotefilepath, String toLocalfilepath)
             throws VlException
     {
-        debug("downloadFile:" + this + " from:" + remotefilepath
-                + " to:" + toLocalfilepath);
+        logger.debugPrintf("downloadFile():%s: from '%s' to '%s'\n",this,remotefilepath,toLocalfilepath);
         
         //transfer.setCurrentSubTask("Downloading file."); 
         
@@ -924,11 +908,7 @@ public class GftpFileSystem extends FileSystemNode
             RandomAccessFile rfile = new RandomAccessFile(lfile, "rw");
             TransferRandomIO riofile = new TransferRandomIO(rfile);
 
-            debug("localfilepath=" + toLocalfilepath);
-            debug("remotefilepath=" + remotefilepath);
-
             transfer.logPrintf("Downloading file.\n");
-            
 
             GridFTPClient myclient = null;
             TransferState transferState = null;
@@ -952,13 +932,10 @@ public class GftpFileSystem extends FileSystemNode
                 transferState = client.asynchGet(remotefilepath,
                             riofile, markerListener);
             }
-
-            debug(">>> after asynchGet");
-
+            
             // ===
             // LOOP
             // ===
-
             while ((transferState != null)
                     && (transferState.isDone() == false))
             {
@@ -1003,12 +980,10 @@ public class GftpFileSystem extends FileSystemNode
             // length
             transfer.updateSubTaskDone(lfile.length());
             transfer.endSubTask("Downloading GridFTP File"); 
-            debug(">>> after transfer");
         }
         catch (ServerException e)
         {
             logger.logException(ClassLogger.DEBUG,e,"ServerException:%s\n",e); 
-
             this.serverException = true;
             throw new nl.uva.vlet.exception.VlServerException(
                     "GridFTP:ServerException:" + e.getMessage(), e);
@@ -1016,14 +991,12 @@ public class GftpFileSystem extends FileSystemNode
         catch (IOException e)
         {
             logger.logException(ClassLogger.DEBUG,e,"IOException:%s\n",e); 
-
             throw new VlIOException("GridFTP:IOException:"
                     + e.getMessage(), e);
         }
         catch (ClientException e)
         {
             logger.logException(ClassLogger.DEBUG,e,"ClientException:%s\n",e); 
-
             throw new VlIOException("GridFTP:ClientException:"
                     + e.getMessage(), e);
         }
@@ -1033,7 +1006,7 @@ public class GftpFileSystem extends FileSystemNode
     public String rename(String filepath, String newName,
             boolean nameIsPath) throws VlException
     {
-        debug("rename:" + filepath + " to:" + newName);
+        logger.debugPrintf("rename:%s->%s\n",filepath,newName);
 
         String newpath = null;
 
@@ -1073,7 +1046,7 @@ public class GftpFileSystem extends FileSystemNode
     public boolean delete(boolean isDir, String path)
             throws VlException
     {
-        debug("delete:" + path);
+        logger.debugPrintf("delete:%s\n",path);
 
         try
         {
@@ -1113,7 +1086,7 @@ public class GftpFileSystem extends FileSystemNode
 
     public long getModificationTime(String path) throws VlException
     {
-        debug("getModificationTime:" + path);
+        //debug("getModificationTime:" + path);
 
         // Date date = null;
 
@@ -1159,7 +1132,7 @@ public class GftpFileSystem extends FileSystemNode
             VRSContext context) throws GlobusCredentialException,
             GSSException, VlAuthenticationException
     {
-        debug("getGlobusCredentials");
+        //debug("getGlobusCredentials");
 
         GridProxy proxy = context.getGridProxy();
 
@@ -1229,7 +1202,7 @@ public class GftpFileSystem extends FileSystemNode
     public VDir createDir(String dirpath, boolean force)
             throws VlException
     {
-        debug("createDir:" + dirpath);
+        logger.debugPrintf("createDir:%s\n",dirpath);
 
         String parentDir=VRL.dirname(dirpath); 
         
@@ -1287,7 +1260,7 @@ public class GftpFileSystem extends FileSystemNode
                 client.makeDir(dirpath);
             }
 
-            debug("created directory:" + dirpath);
+            logger.debugPrintf("created directory:%s\n",dirpath);
 
             return  getDir(dirpath); 
         }
@@ -1308,11 +1281,13 @@ public class GftpFileSystem extends FileSystemNode
 
     public VFSNode openLocation(VRL loc) throws VlException
     {
+        logger.debugPrintf("openLocation:%s\n",loc); 
+        
         try
         {
             String path = loc.getPath();
 
-            if ((path == null) && (path.equalsIgnoreCase("")))
+            if ((path == null) || (path.equalsIgnoreCase("")))
             {
                 synchronized (serverMutex)
                 {
@@ -1332,8 +1307,8 @@ public class GftpFileSystem extends FileSystemNode
             {
                 path = this.homeDir + path.substring(2);
             }
-
-            debug("Opening path=" + path);
+            
+            logger.debugPrintf("Open actual path=%s\n",path); 
 
             MlsxEntry entry = mlst(path); // ask for single fileinfo
             VFSNode node = null;
@@ -1371,7 +1346,7 @@ public class GftpFileSystem extends FileSystemNode
         }
     }
 
-    public Vector mlsd(String dirpath) throws VlException
+    public Vector<?> mlsd(String dirpath) throws VlException
     {
         // new feature: Blind As A Bat !
         if (useBlindMode() == true)
@@ -1383,13 +1358,13 @@ public class GftpFileSystem extends FileSystemNode
         if (this.protocol_v1 == true)
             return fakeMlsd(dirpath);
 
-        debug("mlsd:" + dirpath);
+        logger.debugPrintf("mlsd:%s\n",dirpath);
 
         // System.err.println("mlsd:"+dirpath);
 
         try
         {
-            Vector retval = null;
+            Vector<?> retval = null;
             // MSLD uses datachannel
             // bin? channel and check passive mode
 
@@ -1430,13 +1405,13 @@ public class GftpFileSystem extends FileSystemNode
     private Vector<MlsxEntry> fakeMlsd(String path)
             throws VlException
     {
-        debug("fakeMlsd:" + path);
+        logger.debugPrintf("fakeMlsd:%s\n",path);
         GridFTPClient myclient=null; 
         
         try
         {
-            Vector list1 = null;
-            Vector list2 = null;
+            Vector<?> list1 = null;
+            Vector<?> list2 = null;
 
             // old server: create private client for robuustness
             // slow but allows multithreaded browsing !
@@ -1482,7 +1457,7 @@ public class GftpFileSystem extends FileSystemNode
                         {
                             // System.err.println("Will not list hidden
                             // files:"+path);
-                            debug("List command returned hidden files. Will not  perform extra ls -ld .* !");
+                            logger.warnPrintf("List command returned hidden files. Will not  perform extra ls -ld .* !\n");
                             listHidden = false;
                             break;
                         }
@@ -1492,7 +1467,7 @@ public class GftpFileSystem extends FileSystemNode
 
             if (listHidden)
             {
-                debug("Listing hidden files:" + path);
+                logger.debugPrintf("Listing hidden files:%s\n",path);
 
                 myclient.setPassiveMode(usePassive());
                 list2 = myclient.list("-d .*");
@@ -1585,8 +1560,8 @@ public class GftpFileSystem extends FileSystemNode
     public int syncRead(String filepath, long fileOffset,
             byte buffer[], int off, int len) throws VlException
     {
-        debug("syncRead: " + len + " from:" + filepath + "#"
-                + fileOffset + "into: buffer[" + buffer.length + "]");
+//        debug("syncRead: " + len + " from:" + filepath + "#"
+//                + fileOffset + "into: buffer[" + buffer.length + "]");
 
         // create prive client for extended read (parallel mode).
 
@@ -1731,7 +1706,7 @@ public class GftpFileSystem extends FileSystemNode
         if (this.protocol_v1 == true)
             return fakeMlst(filepath);
 
-        debug("mlst:" + filepath);
+        logger.debugPrintf("mlst:%s\n",filepath);
 
         // String dirpath = VRL.dirname(filepath);
         // String name = VRL.basename(filepath);
@@ -1774,7 +1749,7 @@ public class GftpFileSystem extends FileSystemNode
      */
     private MlsxEntry fakeMlst(String filepath) throws VlException
     {
-        debug("fakeMlst:" + filepath);
+        logger.debugPrintf("fakeMlst:%s\n",filepath);
         // System.err.println("fakeMlst:"+filepath);
         boolean isRoot = false;
 
@@ -1797,7 +1772,7 @@ public class GftpFileSystem extends FileSystemNode
             // use current client for existance to speed up 'exists'
             if (client.exists(filepath) == false)
             {
-                debug("fakeMlst: exists=false for:" + filepath);
+                logger.debugPrintf("fakeMlst: exists=false for:%s\n",filepath);
                 // mslt is also used in 'exists' dont'// throw new
                 // ResourceNotFoundException("Couldn't stat:"+filepath);
 
@@ -1809,7 +1784,7 @@ public class GftpFileSystem extends FileSystemNode
 
                 if (useBlindMode())
                 {
-                    debug("BLINDMODE: returning dummy file object!");
+                    logger.debugPrintf("BLINDMODE: returning dummy file object!\n");
 
                     //
                     // blind GFTP Server: return dummy file object.
@@ -1833,9 +1808,9 @@ public class GftpFileSystem extends FileSystemNode
 
             myclient.changeDir(dirname);
 
-            debug("fakeMlst:before list:" + dirname);
+            //debug("fakeMlst:before list:" + dirname);
 
-            Vector files = null;
+            Vector<?> files = null;
 
             try
             {
@@ -1893,7 +1868,7 @@ public class GftpFileSystem extends FileSystemNode
         }
         catch (Exception e)
         {
-            debug("Exception:" + e);
+            logger.logException(ClassLogger.WARN,e,"fakeMlst failed\n");
             throw convertException(e);
         }
     }
@@ -2022,9 +1997,7 @@ public class GftpFileSystem extends FileSystemNode
         }
         catch (VlException e)
         {
-            // should not occure:!!!
-            debug("existsFile exception=" + e);
-            Global.debugPrintStacktrace(e);
+            logger.logException(ClassLogger.WARN,e,"existsFile exception\n");
         }
 
         return false;
@@ -2032,8 +2005,6 @@ public class GftpFileSystem extends FileSystemNode
 
     public boolean existsDir(String path)
     {
-        debug("existsDir:" + path);
-
         boolean retval = false;
 
         MlsxEntry entry;
@@ -2048,14 +2019,14 @@ public class GftpFileSystem extends FileSystemNode
             }
             else
             {
-                debug("existsDir NULL fileinfo for:" + path);
+                logger.debugPrintf("existsDir: got NULL fileinfo for:%s\n",path);
             }
 
-            debug("existsDir Returning:" + retval);
+            // debug("existsDir Returning:" + retval);
         }
         catch (VlException e)
         {
-            debug("existsDir:dir does not exist: Exception:" + e);
+            logger.logException(ClassLogger.WARN,e,"existsDir Exception\n");
         }
 
         return retval;
@@ -2215,7 +2186,7 @@ public class GftpFileSystem extends FileSystemNode
 
         if ((entry == null) || (_isDir(entry) == false))
         {
-            debug("getDir failed for:" + dirpath + ", Entry=" + entry);
+            logger.debugPrintf("getDir() failed for:%s, Entry=%s\n",dirpath,entry);
             return null;
         }
 
@@ -2504,8 +2475,6 @@ public class GftpFileSystem extends FileSystemNode
         PermissionInfo perm = PermissionInfo.fromString(entry
                 .get(MlsxEntry.PERM));
 
-        debug("permissions=" + perm);
-
         if (perm == null)
             return false;
 
@@ -2520,8 +2489,6 @@ public class GftpFileSystem extends FileSystemNode
         PermissionInfo perm = PermissionInfo.fromString(entry
                 .get(MlsxEntry.PERM));
 
-        debug("permissions=" + perm);
-
         if (perm == null)
             return false;
 
@@ -2534,8 +2501,6 @@ public class GftpFileSystem extends FileSystemNode
     {
         PermissionInfo perm = PermissionInfo.fromString(entry
                 .get(MlsxEntry.PERM));
-
-        debug("permissions=" + perm);
 
         if (perm == null)
             return false;
@@ -2604,11 +2569,11 @@ public class GftpFileSystem extends FileSystemNode
             return -1;
 
         String val = entry.get(MlsxEntry.SIZE);
-        debug("_getLength val=" + val);
+        //debug("_getLength val=" + val);
 
         if (val == null)
         {
-            debug("SIZE=null in entry:" + entry);
+            //debug("SIZE=null in entry:" + entry);
             return 0;
         }
 
@@ -2624,11 +2589,11 @@ public class GftpFileSystem extends FileSystemNode
             return "";
 
         String val = entry.get(MlsxEntry.UNIQUE);
-        debug("_getUnique val=" + val);
+        //debug("_getUnique val=" + val);
 
         if (val == null)
         {
-            debug("UNIQUE=null in entry:" + entry);
+            //debug("UNIQUE=null in entry:" + entry);
             return null;
         }
 
@@ -2645,11 +2610,11 @@ public class GftpFileSystem extends FileSystemNode
             return -1;
 
         String val = entry.get(MlsxEntry.MODIFY);
-        debug("_getModificationTime val=" + val);
+        ///debug("_getModificationTime val=" + val);
 
         if (val == null)
         {
-            debug("SIZE=null in entry:" + entry);
+            //debug("SIZE=null in entry:" + entry);
             return 0;
         }
 
@@ -2663,11 +2628,11 @@ public class GftpFileSystem extends FileSystemNode
             return -1;
 
         String val = entry.get(MlsxEntry.CREATE);
-        debug("_getCreationTime val=" + val);
+        //debug("_getCreationTime val=" + val);
 
         if (val == null)
         {
-            debug("CREATE=null in entry:" + entry);
+            //debug("CREATE=null in entry:" + entry);
             return 0;
         }
 
@@ -2704,11 +2669,11 @@ public class GftpFileSystem extends FileSystemNode
             return null;
 
         String val = entry.get(UNIX_GROUP);
-        debug("_getModificationTime val=" + val);
+        //debug("_getModificationTime val=" + val);
 
         if (val == null)
         {
-            debug("UNIX_GROUP=null in entry:" + entry);
+            //debug("UNIX_GROUP=null in entry:" + entry);
             return null;
         }
 
@@ -2722,22 +2687,16 @@ public class GftpFileSystem extends FileSystemNode
             return null;
 
         String val = entry.get(UNIX_OWNER);
-        debug("_getModificationTime val=" + val);
+        //debug("_getModificationTime val=" + val);
 
         if (val == null)
         {
-            debug("UNIX_GROUP=null in entry:" + entry);
+            //debug("UNIX_GROUP=null in entry:" + entry);
             return null;
         }
 
         return val;
     }
-
-    private static void debug(String msg)
-    {
-        logger.debugPrintf("%s\n",msg); 
-    }
-    
 
     /**
      * Optimized getAttribute. Will use MslxEntry or update MlsxEntry of the
@@ -2761,7 +2720,7 @@ public class GftpFileSystem extends FileSystemNode
             String val = entry.get(UNIX_MODE);
             if (isEmpty(val) == false)
             {
-                debug("> unix_mode=" + val);
+                //debug("> unix_mode=" + val);
                 // Parse Octal String:
                 int mode = Integer.parseInt(val, 8);
 
@@ -2770,7 +2729,7 @@ public class GftpFileSystem extends FileSystemNode
             else
             {
                 String permstr = entry.get(MlsxEntry.PERM);
-                debug("> permstr=" + permstr);
+                //debug("> permstr=" + permstr);
                 val = (isDir == true ? "d" : "-")
                         + new PermissionInfo(permstr).toString();
             }
@@ -2915,12 +2874,12 @@ public class GftpFileSystem extends FileSystemNode
             throws VlException
     {
  
-        String txt="GFTP: Performing 3rd party transfer:"
-                           + sourceServer.getHostname() + ":"+sourceServer.getPort()+" => "
-                           + targetServer.getHostname() + ":"+targetServer.getPort() +"\n";
+        String formatstr="GFTP: Performing 3rd party transfer:%s:%d => %s:%d\n";
                            
-        monitor.logPrintf(txt);
-        debug(txt);
+        monitor.logPrintf(formatstr,sourceServer.getHostname(),sourceServer.getPort(),
+                targetServer.getHostname(),targetServer.getPort() );
+        logger.debugPrintf(formatstr,sourceServer.getHostname(),sourceServer.getPort(),
+                targetServer.getHostname(),targetServer.getPort() );
         
         String sourcefilepath = sourceVrl.getPath();
         String destfilepath = targetVrl.getPath();
@@ -2935,8 +2894,8 @@ public class GftpFileSystem extends FileSystemNode
         boolean sourceDCAU=sourceServer.useDataChannelAuthentication(); 
         boolean destDCAU=targetServer.useDataChannelAuthentication(); 
         
-        debug("sourceDCAU="+sourceDCAU);
-        debug("destDCAU="+destDCAU);
+        //debug("sourceDCAU="+sourceDCAU);
+        //debug("destDCAU="+destDCAU);
         
         long sourceSize=-1;
         // not all storage elements like this: 
@@ -2946,7 +2905,7 @@ public class GftpFileSystem extends FileSystemNode
         }
         catch (Exception e)
         {
-            debug("Warning could not get size of file:"+sourcefilepath); 
+            logger.warnPrintf("Warning could not get size of file:%s\n",sourcefilepath); 
         }
         
         // both must be true or false. 
@@ -3033,8 +2992,7 @@ public class GftpFileSystem extends FileSystemNode
         }
         catch (Throwable e)
         {
-            debug("*** Exception:"+e); 
-            
+            logger.logException(ClassLogger.ERROR,e,"Exception during 3rd party transfer\n"); 
             monitor.logPrintf("*** Error: Exception during 3rd party transfer:"+e+"\n");
             VlException vle = convertException(e);
             monitor.setException(vle);

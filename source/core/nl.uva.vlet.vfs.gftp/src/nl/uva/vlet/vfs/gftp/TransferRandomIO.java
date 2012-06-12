@@ -18,7 +18,7 @@
  * ---
  * $Id: TransferRandomIO.java,v 1.2 2011-04-18 12:05:09 ptdeboer Exp $  
  * $Date: 2011-04-18 12:05:09 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vfs.gftp;
@@ -30,68 +30,67 @@ import org.globus.ftp.Buffer;
 import org.globus.ftp.FileRandomIO;
 
 /**
- * Creates a FileRandomIO file which masks the 
- * method used, so the progress can be measured. 
+ * Creates a FileRandomIO file which masks the method used, so the progress can
+ * be measured.
  * <p>
- * Also, I couln't find a way to abort an ongoing 
- * file transfer, so by calling setMustStop(), this
- * object will throw an exception to stop the file 
- * transfer!
+ * Also, I couln't find a way to abort an ongoing file transfer, so by calling
+ * setMustStop(), this object will throw an exception to stop the file transfer!
  * 
  * @author P.T. de Boer
  */
 
 public class TransferRandomIO extends FileRandomIO
 {
-    private long readCount=0;
-    private long writeCount=0;
-    private boolean mustStop=false;
-    
+    private long readCount = 0;
+
+    private long writeCount = 0;
+
+    private boolean mustStop = false;
+
     public TransferRandomIO(RandomAccessFile arg0)
     {
         super(arg0);
     }
+
     public void setMustStop()
     {
-        this.mustStop=true; 
+        this.mustStop = true;
     }
-    
+
     public synchronized Buffer read() throws IOException
     {
-        if (mustStop==true) 
+        if (mustStop == true)
             throw new IOException("Trasfer interrupted!");
-        
-        Buffer buf=super.read();
-        
-        // huh ? 
-        if (buf==null) 
+
+        Buffer buf = super.read();
+
+        // huh ?
+        if (buf == null)
             return null;
-        
+
         // update transfer size:
-        readCount+=buf.getLength();
+        readCount += buf.getLength();
         return buf;
 
     }
 
     public synchronized void write(Buffer buf) throws IOException
     {
-        if (mustStop==true) 
+        if (mustStop == true)
             throw new IOException("Trasfer interrupted!");
-     
-        
-        super.write(buf); 
-        writeCount+=buf.getLength(); 
-    }
-    
-    public long getNrRead() 
-    {
-        return readCount; 
-    }
-    
-    public long getNrWritten() 
-    {
-        return writeCount; 
+
+        super.write(buf);
+        writeCount += buf.getLength();
     }
 
+    public long getNrRead()
+    {
+        return readCount;
+    }
+
+    public long getNrWritten()
+    {
+        return writeCount;
+    }
 
 }

@@ -18,13 +18,14 @@
  * ---
  * $Id: TransferMarkerlistener.java,v 1.2 2011-04-18 12:05:09 ptdeboer Exp $  
  * $Date: 2011-04-18 12:05:09 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vfs.gftp;
 
 import java.util.Vector;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 
 import org.globus.ftp.GridFTPRestartMarker;
@@ -37,46 +38,46 @@ public class TransferMarkerlistener implements MarkerListener
 
     public TransferMarkerlistener(GftpFileSystem gftpFileSystem)
     {
-      
+
     }
 
     public void markerArrived(Marker marker)
     {
         try
         {
-        if (marker instanceof PerfMarker)
-        {
-            PerfMarker perfMarker=(PerfMarker)marker;
-            Global.errorPrintln(this,"PerfMarker:"+perfMarker);            
-            Global.errorPrintln(this,"PerfMarker.timestamp       :"+perfMarker.getTimeStamp());
-            Global.errorPrintln(this,"PerfMarker.stripIndex      :"+perfMarker.getStripeIndex());
-            Global.errorPrintln(this,"PerfMarker.totalStipeCount :"+perfMarker.getTotalStripeCount());
-        }
-        else if (marker instanceof GridFTPRestartMarker)
-        {
-            Vector vec = ((GridFTPRestartMarker)marker).toVector(); 
-            Global.errorPrintln(this,"GridFTPRestartMarker:"+((GridFTPRestartMarker)marker).toVector() );
-            
-            if (vec!=null)
+            if (marker instanceof PerfMarker)
             {
-                for (Object obj:vec)
+                PerfMarker perfMarker = (PerfMarker) marker;
+                // Global.errorPrintln(this,"PerfMarker:"+perfMarker);
+                // Global.errorPrintln(this,"PerfMarker.timestamp       :"+perfMarker.getTimeStamp());
+                // Global.errorPrintln(this,"PerfMarker.stripIndex      :"+perfMarker.getStripeIndex());
+                // Global.errorPrintln(this,"PerfMarker.totalStipeCount :"+perfMarker.getTotalStripeCount());
+            }
+            else if (marker instanceof GridFTPRestartMarker)
+            {
+                Vector vec = ((GridFTPRestartMarker) marker).toVector();
+                // Global.errorPrintln(this,"GridFTPRestartMarker:"+((GridFTPRestartMarker)marker).toVector()
+                // );
+
+                if (vec != null)
                 {
-                    Global.errorPrintln(this,"GridFTPRestartMarker: obj"+obj); 
+                    // for (Object obj:vec)
+                    // {
+                    // Global.errorPrintln(this,"GridFTPRestartMarker: obj"+obj);
+                    // }
                 }
             }
-        }   
-        else
-        { 
-            Global.errorPrintln(this,"Marker:"+marker.getClass());
-        }
-        
+            else
+            {
+                // Global.errorPrintln(this,"Marker:"+marker.getClass());
+            }
+
         }
         catch (Exception e)
         {
-            Global.errorPrintStacktrace(e);  
+            Global.logException(ClassLogger.ERROR,this,e,"markerArrived() Exception\n"); 
         }
 
-        
     }
 
 }

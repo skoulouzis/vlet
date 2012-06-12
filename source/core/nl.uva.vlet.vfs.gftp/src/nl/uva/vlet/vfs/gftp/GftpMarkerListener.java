@@ -33,8 +33,8 @@ public class GftpMarkerListener implements MarkerListener
 	// Not used yet: 
 	public void markerArrived(Marker arg) 
 	{
-		Global.infoPrintln(this,">>> Marker Received. Ignoring:"+arg); 
-		Global.infoPrintln(this,">>> Marker class   ="+arg.getClass());		
+		Global.infoPrintf(this,">>> Marker Received. Ignoring:%s\n",arg); 
+		Global.infoPrintf(this,">>> Marker class   =%s\n",arg.getClass());		
 	}
 
 }

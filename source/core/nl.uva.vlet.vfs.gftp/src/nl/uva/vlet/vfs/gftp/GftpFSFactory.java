@@ -24,20 +24,24 @@
 package nl.uva.vlet.vfs.gftp;
 
 
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_ALLOW_3RD_PARTY;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_GROUP;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_HOSTNAME;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_OWNER;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PASSIVE_MODE;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_PORT;
+import static nl.uva.vlet.data.VAttributeConstants.ATTR_UNIQUE;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.VFS;
 import nl.uva.vlet.vfs.VFSFactory;
-import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFileSystem;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRSContext;
 import nl.vlet.uva.grid.globus.GlobusUtil;
-import static nl.uva.vlet.data.VAttributeConstants.*;
 
 
 /**
@@ -88,11 +92,6 @@ public class GftpFSFactory extends VFSFactory
     public String[] getSchemeNames()
     {
         return supportedTypes;
-    }
-
-    private static void Debug(String string)
-    {
-        Global.debugPrintln("GridFTPFS",string);
     }
 
     /* (non-Javadoc)

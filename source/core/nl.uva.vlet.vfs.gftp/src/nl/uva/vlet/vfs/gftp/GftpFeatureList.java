@@ -18,7 +18,7 @@
  * ---
  * $Id: GftpFeatureList.java,v 1.2 2011-04-18 12:05:09 ptdeboer Exp $  
  * $Date: 2011-04-18 12:05:09 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vfs.gftp;
@@ -30,132 +30,117 @@ import org.globus.ftp.FeatureList;
 /**
  * Util class around Globus GFTP FeatureList.
  * 
- * Sadly org.globus.ftp.FeatureList doesn't parse all Feature List 
- * command like MLST. 
- * 
- * @author P.T. de Boer 
+ * Sadly org.globus.ftp.FeatureList doesn't parse all Feature List command like
+ * MLST.
  * 
  */
-public class GftpFeatureList 
+public class GftpFeatureList
 {
-	FeatureList featureList=null;
-	
-	public static final String UTF8="UTF8"; 
-	public static final String GETPUT="GETPUT"; 
-	// doesn't get parsed well 
-	//public static final String MLST="MLST"; 
-	public static final String LANG_EN="LANG EN"; 
-	
-	public static String gftpFeatureNames[]=
-		{
-			FeatureList.ABUF,
-			FeatureList.DCAU,
-			FeatureList.ERET,
-			FeatureList.ESTO,
-			FeatureList.MDTM,
-			FeatureList.PARALLEL,
-			FeatureList.PIPE,
-			FeatureList.SBUF,
-			FeatureList.SIZE,
-			UTF8,
-			GETPUT,
-			//MLST,
-			LANG_EN
-		};
-	
-	static
-	{
-		Field[] fields = FeatureList.class.getFields(); 
-		
-		for (Field f:fields)
-		{
-			if (f.getName().compareTo("featVector")==0)
-			{
-				f.setAccessible(false); 
-			}
-		}
-	}
-	
-	public GftpFeatureList(FeatureList list)
-	{
-		this.featureList=list;  
-		
-	}
-	
-	public String toString()
-	{
-		String str="{FeatureList:";
-		String missing="";
-		
-		for (int i=0;i<gftpFeatureNames.length;i++)
-		{
-			String name=gftpFeatureNames[i]; 
-			// last comma: 
-			String comma=(i+1<gftpFeatureNames.length)?",":"";
-			
-			if (this.featureList.contains(name))
-			{
-				str+=name+comma;
-			}
-			else
-			{
-				str+=comma; 
-				missing+=name+comma;
-			}
-		}
-		
-		str+=",(missing="+missing+")}"; 
-		
-		return str; 
-	}
+    FeatureList featureList = null;
 
-	public String toCommaString()
-	{
-		String str=""; 
-		
-		for (int i=0;i<gftpFeatureNames.length;i++)
-		{
-			String name=gftpFeatureNames[i]; 
-			// last comma: 
-			String comma=(i+1<gftpFeatureNames.length)?",":"";
-			
-			if (this.featureList.contains(name))
-			{
-				str+=name+comma;
-			}
-		  
-		}
-		
-		return str; 
-	}
+    public static final String UTF8 = "UTF8";
 
-	
-	/**
-	 * Whether Data Channel Authentication (DCAU) is allowed 
-	 */ 
-	public boolean hasDataChannelAuthentication() 
-	{
-		return hasDCAU();
-	}
-	
-	/** Short for Data Channel Authentication */ 
-	public boolean hasDCAU()
-	{
-		return contains(FeatureList.DCAU); 
-	}
-	
-	/** MTDM=ModifyDateTime ? */ 
-	public boolean hasMDTM()
-	{
-		return contains(FeatureList.MDTM); 
-	}
+    public static final String GETPUT = "GETPUT";
 
-	public boolean contains(String str)
-	{
-		return this.featureList.contains(str);
-	}
-	
-	
-	
-	
+    // doesn't get parsed well
+    // public static final String MLST="MLST";
+    public static final String LANG_EN = "LANG EN";
+
+    public static String gftpFeatureNames[] =
+    { FeatureList.ABUF, FeatureList.DCAU, FeatureList.ERET, FeatureList.ESTO, FeatureList.MDTM, FeatureList.PARALLEL,
+            FeatureList.PIPE, FeatureList.SBUF, FeatureList.SIZE, UTF8, GETPUT,
+            // MLST,
+            LANG_EN };
+
+    static
+    {
+        Field[] fields = FeatureList.class.getFields();
+
+        for (Field f : fields)
+        {
+            if (f.getName().compareTo("featVector") == 0)
+            {
+                f.setAccessible(false);
+            }
+        }
+    }
+
+    public GftpFeatureList(FeatureList list)
+    {
+        this.featureList = list;
+
+    }
+
+    public String toString()
+    {
+        String str = "{FeatureList:";
+        String missing = "";
+
+        for (int i = 0; i < gftpFeatureNames.length; i++)
+        {
+            String name = gftpFeatureNames[i];
+            // last comma:
+            String comma = (i + 1 < gftpFeatureNames.length) ? "," : "";
+
+            if (this.featureList.contains(name))
+            {
+                str += name + comma;
+            }
+            else
+            {
+                str += comma;
+                missing += name + comma;
+            }
+        }
+
+        str += ",(missing=" + missing + ")}";
+
+        return str;
+    }
+
+    public String toCommaString()
+    {
+        String str = "";
+
+        for (int i = 0; i < gftpFeatureNames.length; i++)
+        {
+            String name = gftpFeatureNames[i];
+            // last comma:
+            String comma = (i + 1 < gftpFeatureNames.length) ? "," : "";
+
+            if (this.featureList.contains(name))
+            {
+                str += name + comma;
+            }
+
+        }
+
+        return str;
+    }
+
+    /**
+     * Whether Data Channel Authentication (DCAU) is allowed
+     */
+    public boolean hasDataChannelAuthentication()
+    {
+        return hasDCAU();
+    }
+
+    /** Short for Data Channel Authentication */
+    public boolean hasDCAU()
+    {
+        return contains(FeatureList.DCAU);
+    }
+
+    /** MTDM=ModifyDateTime ? */
+    public boolean hasMDTM()
+    {
+        return contains(FeatureList.MDTM);
+    }
+
+    public boolean contains(String str)
+    {
+        return this.featureList.contains(str);
+    }
+
 }
