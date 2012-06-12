@@ -297,7 +297,20 @@ public abstract class ProxyNode
     {
         return this.instanceOf(VDeletable.class);
     }
+    
+    /** 
+     * Tries to resolve logical parent location.
+     */ 
+    public VRL getParentLocation() throws VlException
+    {
+        ProxyNode parent=getParent(); 
+        VRL vrl=null;
+        if (parent!=null)
+            vrl=parent.getVRL();
 
+        return vrl;  
+    }
+   
     // ========================================================================
     // Abstract Interface
     // ========================================================================
