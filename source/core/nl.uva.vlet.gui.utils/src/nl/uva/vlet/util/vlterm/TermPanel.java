@@ -33,7 +33,6 @@ import java.awt.event.ComponentListener;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.font.FontInfo;
 import nl.uva.vlet.gui.util.charpane.CharPane;
 import nl.uva.vlet.gui.util.charpane.ColorMap;
@@ -55,7 +54,7 @@ public class TermPanel extends JPanel implements ComponentListener
 	private CharPane charPane;    
 	private EmulatorKeyMapper keyMapper;
 	private Emulator emulator; 
-	private boolean mustStop=false;
+	//private boolean mustStop=false;
 	
 	public void initGUI()
 	{
@@ -138,7 +137,7 @@ public class TermPanel extends JPanel implements ComponentListener
 	/** Set Emulator but do not start anything */ 
 	public void setEmulator(Emulator emulator)
 	{
-		this.mustStop=false; 
+		//this.mustStop=false; 
 		this.emulator=emulator; 
 		this.keyMapper=new EmulatorKeyMapper(emulator);
 		this.addKeyListener(keyMapper); 
@@ -152,7 +151,7 @@ public class TermPanel extends JPanel implements ComponentListener
 			charPane.dispose(); 
 		charPane=null;
 		
-		this.mustStop=true; 
+		//this.mustStop=true; 
         this.keyMapper=null;  
         this.emulator=null; 
 	}
@@ -274,12 +273,7 @@ public class TermPanel extends JPanel implements ComponentListener
 //    	}
 //    }
     
-    private void debug(String msg)
-    {
-    	Global.debugPrintln(this,msg); 
-    }
-	
-
+   
 	public void clearAll() 
 	{
 		this.charPane.clear(); 

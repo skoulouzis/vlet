@@ -33,7 +33,8 @@ public interface EmulatorListener
 
 	/**
 	 * Is send AFTER the terminal has been resized. 
-	 * CharPanel already has updated it size  */ 
+	 * CharPanel already has updated it size 
+	 */ 
 	void notifyResized(int columns,int rows); 
 	
 }

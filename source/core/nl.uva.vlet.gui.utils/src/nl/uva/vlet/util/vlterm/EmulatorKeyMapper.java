@@ -28,6 +28,7 @@ import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 
 /**
@@ -64,12 +65,12 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 		// keystr matches Token String Reprentation: 
 		// (OPtionally prefix with "VT52_"/"VT100"  for VT52/VT100 codes:
 
-
-		Debug("Input keycode/keychar/keystr (mods="+mods+")="+keycode+"/"+keychar+"/"+keystr); 
-
+		debugPrintf("keyPressed():Input => mods=%d, keycode=%d, char=%s, keystr=%s\n",
+				mods,keycode,""+keychar,keystr); 
+	
 		if (emulator==null)
 		{
-			Debug("*** NO EMULATOR PRESENT ***");
+			debugPrintf("*** NO EMULATOR PRESENT ***\n");
 			return; 
 		}
 		
@@ -97,7 +98,7 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 			{
 				// CTRL-A to CTRL-Z
 				
-				Debug("CTRL-"+(char)keycode);
+				debugPrintf("CTRL-%s\n",""+(char)keycode);
 				// special CTRL-SPACE = send NUL 
 				
 				if ((keycode>=KeyEvent.VK_A) && (keycode<=KeyEvent.VK_Z))
@@ -154,7 +155,7 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 		}
 		catch (Exception ee)
 		{
-			Error("Exception:"+ee);
+			Global.logException(ClassLogger.ERROR,this,ee,"Emulator Exception\n"); 
 		}
 		e.consume(); 
 	}
@@ -165,22 +166,16 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 	{
 
 	}
-
-	private void Error(String msg)
-	{
-        Global.errorPrintln(this,msg);
-	}
-
-
-    private void Debug(String msg) 
+	
+    private void debugPrintf(String format,Object... args)
     {
-        Global.debugPrintln(this,msg);
+        Global.debugPrintf(this,format,args);
     }
     
 
 	public void keyTyped(KeyEvent e)
 	{
-		Debug("Event:"+e);
+		debugPrintf("Event:%s\n",e);
 		
 		int keycode = e.getKeyCode();
 		char keychar=e.getKeyChar(); 
@@ -188,9 +183,10 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 		String keystr=KeyEvent.getKeyText(keycode);
 
 		int mods=e.getModifiersEx();
-		
-		Debug("Typed:: Input keycode/keychar/keystr (mods="+mods+")="+keycode+"/"+keychar+"/"+keystr); 
-		
+
+		debugPrintf("keyTyped():Input => mods=%d, keycode=%d, char=%s, keystr=%s\n",
+				mods,keycode,""+keychar,keystr); 
+		 
 		// International Keymappings: 
 		// if a key is "typed" but not pressed, this was a combo character, 
 		// like "e =>ë, or 'u=>ú 
@@ -214,8 +210,8 @@ public class EmulatorKeyMapper implements TerminalKeyListener, KeyListener
 		}
 		catch (IOException ex) 
 		{
-			Error("Excpetion:"+ex); 
-		} 
+			Global.logException(ClassLogger.ERROR,this,ex,"emulator.send() exception\n"); 
+		}
 		 
 	}
   
