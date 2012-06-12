@@ -692,34 +692,30 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return "{" + type + "," + name + "," + value + enumStr + ",[" + ((isEditable()) ? "E" : "")
                 + ((hasChanged()) ? "C" : "") + "]}";
     }
-
-    /**
-     * This is the only method which really changes the value. Other setValue
-     * methods convert the value to a String value and use this one. Developers
-     * node: All other setValue methods must call this.
-     * 
-     * @param val
-     */
+    
     public String setValue(String val)
     {
-        return _setValue(val);
+        String oldval=value; 
+        _setValue(val);  
+        return oldval; 
     }
 
-    public Object setValue(Object newValue)
+    public Object setValue(Object obj)
     {
-        return _setValue(newValue,true); 
+        Object prev=this.value; 
+        if (obj==null)
+            _setValue(null);
+        
+        return prev; 
     }
     
-    /**
-     * New setter: set value by object. 
-     * if updateType==false, the object will be cast to the original type! 
-     */
-    public Object setValue(Object newValue, boolean updateType)
+    /** Copy value form other VAttribute, but keep current type and flags */
+    public void setValueFrom(VAttribute otherAttr)
     {
-        return _setValue(newValue,updateType); 
+        _setValue(otherAttr.value); // private copy 
     }
 
-    /** Actual setter. */
+    /** Actual setter implemenetation */
     protected String _setValue(String val)
     {
         String orgVal = value;
@@ -743,21 +739,6 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 
         this.changed = true;
         return orgVal;
-    }
-    
-   
-    protected Object _setValue(Object newValue,boolean updateType)
-    {
-        Object oldValue=this.value; 
-        
-        if (newValue==null)
-            this.value=null; 
-        else
-            this.value=newValue.toString(); 
-     
-        this.type=VAttributeType.getObjectType(newValue, VAttributeType.STRING); 
-        
-        return oldValue; 
     }
     
     public boolean isType(VAttributeType otherType)
@@ -1033,4 +1014,5 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
     {
         return StringList.createFrom(getStringValue(), regExp);
     }
+
 }

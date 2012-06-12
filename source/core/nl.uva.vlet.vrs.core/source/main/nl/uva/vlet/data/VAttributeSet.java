@@ -441,9 +441,9 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
         else
         {
             Object oldValue=orgAttr.getValueObject(); 
-            // this method will change the Attribute 
-            // and update the 'changed' flag but keeps original type! 
-            orgAttr.setValue(val); // New: Use Object 
+            
+            // Update value only. 
+            orgAttr.setValue(val); 
             
             /** Return Value as Object which type matches the VAttribute Type */ 
             return oldValue; 
@@ -745,10 +745,9 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
               
               if ((oldVal!=null) && StringUtil.isEmpty(oldVal.toString())==false)
               {
-                  //update value, but use new type (and attributes) 
+                  // update value, but use new type (and attributes) 
                   // this will cause an implicit cast from old value to new value! 
-                  newAttr.setValue(oldAttr.getValueObject(),false); 
-                  //newAttr.forceSetValue(oldAttr.getValue());
+                  newAttr.setValueFrom(oldAttr); // (oldAttr.getValueObject()); 
               }
               // else keep new non empty value ! 
               // Overwrite:
