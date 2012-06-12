@@ -26,7 +26,7 @@ package test;
 
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
-import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.panels.attribute.AttributeEditorForm;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
@@ -42,23 +42,24 @@ public class testAttributeEditor
         
         VAttribute attrs[]=new VAttribute[len];
         
-        ServerInfo srbInfo=null;
+        ServerInfo lfcInfo=null;
+        
         try
         {
-            srbInfo = new ServerInfo(VRSContext.getDefault(),new VRL("srb://piter.de.boer@srb.grid.sara.nl/home/"));
+            lfcInfo=VRSContext.getDefault().getServerInfoFor(new VRL("lfn://lfc.grid.sara.nl:5010/"),true); 
         }
-        catch (VRLSyntaxException e)
+        catch (VlException e)
         {
             e.printStackTrace();
         }
         
-        VAttribute srbAttrs[]=srbInfo.getAttributes(); 
+        VAttribute lfcAttrs[]=lfcInfo.getAttributes(); 
         
         for (int i=0;i<len;i++)
         {
-            if ((i<srbAttrs.length) && (srbAttrs[i]!=null))
+            if ((i<lfcAttrs.length) && (lfcAttrs[i]!=null))
             {
-                attrs[i]=srbAttrs[i];
+                attrs[i]=lfcAttrs[i];
             }
             else
             {

@@ -25,10 +25,7 @@ package test;
 
 import javax.swing.JFrame;
 
-
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
-import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeSet;
 import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.gui.panels.attribute.AttributePanel;
@@ -47,20 +44,17 @@ public class testAttributePanel
         AttributePanel panel=new AttributePanel();
         panel.setVisible(true); 
         
-        // create SRBServerInfo panels:
-        ServerInfo irodsInfo=null;
+        ServerInfo lfcInfo=null;
         try
         {
-            irodsInfo = new ServerInfo(VRSContext.getDefault(),new VRL("irods://piter_de_boer@irods.grid.sara.nl/SARA_BIGGRID/piter_de_boer/"));
+            lfcInfo = new ServerInfo(VRSContext.getDefault(),new VRL("lfn://lfc.grid.sara.nl:5010/"));
         }
         catch (VRLSyntaxException e)
         {
             e.printStackTrace();
         }
         
-        VAttribute srbAttrs[]=irodsInfo.getAttributes(); 
-        
-        VAttributeSet attrs=irodsInfo.getAttributeSet();
+        VAttributeSet attrs=lfcInfo.getAttributeSet();
         AttributePanel.showEditor(attrs); 
         
         // tests asynchtonous setAttributes ! 
