@@ -899,7 +899,6 @@ public final class ProxyVNode extends ProxyNode
         fireChildAdded(this,node); 
     }
     
-    
     public ProxyVNode getParent() throws VlException
     {
         if (cache.getProxyNodeParent() == null)

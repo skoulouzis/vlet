@@ -30,13 +30,12 @@ import nl.uva.vlet.gui.proxyvrs.ProxyVRSClient;
 import nl.uva.vlet.vrs.ResourceEvent;
 
 /**
- * Since the ProxyTNode uses a Cache, it must listen
- * to ProxyModel events as well.
+ * Since the ProxyCNode uses a Cache, it must listen
+ * to ProxyResource events as well.
  *  
  * The default action is just to clear the cache in the case 
  * of a Resource event. 
  */ 
-
 public class ProxyVNodeCacheUpdater implements ProxyResourceEventListener
 {
     ProxyVNodeCacheUpdater()
@@ -49,26 +48,20 @@ public class ProxyVNodeCacheUpdater implements ProxyResourceEventListener
     {
 		if (e==null)
 		{
-			Global.warnPrintln(this,"Warning: NULL resource event");
 			return ; 
 		}
 		
         // check if node is in cache, if not ignore!
-        
         ProxyVNode node = ProxyVNodeFactory.getInstance().getFromCache(e.getSource());
         
-		if(node==null)
+		if (node==null)
 		{
-			Global.debugPrintln(this,"Ignore event. Node not in cache:"+e.getSource());
+			Global.infoPrintf(this,"Ignoring event. Node not in cache:%s\n",e.getSource());
 			return; 
 		}
 		
-        //if (node!=null)
-        //{
-            
-            // udpate cache:
-            switch (e.getType())
-            {
+		switch (e.getType())
+		{
                 case SET_ATTRIBUTES:
                     //update attributes:
                     if (node!=null)
