@@ -137,7 +137,7 @@ public class GftpFileSystem extends FileSystemNode
     static
     {
         logger=ClassLogger.getLogger(GftpFileSystem.class); 
-        logger.setLevelToDebug(); 
+        //logger.setLevelToDebug(); 
     }
     
     /** EDG SE backwards compatibility options (HACK) attribute */
