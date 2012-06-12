@@ -1005,7 +1005,7 @@ public final class ProxyVNode extends ProxyNode
    
     public String toString()
     {
-        return "<ProxyTNode:#" + getID() + ":" + this.getVRL() + ">";
+        return "<ProxyTNode id='#" + getID() + "' type="+getType()+" vrl='" + this.getVRL() + "'/>";
     }
      
     /**
@@ -1777,28 +1777,7 @@ public final class ProxyVNode extends ProxyNode
         vfs.close();
     }
 
-
-	/** Return logical parent location if node is in cache ! */ 
-	public static VRL resolveLogicalParentLocation(VRL viewedLocation)
-	{
-		ProxyVNode pnode = proxyFactory.getFromCache(viewedLocation);
-		
-		if (pnode.isResourceLink())
-			try
-			{
-				pnode=pnode.getTargetPNode();
-			}
-			catch (VlException e)
-			{
-				e.printStackTrace();
-				return null;
-			} 
-		
-		if (pnode!=null)
-			return pnode.vnode.getParentLocation();
-		else
-			return null; 
-	}
+	
 	
 	 /**
      * Does a logical comparison of Locations. 

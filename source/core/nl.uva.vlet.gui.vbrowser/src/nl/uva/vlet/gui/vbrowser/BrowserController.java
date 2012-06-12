@@ -362,6 +362,12 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		return viewedNode.getVRL();
 	}
+	
+	public ProxyNode getViewPNode()
+	{
+	    return viewedNode;
+	}
+	
 
 	/**
 	 * Perform selection on VComponent. 
@@ -1056,14 +1062,11 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				{
 					// already update text field: 
 					setLocationTextField(location);
-
 					ProxyNode node = openLocation(location);
-					
 					// Prefetch Attributes! 
 					String mimeType=node.getMimeType(); 
 				
 					// set Root Resource node and add to History
-
 					if ((node.isResourceLink()==true) && (resolveLinks==true)) 
 					{
 						node=node.getTargetPNode(); 
@@ -1096,6 +1099,55 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		task.startTask();
 	}
 
+	// since a "browse up" might actually trigger a openLocation() perform it in the background!
+	protected void asyncBrowseUp()
+    {
+	    final VRL loc=getViewedLocation(); 
+	    
+	    ActionTask task = new ActionTask(this, "asyncBrowseUp():" + loc)
+        {
+            public void doTask()
+            {
+                try
+                {
+                    VRL parentLoc;
+                   
+                    ProxyNode pnode=getViewedNode(); 
+        
+                    if (pnode.isResourceLink())
+                    {
+                        // resolve link and browse "up" actual location: 
+                        pnode=pnode.getTargetPNode(); 
+                    }
+                    
+                    // get (default) logical location 
+                    parentLoc=pnode.getParentLocation(); 
+        
+                    // root file system: -> browse to MyVle !  
+                    if ((loc.isRootPath()==true) && (isEmpty(loc.getQuery())))
+                    {
+                        parentLoc=ProxyVRSClient.getInstance().getVirtualRootLocation(); 
+                    }
+        
+                    debug("parentLoc="+parentLoc);
+                    // Async -> Async ! 
+                    asyncOpenLocation(parentLoc);
+                }
+                catch (VlException e)
+                {
+                    handle(e);
+                }
+            }
+
+            @Override
+            public void stopTask()
+            {
+            }
+        };
+        
+        task.startTask(); 
+    }
+	
 	private void performViewNode(ProxyNode node, boolean addToHistory)
 	{
 		ViewContext context=new ViewContext(this); // default, start embedded, etc.  
@@ -1282,7 +1334,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			{
 				if (vbrowser.resourceTree.isRootVisible()==true)
 					// init with MyVLe:  
-					vbrowser.resourceTree.setRootNode(_getVirtualRootNode(),orgNode.getVRL()); 
+					vbrowser.resourceTree.setRootNode(getVirtualRootNode(),orgNode.getVRL()); 
 				else
 					vbrowser.resourceTree.setRootNode(orgNode);
 			}
@@ -1567,30 +1619,10 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	public void performBrowseUp()
 	{
-		try
-		{
-			VRL parentLoc;
+	    asyncBrowseUp();
+    }
 
-			// browse up to MyVLe ! 
-			VRL loc=getViewedLocation(); 
-
-			if ((loc.isRootPath()==true) && (isEmpty(loc.getQuery())))
-				parentLoc=UIGlobal.getVRSContext().getVirtualRootLocation();  
-			else
-				parentLoc=_resolveLogicalParentLocation(this.getViewedLocation());
-
-			debug("parentLoc="+parentLoc);
-
-			asyncOpenLocation(parentLoc);
-		}
-		catch (VlException e)
-		{
-			System.out.println("***Error: Exception:" + e);
-			e.printStackTrace();
-			handle(e);
-		}
-
-	}
+	
 
 	private boolean isEmpty(String str)
 	{
@@ -2862,13 +2894,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
     
     /** Return logical parent location if node is in cache ! */ 
     
-	public VRL _resolveLogicalParentLocation(VRL viewedLocation)
-	{
-		return nl.uva.vlet.gui.proxynode.impl.direct.ProxyVNode.resolveLogicalParentLocation(viewedLocation); 
-	}
-	
 
-	private ProxyNode _getVirtualRootNode() throws VlException
+	private ProxyNode getVirtualRootNode() throws VlException
 	{
 		return ProxyNode.getVirtualRoot(); 
 	}
