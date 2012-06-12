@@ -24,8 +24,8 @@
 package nl.uva.vlet.vdriver.vrs.infors;
 
 import java.io.File;
-import java.util.Vector;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.data.BooleanHolder;
@@ -33,10 +33,7 @@ import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
-import nl.uva.vlet.exception.NotImplementedException;
 import nl.uva.vlet.exception.VlException;
-import nl.uva.vlet.vdriver.vrs.infors.CompositeServiceInfoNode;
-import nl.uva.vlet.vdriver.vrs.infors.InfoConstants;
 import nl.uva.vlet.vdriver.vrs.infors.net.NetworkNode;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrms.ConfigManager;
@@ -45,7 +42,7 @@ import nl.uva.vlet.vrs.VEditable;
 import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRSContext;
 
-public class LocalSystem extends CompositeServiceInfoNode implements VEditable
+public class LocalSystem extends CompositeServiceInfoNode<VNode> implements VEditable
 {
 	
 	public LocalSystem(VRSContext context)
@@ -58,7 +55,7 @@ public class LocalSystem extends CompositeServiceInfoNode implements VEditable
         }
         catch (VlException e)
         {
-            Global.errorPrintln(this,"Failed to initialize child:"+e); 
+            Global.logException(ClassLogger.ERROR,this,e,"LocalSystemNode:Failed to initialize childs:"); 
         } 
 		
 		//	serverInstances=new ServerInstanceGroup(vrsContext); 
@@ -141,7 +138,7 @@ public class LocalSystem extends CompositeServiceInfoNode implements VEditable
      // start with userHome:
         addPathNode(vrsContext.getUserHomeLocation(),"home","default/home_folder.png");
         // debugging:
-        if (Global.getDebug()) 
+        if (Global.getLogger().isLevelDebug()) 
             addPathNode(vrsContext.getConfigManager().getUserConfigDir(),"config","config-folder-48.png");
         addFilesystemRoots(); 
     }
@@ -295,8 +292,7 @@ public class LocalSystem extends CompositeServiceInfoNode implements VEditable
 		}
 		catch (VlException e) 
 		{
-			Global.errorPrintln(this,"Exception:"+e); 
-			Global.errorPrintStacktrace(e);
+			Global.logException(ClassLogger.ERROR,this,e,"refresh(): got exception\n"); 
 		} 
 		this.fireRefresh(); 
 	}
