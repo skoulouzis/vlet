@@ -81,7 +81,8 @@ public class AutoCompleteTextField extends JComboBox
     private void init()
     {
         history.addUnique("myvle:/");
-        history.addUnique("file:///"+Global.getUserHome());
+        history.addUnique("file:"+Global.getUserHome());
+        history.addUnique("file:/"); 
         
         history.sort(true);
 
@@ -168,7 +169,6 @@ public class AutoCompleteTextField extends JComboBox
 
     protected void saveHistory()
     {
-
         String insertedText = getTextField().getText();
         if (!StringUtil.isEmpty(insertedText) || !insertedText.equals(" "))
         {
@@ -180,7 +180,6 @@ public class AutoCompleteTextField extends JComboBox
         ComboBoxModel historyListModel = new DefaultComboBoxModel(history.toArray());
         setModel(historyListModel);
         
-        
         int index = history.indexOf(insertedText);
         if (getSelectedIndex()!=index)
         {
@@ -189,7 +188,6 @@ public class AutoCompleteTextField extends JComboBox
             setSelectedIndex(index);
             this.setActionCommand(orgCmd);
         }
-
     }
 
     public String getText()
@@ -213,7 +211,6 @@ public class AutoCompleteTextField extends JComboBox
             UIGlobal.swingInvokeLater(updater);
             return; 
         }
- 
         
         this.getTextField().setText(txt); 
     }
