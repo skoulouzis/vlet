@@ -152,13 +152,13 @@ public class VomsTest
 
 	private static void Error(String str)
 	{
-		Global.errorPrintln(VomsTest.class, str);
+		Global.errorPrintf(VomsTest.class,"%s\n", str);
 		
 	}
 
 	private static void Message(String str)
 	{
-		Global.infoPrintln(VomsTest.class,str);
+		Global.infoPrintf(VomsTest.class,"%s\n",str);
 		
 	}
 }

@@ -618,7 +618,7 @@ public class VomsUtil
                     VOServer[] voServers = new VOServer[nrOfservers];
                     
 
-                    Global.infoPrintln(VO.class," - nrOfServers="+nrOfservers); 
+                    logger.infoPrintf(" - nrOfServers=%d\n",nrOfservers); 
                     
                     for( int i = 0 ; i < nrOfservers ; i ++ )
                     {
@@ -654,13 +654,13 @@ public class VomsUtil
 
                         voServers[i]=new VOServer(host,port,certFile,hostDN); 
                         
-                        Global.infoPrintln(VO.class," - VO server="+host+":"+port);  
-                        Global.infoPrintln(VO.class," - VO     DN="+hostDN);  
+                        logger.infoPrintf(" - VO server=%s:%d\n",host,port);  
+                        logger.infoPrintf(" - VO     DN=%s\n",hostDN);  
                          
 
                     } // end of server tag loop
                     vo.setServers(voServers); 
-                    Global.infoPrintln(VO.class,"Returning VO="+vo);
+                    logger.infoPrintf("Returning VO=%s\n",vo);
                     // keep filename; 
                     vo.setVOMSXmlFile(vomsFilename);  
                     
@@ -676,33 +676,23 @@ public class VomsUtil
         }
         catch (ParserConfigurationException e)
         {
-            // nest exception 
-            Global.debugPrintln(VO.class,"Exception when reading from:"+vomsFilename); 
-            Global.debugPrintln(VO.class,"Exception="+e);
-            
+            logger.debugPrintf("Exception when reading from file:%s\n",vomsFilename); 
             throw new VlException("Parse Error","Couldn't parse:"+vomsFilename,e); 
         }
         catch (IOException e)
         {
-            // nest exception 
-            Global.debugPrintln(VO.class,"Exception when reading from:"+vomsFilename); 
-            Global.debugPrintln(VO.class,"Exception="+e);
-            
+            logger.debugPrintf("Exception when reading from file:%s\n",vomsFilename); 
             throw new VlException("Read Error","Couldn't read file:"+vomsFilename,e); 
         }
         catch (SAXException e)
         {
-            // nest exception 
-            Global.debugPrintln(VO.class,"Exception when reading from:"+vomsFilename); 
-            Global.debugPrintln(VO.class,"Exception="+e);
-            
+            logger.debugPrintf("Exception when reading from file:%s\n",vomsFilename); 
             throw new VlException("Parse Error","Couldn't parse:"+vomsFilename,e); 
         }
         // others: 
         catch(Exception e )
         {
-            Global.debugPrintln(VO.class,"Exception when reading from:"+vomsFilename); 
-            Global.debugPrintln(VO.class,"Exception="+e); 
+            logger.debugPrintf("Exception when reading from file:%s\n",vomsFilename); 
             throw new VlException("VOMS Exception",e.getMessage(),e); 
         }
 
