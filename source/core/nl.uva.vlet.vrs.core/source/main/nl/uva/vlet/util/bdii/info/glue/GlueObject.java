@@ -111,11 +111,6 @@ public class GlueObject
 
     }
 
-    private void debug(String msg)
-    {
-        Global.debugPrintln(this, msg);
-    }
-
 //    public Object getAttribute(String glueType)
 //    {
 //        return glueAttributes.get(glueType);

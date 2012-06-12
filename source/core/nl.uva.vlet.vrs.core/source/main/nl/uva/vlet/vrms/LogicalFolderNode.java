@@ -25,7 +25,6 @@ package nl.uva.vlet.vrms;
 
 import java.util.Vector;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
@@ -162,7 +161,7 @@ public abstract class LogicalFolderNode<T extends VNode> extends VCompositeNode 
 	 
 	public VNode findNode(VRL location,boolean recurse) throws VlException
 	{
-		debug("Find subnode:"+this+" checking: "+location);
+	    //debug("Find subnode:"+this+" checking: "+location);
 		
 		VNode[] nodes = this.getNodes(); 
 		
@@ -170,7 +169,7 @@ public abstract class LogicalFolderNode<T extends VNode> extends VCompositeNode 
 		{
 			if (node.getLocation().compareTo(location)==0)
 			{
-				debug("Find subnode: Found:"+location); 
+				//debug("Find subnode: Found:"+location); 
 				return node;
 			}
 			else if (recurse && node.getLocation().isParentOf(location))
@@ -189,12 +188,7 @@ public abstract class LogicalFolderNode<T extends VNode> extends VCompositeNode 
 		}
 		return null;
 	}
-
-	private void debug(String msg) 
-	{
-		Global.debugPrintln(this,msg); 
-	}
-
+	
 	public boolean unlinkNodes(VNode nodes[])
 	{
 		boolean result=true; 

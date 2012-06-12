@@ -114,7 +114,7 @@ public class Scanner
     
     protected void scanHost(String host)
     {
-        info("> Scanning host:"+host); 
+        //info("> Scanning host:"+host); 
         
         // ===
         // private stateFULL port tester // 
@@ -124,7 +124,7 @@ public class Scanner
         for (int i=0;i<defaultPorts.length;i++)
         {
             int port=defaultPorts[i]; 
-            info("> - Scanning host+port:"+host+":"+port);
+            //info("> - Scanning host+port:"+host+":"+port);
             
             long startTime=0; 
             long endTime=0;
@@ -135,11 +135,11 @@ public class Scanner
             
             for (ProtocolTester portTester:testers)
             {
-                info("> - - Scanning protocol:"+host+":"+port+" for:"+portTester.getScheme());
+                //info("> - - Scanning protocol:"+host+":"+port+" for:"+portTester.getScheme());
                 
                 // new instance: 
                 PortInfo info=new PortInfo(port);
-                // info.clear();
+                // .clear();
                 // preset time out value: 
                 info.tcpTimeout=quickConnectTimeOut;
                 
@@ -159,7 +159,7 @@ public class Scanner
                   }
                     
                   endTime=System.currentTimeMillis();
-                  info("port connected:"+host+":"+port);
+                  //info("port connected:"+host+":"+port);
                   info.status=ConnectionStatus.CONNECTED;  
                   info.tcpSetupTime=(int)(endTime-startTime);  
                   info.tcpConnectOK=true;
@@ -171,10 +171,10 @@ public class Scanner
                       testerResult=portTester.check(sock); 
                       info.reponseMsg=portTester.getReponseString(); 
                       info.responseTime=portTester.getReponseTime(); 
-                      if (testerResult==true)
-                      {
-                          info("> - - +++ Protocol matched:"+portTester.getScheme()+" (for:"+host+":"+port+")");
-                      }
+//                      if (testerResult==true)
+//                      {
+//                          info("> - - +++ Protocol matched:"+portTester.getScheme()+" (for:"+host+":"+port+")");
+//                      }
                   }
                     
                   if (sock.isConnected())     
@@ -186,7 +186,7 @@ public class Scanner
                     String msg=e.getMessage();
                     if (msg.contains("Connection refused"))
                     {
-                        info("> - - *** Socket refused:"+host+":"+port);
+                        //info("> - - *** Socket refused:"+host+":"+port);
                         info.status=ConnectionStatus.REFUSED;
                     }
     		    }
@@ -195,7 +195,7 @@ public class Scanner
                     String msg=e.getMessage();
                     if (msg.contains("connect timed out"))
                     {
-                        info("> - - *** Socket timed out:"+host+":"+port);
+                        // info("> - - *** Socket timed out:"+host+":"+port);
                         info.status=ConnectionStatus.TIMED_OUT;
                     }
                 } 
@@ -204,7 +204,7 @@ public class Scanner
                     String msg=e.getMessage();
     //                if (msg.contains("No route to host"))
     //                {
-                        info("> - - *** Error: NO ROUTE:"+host+":"+port);
+                        //info("> - - *** Error: NO ROUTE:"+host+":"+port);
                         info.status=ConnectionStatus.ROUTE_BLOCKED;
     //                }
                 } 
@@ -213,7 +213,7 @@ public class Scanner
                 // ================================================================
                 catch (CertificateException e)
                 {
-                    info("CertificateException for:"+host+":"+port);
+                    //info("CertificateException for:"+host+":"+port);
                     // For certificate error: there was a SSL handshake 
                     info.status=ConnectionStatus.CONNECTED;
                     info.sslError=true;
@@ -225,14 +225,14 @@ public class Scanner
                 //
                 catch (IOException e)
                 {
-                    info("IOException for:"+host+":"+port);
+                    //info("IOException for:"+host+":"+port);
                     info.status=ConnectionStatus.UNKNOWN;   
                     info.exception=e; // keep
                     e.printStackTrace();
                 }
                 catch (Exception e)
                 {
-                    info("Exception for:"+host+":"+port);
+                    //info("Exception for:"+host+":"+port);
                     info.status=ConnectionStatus.UNKNOWN;   
                     info.exception=e; // keep
                     e.printStackTrace();
@@ -330,11 +330,6 @@ public class Scanner
                 
             return infos.get(new Integer(port));  
         }
-    }
-    
-    private void info(String msg)
-    {
-        Global.errorPrintln(this,msg); 
     }
 
     Object scheduleMutex=new Object(); 

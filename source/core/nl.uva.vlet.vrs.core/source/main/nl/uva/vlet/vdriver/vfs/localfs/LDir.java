@@ -133,7 +133,7 @@ public class LDir extends nl.uva.vlet.vfs.VDir
      */
     public VDir getParentDir() throws VlException
     {
-        Debug("LDir:Getting parent of:"+_file.getPath());
+        //Debug("LDir:Getting parent of:"+_file.getPath());
         
         String parentpath=null; 
         
@@ -169,10 +169,6 @@ public class LDir extends nl.uva.vlet.vfs.VDir
 
 	public VAttribute getAttribute(String name) throws VlException
 	{
-		// Very straightforward implementation
-		Global.debugPrintln(this,"getAttribute:for:" + this + ".name="
-				+ name);
-
 		if (name==null) 
 			return null; 
 
@@ -263,7 +259,7 @@ public class LDir extends nl.uva.vlet.vfs.VDir
     
     public boolean delete(boolean recurse) throws VlException
     {
-        Debug("Deleting local directory:"+this);
+        //Debug("Deleting local directory:"+this);
         
         ITaskMonitor  monitor = ActionTask.getCurrentThreadTaskMonitor("Deleting (local) directory:"+this.getPath(),1); 
         
@@ -290,7 +286,7 @@ public class LDir extends nl.uva.vlet.vfs.VDir
         }
         else
         {
-            Debug("Deletion failed");
+            Global.warnPrintf(this,"Deletion returned FALSE for:%s\n",this);
         }
         
         return result; 
@@ -335,11 +331,6 @@ public class LDir extends nl.uva.vlet.vfs.VDir
     // Misc. 
     // ===
 	
-    private void Debug(String str)
-    {
-       Global.debugPrintln("LDir",str);
-    }
-
 	@Override 
 	public boolean isSymbolicLink() throws VlException
 	{
@@ -351,7 +342,7 @@ public class LDir extends nl.uva.vlet.vfs.VDir
     {
         if (isSymbolicLink()==false)
         {
-            Debug("*** WARNING: getLinkTarget:not a link:"+this);
+        	// not a link
             return null; 
         }
         
@@ -363,7 +354,7 @@ public class LDir extends nl.uva.vlet.vfs.VDir
         */ if (localfs.isUnixFS())
                return localfs.getSoftLinkTarget(this.getPath()); 
 
-        Debug("*** WARNING: getLinkTarget: could not resolve local filesystem's link:"+this);
+        Global.warnPrintf(this,"getLinkTarget(): could not resolve local filesystem's link:%s\n",this);
         
         return null; 
     }

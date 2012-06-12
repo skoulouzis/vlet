@@ -95,7 +95,7 @@ public class PortInfo
                else
                    list.merge(protoList);
                port2protocols.put(portI,list); //
-               info("Registering:"+portI+" => "+list);
+               //info("Registering:"+portI+" => "+list);
            }
        }
        
@@ -206,7 +206,7 @@ public class PortInfo
            return testers; 
        }
        
-       info("Returning testers for:"+port+"="+schemeList.toString(",")); 
+       //info("Returning testers for:"+port+"="+schemeList.toString(",")); 
        
        for (String scheme: schemeList)
        {
@@ -219,13 +219,7 @@ public class PortInfo
        
        return testers; 
    }
-
        
-   private static void info(String msg)
-   {
-       Global.errorPrintln(PortInfo.class,msg); 
-   }
-   
    public String getProtocol()
    {
        return this.possibleProtocol; 

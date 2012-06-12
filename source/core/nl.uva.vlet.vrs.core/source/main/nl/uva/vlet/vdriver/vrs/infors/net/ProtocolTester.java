@@ -103,7 +103,7 @@ public class ProtocolTester
                 {
                     try
                     {
-                        info("Waiting for input:"+wait+","+totalWaited+";"); 
+                        //info("Waiting for input:"+wait+","+totalWaited+";"); 
                         
                         Thread.sleep(wait);
                         totalWaited+=wait;
@@ -165,12 +165,7 @@ public class ProtocolTester
             this.validResult=false; 
         }
     }
-
-    private void info(String msg)
-    {
-        Global.errorPrintln(this,msg);
-    }
-      
+   
     public Throwable getException()
     {
         return this.exception; 

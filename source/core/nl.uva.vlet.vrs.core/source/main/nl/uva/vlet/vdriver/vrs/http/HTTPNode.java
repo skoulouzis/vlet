@@ -105,7 +105,7 @@ public class HTTPNode extends VNode implements VStreamAccessable
 
     private void init(VRL loc) throws VlException 
     {
-        Debug("new URL="+loc);
+        //Debug("new URL="+loc);
 
         this.url=loc.toURL();
 
@@ -144,7 +144,7 @@ public class HTTPNode extends VNode implements VStreamAccessable
         {
             for(int i=1;i<strs.length;i++)
             {
-                Debug("getCharsSet, checking:"+strs[i]);
+                //Debug("getCharsSet, checking:"+strs[i]);
 
                 String pars[]=strs[i].split("=");
 
@@ -156,7 +156,7 @@ public class HTTPNode extends VNode implements VStreamAccessable
 
         }
 
-        Debug("Warning: charset parameter not found, returning default for:"+this);
+        //Debug("Warning: charset parameter not found, returning default for:"+this);
 
         return super.getCharSet();
 
@@ -232,11 +232,6 @@ public class HTTPNode extends VNode implements VStreamAccessable
     }
 
     // === Misc === 
-
-    private void Debug(String string)
-    {
-        Global.debugPrintln(this,string); 
-    }
 
     // method needs by streamread/write interface 
     public int getOptimalWriteBufferSize()

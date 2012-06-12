@@ -134,7 +134,7 @@ public class StatInfo
             // skip invalid lines; 
             if ((strs==null) || (strs.length<2))
             {
-                debug("Couldn't parse line:'"+line+"'");                
+                Global.warnPrintf(this,"StatInfo.parser(): Couldn't parse line:'%s'\n",line);
                 continue; 
             }
  
@@ -159,12 +159,7 @@ public class StatInfo
             str+=name+"="+value+";\n"; 
         }
         return str;
-    }
-    
-    private void debug(String msg)
-    {
-        Global.errorPrintln(this,msg);
-    }
+    }   
     
     public String getUserID()
     {

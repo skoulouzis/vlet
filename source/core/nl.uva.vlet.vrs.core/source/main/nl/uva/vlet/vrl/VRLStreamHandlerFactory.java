@@ -18,7 +18,7 @@
  * ---
  * $Id: VRLStreamHandlerFactory.java,v 1.6 2011-04-18 12:00:37 ptdeboer Exp $  
  * $Date: 2011-04-18 12:00:37 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vrl;
@@ -29,109 +29,111 @@ import java.net.URLStreamHandlerFactory;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.net.ssl.SslUtil;
 
-/** 
- * The VRLStreamHandlerFactory. 
- *    
- * It extends URLStreamHandler with the supported protocols 
- * from the VRS Registry. 
- * Important: At startup this StreamHandleFactory has to be created 
- * and set as default in: 
+/**
+ * The VRLStreamHandlerFactory.
+ * 
+ * It extends URLStreamHandler with the supported protocols from the VRS
+ * Registry. Important: At startup this StreamHandleFactory has to be created
+ * and set as default in:
+ * 
  * <pre>
- *     URL.setURLStreamHandlerFactory();
+ * URL.setURLStreamHandlerFactory();
  * </pre>
- * Currently this is done in the Global class. 
- * After this, the URL class can be use to VRS protocols !
+ * 
+ * Currently this is done in the Global class. After this, the URL class can be
+ * use to VRS protocols !
  * <p>
  * Examples:
- * <li> URL url=new URL("gftp://fs2.da2.nikhef.nl/"); </li>  
- *       
+ * <li>URL url=new URL("gftp://fs2.da2.nikhef.nl/");</li>
+ * 
  * @author P.T. de Boer
  */
 
 public class VRLStreamHandlerFactory implements URLStreamHandlerFactory
 {
-    private static VRLStreamHandlerFactory instance=null; 
-    
-	// no constructor:
+    private static VRLStreamHandlerFactory instance = null;
 
-	// Whether to use SUN's 'file://' URL reader ! 
-	private static boolean use_sun_file_handler=true;
+    // no constructor:
+
+    // Whether to use SUN's 'file://' URL reader !
+    private static boolean use_sun_file_handler = true;
 
     public synchronized static VRLStreamHandlerFactory getDefault()
     {
-        if (instance==null)
-            instance=new VRLStreamHandlerFactory();
-        
-        return instance; 
-    }
-    
-    // ========================================================================= //
-    // 
-    // ========================================================================= //
-    
-    private Class<? extends URLStreamHandler> httpsURLHandlerClass;
-    private Class<? extends URLStreamHandler> httpgURLHandlerClass;
-    
-    private VRLStreamHandlerFactory()
-	{
-	    this.httpsURLHandlerClass=SslUtil.createHttpsHandler().getClass();
-	}
-	
-	public URLStreamHandler createURLStreamHandler(String protocol)
-	{
-		Global.debugPrintln("vrl","new protocol="+protocol);
+        if (instance == null)
+            instance = new VRLStreamHandlerFactory();
 
-		if (protocol.compareToIgnoreCase("jar")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.jar.Handler();
-		}
-		// sun http handler ! 
-		else if (protocol.compareToIgnoreCase("mailto")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.mailto.Handler();
-		}
-		// sun http handler ! 
-		else if (protocol.compareToIgnoreCase("ftp")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.ftp.Handler();
-		}
-		else if (protocol.compareToIgnoreCase("gopher")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.gopher.Handler();
-		}
-		// not in java 1.7 :
-		/*else if (protocol.compareToIgnoreCase("verbatim")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.verbatim.Handler();
-		}
-		else if (protocol.compareToIgnoreCase("systemresource")==0)
-		{
-			// return sun's default HTTP handler ! 
-			return new sun.net.www.protocol.systemresource.Handler();
-		}*/
-        else if (protocol.compareToIgnoreCase("https")==0)
+        return instance;
+    }
+
+    // =========================================================================
+    // //
+    //
+    // =========================================================================
+    // //
+
+    private Class<? extends URLStreamHandler> httpsURLHandlerClass;
+
+    private Class<? extends URLStreamHandler> httpgURLHandlerClass;
+
+    private VRLStreamHandlerFactory()
+    {
+        this.httpsURLHandlerClass = SslUtil.createHttpsHandler().getClass();
+    }
+
+    public URLStreamHandler createURLStreamHandler(String protocol)
+    {
+        Global.debugPrintf(this,"createURLStreamHandler() for:%s\n",protocol);
+
+        if (protocol.compareToIgnoreCase("jar") == 0)
+        {
+            // return sun's default HTTP handler !
+            return new sun.net.www.protocol.jar.Handler();
+        }
+        // sun http handler !
+        else if (protocol.compareToIgnoreCase("mailto") == 0)
+        {
+            // return sun's default HTTP handler !
+            return new sun.net.www.protocol.mailto.Handler();
+        }
+        // sun http handler !
+        else if (protocol.compareToIgnoreCase("ftp") == 0)
+        {
+            // return sun's default HTTP handler !
+            return new sun.net.www.protocol.ftp.Handler();
+        }
+        else if (protocol.compareToIgnoreCase("gopher") == 0)
+        {
+            // return sun's default HTTP handler !
+            return new sun.net.www.protocol.gopher.Handler();
+        }
+        // not in java 1.7 :
+        /*
+         * else if (protocol.compareToIgnoreCase("verbatim")==0) { // return
+         * sun's default HTTP handler ! return new
+         * sun.net.www.protocol.verbatim.Handler(); } else if
+         * (protocol.compareToIgnoreCase("systemresource")==0) { // return sun's
+         * default HTTP handler ! return new
+         * sun.net.www.protocol.systemresource.Handler(); }
+         */
+        else if (protocol.compareToIgnoreCase("https") == 0)
         {
 
             // return sun's default HTTP handler !
-            
-            // this.httpsURLHandlerClass=SslUtil.createHttpsHandler().getClass(); 
-            
+
+            // this.httpsURLHandlerClass=SslUtil.createHttpsHandler().getClass();
+
             try
             {
                 return this.httpsURLHandlerClass.newInstance();
             }
             catch (Exception e)
             {
-                throw new Error(e); 
+                throw new Error(e);
             }
 
         }
-        else if ((protocol.compareToIgnoreCase("httpg")==0) && (httpgURLHandlerClass!=null))
+        else if ((protocol.compareToIgnoreCase("httpg") == 0) && (httpgURLHandlerClass != null))
         {
             try
             {
@@ -140,83 +142,80 @@ public class VRLStreamHandlerFactory implements URLStreamHandlerFactory
             }
             catch (Exception e)
             {
-                throw new Error(e); 
+                throw new Error(e);
             }
 
         }
-		else if (protocol.compareToIgnoreCase("http")==0)
-		{
-			
-			String proxyHost=null;
-			int proxyPort=0; 
-			
-			if (Global.useHttpProxy())
-			{
-				
-				proxyHost=Global.getProxyHost(); 
-				proxyPort=Global.getProxyPort();
-				
-				Global.infoPrintln(this,"Using HTTP Proxy="+proxyHost+":"+proxyPort); 
-			
-				// return sun's default HTTP handler ! 
-				return new sun.net.www.protocol.http.Handler(proxyHost,proxyPort);
-			}
-			else
-			{
-				Global.infoPrintln(this,"Using plain HTTP connection");
-				
-				// return sun's default HTTP handler ! 
-				return new sun.net.www.protocol.http.Handler();
-			}
-		}
-		//
-		// Use own https handler so that server certificates 
-		// can be added.
-		//
-
-		/*// sun https handler ! 
-        else if (protocol.compareToIgnoreCase("https")==0)
+        else if (protocol.compareToIgnoreCase("http") == 0)
         {
-            // return sun's default HTTPS handler ! 
-            return new sun.net.www.protocol.https.Handler();
-        }*/
-		else if (use_sun_file_handler)
-		{
-			// 
-			// Following protocols could be handled by the VRS Registry
-			// but only AFTER the Reigstry has been initialized.
-			// Currently the Registry sets the VRLStreamHandler after initialition
-			// so the following code isn't necessary :
-			//
 
+            String proxyHost = null;
+            int proxyPort = 0;
 
-			// WINDOWS PATH: [aA]:,[bB]:,[cC]:,[dD]:,... !
-			if (protocol.charAt(1)==':')
-			{
-				return new sun.net.www.protocol.file.Handler();
-			}
+            if (Global.useHttpProxy())
+            {
 
+                proxyHost = Global.getProxyHost();
+                proxyPort = Global.getProxyPort();
 
-			// sun jar handler ! 
-			else if (protocol.compareToIgnoreCase("file")==0)
-			{
+                Global.infoPrintf(this, "Using HTTP Proxy=%s:%d\n",proxyHost,proxyPort);
 
-				// return sun's default HTTP handler ! 
-				return new sun.net.www.protocol.file.Handler();
-			}
+                // return sun's default HTTP handler !
+                return new sun.net.www.protocol.http.Handler(proxyHost, proxyPort);
+            }
+            else
+            {
+                //Global.infoPrintln(this, "Using plain HTTP connection");
 
-		}
+                // return sun's default HTTP handler !
+                return new sun.net.www.protocol.http.Handler();
+            }
+        }
+        //
+        // Use own https handler so that server certificates
+        // can be added.
+        //
 
-		// return VRStreamHandler 
+        /*
+         * // sun https handler ! else if
+         * (protocol.compareToIgnoreCase("https")==0) { // return sun's default
+         * HTTPS handler ! return new sun.net.www.protocol.https.Handler(); }
+         */
+        else if (use_sun_file_handler)
+        {
+            //
+            // Following protocols could be handled by the VRS Registry
+            // but only AFTER the Reigstry has been initialized.
+            // Currently the Registry sets the VRLStreamHandler after
+            // initialition
+            // so the following code isn't necessary :
+            //
 
-		return new VRLStreamHandler(); 
-	}
+            // WINDOWS PATH: [aA]:,[bB]:,[cC]:,[dD]:,... !
+            if (protocol.charAt(1) == ':')
+            {
+                return new sun.net.www.protocol.file.Handler();
+            }
 
-	public void setHTTPGUrlHandlerClass(Class<? extends URLStreamHandler> handlerClass)
-	{
-	    // Todo: Better GSS/GSI/SSL integration: 
-	    this.httpgURLHandlerClass=handlerClass; 
-	}
-	 
-	 
+            // sun jar handler !
+            else if (protocol.compareToIgnoreCase("file") == 0)
+            {
+
+                // return sun's default HTTP handler !
+                return new sun.net.www.protocol.file.Handler();
+            }
+
+        }
+
+        // return VRStreamHandler
+
+        return new VRLStreamHandler();
+    }
+
+    public void setHTTPGUrlHandlerClass(Class<? extends URLStreamHandler> handlerClass)
+    {
+        // Todo: Better GSS/GSI/SSL integration:
+        this.httpgURLHandlerClass = handlerClass;
+    }
+
 }

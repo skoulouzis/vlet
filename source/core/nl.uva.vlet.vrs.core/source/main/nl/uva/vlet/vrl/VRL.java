@@ -1008,7 +1008,7 @@ public final class VRL implements Cloneable, Serializable,
     {
         if (url==null)
         {
-            Global.errorPrintln(this,"*** Error: null URL in constructor");
+            Global.errorPrintf(this,"*** Error: null URL in constructor!\n");
             return; 
         }
         // use normalized string representation: 

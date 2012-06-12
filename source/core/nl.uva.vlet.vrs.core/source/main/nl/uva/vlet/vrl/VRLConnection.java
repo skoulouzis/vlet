@@ -18,7 +18,7 @@
  * ---
  * $Id: VRLConnection.java,v 1.3 2011-04-18 12:00:37 ptdeboer Exp $  
  * $Date: 2011-04-18 12:00:37 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vrl;
@@ -30,7 +30,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vrs.VNode;
@@ -38,22 +37,19 @@ import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.io.VStreamReadable;
 import nl.uva.vlet.vrs.io.VStreamWritable;
 
-
-
-/** 
- * VRL Connection which support VRLs.   
- * It extends URLConnection with the supported protocols 
- * from the VRS Registry so that VRL can be used as URLs. 
+/**
+ * VRL Connection which support VRLs. It extends URLConnection with the
+ * supported protocols from the VRS Registry so that VRL can be used as URLs.
  * <p>
- * By suppling an VRLConnection class, VRLs can be converted to URLs 
- * and be used in the default Java Stream Reader which use URL.openConnection();  
+ * By suppling an VRLConnection class, VRLs can be converted to URLs and be used
+ * in the default Java Stream Reader which use URL.openConnection();
  * 
  * @author P.T. de Boer
  */
 public class VRLConnection extends URLConnection
 {
-    VNode node=null; 
-    
+    VNode node = null;
+
     protected VRLConnection(URL url)
     {
         super(url);
@@ -62,83 +58,82 @@ public class VRLConnection extends URLConnection
     @Override
     public void connect() throws IOException
     {
-    	Global.debugPrintln(this,"Connecting to:"+getURL());
         try
         {
-            node= VRS.getDefaultVRSContext().openLocation(this.getVRL());
-            connected=true; 
+            node = VRS.getDefaultVRSContext().openLocation(this.getVRL());
+            connected = true;
         }
         catch (VlException e)
         {
-            throw convertToIO(e);  
+            throw convertToIO(e);
         }
-    }
-    
-    public InputStream getInputStream() throws IOException 
-    {
-        if (this.connected==false) 
-            connect(); 
-        
-       if (node instanceof VStreamReadable)
-       {
-    	   try
-    	   {
-    		   return ((VStreamReadable)node).getInputStream();
-    	   }
-    	   catch (VlException e)
-    	   {
-    		   throw convertToIO(e);  
-    	   } 
-       }
-       else if (node instanceof VDir)
-       {
-           // Directories do not have stream read methods. 
-           // possibly the 'index.html' file is meant, but
-           // here we don't know what the caller wants. 
-           throw new UnknownServiceException("VRS: Location is a directory:"+node);
-       }
-       else
-       {
-           throw new UnknownServiceException("VRS: Location is not streamreadable:"+node);
-       }
     }
 
-    public OutputStream getOutputStream() throws IOException 
+    public InputStream getInputStream() throws IOException
     {
-        if (this.connected==false) 
-            connect(); 
-        
-       if (node instanceof VStreamReadable)
-       {
-        try
+        if (this.connected == false)
+            connect();
+
+        if (node instanceof VStreamReadable)
         {
-            return ((VStreamWritable)node).getOutputStream();
+            try
+            {
+                return ((VStreamReadable) node).getInputStream();
+            }
+            catch (VlException e)
+            {
+                throw convertToIO(e);
+            }
         }
-        catch (VlException e)
+        else if (node instanceof VDir)
         {
-            throw convertToIO(e);  
-        } 
-       }
-       else if (node instanceof VDir)
-       {
-           // Directories do not have stream read methods. 
-           // possibly the 'index.html' file is meant, but
-           // here we don't know what the caller wants. 
-           throw new UnknownServiceException("VRS: Location is a directory:"+node);
-       }
-       else
-       {
-           throw new UnknownServiceException("VRS: location is not streamwritable:"+node);
-       }
+            // Directories do not have stream read methods.
+            // possibly the 'index.html' file is meant, but
+            // here we don't know what the caller wants.
+            throw new UnknownServiceException("VRS: Location is a directory:" + node);
+        }
+        else
+        {
+            throw new UnknownServiceException("VRS: Location is not streamreadable:" + node);
+        }
+    }
+
+    public OutputStream getOutputStream() throws IOException
+    {
+        if (this.connected == false)
+            connect();
+
+        if (node instanceof VStreamReadable)
+        {
+            try
+            {
+                return ((VStreamWritable) node).getOutputStream();
+            }
+            catch (VlException e)
+            {
+                throw convertToIO(e);
+            }
+        }
+        else if (node instanceof VDir)
+        {
+            // Directories do not have stream read methods.
+            // possibly the 'index.html' file is meant, but
+            // here we don't know what the caller wants.
+            throw new UnknownServiceException("VRS: Location is a directory:" + node);
+        }
+        else
+        {
+            throw new UnknownServiceException("VRS: location is not streamwritable:" + node);
+        }
     }
 
     private IOException convertToIO(VlException e)
     {
-        return new IOException(e.getName()+"\n"+e.getMessage());
+        return new IOException(e.getName() + "\n" + e.getMessage());
     }
-    
+
     public VRL getVRL() throws VlException
     {
-    	return new VRL(this.getURL());
+        return new VRL(this.getURL());
     }
 }

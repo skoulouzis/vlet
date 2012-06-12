@@ -18,7 +18,7 @@
  * ---
  * $Id: HTTPRS.java,v 1.8 2011-04-27 12:29:23 ptdeboer Exp $  
  * $Date: 2011-04-27 12:29:23 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.vdriver.vrs.http;
@@ -41,117 +41,109 @@ import nl.uva.vlet.vrs.VStreamProducer;
 
 public class HTTPRS implements VResourceSystem, VStreamProducer
 {
-	public static final String DEFAULT_HTTPRS_SERVERID="httprs";
+    public static final String DEFAULT_HTTPRS_SERVERID = "httprs";
 
-	static public synchronized HTTPRS getClientFor(VRSContext context, ServerInfo info, VRL location) throws VlException
-	{
-	    // ===========================================
-	    // Only One HTTP/HTTPS Resource per Context for all hosts. 
-	    // ===========================================
-		String serverid=DEFAULT_HTTPRS_SERVERID;
-		    
-		HTTPRS server = (HTTPRS)context.getServerInstance(serverid,HTTPRS.class); 
-	        
-		if (server==null)
-		{
-			// create new server
-			server=new HTTPRS(context,info);
-	              
-			// Hashtable is 
-			//servers.put(serverid,server); 
-			context.putServerInstance(server); 
-		}
-	          
-		return server;
-	}
+    static public synchronized HTTPRS getClientFor(VRSContext context, ServerInfo info, VRL location)
+            throws VlException
+    {
+        // ===========================================
+        // Only One HTTP/HTTPS Resource per Context for all hosts.
+        // ===========================================
+        String serverid = DEFAULT_HTTPRS_SERVERID;
 
-	// ========================================================================
-	// 
-	// ========================================================================
+        HTTPRS server = (HTTPRS) context.getServerInstance(serverid, HTTPRS.class);
 
-	private VRSContext vrsContext;
+        if (server == null)
+        {
+            // create new server
+            server = new HTTPRS(context, info);
+
+            // Hashtable is
+            // servers.put(serverid,server);
+            context.putServerInstance(server);
+        }
+
+        return server;
+    }
+
+    // ========================================================================
+    //
+    // ========================================================================
+
+    private VRSContext vrsContext;
+
     private Proxy httpProxy;
+
     private Proxy httpsProxy;
-	  
-    
+
     public HTTPRS(VRSContext context, ServerInfo info)
     {
-    	this.vrsContext=context; 
-    	//this.cache=new HTTPCache(context); 
-	}
+        this.vrsContext = context;
+        // this.cache=new HTTPCache(context);
+    }
 
+    public String getID()
+    {
+        return DEFAULT_HTTPRS_SERVERID;
+    }
 
-	public String getID() 
-	{
-		return DEFAULT_HTTPRS_SERVERID;
-	}
+    // @Override
+    public VNode openLocation(VRL location) throws VlException
+    {
+        return new HTTPNode(this, location);
+    }
 
-	
-	 //@Override
-	 public VNode openLocation(VRL location) throws VlException 
-	 {
-		 Debug("Openening:"+location);
-		 return new HTTPNode(this,location);
-	 }
-	 
-	 void Debug(String str)
-	 {
-		 Global.debugPrintln(this,str); 
-	 }
+    public InputStream openInputStream(VRL location) throws VlException
+    {
+        return new HTTPNode(this, location).getInputStream();
+    }
 
-
-	public InputStream openInputStream(VRL location) throws VlException
-	{
-		 return new HTTPNode(this,location).getInputStream(); 
-	}
-
-
-	public OutputStream createOutputStream(VRL location) throws VlException
+    public OutputStream createOutputStream(VRL location) throws VlException
     {
         return openOutputStream(location);
     }
 
-
     public OutputStream openOutputStream(VRL location) throws VlException
-	{
-		 return new HTTPNode(this,location).getOutputStream(); 
-	}
+    {
+        return new HTTPNode(this, location).getOutputStream();
+    }
 
-	public VRSContext getVRSContext()
-	{
-		return this.vrsContext; 
-	}
-	
-	/**
-	 * Always return Proxy Object. If no proxy has been defined
-	 * it returns a Proxy.NO_PROXYtype which means no proxy.  
-	 * This way you can always use getProxy();
-	 * @param isHTTPS 
-	 * @return
-	 */
-	public Proxy getHTTPProxy(boolean isHTTPS)
-	{
-	    if (isHTTPS==false)
-	    {
-	        if (httpProxy==null)
-	        // check ServerInfo for this resource ? 
-	            httpProxy=this.vrsContext.getConfigManager().getHTTPProxy();
-	        return httpProxy;
-	    }
-	    else
-	    {
-	        if (httpsProxy==null)
-	            // check ServerInfo for this resource ? 
-	            httpsProxy=this.vrsContext.getConfigManager().getHTTPSProxy();
-	        return httpsProxy; 
-	    }
-	}
+    public VRSContext getVRSContext()
+    {
+        return this.vrsContext;
+    }
+
+    /**
+     * Always return Proxy Object. If no proxy has been defined it returns a
+     * Proxy.NO_PROXYtype which means no proxy. This way you can always use
+     * getProxy();
+     * 
+     * @param isHTTPS
+     * @return
+     */
+    public Proxy getHTTPProxy(boolean isHTTPS)
+    {
+        if (isHTTPS == false)
+        {
+            if (httpProxy == null)
+                // check ServerInfo for this resource ?
+                httpProxy = this.vrsContext.getConfigManager().getHTTPProxy();
+            return httpProxy;
+        }
+        else
+        {
+            if (httpsProxy == null)
+                // check ServerInfo for this resource ?
+                httpsProxy = this.vrsContext.getConfigManager().getHTTPSProxy();
+            return httpsProxy;
+        }
+    }
 
     @Override
     public void connect()
     {
     }
-    
+
     @Override
     public void disconnect()
     {
@@ -161,5 +153,5 @@ public class HTTPRS implements VResourceSystem, VStreamProducer
     public void dispose()
     {
     }
-	
+
 }

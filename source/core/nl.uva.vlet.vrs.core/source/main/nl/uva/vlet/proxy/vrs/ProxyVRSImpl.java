@@ -84,13 +84,13 @@ public class ProxyVRSImpl
     
     public Object invoke(Class<?> resultClass, String resourceVRL, String methodName, Object[] args) throws VlException
     {
-        debug("===");  
-        debug(" Invoke:"+methodName+"() on:"+resourceVRL);
+        //debug("===");  
+        //debug(" Invoke:"+methodName+"() on:"+resourceVRL);
        
         if (args!=null)
             for (Object arg:args)
             {
-                debug(" --- arg: "+arg.getClass().getCanonicalName()+"="+arg.toString()); 
+                //debug(" --- arg: "+arg.getClass().getCanonicalName()+"="+arg.toString()); 
             }
         
         // ==================
@@ -119,8 +119,8 @@ public class ProxyVRSImpl
         // ================
         // Marshall: result
         // ================
-        debug(" --- result="+result.toString()); 
-        debug(" ==="); 
+        //debug(" --- result="+result.toString()); 
+        //debug(" ==="); 
         return result; 
     }
     
@@ -482,13 +482,5 @@ public class ProxyVRSImpl
         return result;   
     }
     
-    private void debug(String str)
-    {
-        Global.errorPrintln(this,str); 
-    }
     
-    private void error(String str)
-    {
-        Global.errorPrintln(this,str); 
-    }
 }

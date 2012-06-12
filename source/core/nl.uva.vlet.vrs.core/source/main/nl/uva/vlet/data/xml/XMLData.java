@@ -40,6 +40,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
@@ -183,7 +184,7 @@ public class XMLData
 		//actual contents  
 		if (value==null)
 		{
-			Global.warnPrintln(this,"Warning: in VAttribute has NULL value:"+name);
+			Global.warnPrintf(this,"Warning: in VAttribute has NULL value:%s\n",name);
 			value=""; // implementation doesn't like NULL values !
 		}
 		
@@ -321,7 +322,7 @@ public class XMLData
 				throw new VlXMLDataException("XML String doesn't contain any VAttribute Set"); 
 
 			if (nrOfSets>1) 
-				Warning("Warning: XML AttributeSet contains more then one 1 set"); 
+				Global.warnPrintf(this,"Warning: XML AttributeSet contains more then one 1 set\n"); 
 
 			Element setEl = setElements.elementAt(0); 
 
@@ -360,12 +361,12 @@ public class XMLData
             
             if (collectionsElements.size()<=0) 
             {
-                Global.warnPrintln(this,"*** Warning: Couldn't find CollectionTag:"+collectionTag);
+                Global.warnPrintf(this,"*** Warning: Couldn't find CollectionTag:%s\n",collectionTag);
                 return list; 
             }
             else
             {
-                Global.warnPrintln(this,"*** Warning: Found more then one CollectionTag:"+collectionTag); 
+                Global.warnPrintf(this,"*** Warning: Found more then one CollectionTag:%s\n",collectionTag); 
             }
             
             // get first collection: 
@@ -490,18 +491,6 @@ public class XMLData
 		String valuestr= (String)( (Node)textNodes.item(0) ).getNodeValue().trim() ;
 
 		return valuestr; 
-	}
-
-
-	private void Error(String msg)
-	{
-		Global.errorPrintln(this,msg); 
-	}
-
-	private void Warning(String msg)
-	{
-		//Global.errorPrintln(this,msg);
-		Global.warnPrintln(this,msg); 
 	}
 
 	private void debugPrintf(String format,Object ... args) 
@@ -643,31 +632,25 @@ public class XMLData
 						   // only add Persistance nodes: 
 						   if (node instanceof VPersistance)
 						   {
-						       Info("Adding node:"+node);
+						       //Info("Adding node:"+node);
 							   // go into recursion: 
 							   Node childNode=this.createXMLTree(domDoc, (VPersistance)node);
 							   newXmlNode.appendChild(childNode); 
 					       }
 						   else
 						   {
-							   Info("Node is not an persistant node:"+node);
+							   //Info("Node is not an persistant node:"+node);
 						   }
 					}
 				}
 				catch (VlException e)
 				{
-					Error("Exception:"+e); 
+					Global.logException(ClassLogger.ERROR,this,e,"Failed to create XML Tree\n");
 				}
 			}
 			
 			return newXmlNode;
 		}
-	}
-
-	
-	private void Info(String msg)
-	{
-		Global.infoPrintln(this,msg);
 	}
 
 	public VNode parsePersistantNodeTree(XMLtoNodeFactory nodeFactory, InputStream stream) throws VlException

@@ -76,7 +76,7 @@ public class ResourceNodeFactory extends XMLtoNodeFactory
 		}
 		else
 		{
-			Global.errorPrintln(this,"***Error: unknown type:"+type); 
+			Global.errorPrintf(this,"***Error: unknown type:%s\n",type); 
 		}
 		
 		return null;
