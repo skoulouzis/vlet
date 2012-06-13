@@ -716,11 +716,14 @@ public class AttributePanel extends JPanel
     /** Update Attribute in AttributeSet */ 
     public void setAttribute(String name, String value) 
     {
-        Global.debugPrintln("AttributePanel","setAttribute "+name+"="+value);
+        Global.debugPrintf(this,"setAttribute %s=%s\n",name,value);
 
         if (name==null)
+        {
+            Global.warnPrintf(this,"setAttribute: NULL name!\n"); 
             return;  
-
+        }
+        
         if (attributes.containsKey(name))
         {
         	String oldValue=null; 
@@ -730,7 +733,7 @@ public class AttributePanel extends JPanel
 				
         	if ((oldValue!=null) && (oldValue.compareTo(value)!=0)) 
         	{
-        		attributes.set(name,value);
+        	 	attributes.set(name,value);
         		// really a new value !
         		// filter out focus and other event which do not 
         		// change the value 
@@ -742,7 +745,6 @@ public class AttributePanel extends JPanel
         {
             debug("Attribute not found:"+name); 
         }
-        
        
     }
 
