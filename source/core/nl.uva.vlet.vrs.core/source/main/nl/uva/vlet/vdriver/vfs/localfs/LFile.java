@@ -68,7 +68,6 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
     static
     {
         logger=ClassLogger.getLogger(LFile.class); 
-        logger.setLevelToDebug();
     }
     
     // ** local LFile implementation
