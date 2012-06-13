@@ -23,9 +23,6 @@
 
 package nl.uva.vlet.gui.table;
 
-import java.util.Vector;
-
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.table.VRSTableModel.RowObject;
 import nl.uva.vlet.util.Comparer;

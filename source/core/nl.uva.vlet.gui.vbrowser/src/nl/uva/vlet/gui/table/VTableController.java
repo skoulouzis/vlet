@@ -35,7 +35,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeType;
@@ -80,7 +79,7 @@ public class VTableController implements MouseListener, MouseMotionListener
         
         TablePos tablePos=getTablePositionOf(e);
        
-        Global.debugPrintln(this,"MouseClicked:"+e);
+        //Global.debugPrintln(this,"MouseClicked:"+e);
         
         boolean ctrl=((e.getModifiersEx() & e.CTRL_DOWN_MASK) !=0); 
         
@@ -141,7 +140,7 @@ public class VTableController implements MouseListener, MouseMotionListener
         
         VAttribute attr=null;
         
-        Global.debugPrintln("TableMouseEventHandler","click on component:"+comp);
+        //Global.debugPrintln("TableMouseEventHandler","click on component:"+comp);
          
         if (comp instanceof JTableHeader)
         { 
@@ -170,9 +169,9 @@ public class VTableController implements MouseListener, MouseMotionListener
               attr=(VAttribute)value; 
         }
     
-        Global.debugPrintln("TableMouseEventHandler","rowNr="+pos.row);
-        Global.debugPrintln("TableMouseEventHandler","columnNr="+pos.column);
-        Global.debugPrintln("TableMouseEventHandler","columnName="+pos.columnName);
+//        Global.debugPrintln("TableMouseEventHandler","rowNr="+pos.row);
+//        Global.debugPrintln("TableMouseEventHandler","columnNr="+pos.column);
+//        Global.debugPrintln("TableMouseEventHandler","columnName="+pos.columnName);
         
         if (pos.row<0) 
             return;

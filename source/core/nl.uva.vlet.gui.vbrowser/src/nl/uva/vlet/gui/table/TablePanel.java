@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -37,12 +38,12 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.UIGlobal;
-
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.dnd.VDragGestureListener;
 import nl.uva.vlet.gui.dnd.VTransferHandler;
@@ -239,13 +240,8 @@ public class TablePanel extends JTable implements VContainer,VPresentable
         else
         {
             // for testing: 
-            Global.errorPrintln("TablePanel","Exception:"+e);  
+            Global.logException(ClassLogger.ERROR,this,e,"TablePanel Exception!\n");  
         }
-    }
-    private void debug(String str)
-    {
-        //Global.errorPrintln(this, str);
-        Global.debugPrintln(this, str);
     }
     
     public void showHeaderMenuIn(Component comp, String name,int x, int y) 
@@ -291,19 +287,14 @@ public class TablePanel extends JTable implements VContainer,VPresentable
    
     public void populateWith(ProxyNode pnode) throws VlException 
     {
-    	debug("populateWith:"+pnode);
-    	
         if ((dataProducer instanceof NodeTableProducer)==false)
         {
         	// create empty model, will be populated later !
-        	
         	VRSTableModel model=new VRSTableModel(this); 
-        	
             dataProducer = new NodeTableProducer(this,ProxyNode.getProxyNodeFactory(),model);
         }
         else
         {
-        
         }
         
         dataProducer.setNode(pnode); 
@@ -323,15 +314,14 @@ public class TablePanel extends JTable implements VContainer,VPresentable
      */
     public void uiCreateTable(final Object[][] body,final String[] headers,final ProxyNode rowobjects[])
     {
-    	debug("uiCreateTable: (I):"+Thread.currentThread().getId());
-    	
+        // debug("uiCreateTable: (I):"+Thread.currentThread().getId());
     	// ===
     	// ui thread:
     	// ===
     	
     	if (UIGlobal.isGuiThread()==false)
     	{
-    		debug("uiCreateTable: (IIa) is not gui invoke later ");
+    		// debug("uiCreateTable: (IIa) is not gui invoke later ");
     		Runnable createTask=new Runnable()
     		{
     			public void run()
@@ -345,7 +335,7 @@ public class TablePanel extends JTable implements VContainer,VPresentable
     		return;
     	}
     	
-    	debug("uiCreateTable: (IIb) is gui thread");
+    	//debug("uiCreateTable: (IIb) is gui thread");
     	// ==
     	
         // keep copy since, even when removed!, the listeners STILL receive change events ! 
@@ -408,22 +398,19 @@ public class TablePanel extends JTable implements VContainer,VPresentable
                   String name=column.getHeaderValue().toString(); 
                   Integer w=pres.getAttributePreferredWidth(name);
                 
-                  Global.debugPrintln(this,"setting column width of "+name+" to:"+w);
+                  // Global.debugPrintln(this,"setting column width of "+name+" to:"+w);
                 
                   if (w!=null)
                       column.setPreferredWidth(w);
               }
             }  
-            
         }
         
         if ((body==null) || (body.length==0))
             return; // empty table: nothing todo
         
         updateCellEditors();
-         
         this.presentation=pres; // restore (previous) presentation  
-        
     }
         
     public void updateCellEditors()
@@ -450,7 +437,7 @@ public class TablePanel extends JTable implements VContainer,VPresentable
                            // boolean does autocast to "true" and "false"
                        case BOOLEAN:
                        {
-                          debug("setting celleditor to EnumCellEditor of columnr:"+i);
+                          //debug("setting celleditor to EnumCellEditor of columnr:"+i);
                           column.setCellEditor(new EnumCellEditor(attr.getEnumValues()));
                           break;
                        }
@@ -465,12 +452,8 @@ public class TablePanel extends JTable implements VContainer,VPresentable
            }
         }
     }
-
-
-
     
     /** Returns list of ALL possible attribute names */ 
-    
     public String[] getAllHeaderNames()
     {
         return dataProducer.getAllHeaderNames();  
@@ -704,8 +687,6 @@ public class TablePanel extends JTable implements VContainer,VPresentable
         {     
         	ProxyNode node = this.tableModel.getRowIndexObject(rownr);
         	
-        	debug(" [+] Adding selection:"+node); 
-        	
         	if (node!=null)
         		vrls[index++]=node.getResourceRef();  
         }
@@ -750,10 +731,7 @@ public class TablePanel extends JTable implements VContainer,VPresentable
     @Override
     public void selectAll(boolean selectValue)
     {
-        // TODO Auto-generated method stub
-        
+        Global.warnPrintf(this,"Fixme:selectAll()"); 
     }
-
-	
 
 }

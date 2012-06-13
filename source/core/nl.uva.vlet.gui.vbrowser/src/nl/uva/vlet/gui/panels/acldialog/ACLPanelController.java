@@ -53,7 +53,7 @@ public class ACLPanelController implements ActionListener, WindowListener
         String cmd=e.getActionCommand(); 
         Component comp=(Component)e.getSource(); 
         
-        Global.debugPrintln("ACLPanelController","cmd="+cmd);
+        //Global.debugPrintln("ACLPanelController","cmd="+cmd);
         if ((cmd.length()>4) && (cmd.substring(0,4).compareTo("add:")==0))
         {
             String entityName=cmd.substring(4,cmd.length());
@@ -191,7 +191,7 @@ public class ACLPanelController implements ActionListener, WindowListener
         
         if (entityAttr==null) 
         {
-            Global.errorPrintln(this,"Couldn't find entity:"+entityName); 
+            Global.errorPrintf(this,"Couldn't find entity:%s\n",entityName); 
             return; 
         }
         

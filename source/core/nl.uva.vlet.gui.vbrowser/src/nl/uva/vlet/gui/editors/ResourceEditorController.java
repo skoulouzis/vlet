@@ -546,8 +546,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
     
     private void error(String msg)
     {
-        Global.errorPrintln(this,"Error:"+msg); 
-        
+        Global.errorPrintf(this,"Error:%s\n",msg); 
     }
 
     public void windowClosing(WindowEvent e)
@@ -741,7 +740,7 @@ public class ResourceEditorController implements ActionListener, WindowListener,
     public void messagePrintln(String msg)
     {
         //  log banner:
-        Global.infoPrintln(this,msg);
+        Global.infoPrintf(this,"%s\n",msg);
     }
 
     //@Override

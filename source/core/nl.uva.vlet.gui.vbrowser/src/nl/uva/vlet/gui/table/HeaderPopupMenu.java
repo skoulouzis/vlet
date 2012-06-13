@@ -34,8 +34,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 
-import nl.uva.vlet.Global;
-
 /** Table Header popup menu + popup listener */ 
 public class HeaderPopupMenu extends JPopupMenu
 {
@@ -56,9 +54,6 @@ public class HeaderPopupMenu extends JPopupMenu
     {
         public void actionPerformed(ActionEvent e) 
         {
-            Global.debugPrintln("PopupListener","Action:"+e);
-            Global.debugPrintln("PopupListener","source:"+e.getSource());
-            
             String cmdstr=e.getActionCommand();
             String vals[]=cmdstr.split(":");
             cmdstr=vals[0];

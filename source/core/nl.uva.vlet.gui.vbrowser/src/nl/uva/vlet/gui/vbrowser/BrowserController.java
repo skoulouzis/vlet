@@ -140,7 +140,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	static
 	{
 	    logger=ClassLogger.getLogger(BrowserController.class); 
-	    //logger.setLevelToDebug(); 
 	    
 		try
 		{
@@ -149,8 +148,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		catch (Throwable t)
 		{
 			// gracefull shutdown to prevent bootstrap errors
-			logger.logException(ClassLogger.ERROR,t," *** Couldn't create Master Frame: No graphical environment?\n");
-			t.printStackTrace();
+			logger.logException(ClassLogger.FATAL,t," *** Couldn't create Master Frame: No graphical environment?\n");
 			System.exit(-1); 
 		}
 	}
@@ -331,29 +329,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
         //this.addHistory(vrl); // add to typed locations
     }
 
-	/**
-	 * Parse location string, lookup Service handler and request for new
-	 * location
-	 */
-	/*public void setLocation(String str)
-    {
-        try
-        {
-            VRL location = new VRL(str);
-            // VFS fs=null;
-            // fs=VFSClient.getDefault();
-            // ProxyNode node=fs.getLocation(location.path);
-            ProxyNode node=openLocation(location); 
-
-
-            setLocation(node, true);
-        }
-        catch (VlException e)
-        {
-            handle(e);
-        }
-    }*/
-
 	/** Get current viewed location */ 
 	public VRL getViewedLocation()
 	{
@@ -367,7 +342,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	{
 	    return viewedNode;
 	}
-	
 
 	/**
 	 * Perform selection on VComponent. 
@@ -415,20 +389,14 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	private void handleAction(VComponent vcomp,final ActionCommand actionCommand,boolean globalAction)
 	{
-		// 
 		// pre: 
-		// 
-		debug("performAction actionCommand ="+actionCommand);
+	    logger.debugPrintf("performAction actionCommand =%s\n",actionCommand);
 		//Debug("performAction actionNode    ="+actionNode);
-		debug("performAction vcomp         ="+vcomp);
-		debug("performAction globalAction  ="+globalAction);
+	    logger.debugPrintf("performAction vcomp         =%s\n",vcomp);
+	    logger.debugPrintf("performAction globalAction  =%s\n",globalAction);
 		
-		//
 		// global actions are perform on the active selection. 
 		// other actions need a vcomponent. 
-		//
-		
-		
 		
 		///////////////////////
 		// Start 
@@ -454,7 +422,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			performNode=null;
 		}
 
-		debug("performNode ="+performNode);
+		logger.debugPrintf("performNode =%s\n",performNode);
 
 		// Perform non background method:  
 		try
@@ -664,15 +632,15 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				}
 				else if (vcomp==null)
 				{
-					Global.infoPrintln(this,"No resource selected for action:"+actionCommand.actionType);
+					Global.infoPrintf(this,"No resource selected for action:%s\n",actionCommand.actionType);
 				}
 				
-				debug("handleAction(): performNode"+performNode); 
+				logger.debugPrintf("handleAction(): performNode%s\n",performNode); 
 				
 				if (performNode==null)
 				{
 					// No perform node: (to be investigated) 
-					Global.infoPrintln(this,"No resource selected to perform action:"+actionCommand.actionType);
+					logger.infoPrintf("No resource selected to perform action:%s\n",actionCommand.actionType);
 					setBusy(false); 
 					return;  
 				}
@@ -799,7 +767,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 						performViewNode(performNode, true);
 						break;
 					default:
-						debug("*** Warning: No ActionCommand:"+actionCommand);
+					    logger.warnPrintf("*** Warning: Unrecognized ActionCommand:%s\n"+actionCommand);
 						actionDone=false; 
 					break;
 				} // switch 
@@ -840,8 +808,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 			public void doTask()
 			{
-				debug("+++ Starting Action for:" + actionCommand + "on:"
-						+ finalNode);
+			    logger.debugPrintf("+++ Starting Action for:%s on %s\n",actionCommand,finalNode);
 				try
 				{
 					switch (actionCommand.actionType)
@@ -870,7 +837,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 							break;
 						} 
 						default: 
-							debug("*** Warning: No ActionCommand:"+actionCommand);
+						    logger.warnPrintf("*** Warning: Unrecognized ActionCommand:%s\n",actionCommand);
 						break;
 					}
 				}
@@ -883,8 +850,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 					// no clean up to be done...
 				}
 
-				debug("--- Finished Starting Action for:" + actionCommand
-						+ "on:" + finalNode);
+                logger.debugPrintf("--- Finished Starting Action for:%s on %s\n",actionCommand,finalNode);
 			}
 
 			public void stopTask()
@@ -896,10 +862,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		task.startTask();
 		this.currentTask = task;
 		// task will update setBusy(); 
-		
-		debug("=== After run for command:" + actionCommand + "===");
 	}
-
 
 	private void performNewWindow(VRL vrl)
     {
@@ -1128,8 +1091,9 @@ public class BrowserController implements WindowListener, GridProxyListener,
                     {
                         parentLoc=ProxyVRSClient.getInstance().getVirtualRootLocation(); 
                     }
-        
-                    debug("parentLoc="+parentLoc);
+                    
+                    logger.debugPrintf("browseUp:parentLoc=%s\n",parentLoc); 
+
                     // Async -> Async ! 
                     asyncOpenLocation(parentLoc);
                 }
@@ -1168,14 +1132,10 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	 */
 	private void performViewNode(ProxyNode actionNode,ViewContext viewContext, boolean addToHistory)
 	{
-		debug(">>> performViewNode:"+actionNode); 
-
-		// NiNo: Null In => Null Out
 		if (actionNode == null)
 			return;
 
 		// VRL vrls[]=this.getCopySelection();   
-
 
 		boolean composite=false; 
 		VRL targetLocation=null;
@@ -1378,12 +1338,9 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			// reuse or initiliaze new embedded viewer:
 		    if ((viewerManager!=null) && (this.viewerManager.hasViewer()))
 			{
-				debug("hasViewer() == true");
-				
 				// reuse current viewer:
 				if (this.viewerManager.hasViewer(viewer.getClass())) 
 				{
-					debug("asyncUpdateLocation():"+location);
 					viewerManager.asyncUpdateLocation(location); 
 					// trigger item panel:
 					updateItemViewer(viewerManager.getViewer());
@@ -1428,7 +1385,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		if ((mimetype==null)  && (optViewerClass==null)) 
 		{
-			errorPrintf("Cannot determine viewer\n"); 
+			logger.errorPrintf("Cannot determine viewer\n"); 
 			mimetype="";
 		}
 
@@ -1499,20 +1456,16 @@ public class BrowserController implements WindowListener, GridProxyListener,
             @Override
             public void stopTask()
             {
-                // TODO Auto-generated method stub
-                
             }
         };
         
         task.startTask();
-        
     }
 
 	/**
 	 * Update location with VRL. 
 	 * Deletes icon +  ResourceType.
 	 */
-
 	private void setLocationTextField(VRL loc)
 	{
 		vbrowser.setLocationIcon(null);
@@ -1595,25 +1548,13 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			if (historyIndex != history.size() - 1)
 			{
 				// truncate history to 'current'
-
-				debug("previous history =" + historyIndex);
-
 				// currently browsing back: truncate history
 				history.setSize(historyIndex + 1);
 			}
 
 			history.addElement(new HistoryElement(location,this.viewType));  
-
 			historyIndex = history.size() - 1; // after adding, current
 		}
-
-		//for (int i = 0; i < history.size(); i++)
-		//{
-		//  Debug("history[" + i + "]=" + history.elementAt(i));
-		//}
-
-		debug("Added new VRL at #"+ historyIndex+":"+location);
-
 		return historyIndex;
 	}
 
@@ -1621,8 +1562,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	{
 	    asyncBrowseUp();
     }
-
-	
 
 	private boolean isEmpty(String str)
 	{
@@ -1637,26 +1576,14 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	public void performBrowseForward()
 	{
-		debug("historyIndex= " + historyIndex);
-
 		if (historyIndex + 1 >= history.size())
 			return; // can't go further
 
-		// ===
 		// Increase History Index
-		// ===
 		historyIndex++;
 
 		// Fetch History element and restore Browser State:
-
-		HistoryElement hel = (HistoryElement) history
-		.elementAt(historyIndex);
-
-
-		debug("history [" + historyIndex + "]=" + hel.viewedLocation);
-
-		// Update
-		// setRootResource(node);
+		HistoryElement hel = (HistoryElement) history.elementAt(historyIndex);
 
 		// Restore View
 		setView(hel.viewType); // restore view
@@ -1671,12 +1598,11 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		{
 			this.asyncOpenLocation(hel.viewedLocation); 
 		}
-
 	}
 
 	public void performBrowseBack()
 	{
-		debug("historyIndex= " + historyIndex);
+		//debug("historyIndex= " + historyIndex);
 
 		if (historyIndex <= 0)
 			return; // can't go further
@@ -1686,15 +1612,11 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		HistoryElement hel = (HistoryElement) history.elementAt(historyIndex);
 
-		debug("browse back to:"+hel.viewedLocation); 
-
 		ProxyNode node = ProxyNode.getProxyNodeFactory().getFromCache(hel.viewedLocation);
-
-		debug("browse back pnode:"+node); 
 
 		if (node==null)
 		{
-			Global.errorPrintln(this,"Oops: couldn't get node (back) from cache:"+hel.viewedLocation);
+		    logger.errorPrintf("Oops: couldn't get node (back) from cache:%s\n",hel.viewedLocation);
 			// perform browse:
 			this.asyncOpenLocation(hel.viewedLocation); 
 		}
@@ -1709,34 +1631,15 @@ public class BrowserController implements WindowListener, GridProxyListener,
 				handle(e);
 			}
 		}
-
-
-
-		debug("history [" + historyIndex + "]=" + node);
-
+		
+		//debug("history [" + historyIndex + "]=" + node);
 		// Restore View
 		setView(hel.viewType); // restore view
-		debug("history [" + historyIndex + "].viewtype="+hel.viewType);
+		//debug("history [" + historyIndex + "].viewtype="+hel.viewType);
 
 		// do not add to history, we are browsing back:
 		performViewNode(node, false);
-
 	}
-
-	/**
-	 * Sets current viewed resource in the resourceTree.<br>
-	 * <br>
-	 * invokes performViewItem() !
-	 * 
-	 * @throws VlException
-	 * 
-	 */
-
-	public void errorMessage(String str)
-	{
-		messagePrint("Error:" + str + "\n");
-	}
-
 
 	/** Print message line into the log window. */ 
 	public void messagePrint(String str)
@@ -1744,9 +1647,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		if (vbrowser != null)
 		{
 			JTextArea textArea = vbrowser.messageTextArea;
-
 			// synchronized write actions to the textArea: 
-
 			synchronized(textArea)
 			{
 				String orgtxt = textArea.getText();
@@ -1760,16 +1661,13 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		{
 			// this is possible when the browser window has closed but a 
 			// background job want to print a message: 
-
-			Global.infoPrintln("VBrowser:", str);
-
+		    logger.infoPrintf("VBrowser:%s\n", str);
 		}
 	}
 
 	// ==========================================================================
 	// Non Thread Critical Methods
 	// ==========================================================================
-
 
 	/**
 	 * Refreshes all resources and windows
@@ -1802,7 +1700,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		if (controllers.size()==0)
 		{
-			info("Last browser closed: cleaning up");
+		    logger.infoPrintf("Last browser closed: cleaning up!\n");
 			performExitAll();
 		}
 	}
@@ -1943,29 +1841,14 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-	 */
 	public void windowActivated(WindowEvent arg0)
 	{
-		// TODO Auto-generated method stub
-
+	    // wakeup!
 	}
 
-	/*
-	 * Is called AFTER the window has been closed. So when a dispose is called !
-	 */
+	//Is called AFTER the window has been closed. So when a dispose is called !
 	public void windowClosed(WindowEvent arg0)
 	{
-		// debug("Window Event="+arg0);
-
-		/*
-		 * Do NOT call performExit here (again) since this results in a loop
-		 */
-
-		// performExit(); // calls dispose
 	}
 
 	/**
@@ -1976,62 +1859,25 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	 */
 	public void windowClosing(WindowEvent arg0)
 	{
-		debug("Window Event=" + arg0);
 		performClose();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-	 */
+	// sleep: 
 	public void windowDeactivated(WindowEvent arg0)
 	{
-		// debug("Window Event="+arg0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-	 */
 	public void windowDeiconified(WindowEvent arg0)
 	{
-		// debug("Window Event="+arg0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-	 */
 	public void windowIconified(WindowEvent arg0)
 	{
-		debug("Window Event=" + arg0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-	 */
 	public void windowOpened(WindowEvent arg0)
 	{
-		// debug("Window Event="+arg0);
 	}
-
-    private void debug(String str)
-    {
-        Global.debugPrintf(this, "Browser.id=%d:%s\n",browserId,str);
-    }
-    
-    private void info(String str)
-    {
-        Global.infoPrintf(this, "Browser.id=%d:%s\n",browserId,str);
-    }
-	
-    
-
 
 	private Throwable lastException=null;  
 	private Long handleMutex=new Long(0);  
@@ -2057,7 +1903,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	{
 	    if (e==null)
 	    {
-	        Global.errorPrintln(this,"*** Error in handle(): Exception==null ***"); 
+	        logger.logException(ClassLogger.WARN,e,"*** Error in handle(): Exception==null ***\n"); 
 	        return;
         }
 
@@ -2065,10 +1911,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		// Do No Invoke Outside Event Thread: 
 		if (UIGlobal.isGuiThread()==false)
 		{
-			// print to stderr, since  the errorMessage Popup might not work.
-			if (Global.getDebug())
-				Global.errorPrintln(this,"Background task Exception:"+e);
-
 			Runnable run=new Runnable()
 	        {
 	            public void run()
@@ -2078,10 +1920,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	        };
 
 	        SwingUtilities.invokeLater(run); 
- 
-			return; 
+ 			return; 
 		}
-
 
 		// Previous code has synchronized possible multiple 
 		// threads into on single (GUI Swing) thread. 
@@ -2094,7 +1934,9 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		{
 			if ( (lastException!=null) &&  (lastException.getMessage()!=null) )
 				if (e.getMessage()==null)
-					errorMessage("NULL message in exception:"+e); 
+				{
+					;//errorMessage("NULL message in exception:"+e); 
+				}
 				else if (lastException.getMessage().compareTo(e.getMessage())==0) 
 					if ((System.currentTimeMillis()-handleMutex)<100)
 						return; 
@@ -2104,73 +1946,28 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			handleMutex=System.currentTimeMillis(); 
 		}
 
-		errorMessage("Exception:"+e);
-
+		logger.logException(ClassLogger.ERROR,e,"Exception!\n");
 		ExceptionForm.show(e);
-
-		// Be verbose if in debug, but don't bother the user when NOT in debug mode.
-		if (Global.getDebug())
-		{
-		    Global.errorPrintStacktrace(e); 
-		}
-
 	}
-
-	
 
 	/** space filler method */
 	public static String spaces(int nr)
 	{
 		char chars[] = new char[nr];
-
 		for (int i = 0; i < chars.length; chars[i++] = ' ')
 			;
 		// empty body
-
 		String str = new String(chars);
-
 		return str;
 	}
-
-
 
 	/** Show Grid Proxy Dialog */ 
 	public void performProxyDialog()
 	{
 		GridProxyDialog dialog = new GridProxyDialog(UIGlobal.getVRSContext(),this.vbrowser);
-
 		dialog.setVisible(true);
 	}
-
-
-//	private void performCogUtilConfigureCerts()
-//	{
-//		// Oopsy the Wizard performs a JVM.exit()!!! 
-//		// Make a feature from a bug !
-//
-//		String msgstr = "";
-//
-//		if (UIGlobal.getGridProxy().isValid()==false)
-//		{
-//			msgstr = Messages.M_gridproxy_is_valid_configure_cog_might_not_be_needed; 
-//
-//		}
-//
-//		// oopsy: the ConfigurationWizard does a System.exit !!!
-//		msgstr += Messages.Q_cog_init_wizard_will_exit_proceed;
-//
-//		boolean ans = nl.uva.vlet.gui.dialog.SimpleDialog.askConfirmation(
-//				msgstr, false);
-//
-//		if (ans == false)
-//			return;
-//
-//		ConfigurationWizard wiz = new org.globus.tools.ui.config.ConfigurationWizard();
-//		wiz.setVisible(true);
-//
-//		// GridProxyInit.main(null);
-//	}
-
+	
 	public ResourceRef[] getClipBoardSelection()
 	{
 		return staticCopySelection;
@@ -2187,7 +1984,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 		staticCopySelection=new ResourceRef[1];
 		staticCopySelection[0]=vcomp.getResourceRef();
-
 	}
 
 	private boolean getCopySelectionIsCut()
@@ -2198,8 +1994,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	// either a selection or an unselection has occured 
 	public void setSelection(VComponent selection)
 	{
-		debug("setSelection():"+selection);
-
 		// update last focus component 
 		if (selection==null)
 			lastActiveVContainer=null; 
@@ -2301,12 +2095,10 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	{
 		if (this.vbrowser.hasFocus())
 		{
-			debug("getActiveSelection() using IconsPanel"); 
 			return this.vbrowser.iconsPanel.getSelection();
 		}
 		else if (this.vbrowser.resourceTree.hasFocus())
 		{
-			debug("getActiveSelection() using ResourceTree");
 			return this.vbrowser.resourceTree.getSelection();
 		}
 		else if (lastActiveVContainer!=null)
@@ -2317,7 +2109,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		{
 			return null;
 		}
-	 
 	}
 
 	private void setCredentialStatus(boolean stat)
@@ -2334,7 +2125,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		}
 
 		this.vbrowser.credentialButton.repaint();
-
 	}
 
 	public boolean checkCredentialStatus()
@@ -2353,13 +2143,10 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	    return false; 
 	}
 
-	
-
 	public JFrame getFrame()
 	{
 		return this.vbrowser;
 	}
-
 
 	/** Create ProxyNode menu and show it in the JComponent */
 	public void showNodeMenu(Component comp, int x, int y)
@@ -2375,7 +2162,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		menu.show(comp, x, y);
 	} 
 
-
 	private void showTasks()
 	{
 		ActionTask.debugPrintTasks();
@@ -2388,7 +2174,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 
 	public void setHasTasks(boolean val)
 	{
-		debug("["+Thread.currentThread().getId()+"]:setHasTasks=" + val);
+        logger.debugPrintf("[%d]:setHasTasks=%s\n",Thread.currentThread().getId(), val);
 
 		if (this.vbrowser == null)
 			// oopsy: browser already disposed !
@@ -2421,24 +2207,18 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	 */ 
 	public void notifyHyperLinkEvent(ViewerEvent event)
 	{
-		// Global.errorPrintln(this,"Master Browser Event:"+event); 
-		debug("Master Browser Event:"+event); 
-
 		switch (event.type)
 		{
 			case VIEWER_CLOSED_EVENT:
 			{
-				// remove Viewer panel
-				// whatever (TODO)
+				// Viewer stopped/closed/
 				break; 
-
-				// hyperlink event from viewer: update viewed location
 			}
             case HYPER_LINK_EVENT:
             {
                 // if event is coming from current Viewer,
                 // follow the hyper link ! 
-                debug("Hyperlink event:"+event.getVRL());
+                logger.debugPrintf(">>> Hyperlink event:%s\n",event.getVRL());
                 
                 //IMimeViewer currentViewer = this.viewerManager.getViewer();
                 
@@ -2458,7 +2238,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
             case LINK_FOLLOWED_EVENT:
             {
                 // follow viewer: update locations and history:
-                debug("Follow Link event:"+event.getVRL());
+                logger.debugPrintf(">>> Follow Link  event:%s\n",event.getVRL());
 
                 // Follow Event ONLY allowed from embedded viewer!
                 IMimeViewer source = event.getViewer();
@@ -2605,7 +2385,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	 */
 	public void performDragAndDrop(DropAction drop)
 	{
-		debug("performDragAndDrop:"+drop);
+	    logger.debugPrintf("performDragAndDrop:%s\n",drop);
 		
 		// Interactive DnD ! 
 
@@ -2613,7 +2393,7 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		{
 			if (drop.component==null) 
 			{
-				Global.errorPrintln(this,"NULL component for interactive Drag&Drop menu!"); 
+			    logger.errorPrintf("NULL component for interactive Drag&Drop menu!\n"); 
 				return; 
 			}
 
@@ -2752,12 +2532,12 @@ public class BrowserController implements WindowListener, GridProxyListener,
 		final String methodName=actionCommand.getDynamicActionName();
 		//final String menuMethodName=actionCommand.getActionMessage(); 
 		
-		info("PerformActionCommand:"+methodName);
-		info("Selection context = "+actionContext);
+		logger.infoPrintf("performDynamicAction:PerformActionCommand:%s\n",methodName);
+		logger.infoPrintf("performDynamicAction:Selection context = %s\n",actionContext);
 
 		if (vrs==null) 
 		{
-			Global.errorPrintf(this,"***Error: VRS not defined for action command:%s\n",actionCommand); 
+		    logger.errorPrintf("VRS not defined for action command:%s\n",actionCommand); 
 			return;
 		}
 
@@ -2779,23 +2559,17 @@ public class BrowserController implements WindowListener, GridProxyListener,
 					monitor.setException(e); 
 					bc.handle(e); 
 				}
-		
 			}
 
 			@Override
 			public void stopTask()
 			{
-
 			}
 		};
 
 		dynamicAction.startTask();
-		
 		nl.uva.vlet.gui.panels.monitoring.TaskMonitorDialog.showTaskMonitorDialog(this.getFrame(), dynamicAction,1000); 
-		
 	}
-
-	
 
     public void performDynamicViewerAction(final ActionCommand actionCommand, final ActionContext actionContext) throws VlException
 	{
@@ -2823,7 +2597,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
 //	    viewer.setViewContext(context);  
 //	    viewerManager.startForAction(methodName,actionContext); 
 	    performStartStandaloneViewer(actionCommand,actionContext);
-
 	}
 	
 	public void performStartStandaloneViewer(final ActionCommand actionCommand, final ActionContext actionContext) throws VlException
@@ -2890,11 +2663,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
     	return this.interactiveActionHandler.interactiveCheckAuthenticationFor(vrl); 
 	}
     
-    // === TODO: remove dependency of ProxyTNode ==== 
-    
-    /** Return logical parent location if node is in cache ! */ 
-    
-
 	private ProxyNode getVirtualRootNode() throws VlException
 	{
 		return ProxyNode.getVirtualRoot(); 
@@ -2950,8 +2718,6 @@ public class BrowserController implements WindowListener, GridProxyListener,
     public void notifyProxyValidityChanged(GridProxy gridProxy, boolean newValidity)
     {
         logger.infoPrintf("Received proxy validity=%s\n",newValidity);
-        debug("New Proxy Validity=" + newValidity);
-
         setCredentialStatus(newValidity);
     }
 

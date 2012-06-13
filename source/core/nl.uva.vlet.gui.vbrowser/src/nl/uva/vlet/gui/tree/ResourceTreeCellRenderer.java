@@ -25,14 +25,11 @@ package nl.uva.vlet.gui.tree;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.view.ViewNode;
 
 //import sun.security.krb5.internal.i;
@@ -103,7 +100,7 @@ public class ResourceTreeCellRenderer extends DefaultTreeCellRenderer
     public boolean imageUpdate2(Image img, int infoflags,
             int x, int y, int w, int h) 
     {
-    	Global.errorPrintln(this,"Received imageUpdate:"+infoflags); 
+    	//Global.errorPrintf(this,"Received imageUpdate:%s\n",infoflags); 
     	
     	return super.imageUpdate(img, infoflags, x, y, w, h);
     	

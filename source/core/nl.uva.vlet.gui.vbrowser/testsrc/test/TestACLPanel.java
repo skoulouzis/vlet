@@ -34,12 +34,10 @@ public class TestACLPanel
 
     public static void main(String args[])
     {
-        Global.setDebug(true);
-        
+        Global.getLogger().setLevelToDebug(); 
         testFor("file:///home/ptdeboer");
         testFor("srb://piter.de.boer.vlenl@srb.grid.sara.nl/VLENL/home/piter.de.boer.vlenl");
         testFor("sftp://ptdeboer@elab.science.uva.nl/home/ptdeboer"); 
-        
      }
     
     public static void testFor(String loc)

@@ -37,7 +37,7 @@ public class testAttributeEditor
 {
     public static void main(String args[])
     {
-        Global.setDebug(true);
+        Global.getLogger().setLevelToDebug(); 
         int len=20; 
         
         VAttribute attrs[]=new VAttribute[len];

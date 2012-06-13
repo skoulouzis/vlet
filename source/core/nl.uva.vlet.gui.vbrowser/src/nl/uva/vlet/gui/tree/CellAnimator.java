@@ -49,7 +49,7 @@ public class CellAnimator implements ImageObserver
 	{
 		if (icon.getImageObserver() instanceof CellAnimator)
 		{
-			Global.errorPrintln(CellAnimator.class,"CellAnimator already installed:"+path);
+			Global.errorPrintf(CellAnimator.class,"CellAnimator already installed:%s\n",path);
 			return ; 
 		}
 		

@@ -18,7 +18,7 @@
  * ---
  * $Id: startWrapNodeVBrowser.java,v 1.3 2011-04-18 12:27:25 ptdeboer Exp $  
  * $Date: 2011-04-18 12:27:25 $
- */ 
+ */
 // source: 
 
 package test;
@@ -38,92 +38,81 @@ import nl.uva.vlet.gui.vbrowser.VBrowserFactory;
 public class startWrapNodeVBrowser
 {
 
-  public static void main(String args[])
-  {
-      try
-      {
-          ClassLogger.getRootLogger().setLevelToDebug();
-          args=Global.parseArguments(args);
-          
-          // custom platform instance ! -> use wrap node
-          UIPlatform plat = UIPlatform.getPlatform(); 
-          
-          // Option --native ? :
-          //GuiSettings.setNativeLookAndFeel();
-          
-          // shiny swing metal look:
-          plat.startCustomLAF(); 
-          
-          ProxyVRSClient.getInstance().setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());
-          
-          Global.debugPrintln(startWrapNodeVBrowser.class,"GLOBUS_LOCATION        ="+Global.getProperty("GLOBUS_LOCATION"));
-          Global.debugPrintln(startWrapNodeVBrowser.class,"env var 'VLET_INSTALL' ="+Global.getProperty("VLET_INSTALL"));
-          Global.debugPrintln(startWrapNodeVBrowser.class,"Base installation      ="+Global.getInstallBaseDir()); 
-        
-       
-  		// prefetch MyVLe, during startup:
-  		ProxyVNode.getVirtualRoot();
-  		 
-        // start browser(s)
-      	{
-            int urls=0; 
-            
-            for (String arg:args)
-            {
-                Global.debugPrintln(startWrapNodeVBrowser.class,"arg="+arg);
-                
-                // assume that every non-option is a VRL:
-                
-                if (arg.startsWith("-")==false)
-                {
-                    // urls specfied:
-                    urls++; 
-                    VBrowserFactory.getInstance().createBrowser(arg);
-                }
-                else
-                {
-                   if (arg.compareTo("-debug")==0)
-                       Global.setDebug(true); 
-                   // disable busy wait: 
-                   //else if (arg.compareTo("-noblock")==0)
-                    //   BrowserController.karma=3;  
-                }
-            }
-            
-            // no urls specified, open default window:
-            if (urls==0) 
-            {
-                // get home LOCATION: Can also be gftp/srb/....
-                // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
-                
-                VBrowserFactory.getInstance().createBrowser(UIGlobal.getProxyVRS().getVirtualRootLocation()); 
-            }
- 
-            //BrowserController.performNewWindow("file:///home/ptdeboer/vfs2");
-            //BrowserController.performNewWindow("gftp://fs2.das2.nikhef.nl/home1/ptdeboer/vfs");
-            // bc.newWindow("srb:///");
-      	}
-      	
-      	{
-      	    //Nill nill=new Nill("root");
-      	    //bc.setRootResource(nill,true); 
-      	}
-      	
-  	    
-        //bc.errorMessage(" Browser Started");
-        
-        // bc.addResource("vfs","localhost",Main.getUserHome());
-    }
-    catch (VlException e)
+    public static void main(String args[])
     {
-        Global.errorPrintln(startWrapNodeVBrowser.class,"***Error: Exception:"+e); 
-        Global.debugPrintStacktrace(e);
-        ExceptionForm.show(e); 
-         
+        try
+        {
+            ClassLogger.getRootLogger().setLevelToDebug();
+            args = Global.parseArguments(args);
+
+            // custom platform instance ! -> use wrap node
+            UIPlatform plat = UIPlatform.getPlatform();
+
+            // Option --native ? :
+            // GuiSettings.setNativeLookAndFeel();
+
+            // shiny swing metal look:
+            plat.startCustomLAF();
+
+            ProxyVRSClient.getInstance().setProxyNodeFactory(ProxyWrapNodeFactory.getDefault());
+
+            println("GLOBUS_LOCATION        =" + Global.getProperty("GLOBUS_LOCATION"));
+            println("env var 'VLET_INSTALL' =" + Global.getProperty("VLET_INSTALL"));
+            println("Base installation      =" + Global.getInstallBaseDir());
+
+            // prefetch MyVLe, during startup:
+            ProxyVNode.getVirtualRoot();
+
+            // start browser(s)
+            {
+                int urls = 0;
+
+                for (String arg : args)
+                {
+                    println("arg=" + arg);
+
+                    // assume that every non-option is a VRL:
+
+                    if (arg.startsWith("-") == false)
+                    {
+                        // urls specfied:
+                        urls++;
+                        VBrowserFactory.getInstance().createBrowser(arg);
+                    }
+                    else
+                    {
+                        if (arg.compareTo("-debug") == 0)
+                            Global.getLogger().setLevelToDebug();
+                        // disable busy wait:
+                        // else if (arg.compareTo("-noblock")==0)
+                        // BrowserController.karma=3;
+                    }
+                }
+
+                // no urls specified, open default window:
+                if (urls == 0)
+                {
+                    // get home LOCATION: Can also be gftp/srb/....
+                    // BrowserController.performNewWindow(TermGlobal.getUserHomeLocation());
+
+                    VBrowserFactory.getInstance().createBrowser(UIGlobal.getProxyVRS().getVirtualRootLocation());
+                }
+
+                // BrowserController.performNewWindow("file:///home/ptdeboer/vfs2");
+                // BrowserController.performNewWindow("gftp://fs2.das2.nikhef.nl/home1/ptdeboer/vfs");
+                // bc.newWindow("srb:///");
+            }
+
+        }
+        catch (VlException e)
+        {
+            Global.logException(ClassLogger.ERROR, startWrapNodeVBrowser.class, e, "***Error: Exception:" + e);
+            ExceptionForm.show(e);
+        }
     }
-  	// bc.addResource("vfs","localhost",Main.getUserHome());
-  }
 
+    public static void println(String msg)
+    {
+        Global.getLogger().debugPrintf("%s\n", msg);
+    }
 }
-
-  

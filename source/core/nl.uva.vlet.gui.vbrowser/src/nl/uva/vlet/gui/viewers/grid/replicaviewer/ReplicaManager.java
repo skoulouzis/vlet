@@ -25,7 +25,6 @@ package nl.uva.vlet.gui.viewers.grid.replicaviewer;
 
 import java.util.ArrayList;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
@@ -82,13 +81,11 @@ public class ReplicaManager
             
         if ((node instanceof VReplicatable)==false) 
         {   
-            debug("File doesn't have replicas:"+vrl);
             return null; 
         }
                 
         VRL replicas[]=((VReplicatable)node).getReplicas();
-        return replicas; 
-              
+        return replicas;          
     }
     
 //    public ArrayList<ReplicaInfo> getReplicaInfos() throws VlException
@@ -172,12 +169,6 @@ public class ReplicaManager
         return attrSet; 
     }
 
-    
-    private void debug(String msg) 
-    {
-       Global.debugPrintln(this,msg); 
-    }
-
     public void addReplica(ITaskMonitor monitor, String se) throws VlException
     {
         VReplicatable rep=getRepFile();
@@ -201,7 +192,6 @@ public class ReplicaManager
         
         return node; 
     }
-    
 
     public void deleteReplica(ITaskMonitor monitor, String se) throws VlException
     {

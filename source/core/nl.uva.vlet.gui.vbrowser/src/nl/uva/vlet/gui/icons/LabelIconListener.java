@@ -35,7 +35,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPopupMenu;
-import nl.uva.vlet.Global;
+
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.view.VComponent;
@@ -101,14 +101,14 @@ public class LabelIconListener implements ActionListener,
         }
         else
         {
-            Global.errorPrintln(this,"Internal Error:event NOT from VComponent ***");
+            //Global.errorPrintf(this,"Internal Error:event NOT from VComponent ***");
             return null;  
         }
     }
     
     public void mouseClicked(MouseEvent e)
     {
-        Debug("Action:"+e);
+        // Debug("Action:"+e);
         Component comp=(Component)e.getSource(); 
         VComponent vcomp=(VComponent)comp;
         
@@ -320,20 +320,12 @@ public class LabelIconListener implements ActionListener,
     {
     }
 
-    
-    private void Debug(String str)
-    {
-        Global.debugPrintln("ButtonIconListener", str);
-    }
-
 	public void keyPressed(KeyEvent e)
 	{
-		
 	}
 
 	public void keyReleased(KeyEvent e)
 	{
-		
 	}
 
 	public void keyTyped(KeyEvent e)

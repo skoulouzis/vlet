@@ -33,7 +33,6 @@ import java.awt.event.InputEvent;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.view.VComponent;
 import nl.uva.vlet.vrl.VRL;
 
@@ -56,14 +55,14 @@ public class IconsDragGestureListener implements DragGestureListener
     {
     	// DnD Stuff: 
     	
-        Global.debugPrintln(this, "dragGestureRecognized:" + dge);
+        //Global.debugPrintln(this, "dragGestureRecognized:" + dge);
         int action=dge.getDragAction(); 
         // Use DragSource ? 
     
         InputEvent trigger=dge.getTriggerEvent();
         JComponent comp= (JComponent)dge.getComponent();
         
-        Global.debugPrintln(this, "source comp="+comp);
+        //Global.debugPrintln(this, "source comp="+comp);
         
         boolean multi=((dge.getTriggerEvent().getModifiersEx() & InputEvent.CTRL_DOWN_MASK)!=0);
         

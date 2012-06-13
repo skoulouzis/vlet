@@ -26,18 +26,17 @@ package nl.uva.vlet.gui.panels.acldialog;
 
 
 import java.awt.BorderLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
-
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.data.VAttributeSet;
@@ -47,7 +46,6 @@ import nl.uva.vlet.gui.dialog.ExceptionForm;
 import nl.uva.vlet.gui.panels.attribute.AttributePanel;
 import nl.uva.vlet.gui.panels.resourcetable.ResourceTable;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
-
 import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.vrl.VRL;
 
@@ -197,7 +195,7 @@ public class ACLPanel extends JPanel
     
     public void readACLFrom(ProxyNode node) throws VlException
     {
-        Debug("setNode:"+node);
+        //Debug("setNode:"+node);
         this.proxyNode=node; 
         
         VAttribute attrs[][]=node.getACL();
@@ -205,14 +203,14 @@ public class ACLPanel extends JPanel
         this.table.initColumns(); 
         
         aclEntities=node.getACLEntities();
-        if (aclEntities!=null)
-        {
-          for (VAttribute attr:aclEntities)
-          {
-            //String name=attr.getValue(); 
-            Debug("ACLEntity="+attr);  
-          }
-        }
+//        if (aclEntities!=null)
+//        {
+//          for (VAttribute attr:aclEntities)
+//          {
+//            //String name=attr.getValue(); 
+//            //Debug("ACLEntity="+attr);  
+//          }
+//        }
         
         String names[]=
             {
@@ -228,12 +226,7 @@ public class ACLPanel extends JPanel
     {
         return aclEntities;
     }
-    
-    public static void Debug(String msg) 
-    {
-        Global.debugPrintln("ACLPanel",msg); 
-    }
-
+   
     public void handle(VlException e)
     {
         if (browserController!=null)
@@ -247,7 +240,6 @@ public class ACLPanel extends JPanel
             e.printStackTrace();
             ExceptionForm.show(e); 
         }
-        
     }
     
     public ACLPanelController getPanelController()

@@ -425,7 +425,7 @@ public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListe
             if (pnode==null)
             {
                 // add/set Child should have checked this :
-                Global.infoPrintln(this,"*** Warning: child node not in cache, fetching childs of:"+rootNode);
+                Global.infoPrintf(this,"*** Warning: child node not in cache, fetching childs of:%s\n",rootNode);
             }
             else
             {
@@ -716,7 +716,8 @@ public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListe
         
         if (newNode==null) 
         {
-        	Global.errorPrintln(this,"Warning, new node NOT in cache:"+newLoc);
+            // todo caching
+        	Global.errorPrintf(this,"Warning, new node NOT found:%s\n",newLoc);
         	return; 
         }
                 
@@ -791,7 +792,7 @@ public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListe
 		 
 		 if (bicon==null)
 		 {
-		     Global.debugPrintln(this,("setSelected(): Couln't find icon:"+vrl)); 
+		     Global.debugPrintf(this,"setSelected(): Couln't find icon for:%s\n",vrl); 
 		     return; 
          }
 		 
@@ -839,7 +840,7 @@ public class IconsPanel extends BrowserJPanel implements ProxyResourceEventListe
         LabelIcon last = this.getLabelIcon(vrl);
         if (last==null)
         {
-            Global.debugPrintln(this,("selectRange(): Couln't find 2d selection marker:"+vrl)); 
+            Global.debugPrintf(this,"selectRange(): Couln't find 2d selection marker:%s\n",vrl); 
             return; 
         }
             

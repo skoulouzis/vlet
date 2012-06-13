@@ -23,6 +23,7 @@
 
 package nl.uva.vlet.gui.viewers;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.tasks.ITaskSource;
 
@@ -33,31 +34,30 @@ public class ViewerWatcher implements ITaskSource
     
     public ViewerWatcher()
     {
-        
     }
     
-    //@Override
+    @Override
     public String getID()
     {
         return "ViewerWatcher"; 
     }
 
-    //@Override
+    @Override
     public void handle(Exception e)
     {
-        Global.errorPrintStacktrace(e); 
+        Global.logException(ClassLogger.ERROR,this,e,"Exception\n"); 
     }
 
-    //@Override
+    @Override
     public void messagePrintln(String msg)
     {
-        Global.infoPrintln(this,msg); 
+        Global.infoPrintf(this,"%s\n",msg); 
     }
 
-    //@Override
+    @Override
     public void setHasTasks(boolean val)
     {
-        Global.infoPrintln(this,"has Tasks:"+val); 
+        // Global.infoPrintln(this,"has Tasks:"+val); 
     }
 
     

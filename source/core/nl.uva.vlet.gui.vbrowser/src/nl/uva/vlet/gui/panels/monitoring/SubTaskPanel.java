@@ -31,13 +31,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
 import nl.uva.vlet.Global;
-import nl.uva.vlet.gui.vbrowser.BrowserController;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskMonitor;
@@ -135,8 +132,7 @@ public class SubTaskPanel extends JPanel implements ActionListener
                }
                catch (InterruptedException e)
                {
-                   Global.errorPrintln(this,"***Error: Exception:"+e); 
-                   e.printStackTrace();
+                   Global.errorPrintf(this,"Interrupted!\n"); 
                 } 
             }
             

@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.swing.tree.TreePath;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.gui.MasterBrowser;
@@ -96,13 +95,13 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
 
 	public void notifyProxyEvent(ResourceEvent e)
 	{
-		debug("Event:" + e);
+		//debug("Event:" + e);
 
 		List<ResourceTreeNode>  nodes = findNodes(e.getSource(),true); 
 
         if ((nodes == null) || (nodes.size()<0) )
         {
-            debug("Node node for:" + e.getSource());
+            //debug("Node node for:" + e.getSource());
             return;
         }
         
@@ -165,7 +164,7 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
     				node.notifyBusyEvent(e.getBoolVal());
     				break;
     			default:
-    				debug("***Warning: Unknown EventType:" + e);
+    				//debug("***Warning: Unknown EventType:" + e);
     			break;
     		}
     		
@@ -267,7 +266,7 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
 
 		if ((nodes==null) || (nodes.size()<=0))
 		{
-			debug("***Warning. updateChildNodesFor(): Couldn't find nodeRecieved update for node in tree:"+parent);
+			// debug("***Warning. updateChildNodesFor(): Couldn't find nodeRecieved update for node in tree:"+parent);
 		}
 		else
 		{
@@ -300,13 +299,7 @@ public class ResourceTreeDataProducer extends ProxyDataProducer
         
         return true; 
     }
-
-    private void debug(String msg)
-	{
-        //Global.errorPrintln(this,msg); 
-		Global.debugPrintln(this,msg);
-	}
-	
+   
 	public void dispose()
 	{
 		ProxyVRSClient.getInstance().removeResourceEventListener(this); 

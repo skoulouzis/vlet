@@ -35,6 +35,7 @@ import static nl.uva.vlet.data.VAttributeConstants.ATTR_TYPE;
 
 import javax.swing.Icon;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.VAttribute;
@@ -464,12 +465,12 @@ public class ProxyWrapNode extends ProxyNode
 
     private void fixme(String msg)
     {
-        Global.errorPrintln(this,"FIXME:"+msg); 
+        Global.errorPrintf(this,"FIXME:"+msg); 
     }
     
     private void debug(String msg)
     {
-        Global.errorPrintln(this,msg); 
+        Global.errorPrintf(this,"%\n",msg); 
     }
     
     private void fixme(Exception e)
@@ -652,18 +653,12 @@ public class ProxyWrapNode extends ProxyNode
     
     private void warn(String msg)
     {
-        Global.errorPrintln(this,msg); 
+        Global.errorPrintf(this,"%s\n",msg); 
     }
-    
-    private void error(String msg)
-    {
-        Global.errorPrintln(this,msg); 
-    }
-
+      
     private void error(String msg, Exception e)
     {
-        Global.errorPrintln(this,msg);
-        Global.errorPrintStacktrace(e); 
+        Global.logException(ClassLogger.ERROR,this,e,"%s\n",msg); 
     }
 
     public VRL[] getAliasVRLs()

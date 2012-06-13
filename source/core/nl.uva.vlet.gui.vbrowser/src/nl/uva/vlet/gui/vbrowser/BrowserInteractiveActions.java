@@ -37,11 +37,10 @@ import nl.uva.vlet.gui.UIGlobal;
 import nl.uva.vlet.gui.actions.TransferWatcher;
 import nl.uva.vlet.gui.data.ResourceRef;
 import nl.uva.vlet.gui.dialog.CopyDialog;
+import nl.uva.vlet.gui.dialog.CopyDialog.CopyOption;
 import nl.uva.vlet.gui.dialog.SimpleDialog;
 import nl.uva.vlet.gui.dialog.SimpleNButtonDialog;
-import nl.uva.vlet.gui.dialog.CopyDialog.CopyOption;
 import nl.uva.vlet.gui.editors.ResourceEditor;
-import nl.uva.vlet.gui.panels.monitoring.TaskMonitorDialog;
 import nl.uva.vlet.gui.panels.monitoring.TransferMonitorDialog;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
 import nl.uva.vlet.gui.proxyvrs.ProxyNodeFactory;
@@ -59,7 +58,6 @@ import nl.uva.vlet.vrs.VNode;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 import nl.uva.vlet.vrs.ui.ICopyInteractor;
-import nl.uva.vlet.vrs.ui.ICopyInteractor.InteractiveAction;
 
 /**
  * New Delegation class to handle more complex
@@ -416,7 +414,7 @@ public class BrowserInteractiveActions
 
                     if (result.equals("Delete All"))
                     {
-                        Global.infoPrintln(this,"Delete ALL Selected"); 
+                        //Global.infoPrintln(this,"Delete ALL Selected"); 
                         forceRecurseDelete.value=true;
                     }
 
@@ -447,7 +445,7 @@ public class BrowserInteractiveActions
                 boolean cont=interactiveDelete(ref,deletemAll);
                 if (cont==false)
                 {
-                    Global.infoPrintln(this,"Cancel deleteAll");
+                    Global.infoPrintf(this,"Cancel deleteAll\n");
                     return;
                 }
             }
@@ -466,7 +464,7 @@ public class BrowserInteractiveActions
         if (node!=null)
             return interactiveDelete(node,forceRecurseDelete); 
         else
-            Global.errorPrintln(this,"Node not in cache:"+ref);
+            Global.errorPrintf(this,"Node not in cache:%s\n",ref);
 
         return true; 
     }
@@ -631,8 +629,6 @@ public class BrowserInteractiveActions
      * @throws VlException */ 
     private boolean _interactiveCheckAuthenticationFor(final VRL location) 
     {
-        Global.debugPrintln(this,"Interactive Checking Authentication for:"+location);
-        
         // ===
         // check
         // ====
@@ -654,7 +650,7 @@ public class BrowserInteractiveActions
 
         if (info==null)
         {
-            debug(">>> NULL ServerInfo for:"+location);
+            Global.warnPrintf(this,">>> NULL ServerInfo for:%s\n",location);
             //
             // continue: authentication might not be needed. 
             // if needed access will fail in a later stage.  
@@ -662,10 +658,10 @@ public class BrowserInteractiveActions
             return true;
         }
 
-        debug("ServerInfo.isAuthenticationNeeded :"+info.isAuthenticationNeeded(vrsContext));
-        debug("ServerInfo.useGSIAuth             :"+info.useGSIAuth()); 
-        debug("ServerInfo.usePassword()          :"+info.usePasswordAuth()); 
-        debug("ServerInfo.isValid                :"+info.hasValidAuthentication()); 
+        Global.warnPrintf(this,"ServerInfo.isAuthenticationNeeded :%s\n",info.isAuthenticationNeeded(vrsContext));
+        Global.warnPrintf(this,"ServerInfo.useGSIAuth             :%s\n",info.useGSIAuth()); 
+        Global.warnPrintf(this,"ServerInfo.usePassword()          :%s\n",info.usePasswordAuth()); 
+        Global.warnPrintf(this,"ServerInfo.isValid                :%s\n",info.hasValidAuthentication()); 
         // ================================================
         // Directly return true without GUI interaction ! 
         // ================================================
@@ -701,13 +697,7 @@ public class BrowserInteractiveActions
             if (GridProxyDialog.askInitProxy(message)==false) 
                 return false; // cancel 
         }
-
-        if (info==null) 
-        {
-            debug("Authentication information Cancelled");
-            return false; 
-        }
-        
+    
         // 
         // assume provided information is valid, until actual authentication
         // this to prevent multiple windows to popup 'during' 
@@ -720,14 +710,9 @@ public class BrowserInteractiveActions
         return true; 
     }
 
-    private void debug(String msg)
-    {
-        Global.debugPrintln(this,msg); 
-    }
 
     public void interactiveEditProperties(final ProxyNode pnode, final boolean refresh)
     {
-
         // will wait for GUI to finish !
         // New Resource Location 
         if ((true) || pnode.getType().compareTo(VRS.RESOURCE_LOCATION_TYPE)==0)
@@ -1040,7 +1025,7 @@ public class BrowserInteractiveActions
             
         if ((source==null) || (source.getVRL()==null))
         {
-            Global.errorPrintln(this,"***ERROR: NULL pointer checkCopyMoveDrop:"+this); 
+            Global.errorPrintf(this,"***ERROR: NULL pointer checkCopyMoveDrop:%s\n",this); 
             return false; 
         }
         // cannot handle non composite node (yet) !

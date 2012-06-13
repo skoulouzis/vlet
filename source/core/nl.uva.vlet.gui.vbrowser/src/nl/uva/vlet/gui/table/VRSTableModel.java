@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.gui.proxyvrs.ProxyNode;
@@ -45,6 +46,13 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 {
     // === class ===
     private static final long serialVersionUID = -1721698802548910305L;
+    private static ClassLogger logger; 
+    
+    static
+    {
+        logger=ClassLogger.getLogger(VRSTableModel.class); 
+        logger.setLevelToDebug();
+    }
     
     // need better data structure 
     public static Vector<Object> attr2vector(Object[] objarr) 
@@ -80,7 +88,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     	{
     		if ((colNr<0) || (colNr>=rowData.size()))
     		{
-    			debug("Column number out of bounds:"+colNr); 
+    			logger.warnPrintf("Column number out of bounds:%d\n",colNr); 
     		}
     		return rowData.get(colNr); 
     	}
@@ -137,7 +145,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 		{
 			if ((j<0) || (j>=rowData.size()))
 			{
-				debug("column index out of bounds:"+j);
+				logger.warnPrintf("column index out of bounds:%s\n",j);
 				return null; 
 			}
 			
@@ -149,7 +157,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 			}
 			else
 			{
-				Global.errorPrintln(this,"Cell is NOT an VAttribute:"+obj);
+				Global.errorPrintf(this,"Cell is NOT an VAttribute:%s\n",obj);
 				return null; 
 			}
 		}
@@ -175,7 +183,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
         if (attr!=null) 
             val=attr.isEditable();
         
-        Global.debugPrintln(this,"IsEditable:"+row+","+col+"=attr"+attr+"="+val);
+        //Global.debugPrintln(this,"IsEditable:"+row+","+col+"=attr"+attr+"="+val);
         
         return val; 
     }
@@ -186,7 +194,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     	{
     		if ((row<0) || (row>=rowObjects.size()))
     		{
-    			debug("Row out of bounds:"+row+">="+rowObjects.size());
+    			logger.warnPrintf("Row out of bounds (row)%d>(size)%d\n",row,rowObjects.size());
     			return null; 
     		}
     		
@@ -338,7 +346,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     	
     	if (row==null)
     	{
-    		debug("Index out of bound. ingoreing setData:"+rowNr+","+colNr+":"+value); 
+    		logger.warnPrintf("Index out of bound. ignoring setData(row,col)[%d,%d]='%s'\n",rowNr,colNr,value); 
     		return;
     	}
         
@@ -466,14 +474,14 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     
     public int[] sortBy(String name, boolean reverse)
     {
-    	debug("sortBy:"+name+", reverse="+reverse); 
+    	//debug("sortBy:"+name+", reverse="+reverse); 
     	
         int colnr=getHeaderIndex(name);    
         
         if (colnr<0) 
             return null; 
         
-    	debug("sortBy column number="+colnr);
+    	//debug("sortBy column number="+colnr);
     	
         TableRowComparer comparer=new TableRowComparer(colnr,reverse); 
         QSort sorter=new QSort(comparer); 
@@ -550,7 +558,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     	{
     		if ((i<0) || i >=rowObjects.size())
     		{
-    			debug("removeRow: Index out of bounds:"+i);
+    			logger.warnPrintf("removeRow: Index out of bounds:%d\n",i);
     			return false;
     		}
     	
@@ -569,19 +577,18 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
      */
    public boolean addNodeRow(ProxyNode node,Object attrs[])
    {
-	    debug("New proxynode row:"+node);
-	   
-	   // Use VAttributeSet as factory 
+       //debug("New proxynode row:"+node);
+       // Use VAttributeSet as factory 
 	
-    	int rownr=0; 
-    	
-    	synchronized(this.rowObjects)
-    	{
+       int rownr=0; 
+    	    
+       synchronized(this.rowObjects)
+       {
     		RowObject row = this.getRowByVRL(node.getVRL()); 
 
     		if (row!=null)
     		{
-    			Global.debugPrintln(this,"Ignoring existing rowNode:"+node); 
+    			//Global.debugPrintln(this,"Ignoring existing rowNode:"+node); 
     			return false;  
     		}
         	
@@ -594,8 +601,6 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
     	
     	return true; 
    }
-
- 
 
 	public VAttribute[][] getData()
     {
@@ -633,12 +638,6 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 		return this.tablePanel.getDataProducer().getRootViewItem(); 
 	}
 
-	private void debug(String msg)
-	{
-		//Global.errorPrintln(this,msg);
-		Global.debugPrintln(this,msg);
-	}
-
 	public ProxyNode[] getRowObjects()
 	{
 		synchronized(this.rowObjects)
@@ -663,7 +662,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 				if (rowObjects.get(i).hasVRL(vrl))
 				{
 					rowObjects.remove(i);
-					debug("removeNode: removed:"+vrl);
+					//debug("removeNode: removed:"+vrl);
  					removed = true;
  					index=i; 
 					break; 
@@ -677,7 +676,7 @@ public class VRSTableModel extends AbstractTableModel // implements IProxyModel
 		}
 		else
 		{	
-			debug("removeNode: couldn't find node:"+vrl);
+			logger.warnPrintf("removeNode: couldn't find node:%s\n",vrl);
 		}
 		
 		return removed;  

@@ -31,19 +31,18 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
-import nl.uva.vlet.gui.viewers.ViewerPlugin;
 import nl.uva.vlet.tasks.ActionTask;
 import nl.uva.vlet.tasks.ITaskSource;
 import nl.uva.vlet.vrl.VRL;
@@ -133,7 +132,7 @@ public class ViewerManager
      */
 	public void handleWindowClosingEvent(WindowEvent e)
     {
-	    debug("handleWindowClosingEvent:"+e);
+	    //debug("handleWindowClosingEvent:"+e);
 	    // finalize in background: 
 	    signalFinalize();
     }
@@ -321,8 +320,7 @@ public class ViewerManager
                 }
                 catch (Error e)
                 {
-                    Global.errorPrintln(this,"***Error: Exception:" + e);
-                    Global.errorPrintStacktrace(e); 
+                    Global.logException(ClassLogger.ERROR,this,e,"Exception\n"); 
                 }
                 catch (VlException e)
                 {
@@ -457,8 +455,6 @@ public class ViewerManager
      */ 
     public void finalizeViewer()
     {
-        Global.infoPrintln(this,">>> finalizeViewer():"+this.viewer); 
-        
         viewer.stopViewer();
 
         // check whether star tasks still is running ! 
@@ -489,9 +485,4 @@ public class ViewerManager
         }
     }
  
-
-    private void debug(String msg) 
-    {
-        Global.debugPrintln(this,msg); 
-    }
 }

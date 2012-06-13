@@ -25,7 +25,6 @@ package nl.uva.vlet.gui.tree;
 
 
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.tree.MutableTreeNode;
@@ -76,7 +75,7 @@ public class ResourceTreeNode implements MutableTreeNode, VComponent
     public ResourceTreeNode(ResourceTree tree, ViewNode iconItem)
     {
     	init(tree,iconItem);  
-    	debug(">>> NEW NODE:"+this);
+    	//debug(">>> NEW NODE:"+this);
     }
     
     private void init(ResourceTree tree,ViewNode item)
@@ -264,11 +263,6 @@ public class ResourceTreeNode implements MutableTreeNode, VComponent
     	return "{ResourceTreeNode:"+getVRL()+"}"; 
     }
 
-    private void debug(String str)
-    {
-        Global.debugPrintln(this, str);
-    }
-
     public MasterBrowser getMasterBrowser()
     {
         return this.resourceTree.getMasterBrowser();
@@ -319,7 +313,7 @@ public class ResourceTreeNode implements MutableTreeNode, VComponent
         catch (InterruptedException e)
         {
             // continue:
-            Global.errorPrintln(this, "InterruptedException:"+ e);
+            Global.errorPrintf(this, "InterruptedException:%s\n",e);
         }
 
     }
@@ -399,7 +393,7 @@ public class ResourceTreeNode implements MutableTreeNode, VComponent
     /** Used linear search in childs Vector to get to sibling object */
     public ResourceTreeNode getNextChild(ResourceTreeNode child)
     {
-        debug("getNextChild:"+child); 
+        //debug("getNextChild:"+child); 
         
         synchronized(this.childs)
         {

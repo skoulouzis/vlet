@@ -33,7 +33,6 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPopupMenu;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.GuiSettings;
 
 /** For event ON the icons Panel (not the ButtonIcon componenets) */
@@ -53,7 +52,7 @@ class IconsPanelListener implements MouseListener,MouseWheelListener, FocusListe
 	
     public void mouseClicked(MouseEvent e)
     {
-        Debug("IconsPanel mouse clicked:"+e);
+        //Debug("IconsPanel mouse clicked:"+e);
         
         boolean combine=((e.getModifiersEx()&MouseEvent.CTRL_DOWN_MASK)!=0);
         boolean shift=((e.getModifiersEx()&MouseEvent.SHIFT_DOWN_MASK)!=0);
@@ -73,7 +72,7 @@ class IconsPanelListener implements MouseListener,MouseWheelListener, FocusListe
     // Canvas Click: 
     public void mousePressed(MouseEvent e)
     {
-        Debug("IconsPanel mouse pressed:"+e);
+        //Debug("IconsPanel mouse pressed:"+e);
         // update focus ! 
     	this.iconsPanel.requestFocus();
     	
@@ -109,32 +108,23 @@ class IconsPanelListener implements MouseListener,MouseWheelListener, FocusListe
 
     public void mouseExited(MouseEvent e)
     {
-        Debug("IconsPanel mouseExited:"+e);
+        //Debug("IconsPanel mouseExited:"+e);
     }
-    
-    
-    private void Debug(String msg)
-    {
-        //Global.errorPrintln(this,msg);
-        Global.debugPrintln(this,msg);
-    }
-
+   
     public void mouseWheelMoved(MouseWheelEvent e)
     {
-        Debug("IconsPanel mousewheel moved:"+e);
+        //Debug("IconsPanel mousewheel moved:"+e);
     }
 
 	public void focusGained(FocusEvent e)
 	{
-        Debug("IconsPanel focusGained:"+e);
+       // Debug("IconsPanel focusGained:"+e);
         //this.iconsPanel.setBackground(new Color(128,128,255)); 
-		
 	}
 
 	public void focusLost(FocusEvent e)
 	{
-        Debug("IconsPanel focusLost:"+e);      
+        //Debug("IconsPanel focusLost:"+e);      
        // this.iconsPanel.setBackground(new Color(128,128,128));
-		
 	}
 }

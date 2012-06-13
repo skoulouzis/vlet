@@ -32,9 +32,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPopupMenu;
-import javax.swing.tree.TreePath;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.MasterBrowser;
 import nl.uva.vlet.gui.data.ResourceRef;
@@ -65,7 +63,7 @@ public class ResourceTreeListener implements MouseListener,MouseMotionListener,
 
     public void mousePressed(MouseEvent e)
     {
-        Debug("mousePressed"+e);
+        //Debug("mousePressed"+e);
         
         ResourceTreeNode rtnode=resourceTree.getNodeUnderPoint(e.getPoint()); 
         boolean canvasclick=false; 
@@ -122,7 +120,7 @@ public class ResourceTreeListener implements MouseListener,MouseMotionListener,
 
     public void mouseClicked(MouseEvent e)
     {
-        Debug("mouseClicked"+e);
+        //Debug("mouseClicked"+e);
         
         ResourceTreeNode rtnode = resourceTree.getNodeUnderPoint(e.getPoint());
         
@@ -182,7 +180,7 @@ public class ResourceTreeListener implements MouseListener,MouseMotionListener,
     
     public void mouseReleased(MouseEvent e)
     {
-    	Debug("mouseReleased:"+e);  
+    	//Debug("mouseReleased:"+e);  
     	this.resourceTree.stopAutoScroller(); 
     }
 
@@ -197,20 +195,11 @@ public class ResourceTreeListener implements MouseListener,MouseMotionListener,
     	this.resourceTree.stopAutoScroller();
         resourceTree.setMouseOverPoint(null);  
     }
-
-       /**
-     * @param string
-     */
-    private void Debug(String msg)
-    {
-       // Global.errorPrintln("ResourceTreeListenenr",msg);
-        Global.debugPrintln("ResourceTreeListenenr",msg);
-    }
     
     /** Auto Scroll */ 
     public void mouseDragged(MouseEvent e)
     {
-    	Debug("mouseDragged:"+e); 
+    	//Debug("mouseDragged:"+e); 
     	
     	Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
     	this.resourceTree.scrollRectToVisible(r);
@@ -218,7 +207,7 @@ public class ResourceTreeListener implements MouseListener,MouseMotionListener,
 
     public void mouseMoved(MouseEvent e)
     {
-    	Debug("mouseMoved:"+e);
+    	//Debug("mouseMoved:"+e);
     	
         resourceTree.setMouseOverPoint(e.getPoint()); 
     	

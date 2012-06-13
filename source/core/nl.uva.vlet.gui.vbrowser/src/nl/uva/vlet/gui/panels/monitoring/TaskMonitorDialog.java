@@ -232,8 +232,7 @@ public class TaskMonitorDialog extends javax.swing.JDialog
                }
                catch (InterruptedException e)
                {
-                   Global.errorPrintln(this,"***Error: Exception:"+e); 
-                   e.printStackTrace();
+                   Global.errorPrintf(this,"Interrupted!"); 
                 } 
             }
             
