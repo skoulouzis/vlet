@@ -115,12 +115,9 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
         return new VAttributeSet(attrs).toObjectVector();
     }
 
-    
     // ========================================================================
     // Instance
     // ========================================================================
-    
-    
     
     /** Optional set Name */ 
     protected String setName=""; 
@@ -165,8 +162,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
       super(); //empty hastable
       this.setName=name; 
     }
-    
-    
+        
     /**
      * Create from Vector. Duplicate entries
      * are overwritten. Last entry is kept.
@@ -274,7 +270,6 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     	attr.setEditable(editable); 
     	this.put(attr); 
     }
-
     
     public void set(VAttribute attribute)
     {
@@ -364,7 +359,6 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
         
         return attr.getStringValue();
     }
-
     
     /** 
      * Returns String value of Attribute 
@@ -424,16 +418,16 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     
     /**
      * Helper method used by the set() methods. 
-     * Retruns old value. 
+     * Returns old value. 
      */ 
-    private Object _set(VAttributeType type, String name, Object val)
+    private Object _set(VAttributeType optNewType, String name, Object val)
     {
         VAttribute orgAttr = this.get(name); 
         
         if (orgAttr==null)
         {
             // set: put new Editable Attribute with specified type: 
-            VAttribute attr = VAttribute.createFrom(type,name,val);
+            VAttribute attr = VAttribute.createFrom(optNewType,name,val);
             attr.setEditable(true);
             this.put(attr); 
             return null; 
@@ -449,6 +443,7 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
             return oldValue; 
         }
     }
+    
     /**
      * Set Attribute Value. Returns previous value if any.  
      * The difference between put and set is that this method changes the 
@@ -459,7 +454,6 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
      * If the named attribute isn't stored, a new attribute will be created
      * and the behaviour is similar to put().  
      */
-    
     public String set(String name, String val) 
     {
         String oldvalue=getStringValue(name); 
@@ -486,7 +480,6 @@ public class VAttributeSet extends OrdenedHashtable<String,VAttribute>
     {
     	_set(VAttributeType.VRL,attrName,vrl);
     }
-
     
     public boolean getBooleanValue(String name,boolean defaultValue)
     {

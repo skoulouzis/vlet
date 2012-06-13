@@ -700,11 +700,25 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
         return oldval; 
     }
 
+    /** Set value by object */ 
     public Object setValue(Object obj)
     {
-        Object prev=this.value; 
+        Object prev=this.value;
         if (obj==null)
+        {
             _setValue(null);
+        }
+        else
+        {
+            String strvalue=null; 
+        
+            if (obj instanceof String)
+                strvalue=(String)obj;
+            else
+                strvalue=obj.toString(); 
+            
+            _setValue(strvalue);
+        }
         
         return prev; 
     }
@@ -803,7 +817,6 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
 
     public static VAttribute[] convertVectorToArray(Vector<VAttribute> attributes)
     {
-
         VAttribute newAttrs[] = new VAttribute[attributes.size()];
 
         for (int i = 0; i < newAttrs.length; i++)
@@ -980,12 +993,6 @@ public class VAttribute implements Cloneable, Serializable, Duplicatable<VAttrib
             return true;
 
         return false;
-    }
-
-    /** @deprecated use setValue(...) */ 
-    public void forceSetValue(String valstr)
-    {
-        this.setValue(valstr);
     }
 
     public static boolean isSectionName(String name)
