@@ -474,14 +474,17 @@ public class testVAttribute
     
     void doVAttributeIntLongCompare(int val1,int val2)
     {
-        int intComp=Integer.compare(val1, val2);  
+        // int inComp=Integer.compare(val1, val2);  // java 1.7 
+        int intComp=new Integer(val1).compareTo(val2);
         VAttribute a1=new VAttribute("name1",val1); 
         VAttribute a2=new VAttribute("name2",val2); 
         int attrComp=a1.compareTo(a2); 
         Assert.assertEquals("VAttribute (int)compareTo() must result in same value a Integer compareTo()!",intComp,attrComp);
        
         long lval1=val1,lval2=val2; 
-        int longComp=Long.compare(lval1, lval2);  
+        // int longComp=Long.compare(lval1, lval2); // java 1.7  
+        int longComp=new Long(lval1).compareTo(lval2); 
+        
         a1=new VAttribute("name1",lval1); 
         a2=new VAttribute("name2",lval2); 
         attrComp=a1.compareTo(a2); 
