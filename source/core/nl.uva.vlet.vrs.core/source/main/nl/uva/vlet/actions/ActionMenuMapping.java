@@ -23,12 +23,13 @@
 
 package nl.uva.vlet.actions;
 
+import static nl.uva.vlet.actions.ActionMenuConstants.MENU_INACTIVE_DONT_SHOW;
+import static nl.uva.vlet.actions.ActionMenuConstants.MENU_ITEM_ACTION;
+
 import java.util.Vector;
 import java.util.regex.Pattern;
 
 import nl.uva.vlet.vrs.VRSFactory;
-
-import static nl.uva.vlet.actions.ActionMenuConstants.*;
 
 /** 
  * Action Menu Mapping class.
@@ -42,7 +43,6 @@ import static nl.uva.vlet.actions.ActionMenuConstants.*;
  *  
  * @author P.T. de Boer 
  */
-
 public class ActionMenuMapping
 {
 	public static final int DEFAULT_MENU_OPTIONS=MENU_INACTIVE_DONT_SHOW&MENU_ITEM_ACTION;
@@ -173,8 +173,6 @@ public class ActionMenuMapping
 		this.actionSubMenuName=subMenuName; 
 	}
 
-	
-	
 	public void addTypeMapping(Pattern type)
 	{
 		Pattern types[]=null;
@@ -428,6 +426,5 @@ public class ActionMenuMapping
 	{
 		return this.isVRSAction; 
 	}
-
 	
 }

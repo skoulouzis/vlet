@@ -24,7 +24,6 @@
 package nl.uva.vlet.exec;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.tasks.ITaskSource;
 
 /** 
@@ -33,7 +32,6 @@ import nl.uva.vlet.tasks.ITaskSource;
  * for the Tasks started in the Java Process objects which watch
  * the started process. For example the streamReader task. 
  */ 
-
 public class ProcessTaskSource implements ITaskSource 
 {
     private static ClassLogger logger; 

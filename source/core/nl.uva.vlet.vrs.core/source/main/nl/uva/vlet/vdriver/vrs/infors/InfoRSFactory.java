@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.vdriver.vrs.infors;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;

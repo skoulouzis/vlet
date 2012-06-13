@@ -18,7 +18,7 @@
  * ---
  * $Id: FileOutputStream.java,v 1.4 2011-06-07 15:13:51 ptdeboer Exp $  
  * $Date: 2011-06-07 15:13:51 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.io.javafile;
@@ -27,94 +27,89 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vfs.VFSClient;
 import nl.uva.vlet.vrl.VRL;
 
- 
-/** 
- * java.io.FileOutputStream compatible class. 
+/**
+ * java.io.FileOutputStream compatible class.
  */
 public class FileOutputStream extends OutputStream
 {
-   
+
     private VRL location;
-	private OutputStream output;
 
-	public FileOutputStream(String name) throws FileNotFoundException
+    private OutputStream output;
+
+    public FileOutputStream(String name) throws FileNotFoundException
     {
-    	try 
-    	{
-			this.location=File.getStaticVFSClient().resolve(name);
-		}
-    	catch (VRLSyntaxException e) 
-    	{
-    		throw new FileNotFoundException("Couldn't resolve:"+name+"\nException="+e); 
-    	}
-    	open(location); 
+        try
+        {
+            this.location = File.getStaticVFSClient().resolve(name);
+        }
+        catch (VRLSyntaxException e)
+        {
+            throw new FileNotFoundException("Couldn't resolve:" + name + "\nException=" + e);
+        }
+        open(location);
     }
 
- 
-//    public FileOutputStream(String name, boolean append)
-//        throws FileNotFoundException
-//    {
-//        this(name != null ? new File(name) : null, append);
-//    }
+    // public FileOutputStream(String name, boolean append)
+    // throws FileNotFoundException
+    // {
+    // this(name != null ? new File(name) : null, append);
+    // }
 
-  
-    public FileOutputStream(File file) throws FileNotFoundException 
+    public FileOutputStream(File file) throws FileNotFoundException
     {
-    	this.location=file.toVRL(); 
-    	open(location); 
+        this.location = file.toVRL();
+        open(location);
     }
 
-    public FileOutputStream(VRL vrl) throws FileNotFoundException 
+    public FileOutputStream(VRL vrl) throws FileNotFoundException
     {
-    	this.location=vrl; 
-    	open(location);
+        this.location = vrl;
+        open(location);
     }
-    
+
     private void open(VRL vrl) throws FileNotFoundException
     {
-    	try
-    	{
-    		VFSClient vfs = File.getStaticVFSClient();
-    		this.location=vrl; 
-    		output=vfs.openOutputStream(location); 
-    	}
-    	catch (VlException e) 
-    	{
-    		throw new FileNotFoundException("Couldn't open file:"+location+"\nException="+e);  
-    	}	 
+        try
+        {
+            VFSClient vfs = File.getStaticVFSClient();
+            this.location = vrl;
+            output = vfs.openOutputStream(location);
+        }
+        catch (VlException e)
+        {
+            throw new FileNotFoundException("Couldn't open file:" + location + "\nException=" + e);
+        }
     }
-   
+
     public void write(int b) throws IOException
     {
-    	output.write(b); 
-    }
-   
- 
-    public void write(byte b[]) throws IOException 
-    {
-    	this.output.write(b, 0, b.length);
+        output.write(b);
     }
 
-    public void write(byte b[], int off, int len) throws IOException 
+    public void write(byte b[]) throws IOException
     {
-    	this.output.write(b, off, len);
-    }
-   
-    public void close() throws IOException 
-    {
-    	this.output.close(); 
+        this.output.write(b, 0, b.length);
     }
 
-   
-    public void flush() throws IOException 
+    public void write(byte b[], int off, int len) throws IOException
     {
-    	this.output.flush(); 
+        this.output.write(b, off, len);
     }
-    
+
+    public void close() throws IOException
+    {
+        this.output.close();
+    }
+
+    public void flush() throws IOException
+    {
+        this.output.flush();
+    }
+
 }
-

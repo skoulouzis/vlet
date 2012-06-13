@@ -49,7 +49,6 @@ import nl.uva.vlet.util.ChecksumUtil;
 import nl.uva.vlet.vfs.VChecksum;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFile;
-import nl.uva.vlet.vfs.VRSTransferManager;
 import nl.uva.vlet.vfs.VUnixFileAttributes;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VRS;
@@ -60,9 +59,7 @@ import nl.uva.vlet.vrs.io.VStreamAppendable;
 
 /**
  * Local LFile System implementation of the VFile class
- * 
  */
-
 public class LFile extends VFile implements VStreamAccessable, VStreamAppendable, 
         VRandomAccessable, VUnixFileAttributes, VResizable, VChecksum
 {
@@ -71,6 +68,7 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
     static
     {
         logger=ClassLogger.getLogger(LFile.class); 
+        logger.setLevelToDebug();
     }
     
     // ** local LFile implementation
@@ -107,9 +105,10 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
     }
 
     /** Initiliaze with Java File object */
-
     private void init(java.io.File file) throws VlException
     {
+        logger.debugPrintf("init():new file:%s\n",file); 
+        
         String path = file.getAbsolutePath();
 
         //
@@ -148,7 +147,6 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
         }
 
         return superNames;
-
     }
 
     private StatInfo getStat() throws VlException
@@ -171,8 +169,7 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
      */
     public VAttribute getAttribute(String name) throws VlException
     {
-        // Very straightforward implementation
-        logger.debugPrintf("getAttribute '%s' for:%s\n",name,this); 
+        // slowdown: logger.debugPrintf("getAttribute '%s' for:%s\n",name,this); 
         
         if (name == null)
             return null;
@@ -256,8 +253,7 @@ public class LFile extends VFile implements VStreamAccessable, VStreamAppendable
                 }
                 else
                 {
-                    logger.debugPrintf("Warning: Not creating existing file,but truncating:%s\n",this);
-
+                    logger.debugPrintf("Warning: Not creating existing file, but truncating:%s\n",this);
                     this.delete();
                 }
             }

@@ -32,8 +32,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
-import java.util.logging.Level;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -50,9 +48,9 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlServerException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.util.bdii.info.glue.GlueConstants;
 import nl.uva.vlet.util.bdii.info.glue.GlueObject;
 

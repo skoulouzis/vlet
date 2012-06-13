@@ -128,7 +128,6 @@ public class SSLContextManager
         return getConfigProperty(PROP_PRIVATE_KEYSTORE_KEY_ALIAS,KEYSTORE_DEFAULT_PRIVATE_KEY_ALIAS);    
     }
 
-
     public String getProxyFilename()
     {
         return getConfigProperty(PROP_CREDENTIALS_PROXY_FILE,"/tmp/x509up_u1000");   
@@ -137,8 +136,7 @@ public class SSLContextManager
     public String getProtocol()
     {
         return getConfigProperty(PROP_SSL_PROTOCOL,SSL_PROTOCOL_DEFAULT_VALUE);
-    }
-    
+    }    
 
     public String getCaCertsLocation()
     {

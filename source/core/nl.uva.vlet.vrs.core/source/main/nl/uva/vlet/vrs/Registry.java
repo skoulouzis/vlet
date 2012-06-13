@@ -645,7 +645,6 @@ final public class Registry
         
         throw new nl.uva.vlet.exception.ResourceTypeMismatchException("Location is NOT a fileystem:"+location); 
     }
-
   
     /**
      * When more then one scheme names are allowed (for example: gftp/gsiftp)
@@ -809,7 +808,6 @@ final public class Registry
     {
         return this.resourceEventNotifier; 
     }
-
     
     //===========================================================================
     // Class (static) methods
@@ -866,19 +864,15 @@ final public class Registry
                 
                 instance=new Registry();
                 instanceCreation=false; //Release Lock ! 
-            }
-                
+            }                
         }
         catch (Throwable t)
         {
             logger.logException(ClassLogger.FATAL,t,"*** PANIC: Can not initialise Registry! Exception="+t); 
             t.printStackTrace();
             instanceCreation=false;
-        }
-        
+        }        
         return instance; 
     }
-
-  
   
 }

@@ -23,7 +23,6 @@
 
 package nl.uva.vlet.vdriver.vrs.http;
 
-import nl.uva.vlet.Global;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.net.ssl.SslUtil;
 import nl.uva.vlet.vrl.VRL;

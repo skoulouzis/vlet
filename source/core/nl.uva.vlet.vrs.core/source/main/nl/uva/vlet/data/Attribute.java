@@ -47,7 +47,6 @@ import nl.uva.vlet.vrl.VRL;
  * 
  * @author P.T. de Boer
  */
-
 public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribute>//,Triple<VAttributeType,String,Object> 
 {
 	private static final long serialVersionUID = 7275104309580585823L;
@@ -61,7 +60,6 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
 	// ========================================================================
 	// Class Methods 
 	// ========================================================================
-
 
     public static Attribute createFrom(String name, Object value)
     {
@@ -173,7 +171,6 @@ public class Attribute  implements Cloneable, Serializable,Duplicatable<Attribut
         }
     }
     
-
 	private static Object duplicateValue(VAttributeType type,Object object)
 	{
 	    if (object==null)

@@ -173,29 +173,26 @@ public class ActionContext
 	
 	public String toString()
 	{
-		String str=   "{<ActionContext>:\n" 
-				     +"  {  type                 ="+type +"\n"
-				     +"     source               ="+source +"\n"
-				     +"     isContainer          ="+isContainer +"\n"
-				     +"     isClipboardSelection ="+isClipboardSelection +"\n"
-				     +"     isMiniDnDMenu        ="+isMiniDnDMenu +"\n"; 
+		String str="{<ActionContext>:\n" 
+				   +"  {  type                 ="+type +"\n"
+				   +"     source               ="+source +"\n"
+				   +"     isContainer          ="+isContainer +"\n"
+				   +"     isClipboardSelection ="+isClipboardSelection +"\n"
+				   +"     isMiniDnDMenu        ="+isMiniDnDMenu +"\n"; 
 		     
 		if (selections!=null)
-		{
- 	         str+="\nnr Selections="+selections.length+"\n";
- 	         for (VRL vrl:selections)
-	         {
- 	        	 str+="    - selection="+vrl+"\n";
-	         }
-		}
+	    {
+		    str+="\nnr Selections="+selections.length+"\n";
+		    for (VRL vrl:selections)
+		    {
+		        str+="    - selection="+vrl+"\n";
+		    }
+	    }
 
-	     	  str+="  }\n";  
-	          str+="}\n";
-
+		str+="  }\n";  
+		str+="}\n";
 	     
 		return str; 
 	}
-
-
 
 }

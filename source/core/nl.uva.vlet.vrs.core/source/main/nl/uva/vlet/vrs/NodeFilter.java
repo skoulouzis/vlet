@@ -63,7 +63,6 @@ public class NodeFilter implements FileFilter
 		pattern=patVal; 
 	}
 
-	
 	/** Create a new filter from the pattern. 
 	 * Specify whether the pattern is a Regular Expression (.*txt 
 	 * or a WildCard (*.txt) pattern. 
@@ -113,8 +112,6 @@ public class NodeFilter implements FileFilter
 		return m.matches(); 
 	}
 	
-	
-
 	/** Whether to match full path or basename only */ 
 	public void setUsePath(boolean value)
 	{
@@ -180,7 +177,5 @@ public class NodeFilter implements FileFilter
     	_nodes=filtered.toArray(_nodes); 
     	return _nodes; 
 	}
-
-	
 	
 }

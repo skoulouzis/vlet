@@ -45,7 +45,6 @@ public interface VMetaResource
      * Return the Composite Meta File type of this file.
      * Use isComposite() to check wether this (Meta) file is composite. 
      */  
-    VCompositeMetaResource getComposite();
-    
+    VCompositeMetaResource getComposite();    
     
 }

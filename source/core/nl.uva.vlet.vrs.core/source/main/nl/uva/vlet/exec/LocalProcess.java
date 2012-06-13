@@ -33,11 +33,8 @@ import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.tasks.ActionTask;
 
 /** 
- * 
  * Process Information wrapper
- *  
  */ 
-
 public class LocalProcess implements VProcess
 {
 	private Process process=null;

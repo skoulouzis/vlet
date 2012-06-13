@@ -34,24 +34,21 @@ import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalUtil;
 import nl.uva.vlet.data.StringList;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 
 /**
  * Load plugin jar or plugin directory.
- * 
  * Used by VBrowser (IViewer plugins) and Registry (VRS plugins). PluginLoader
  * scans a plugin directory and add the jars+directories to the custom (plugin)
  * classloader.
- * 
- * @author P.T. de Boer
- * 
  */
 public class PluginLoader
 {
     private static  ClassLogger logger=null; 
     
+    static
     {
         logger=ClassLogger.getLogger(PluginLoader.class);
         // logger.setLevelToDebug(); 
@@ -144,8 +141,11 @@ public class PluginLoader
 		// strip .jar from single jar plugin:
 		if (localPath.endsWith(".jar"))
 		{
-			subdirName = subdirName.substring(0, subdirName.indexOf(jarSuffix,
-					subdirName.length() - jarSuffix.length()));
+			subdirName = subdirName.substring(
+			        0, 
+			        subdirName.indexOf(jarSuffix,
+			                           subdirName.length() - jarSuffix.length())
+					);
 		}
 
 		PluginClassLoader classLoader = createLocalClassLoader(localPath, true,true);
@@ -274,7 +274,7 @@ public class PluginLoader
 		// since VRS Registry might not be initialized,
 		// VFS can NOT be used here:
 		File pluginLoc = new File(pluginPath);
-		String classname = pluginLoc.getName();
+		//String classname = pluginLoc.getName();
 		Vector<URL> urls = new Vector<URL>();
 
 		if (pluginLoc.isFile())
@@ -307,10 +307,10 @@ public class PluginLoader
 		ClassLoader parent = Thread.currentThread().getContextClassLoader();
 		urlloader = new PluginClassLoader(urlarray, parent);
 
-		if (urlloader == null)
-		{
-			logger.errorPrintf("NULL URLloader for:%s\n",classname);
-		}
+//		if (urlloader == null)
+//		{
+//			logger.errorPrintf("NULL URLloader for:%s\n",classname);
+//		}
 
 		return urlloader;
 	}
@@ -357,7 +357,7 @@ public class PluginLoader
 
 					// list entry (local FILE/URL!):
 					File subfile = new File(subvrl.getPath());
-					URL suburl = subvrl.toURL();
+					//URL suburl = subvrl.toURL();
 
 				    if (subfile.isDirectory())
 					{

@@ -25,12 +25,8 @@ package nl.uva.vlet.vdriver.vrs.http;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.Proxy.Type;
 
-import nl.uva.vlet.Global;
-import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;

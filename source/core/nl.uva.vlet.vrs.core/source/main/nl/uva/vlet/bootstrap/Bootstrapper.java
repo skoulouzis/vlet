@@ -25,18 +25,18 @@ package nl.uva.vlet.bootstrap;
 // ====================
 // NO VLET IMPORTS HERE 
 // ====================
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JOptionPane;
 
@@ -49,14 +49,15 @@ import javax.swing.JOptionPane;
  * @author Piter T. de Boer
  *
  */
-// must be java 1.4 compatible: surpress ALL warnings:
-//@SuppressWarnings("unchecked") but, that code is NOT java 1.4 compatible ! 
+// must be java 1.5 compatible: surpress ALL warnings:
+@SuppressWarnings("unchecked") 
 public class Bootstrapper
 {
 	public static class BooleanHolder{public boolean value=false;}; 
 	
 	public static final String PLUGIN_SUBDIR="plugins"; 
 	
+   
     private static final Class[] MAIN_PARAMS_TYPE =
     	{ String[].class };
    

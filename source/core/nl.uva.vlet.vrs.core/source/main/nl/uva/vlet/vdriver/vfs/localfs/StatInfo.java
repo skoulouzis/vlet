@@ -29,7 +29,6 @@ import java.util.Properties;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.vfs.VFS;
-import nl.uva.vlet.vfs.VFileSystem;
 
 /**
  *  Unix/Linux 'stat' result 

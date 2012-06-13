@@ -23,8 +23,6 @@
 
 package nl.uva.vlet.net.ssl;
 
-import javax.net.ssl.*;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -37,8 +35,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 
 /** 
@@ -91,7 +93,6 @@ public class ExtSSLSocketFactory extends SSLSocketFactory
         return socket;
     }
 
-
     // === Instance === 
     
     protected SSLSocketFactory sslFactory = null;
@@ -110,8 +111,7 @@ public class ExtSSLSocketFactory extends SSLSocketFactory
     {
         this.enableRC4=enable; 
     }
-    
-    
+        
     @Override
     public Socket createSocket(Socket plainSocket, String host,int port, boolean flag) throws IOException
     {
@@ -181,8 +181,6 @@ public class ExtSSLSocketFactory extends SSLSocketFactory
             
             socket.setEnabledCipherSuites(cl.toArray(new String[cl.size()]));
         }
-        
-            
         // ==========================================================================
         
         //connect as client

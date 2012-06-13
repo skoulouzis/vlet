@@ -403,7 +403,7 @@ public class XMLData
 	{
 			// name - only one
 			String setName = setElement.getAttribute("name");
-			String setEditableStr = setElement.getAttribute("editable");
+			//String setEditableStr = setElement.getAttribute("editable");
 			
 			VAttributeSet attrSet=new VAttributeSet(setName); 
 			debugPrintf(" > setName=%s\n",setName);

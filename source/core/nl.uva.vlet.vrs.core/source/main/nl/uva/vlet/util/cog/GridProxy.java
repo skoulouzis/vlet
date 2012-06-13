@@ -34,8 +34,6 @@ import java.util.Vector;
 
 import javax.net.ssl.SSLContext;
 
-import org.ietf.jgss.GSSCredential;
-
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.GlobalUtil;
@@ -1391,6 +1389,5 @@ public class GridProxy
             for (GridProxyListener l : listeners)
                 l.notifyProxyAttributesChanged(this,attrs); 
     }
-
 
 }

@@ -26,12 +26,11 @@ package nl.uva.vlet.vdriver.vrs.infors;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.ResourceNotFoundException;
-import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VRLSyntaxException;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vdriver.vrs.infors.grid.GridNeighbourhood;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VNode;
-import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 import nl.uva.vlet.vrs.VResourceSystem;
 

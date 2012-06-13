@@ -72,4 +72,8 @@ public class ExternalToolInfo
         return this.startupSyntax; 
     }
     
+    public boolean getDownloadFirst()
+    {
+        return this.downloadFirst;
+    }
 }

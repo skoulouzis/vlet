@@ -32,8 +32,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
 
-import nl.uva.vlet.Global;
-
 /**
  * Generic Glue Object
  * 

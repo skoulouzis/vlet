@@ -166,6 +166,11 @@ public class VO
         this.admin=adminstr; 
     }
 
+    public String getAdmin()
+    {
+        return admin; 
+    }
+    
     public void setVOMSXmlFile(String vomsFilename)
     {
         this.vomsXmlFile=vomsFilename; 

@@ -958,9 +958,7 @@ public class Presentation
             pres = new AttributePresentation();
         
         pres.widths=new PreferredSizes(minWidth,prefWidth,maxWidth);  
-        
         this.attributePresentations.put(attrname, pres);
-        
     }
 
     public void setAttributePreferredWidth(String attrname, int w)

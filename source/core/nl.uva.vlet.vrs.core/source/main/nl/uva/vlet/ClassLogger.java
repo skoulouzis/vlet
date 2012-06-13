@@ -18,7 +18,7 @@
  * ---
  * $Id: ClassLogger.java,v 1.19 2011-04-18 12:00:39 ptdeboer Exp $  
  * $Date: 2011-04-18 12:00:39 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet;
@@ -35,78 +35,78 @@ import nl.uva.vlet.logging.StderrLogHandler;
 /**
  * java.util.logging.Logger compatible subclass for class logging.
  * <p>
- * Class Initialization: Do NOT refer to Global, Global call uses this class during initialization!
+ * Class Initialization: Do NOT refer to Global, Global call uses this class
+ * during initialization!
  */
 public class ClassLogger extends FormattingLogger
 {
     // ==================
-    // Class Fields 
+    // Class Fields
     // ==================
 
-    public static final String VLET_RESOURCEBUNDLENAME="nl.uva.vlet";
-    
-    private static Map<String,ClassLogger> classLoggers=new Hashtable<String,ClassLogger>(); 
-    
-    private static ClassLogger rootLogger=null; 
-    
+    public static final String VLET_RESOURCEBUNDLENAME = "nl.uva.vlet";
+
+    private static Map<String, ClassLogger> classLoggers = new Hashtable<String, ClassLogger>();
+
+    private static ClassLogger rootLogger = null;
+
     // ==================
-    // Class Methods 
+    // Class Methods
     // ==================
 
-    public static synchronized ClassLogger getLogger(String name) 
+    public static synchronized ClassLogger getLogger(String name)
     {
-        synchronized(classLoggers)
+        synchronized (classLoggers)
         {
-            ClassLogger logger=classLoggers.get(name); 
-//            Logger javaLogger = LogManager.getLogManager().getLogger(name); 
-//            
-//            if (javaLogger instanceof ClassLogger) 
-//                logger=(ClassLogger)logger; 
-            
-            if (logger==null)
+            ClassLogger logger = classLoggers.get(name);
+            // Logger javaLogger = LogManager.getLogManager().getLogger(name);
+            //
+            // if (javaLogger instanceof ClassLogger)
+            // logger=(ClassLogger)logger;
+
+            if (logger == null)
             {
-                logger=new ClassLogger(name);
-                classLoggers.put(name,logger);
+                logger = new ClassLogger(name);
+                classLoggers.put(name, logger);
                 // ===
                 // Important: Since loggers are hierarchical set parent
                 // of new logger to the root logger for default log messages.
                 // ===
                 logger.setParent(rootLogger);
                 // Store on global LogManager:
-                //LogManager.getLogManager().addLogger(logger); 
+                // LogManager.getLogManager().addLogger(logger);
             }
-            
-            return logger; 
+
+            return logger;
         }
     }
 
     public static ClassLogger getLogger(Class<?> clazz)
     {
-        return getLogger(clazz.getCanonicalName()); 
+        return getLogger(clazz.getCanonicalName());
     }
 
-    
     static
     {
-        // Toplevel Logging! 
-        Logger javaRootLogger=Logger.getLogger(""); 
-        javaRootLogger.setLevel(Level.SEVERE); 
-        
-        //java.util.logging.LogManager.getLogManager().getLogger(null).setLevel(ERROR); 
-        rootLogger=new ClassLogger(VLET_RESOURCEBUNDLENAME); 
-        rootLogger.setLevel(ERROR); 
-        
+        // Toplevel Logging!
+        Logger javaRootLogger = Logger.getLogger("");
+        javaRootLogger.setLevel(Level.SEVERE);
+
+        // java.util.logging.LogManager.getLogManager().getLogger(null).setLevel(ERROR);
+        rootLogger = new ClassLogger(VLET_RESOURCEBUNDLENAME);
+        rootLogger.setLevel(ERROR);
+
         // ==============================================================
         // Setup default Logging handler to stderr!
         // ---
-        // Default root handler which prints out messages to STDERR: 
+        // Default root handler which prints out messages to STDERR:
         rootLogger.addHandler(new StderrLogHandler(System.err));
         // ===============================================================
-        
-        // Check VLET_DEBUG 
-        Level lvl=GlobalConfig.getVletDebugLevel();
-        
-        if (lvl!=null)
+
+        // Check VLET_DEBUG
+        Level lvl = GlobalConfig.getVletDebugLevel();
+
+        if (lvl != null)
             rootLogger.setLevel(lvl);
     }
 
@@ -114,98 +114,98 @@ public class ClassLogger extends FormattingLogger
     {
         return rootLogger;
     }
-    
+
     // ==================
-    // Instance 
+    // Instance
     // ==================
-    
+
     protected ClassLogger(String name, String resourceBundleName)
     {
         super(name, resourceBundleName);
     }
-    
+
     protected ClassLogger(String name)
     {
-        // todo: resourcebundle names 
-        super(name,null);
+        // todo: resourcebundle names
+        super(name, null);
     }
-    
+
     // ==========================================================================================
-    // Backward compatible methods/legacy  
+    // Backward compatible methods/legacy
     // ==========================================================================================
 
     // Old style object class formatter
     private String object2classString(Object obj)
     {
-        String source; 
-        
+        String source;
+
         if (obj == null)
         {
-            source="[NULL]";  
+            source = "[NULL]";
         }
         else
         {
             if (obj instanceof String)
             {
                 // Object is already in string form
-                source=(String)obj;
+                source = (String) obj;
             }
             else
             {
-                Class<?> clazz=null; 
-                
+                Class<?> clazz = null;
+
                 if (obj instanceof Class<?>)
                 {
-                    // Object is class name: is a  call
+                    // Object is class name: is a call
                     // use classname
-                    clazz=(Class<?>)obj; 
+                    clazz = (Class<?>) obj;
                 }
                 else
                 {
                     // instance call from object: get class of object:
-                    clazz=obj.getClass(); 
+                    clazz = obj.getClass();
                 }
-                
+
                 if (clazz.isAnonymousClass())
                 {
-                    Class<?> supC = clazz.getSuperclass(); 
-                    source="[Anon]"+clazz.getEnclosingClass().getSimpleName()+".<? extends "+supC.getSimpleName()+">"; 
+                    Class<?> supC = clazz.getSuperclass();
+                    source = "[Anon]" + clazz.getEnclosingClass().getSimpleName() + ".<? extends "
+                            + supC.getSimpleName() + ">";
                 }
                 else
                 {
-                    source=clazz.getSimpleName();
+                    source = clazz.getSimpleName();
                 }
             }
         }
-        
-        return source; 
+
+        return source;
     }
-    
+
     /**
-     * Warning: this method is a  legacy method which takes the source object as argument. 
-     * This method is slower then the recommend logging methods.
+     * Warning: this method is a legacy method which takes the source object as
+     * argument. This method is slower then the recommend logging methods.
      */
     public void logPrintf(Level level, Object sourceObject, String format, Object... args)
     {
-        if (this.isLoggable(level)==false) // slow check!
-            return; 
-        
-        String source=this.object2classString(sourceObject); 
-        log(level,source+":"+format,args);
+        if (this.isLoggable(level) == false) // slow check!
+            return;
+
+        String source = this.object2classString(sourceObject);
+        log(level, source + ":" + format, args);
     }
-    
+
     /**
-     * Warning: this method is a  legacy method which takes the source object as argument. 
-     * This method is slower then the recommend logging methods.
+     * Warning: this method is a legacy method which takes the source object as
+     * argument. This method is slower then the recommend logging methods.
      */
-    public void logException(Level level,Object sourceObject, Throwable e, String format, Object[] args)
+    public void logException(Level level, Object sourceObject, Throwable e, String format, Object[] args)
     {
-        if (this.isLoggable(level)==false)
-            return; 
+        if (this.isLoggable(level) == false)
+            return;
 
-        String srcstr=this.object2classString(sourceObject); 
-        this.logException(level, e, srcstr+":"+format, args);
+        String srcstr = this.object2classString(sourceObject);
+        this.logException(level, e, srcstr + ":" + format, args);
     }
 
-    
 }

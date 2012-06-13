@@ -66,7 +66,6 @@ import nl.uva.vlet.vrms.SecretStore;
  * 
  * @see ServerInfo
  */
-
 public class ServerInfoRegistry
 {
     private static final String XML_SERVER_CONFIG_HEADER = " VLET ServerRegistry Configuration\n"
@@ -287,7 +286,6 @@ public class ServerInfoRegistry
             return info.duplicate(); // do NOT return reference into
                                      // ServerRegistry
         }
-
     }
 
     protected void checkUpdateID(ServerInfo info)
@@ -413,7 +411,6 @@ public class ServerInfoRegistry
                 logger.logException(ClassLogger.WARN, e, "Couldn't load ServerInfo Registry!\n");
             }
         }
-
     }
 
     /** Find matching Server Info descriptions for scheme and host */

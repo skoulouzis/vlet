@@ -57,33 +57,23 @@ public class DefaultTaskMonitor implements ITaskMonitor, ISubTaskMonitor
     // ===
 
     private long startTime = 0;
-
     private long stopTime = 0;
 
     // -1 is unknown/not set
     private long totalWorkTodo = -1; // -1 = unknown
-
     private long totalWorkDone = 0; // for more then 1 file/directory
-
     private long totalWorkDoneLastUpdateTime = 0;
-    
     private String taskName=null; 
     
     // ===
     // subtask
     // ===
     private int subTaskLevel=0; //
-    
     private String currentSubTask=null; 
-    
     private boolean logSubTask = false;
-
     private long currentSubTaskTodo = -1; // 'current' file, -1=unknown !
-
     private long currentSubTaskDone = 0; // 'current' file,-1=unknown !
-
     private long currentSubTaskStartTime = 0;
-
     private long currentSubTaskDoneLastUpdateTime = 0;
 
     public DefaultTaskMonitor()

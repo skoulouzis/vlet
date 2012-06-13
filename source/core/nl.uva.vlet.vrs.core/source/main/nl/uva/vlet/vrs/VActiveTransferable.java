@@ -36,7 +36,7 @@ import nl.uva.vlet.vrl.VRL;
  * By default the VRS will use stream copy as main copy methods which might not always
  * be the best way to perform a copy.  
  * If a resource implements a more efficient way to copy, for example bulk methods or third
- * party copy mecahnics, this interface can be used.
+ * party copy mechanics, this interface can be used.
  *  
  * @see nl.uva.vlet.vfs.VFileActiveTransferable
  * @see nl.uva.vlet.vfs.VDirActiveTransferable

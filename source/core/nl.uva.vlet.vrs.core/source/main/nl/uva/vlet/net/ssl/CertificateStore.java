@@ -24,14 +24,25 @@
 package nl.uva.vlet.net.ssl;
 
 
-import java.io.*;
-import java.security.*;
-import java.security.cert.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
@@ -54,11 +65,11 @@ public class CertificateStore
 {
     // ==== Class (static) === //
     
-    private static final int DEFAULT_TIMEOUT = 10*1000;  
+    //private static final int DEFAULT_TIMEOUT = 10*1000;  
     
     private static final String DEFAULT_PASSPHRASE = "changeit";
     
-    private static final String DEFAULT_PRIVATE_KEY_ALIAS = "myprivatekey";
+    //private static final String DEFAULT_PRIVATE_KEY_ALIAS = "myprivatekey";
 
     private static CertificateStore instance=null; 
     

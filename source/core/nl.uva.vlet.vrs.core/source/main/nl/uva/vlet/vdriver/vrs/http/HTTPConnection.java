@@ -27,11 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringUtil;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
@@ -119,8 +117,7 @@ public class HTTPConnection
                 connectException=e; 
             }
             
-            Exception certificateException; 
-            
+           
             if (connectException instanceof javax.net.ssl.SSLException)
             {
                 if (isHTTPS)
@@ -135,7 +132,6 @@ public class HTTPConnection
                     }
                     catch (Exception e)
                     {
-                        certificateException=e; 
                         logger.logException(ClassLogger.ERROR,e,"Exception:%s\n",e);
                         throw new nl.uva.vlet.exception.VlAuthenticationException("Couldn't connect to :"+this,e); 
                     }

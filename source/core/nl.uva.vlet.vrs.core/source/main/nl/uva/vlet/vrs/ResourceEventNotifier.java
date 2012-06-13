@@ -157,8 +157,7 @@ public class ResourceEventNotifier implements ITaskSource
 				catch (InterruptedException e)
 				{
 					Global.logException(ClassLogger.ERROR,this,e,"waitFor(): Interrupted!\n"); 
-				}  
-				
+				}  			
 			}
 		}
 
@@ -175,8 +174,7 @@ public class ResourceEventNotifier implements ITaskSource
 		private void Message(String msg)
 		{
 			Global.infoPrintf(this,"%s\n",msg); 
-		}
-		
+		}	
 	}
 	
 	private Vector<ResourceEvent> eventQueue = new Vector<ResourceEvent>();
@@ -190,8 +188,7 @@ public class ResourceEventNotifier implements ITaskSource
 	private long notifyStartTime=0;
 	
 	//private long notifyEndTime=0; 
-	
-	
+		
 	public ResourceEventNotifier()
 	{
 		this.notifier=new Notifier(); 
@@ -199,11 +196,9 @@ public class ResourceEventNotifier implements ITaskSource
 		// startTestMessages(); 
 	}
 	
-
 	public void fire(ResourceEvent event)
 	{
 		Debug("fire event:"+event);
-		
 		schedule(event); 
 	}
 	
@@ -246,8 +241,7 @@ public class ResourceEventNotifier implements ITaskSource
 			ResourceEvent event=this.eventQueue.get(0); 
 			this.eventQueue.remove(0);
 			return event; 
-		}
-		
+		}	
 	}
 	
 	public void addListener(ResourceEventListener listener)

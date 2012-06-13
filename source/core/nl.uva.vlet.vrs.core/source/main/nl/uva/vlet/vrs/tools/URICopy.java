@@ -307,8 +307,7 @@ public class URICopy
                     exit(1);
                 }
             }
-           
-            
+                       
            if (sourceNode.isDir())
            {
                // default behaviour of copyTo is to overwrite !

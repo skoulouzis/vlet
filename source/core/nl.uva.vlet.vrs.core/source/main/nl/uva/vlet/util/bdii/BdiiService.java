@@ -873,13 +873,8 @@ public class BdiiService
             // One last try in the UID
             if (endpointURI == null)
             {
-                endpointURI = new URI(glueService.getUid());
-            }
-
-            if (endpointURI == null)
-            {
                 logger.warnPrintf("**** Warning: Couldn't get valid endpoint from Glue Service description\n");
-
+                //endpointURI = new URI(glueService.getUid());
                 return null;
             }
             else
