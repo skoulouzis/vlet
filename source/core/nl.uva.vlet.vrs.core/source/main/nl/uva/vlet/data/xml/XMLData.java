@@ -71,7 +71,15 @@ import org.xml.sax.SAXException;
 
 public class XMLData
 {
-	public static final String VATTRIBUTE_ELEMENT="vattribute"; 
+    private static ClassLogger logger;
+    
+    static
+    {
+        // check reduce mount of debug statement/profile this class
+        logger=ClassLogger.getLogger(XMLData.class); 
+    }
+    
+    public static final String VATTRIBUTE_ELEMENT="vattribute"; 
 
 	public static final String VATTRIBUTESET_ELEMENT="vattributes";
 
@@ -162,7 +170,6 @@ public class XMLData
 	/**
 	 * Creates VAttribute (XML) node 
 	 */
-
 	public Node createXMLNode(Document domDoc,VAttribute attr)
 	{
 		String name=attr.getName();
@@ -184,7 +191,7 @@ public class XMLData
 		//actual contents  
 		if (value==null)
 		{
-			Global.warnPrintf(this,"Warning: in VAttribute has NULL value:%s\n",name);
+			logger.warnPrintf("Warning: in VAttribute has NULL value:%s\n",name);
 			value=""; // implementation doesn't like NULL values !
 		}
 		
@@ -214,7 +221,6 @@ public class XMLData
 		}
 
 		return attrElement; 
-
 	}
 
 	/**
@@ -233,7 +239,7 @@ public class XMLData
 		if (attrs!=null)
 			for (VAttribute attr:attrs)
 			{
-				debugPrintf("Adding VAttribute Node:%s\n",attr);
+			    // logger.debugPrintf("Adding VAttribute Node:%s\n",attr);
 				Node node=this.createXMLNode(domDoc, attr); 
 				attrSetElement.appendChild(node); 
 			}
@@ -255,14 +261,13 @@ public class XMLData
         if (attrSets!=null)
             for (VAttributeSet set:attrSets)
             {
-                debugPrintf("Adding VAttribute Node:%s\n",set);
+                //logger.debugPrintf("Adding VAttribute Node:%s\n",set);
                 Node node=this.createXMLNode(domDoc, set); 
                 attrSetElement.appendChild(node); 
             }
         
         return attrSetElement;
     }
-
 
 	/**
 	 * Create complete DOM Document from VAttributeSet. 
@@ -293,7 +298,6 @@ public class XMLData
 		}  
 	}
 
-
 	/**
 	 * VAtttributeSet factory method. 
 	 * Reads the whole xml text from the InputStream. 
@@ -316,13 +320,13 @@ public class XMLData
 			int nrOfSets = setElements.size(); 
 			
 
-			debugPrintf("Document hastotal nr. of sets:%d\n",nrOfSets);
+			logger.debugPrintf("Document hastotal nr. of sets:%d\n",nrOfSets);
 
 			if (nrOfSets<=0) 
 				throw new VlXMLDataException("XML String doesn't contain any VAttribute Set"); 
 
 			if (nrOfSets>1) 
-				Global.warnPrintf(this,"Warning: XML AttributeSet contains more then one 1 set\n"); 
+				logger.warnPrintf("Warning: XML AttributeSet contains more then one 1 set\n"); 
 
 			Element setEl = setElements.elementAt(0); 
 
@@ -334,7 +338,7 @@ public class XMLData
 		}
 	}
 	
-	   /**
+	/**
      * VAtttributeSet factory method. 
      * Reads the whole xml text from the InputStream. 
      * Assumes one XML document containing one VAttribute Set.  
@@ -361,12 +365,12 @@ public class XMLData
             
             if (collectionsElements.size()<=0) 
             {
-                Global.warnPrintf(this,"*** Warning: Couldn't find CollectionTag:%s\n",collectionTag);
+                logger.warnPrintf("Warning: Couldn't find CollectionTag:%s\n",collectionTag);
                 return list; 
             }
             else
             {
-                Global.warnPrintf(this,"*** Warning: Found more then one CollectionTag:%s\n",collectionTag); 
+                logger.warnPrintf("Hmm:Found more then one CollectionTag:%s\n",collectionTag); 
             }
             
             // get first collection: 
@@ -377,7 +381,7 @@ public class XMLData
             
             int nrOfSets = setElements.size(); 
 
-            debugPrintf("Document hastotal nr. of sets:%d\n",nrOfSets);
+            logger.debugPrintf("Document hastotal nr. of sets:%d\n",nrOfSets);
 
             if (nrOfSets<=0) 
                 throw new VlXMLDataException("XML String doesn't contain any VAttribute Set"); 
@@ -406,7 +410,7 @@ public class XMLData
 			//String setEditableStr = setElement.getAttribute("editable");
 			
 			VAttributeSet attrSet=new VAttributeSet(setName); 
-			debugPrintf(" > setName=%s\n",setName);
+			logger.debugPrintf(" > setName=%s\n",setName);
 
 			NodeList attrNodes = setElement.getElementsByTagName( getVAtttributeElementName()) ;
 
@@ -419,16 +423,15 @@ public class XMLData
 				
 				VAttributeType attrType=VAttributeType.valueOf(typeStr);
 
-				debugPrintf(" - new Attribute name=%s\n",attrName);
-				debugPrintf(" - new Attribute type=%s\n",attrType);
-				debugPrintf(" - new Attribute editable=%s\n",editableStr);
+				logger.debugPrintf(" - new Attribute: {name,type}={%s,%s}\n",attrName,attrType);
+				logger.debugPrintf(" - new Attribute editable=%s\n",editableStr);
 
 				// only one <value>CONTENTS</value> allowed 
 				Element valueNode = this.getFirstChildElement(attrNode,"value");
 				// get text contents between <value>...</value> if any ! 
 				String valueStr=getSingleElementContents(valueNode);
 
-				debugPrintf(" - new Attribute value=%s\n",valueStr);
+				logger.debugPrintf(" - new Attribute value=%s\n",valueStr);
 				StringList enumValues=null; 
 				// enumValues
 				if (attrType==VAttributeType.ENUM)
@@ -444,10 +447,10 @@ public class XMLData
 						{
 							Node enumValueNode = enumValueNodes.item(j); 
 							String enumValstr=getSingleElementContents((Element)enumValueNode);
-							debugPrintf(" - enumValue =%s\n",enumValstr); 
+							logger.debugPrintf(" - enumValue =%s\n",enumValstr); 
 							enumValues.add(enumValstr); 
 						}
-						debugPrintf(" - enumValues=%s\n",enumValues);
+						logger.debugPrintf(" - enumValues=%s\n",enumValues);
 					}
 				}
 
@@ -461,7 +464,7 @@ public class XMLData
 				else
 					attr=VAttribute.createFromString(attrType,attrName,valueStr); //new VAttribute(attrType,attrName,valueStr);
 
-				debugPrintf(" - new Attribute=%s\n",attr); 
+				logger.debugPrintf(" - new Attribute=%s\n",attr); 
 
 				if (StringUtil.isEmpty(editableStr)!=false)
 				{
@@ -491,11 +494,6 @@ public class XMLData
 		String valuestr= (String)( (Node)textNodes.item(0) ).getNodeValue().trim() ;
 
 		return valuestr; 
-	}
-
-	private void debugPrintf(String format,Object ... args) 
-	{
-		Global.debugPrintf(this,format,args); 
 	}
 
 	public String getEncoding()
@@ -553,7 +551,7 @@ public class XMLData
 
 	public void writeAsXML(OutputStream outp, VAttributeSet attrSet, String comments) throws VlXMLDataException
 	{
-		debugPrintf("writeAsXML(): attrSet=%s\n",attrSet); 
+		logger.debugPrintf("writeAsXML(): attrSet=%s\n",attrSet); 
 				
 		Document domDoc=this.createDefaultDocument();
 		domDoc.appendChild(createCommentsNode(domDoc,comments)); 
@@ -566,7 +564,7 @@ public class XMLData
 	/** Write Iterable Collection of VAttributeSets */  
 	public void writeAsXML(OutputStream outp, String configName, Iterable<VAttributeSet> attrSets, String comments) throws VlXMLDataException
     {
-	    debugPrintf("writeAsXML(): attrSets\n"); 
+	    logger.debugPrintf("writeAsXML(): attrSets\n"); 
         
         Document domDoc=this.createDefaultDocument();
         domDoc.appendChild(createCommentsNode(domDoc,comments)); 
@@ -578,7 +576,7 @@ public class XMLData
 	
 	public void writeAsXML(OutputStream outp, VPersistance rootNode, String comments) throws DOMException, VlException
 	{
-		debugPrintf("writeAsXML(): Persistance Node=%s\n",rootNode); 
+		logger.debugPrintf("writeAsXML(): Persistance Node=%s\n",rootNode); 
 				
 		Document domDoc=this.createDefaultDocument();
 		domDoc.appendChild(createCommentsNode(domDoc,comments)); 
@@ -587,8 +585,6 @@ public class XMLData
 		StreamResult sr=new StreamResult(outp); 
 		this.writeXML(domDoc,sr);
 	}
-
-	
 	
 	private Node createCommentsNode(Document domDoc,String comments)
 	{
@@ -609,15 +605,13 @@ public class XMLData
 			// attributes if it has them. 
 			if (attrSet!=null)
 			{
-				
-				debugPrintf("Adding attributes:%s\n",attrSet); 
+			    // logger.debugPrintf("Adding attributes:%s\n",attrSet); 
 				Node attrNode=this.createXMLNode(domDoc,attrSet); 
 				newXmlNode.appendChild(attrNode);
 			}
 			else
 			{
-				debugPrintf("No attributes for:%s\n",rootNode); 
-				
+				logger.debugPrintf("No attributes for:%s\n",rootNode); 
 			}
 			
 			// add childs, if any: 
@@ -689,17 +683,15 @@ public class XMLData
 		{
 			throw new VlException("IOException",e.getMessage(),e);
 		}
-
-		
 	}
 
 	public VNode parsePersistantNodeTree(VNode _parent,XMLtoNodeFactory nodeFactory, Element start) throws VlException
 	{
-		debugPrintf(" parseXMLNodeTree:%s\n",start.getNodeName()); 
+		logger.debugPrintf(" parseXMLNodeTree:%s\n",start.getNodeName()); 
 		
 		Element el=(Element)start; 
 		String persistantType=el.getAttribute("type");
-		debugPrintf(" - persistant type=%s\n",persistantType); 
+		logger.debugPrintf(" - persistant type=%s\n",persistantType); 
 		
 		// Optional attributeSet: 
 		Element attrSetEl=getFirstChildElement(start,this.getVAtttributeSetElementName());
@@ -712,7 +704,7 @@ public class XMLData
 			
 		// Call Factory: 
 		VNode newNode=nodeFactory.createNode(_parent,persistantType,attrSet);
-		debugPrintf (" - create VNode: %s\n",newNode); 
+		logger.debugPrintf (" - create VNode: %s\n",newNode); 
 		
 		if (newNode==null)
 			throw new VlXMLDataException("Node Factory returned NULL node for type:"+persistantType);  
@@ -753,18 +745,18 @@ public class XMLData
 				
 				if (StringUtil.equals(tagName,elementTag))
 				{
-					debugPrintf("getChildElements(): found:%s\n",elementTag); 
+					logger.debugPrintf("getChildElements(): found:%s\n",elementTag); 
 					elements.add(el);  
 				}
 				else
 				{
-					debugPrintf("getChildElements(): ignoring:%s",tagName);
+					logger.debugPrintf("getChildElements(): ignoring:%s",tagName);
 				}
 			}
 			else
 			{
 				// usually text/newlines,etc. 
-				debugPrintf("Unknown Node:%s\n",item); 
+				logger.debugPrintf("Unknown Node:%s\n",item); 
 			}
 		}
 		
@@ -780,7 +772,5 @@ public class XMLData
 		
 		return els.elementAt(0); 
 	}
-
-	
 	
 }
