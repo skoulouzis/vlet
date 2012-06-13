@@ -120,10 +120,10 @@ public abstract class ProxyNode
     public synchronized void decreaseReferenceCount()
     {
         this.refCount--;
-        Global.debugPrintln(this, ">>> Decreased ref count to:" + refCount + " of:" + this);
+        //Global.debugPrintln(this, ">>> Decreased ref count to:" + refCount + " of:" + this);
 
         if (this.refCount < 0)
-            Global.errorPrintln(this, "*** Error: Negative reference count for:" + this);
+            Global.errorPrintf(this, "*** Error: Negative reference count for:%s\n",this);
 
         if (this.refCount <= 0)
         {

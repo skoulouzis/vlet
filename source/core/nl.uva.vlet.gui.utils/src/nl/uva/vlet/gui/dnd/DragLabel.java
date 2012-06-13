@@ -69,7 +69,7 @@ public class DragLabel extends JLabel implements VComponent
 	  
 	  public static void main(String args[])
 	  {
-		  Global.setDebug(true); 
+		  Global.getLogger().setLevelToDebug(); 
 		  
 		  JFrame frame=new JFrame(); 
 		  DragLabel dlabel=new DragLabel("Hello World");

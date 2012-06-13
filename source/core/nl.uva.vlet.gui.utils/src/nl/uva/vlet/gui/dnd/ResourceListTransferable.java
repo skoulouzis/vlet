@@ -116,7 +116,7 @@ public class ResourceListTransferable implements Transferable
                 }
                 else
                 {
-                    Global.errorPrintln(this,"Cannot export remote file as local file flavor:"+vrl);
+                    Global.errorPrintf(this,"Cannot export remote file as local file flavor:%s\n",vrl);
                     ;// cannot export remote file as local files ! 
                 }
         	}
@@ -133,8 +133,7 @@ public class ResourceListTransferable implements Transferable
 
     public boolean isDataFlavorSupported(DataFlavor flavor)
     {
-        Global.debugPrintln("LocationTransferable", "is flavor supported:"
-                + flavor);
+        Global.debugPrintf(this,"isDataFlavorSupported:%s\n",flavor); 
 
         for (DataFlavor flav : VTransferData.dataFlavorsVRL)
             if (flav.equals(flavor))
