@@ -73,10 +73,14 @@ public class testAttributeEditor
         System.out.println("--- Dialog Ended ---"); 
         
         int i=0;
-        for(VAttribute a:attrs)
-        {
-            System.out.println("Attrs["+i++ +"]="+a);
-        }
+        
+        if ((attrs==null) || (attrs.length<=0)) 
+            System.out.println("NO NEW ATTRIBUTES!");
+        else
+            for(VAttribute a:attrs)
+            {
+                System.out.println(">>> Changed Attrs["+i++ +"]="+a);
+            }
         
         
     }
