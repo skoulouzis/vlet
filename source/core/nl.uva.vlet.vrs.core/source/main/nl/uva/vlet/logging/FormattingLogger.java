@@ -181,6 +181,14 @@ public class FormattingLogger extends Logger
         lr.setThrown(e);
         log(lr);
     }
+    
+    public void logErrorException(Throwable e,String format, Object... args)
+    {
+        if (this.isLoggable(ERROR) == false)
+            return;
+
+        this.logException(ERROR, e, format, args);
+    }
 
     public void logStacktrace(Level level, Throwable e)
     {
