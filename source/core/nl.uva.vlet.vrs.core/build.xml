@@ -251,12 +251,12 @@
 		<copy todir="${component.dist}/etc" verbose="true" >
 			
 			<fileset dir="etc/"
-   	 			excludes="**/genvoms.sh,**/voms.inf,**/voms.xml.header,**/voms.xml.old"> 
+   	 			excludes="**/genvoms.sh,**/voms.inf,**/voms.xml.header,**/voms.xml.old,**/cacerts"> 
 			</fileset>
 	
 			<filterset refid="vletfilters"/>
-
 		</copy>
+		
 		<copy todir="${component.dist}/lib/icons" verbose="true" >
               <fileset dir="icons/">
 			  </fileset>
@@ -343,10 +343,10 @@
 		<copy todir="${project.dist}/">
 			<fileset dir="${component.dist}/root" />
 		</copy>
+		
 		<mkdir dir="${project.dist}/etc" />
 		<copy todir="${project.dist}/etc">
 			<fileset dir="${component.dist}/etc">
-				
 			</fileset>
 		</copy>
 
