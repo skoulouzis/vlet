@@ -120,21 +120,25 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
         public String getUsername()
         {
-            if (isProxy==false)
-                return getServerInfo().getUsername();
-            else
+            if (isProxy)
                 return getProxyUser(); 
+                
+            return SftpFileSystem.this.getUsername();
         }
 
         public String getPassphrase()
         {
-            // no proxy support yet
+            if (isProxy)
+                return null; // no proxy support yet
+    
             return getServerInfo().getPassphrase();
         }
 
         public String getPassword()
         {
-            // no proxy support yet
+            if (isProxy)
+                return null;  // no proxy support yet
+            
             return getServerInfo().getPassword();
         }
 
@@ -167,7 +171,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             logger.debugPrintf("promptPassword(old):%s\n",message); 
             // jSch doesn't provide username in message !
             message = "Password needed for:"+this.getUserHostIDString()+"\n" + message;
-            logger.debugPrintf("promptPassword(old):%s\n",message); 
+            logger.debugPrintf("promptPassword(new):%s\n",message); 
             // getVRSContext().getConfigManager().getHasUI();
             String field = uiPromptPassfield(message);
             
@@ -332,9 +336,19 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
     public String getUsername()
     {
-        return this.userInfo.getUsername();
+        return getServerInfo().getUsername();
     }
 
+//    public String getHostname()
+//    {
+//        return getServerInfo().getHostname();
+//    }
+//    
+//    public int getPort()
+//    {
+//        return getServerInfo().getPort();
+//    }
+    
     // =======================================================================
     // Authentication
     // =======================================================================
