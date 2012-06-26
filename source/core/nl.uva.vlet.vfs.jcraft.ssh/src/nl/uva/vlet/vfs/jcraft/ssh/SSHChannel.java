@@ -163,7 +163,7 @@ public class SSHChannel implements VShellChannel
         try
         {
          
-            jschSession=createSession(user,host,port,sshOptions,new MyUserInfo()); 
+            jschSession=createSession(vrsContext,user,host,port,sshOptions,new MyUserInfo()); 
         }
         catch (JSchException e)
         {
@@ -209,41 +209,23 @@ public class SSHChannel implements VShellChannel
         }
     }
 
-    protected static Session createSession(String sesUser, String sesHost,int sesPort,SSHChannelOptions sshOptions, MyUserInfo ui) throws JSchException
+    protected static Session createSession(VRSContext vrsContext, String sesUser, String sesHost,int sesPort,SSHChannelOptions sshOptions, MyUserInfo ui) throws JSchException
     {
       // ==================================
       // Jsch Instance/Session intilization 
       // ==================================
       
-      JSch jsch = new JSch();
-      String sshdir=Global.getUserHome()+"/.ssh";
-      String id1=sshdir+"/id_rsa";
-      
-      try
-      {
-          if (new VFSClient().existsFile("file:///"+id1)==false)
-              id1=null; 
-      }
-      catch (Exception e) 
-      {
-          id1=null; 
-      }
-      
-      try
-      {
-          jsch.setKnownHosts(sshdir+"/known_hosts");
-          if (id1!=null)
-              jsch.addIdentity(id1);
-      }
-      catch (Exception e)
-      {
-          logger.logException(ClassLogger.ERROR,e,"Error initializing jCraft SSH to:%s@%s:%d\n",sesUser,sesHost,sesPort); 
-      }
+        // reuse VRSContext JCraftClient or create one.
+      JCraftClient jcraftClient=SftpFileSystem.getJCraftClient(vrsContext); 
+        
+      // use VRSContext settings: 
+      //String sshdir=Global.getUserHome()+"/.ssh";
+      //String id1=sshdir+"/id_rsa";
       
       if (sesPort <= 0)
           sesPort = 22;
       
-      Session session = jsch.getSession(sesUser, sesHost, sesPort);
+      Session session = jcraftClient.getSession(sesUser, sesHost, sesPort);
       session.setUserInfo(ui);
       
       java.util.Properties config = new java.util.Properties();

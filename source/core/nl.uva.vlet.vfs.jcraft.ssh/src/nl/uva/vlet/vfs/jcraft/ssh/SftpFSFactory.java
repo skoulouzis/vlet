@@ -31,6 +31,7 @@ import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.VlException;
+import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.vfs.VFS;
 import nl.uva.vlet.vfs.VFSFactory;
 import nl.uva.vlet.vfs.VFileSystem;
@@ -38,6 +39,7 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
+import nl.uva.vlet.vrs.VResourceSystem;
 
 public class SftpFSFactory extends VFSFactory
 {
@@ -83,34 +85,7 @@ public class SftpFSFactory extends VFSFactory
         return schemeNames;  
     }
 
-    @Override
-    public VFileSystem openFileSystem(VRSContext context,VRL location) throws VlException
-    {
-        // get default authentication information 
-        ServerInfo info=context.getServerInfoFor(location,true); 
-      
-        int port=location.getPort(); 
-        
-        String host=location.getHostname();        
-        
-        if (port<=0) 
-            port=VRS.DEFAULT_SSH_PORT;
-        
-        debugPrintf("Server     =%s\n",info.getHostname()+":"+info.getPort());
-        debugPrintf("User       =%s\n",info.getUsername()); 
-        
-        //***
-        // be carefull with the passwd and passphrase fields ! 
-        //***
-        
-        debugPrintf("passwd     =%s\n",((info.getPassword()!=null)?"yes":"no"));
-        debugPrintf("passphrase =%s\n",((info.getPassphrase()!=null)?"yes":"no"));
-        
-        SftpFileSystem server=SftpFileSystem.createFor(context,info);
-        
-        return server;
-    }
-    
+   
      
 
     private void debugPrintf(String format,Object... args)
@@ -131,13 +106,20 @@ public class SftpFSFactory extends VFSFactory
     	
         String user=info.getUsername(); 
         
+        String defaultUser=Global.getUsername();
       	// sftp MUST have username: set current to default ! 
         if ((user==null) || (user.compareTo("")==0)) 
         {
-            info.setUsername(Global.getUsername());
+            info.setUsername(defaultUser);
         }
+        
         info.setIfNotSet(VAttributeConstants.ATTR_HOSTNAME,"hostname"); 
         info.setIfNotSet(ServerInfo.ATTR_SSH_IDENTITY,"id_rsa"); 
+        info.setIfNotSet(ServerInfo.ATTR_SSH_USE_PROXY,false); 
+        info.setIfNotSet(ServerInfo.ATTR_SSH_PROXY_USERNAME,info.getUsername()); 
+        info.setIfNotSet(ServerInfo.ATTR_SSH_PROXY_HOSTNAME,"<none>"); 
+        info.setIfNotSet(ServerInfo.ATTR_SSH_PROXY_PORT,22); 
+        info.setIfNotSet(ServerInfo.ATTR_SSH_LOCAL_PROXY_PORT,0); 
         
         // always use password authentication: 
         info.setUsePasswordAuth();
@@ -162,12 +144,73 @@ public class SftpFSFactory extends VFSFactory
                 +"<tr bgcolor=#f0f0f0><td>More information: <a href=http://www.jcraft.com>www.jcraft.com</a></td></tr>"
                 + "</table></center></body></html>";  
     }
-
+    
+    @Override
+    public VFileSystem openFileSystem(VRSContext context, VRL location) throws VlException
+    {
+     // Enter critical region to avoid multithreaded duplication
+        // of server objects 
+        ServerInfo info=context.getServerInfoFor(location,true);
+        // default serverid is created from location
+        // Create new Default Server.
+        
+        // MUST match actual server id in cache!
+        String serverid=SftpFileSystem.createServerID(info.getHostname(),info.getPort(),info.getUsername()); 
+        
+        SftpFileSystem server = (SftpFileSystem) context.getServerInstance(serverid,SftpFileSystem.class); 
+        
+        if (server==null)
+        {
+            Global.infoPrintf(this,"Creating new ResourceSystem:%s\n",serverid); 
+            server=createNewFileSystem(context,info,location);
+            
+            if (server.getServerID().equals(serverid)==false)
+                throw new VlInternalError("Server IDs don't match!. "+serverid+" <==> "+server.getServerID()); 
+            
+            // server.setID(serverid);
+            //
+            // Store server in Context depened ServerRegistry 
+            // for later use 
+            context.putServerInstance(serverid,server); 
+        }
+        
+        return server; 
+        
+    }
+    
 	@Override
-	public VFileSystem createNewFileSystem(VRSContext context, ServerInfo info,
-			VRL location) throws VlException 
+	public SftpFileSystem createNewFileSystem(VRSContext context, ServerInfo info,
+			VRL loc) throws VlException 
 	{
-		return new SftpFileSystem(context,info,location); 
+        debugPrintf("ServerInfo host:port =%s\n",info.getHostname()+":"+info.getPort());
+        debugPrintf("ServerInfo username   =%s\n",info.getUsername()); 
+        debugPrintf("Location   host:port =%s\n",loc.getHostname()+":"+loc.getPort());
+        debugPrintf("Location   username   =%s\n",loc.getUsername()); 
+
+	    // create new  
+	    int port=loc.getPort(); 
+
+	    if (port<=0)
+	        port=info.getPort(); 
+	    
+	    // update port
+	    if (port<=0) 
+	        port=VRS.DEFAULT_SSH_PORT;
+        
+        //***
+        // be carefull with the passwd and passphrase fields ! 
+        //***
+        
+        debugPrintf("passwd     =%s\n",((info.getPassword()!=null)?"yes":"no"));
+        debugPrintf("passphrase =%s\n",((info.getPassphrase()!=null)?"yes":"no"));
+        
+
+        SftpFileSystem server = new SftpFileSystem(context, info, info.getServerVRL());
+        // match user !
+        server.setFinalUserSubject(context);
+            
+        return server;
+        
 	}
     
 }
