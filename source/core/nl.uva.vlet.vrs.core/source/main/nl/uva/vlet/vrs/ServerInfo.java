@@ -61,9 +61,6 @@ public class ServerInfo
     // Class field
     // =======================================================================
 
-    public static final String ATTR_PROXY_HOSTNAME = "proxy"+ ATTR_HOSTNAME;
-
-    public static final String ATTR_PROXY_PORT = "proxy" + ATTR_PORT;
 
     /** Unique key used in server info registry ! */ 
     public static final String ATTR_SERVER_ID = "serverID";
@@ -79,6 +76,16 @@ public class ServerInfo
     /** "id_rsa" or "id_dsa" file in ~/.ssh */ 
     public static final String ATTR_SSH_IDENTITY = "sshIdentity";
     
+    public static final String ATTR_SSH_USE_PROXY    = "sshUseProxy";
+    
+    public static final String ATTR_SSH_PROXY_HOSTNAME = "sshProxyHostname";
+
+    public static final String ATTR_SSH_PROXY_PORT = "sshProxyPort";
+    
+    public static final String ATTR_SSH_LOCAL_PROXY_PORT = "sshLocalProxyPort";
+    
+    public static final String ATTR_SSH_PROXY_USERNAME = "sshProxyUsername";
+
     public static final String ATTR_NEED_PORT="needPort"; 
     
     public static final String ATTR_NEED_HOSTNAME="needHostname"; 
@@ -475,7 +482,17 @@ public class ServerInfo
 
         return null;
     }
-   
+
+    public String getStringProperty(String name,String defaultValue)
+    {
+        VAttribute val = this.getAttribute(name);
+
+        if (val != null)
+            return val.getStringValue(); // explicit get StringValue 
+
+        return defaultValue; 
+    }
+
     public int getIntProperty(String name, int defVal)
     {
         VAttribute attr = getAttribute(name);

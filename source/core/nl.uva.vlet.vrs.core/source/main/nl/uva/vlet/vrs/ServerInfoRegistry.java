@@ -283,12 +283,14 @@ public class ServerInfoRegistry
             put(info);
             // enters mutex again
             save();
-            return info.duplicate(); // do NOT return reference into
-                                     // ServerRegistry
+            
+            // do NOT return reference to object into ServerRegistry
+            return info.duplicate(); 
         }
     }
-
-    protected void checkUpdateID(ServerInfo info)
+    
+    /** Update Actual ServerInfo ID */ 
+    protected void updateServerInfoID(ServerInfo info)
     {
         synchronized (this.serverInfos)
         {
@@ -364,7 +366,7 @@ public class ServerInfoRegistry
             // store private copy !
             info = info.duplicate();
 
-            checkUpdateID(info);
+            updateServerInfoID(info);
 
             logger.debugPrintf("+++ Storing info:%s\n", info);
 

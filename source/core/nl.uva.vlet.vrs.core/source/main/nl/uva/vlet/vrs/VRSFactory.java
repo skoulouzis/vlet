@@ -165,8 +165,10 @@ public abstract class VRSFactory
                    + "</table></center></body></html>";
     }
 
-    public String createID(String scheme, String hostname, int port)
+    public String createID(ServerInfo info,String scheme, String hostname, int port)
 	{
+        //check ServerInfo for ID details!
+            
     	if (hostname==null)
     		hostname="";
     	// remember: port -1 => don't care, port==0 => default 
@@ -177,9 +179,9 @@ public abstract class VRSFactory
 	 * Creates ResourceSystem ID. 
 	 * Default = scheme+host+port ID from VRL 
 	 */
-	public String createID(VRL loc)
+	public String createID(ServerInfo info,VRL loc)
 	{
-		return createID(loc.getScheme(),loc.getHostname(),loc.getPort()); 
+		return createID(info,loc.getScheme(),loc.getHostname(),loc.getPort()); 
 	}
 	
     public VResourceSystem openResourceSystem(VRSContext context,VRL location) throws VlException
@@ -189,12 +191,12 @@ public abstract class VRSFactory
 		ServerInfo info=context.getServerInfoFor(location,true);
 		// default serverid is created from location
 		// Create new Default Server.
-		String serverid=createID(location); 
+		String serverid=createID(info,location); 
 		VResourceSystem server = (VResourceSystem) context.getServerInstance(serverid,VResourceSystem.class); 
 		
 		if (server==null)
 		{
-			Global.debugPrintf(this,"Creating new SKEL FS Server:%s\n",serverid); 
+			Global.infoPrintf(this,"Creating new ResourceSystem:%s\n",serverid); 
 			server=createNewResourceSystem(context,info,location); 
 			
 			// server.setID(serverid);

@@ -774,8 +774,7 @@ public class VRSContext implements Serializable
             return null; 
 
         if (serverClass.isInstance(server))     
-        //	 if (serverClass.isInstance(server))     
-        	            return server;
+            return server;
         else
             Global.warnPrintf(this,"Server Mismatch for server '%s'. class<%s>!=<%s> \n",serverid,serverClass,server.getClass());
 
