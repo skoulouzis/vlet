@@ -148,7 +148,6 @@ public class BrowserInteractiveActions
         	  // overwrite all! 
             if ((overWriteAll!=null) && (overWriteAll.value==true))
             {
-                //System.err.println("overWriteAll is already true");
                 // update for this copy action 
                 return InteractiveAction.CONTINUE;
             }
@@ -156,14 +155,12 @@ public class BrowserInteractiveActions
             // skip all! 
             if ((skipAll!=null) && (skipAll.value==true))
             {
-                //System.err.println("overWriteAll is already true");
                 // update for this copy action 
                 return InteractiveAction.SKIP; 
             }
             
         	// link to VBrowser frame!
         	JFrame frame = BrowserInteractiveActions.this.browserController.getFrame(); 
-        	 
         	
         	CopyDialog dailog = CopyDialog.showCopyDialog(frame,
         			source,
@@ -213,164 +210,7 @@ public class BrowserInteractiveActions
         	// Default: 
         	return InteractiveAction.CANCEL; 
         }
-        
-        
-        private InteractiveAction doAskOld(String message, 
-                VRL source, 
-                VAttribute[] sourceAttrs, 
-                VRL target,
-                VAttribute[] targetAttrs, 
-                StringHolder optNewName)
-        {
-            boolean isMove=false;
-            
-            // overwrite all! 
-            if ((overWriteAll!=null) && (overWriteAll.value==true))
-            {
-                //System.err.println("overWriteAll is already true");
-                // update for this copy action 
-                return InteractiveAction.CONTINUE;
-            }
-            
-            // skip all! 
-            if ((skipAll!=null) && (skipAll.value==true))
-            {
-                //System.err.println("overWriteAll is already true");
-                // update for this copy action 
-                return InteractiveAction.SKIP; 
-            }
-            
-            boolean noOverwrite=false; 
-            
-            String OPT_CREATE_COPY="Create copy";
-            String OPT_OVERWRITE="Overwrite (merge)";
-            String OPT_OVERWRITE_ALL="Overwrite all";
-            String OPT_SKIP="Skip";
-            String OPT_SKIP_ALL="Skip All";
-            String OPT_CANCEL="Cancel";
-
-            String result=null;
-            
-            String actionStr=(isMove)?"moving":"copying"; 
-            
-            String msgStr=""; 
-            String options[]=new String[7];
-            int index=0; 
-            
-            // construct dialog: 
-            options[index++]=OPT_CREATE_COPY;
-            options[index++]=OPT_SKIP;
-            options[index++]=OPT_SKIP_ALL;
-            
-            if (noOverwrite==false)
-            {
-                if (message!=null)
-                    msgStr=message+"\n";  
-                	
-                else
-                    msgStr= "Resource exists: "+target.getBasename()+"\n" 
-                       +"Destination location ="+target+"\n";  
-                       
-               msgStr+=attrs(sourceAttrs,targetAttrs)
-                       +"\nCreate Copy, Skip, Overwrite or Cancel ?";
-                
-                options[index++]=OPT_OVERWRITE;
-                
-                if (overWriteAll!=null) 
-                    options[index++]=OPT_OVERWRITE_ALL; 
-            }
-            else
-            {
-                msgStr= "Cannot copy resource to itself: "+source.getBasename()+"\n" 
-                        +"Do you want to create a Copy or Cancel ?";
-            }
-            // add multiple options: 
-            
-            
-            options[index++]=OPT_CANCEL;
-                
-            // MODEL DIALOG
-            result = SimpleNButtonDialog.showDialog(null,"Choose Option",msgStr,
-                        options);
-            
-            //        Messages.Q_overwrite_existing_resource, false);
-            if ((result==null) || (result.compareTo(OPT_CANCEL)==0) ) 
-                return  InteractiveAction.CANCEL; 
-            
-         // OverWrite All ? 
-            if ((overWriteAll!=null) && (result.compareTo(OPT_OVERWRITE_ALL)==0)) 
-            {
-            	// overwrite this and others: 
-            	// overWrite.value = true;
-            	overWriteAll.value=true;
-            	return InteractiveAction.CONTINUE;
-            }
-            
-            // Skip All ? 
-            if ((skipAll!=null) && (result.compareTo(OPT_SKIP_ALL)==0)) 
-            {
-            	// overwrite this and others: 
-            	// overWrite.value = true;
-            	skipAll.value=true;
-            	return InteractiveAction.SKIP;
-            }
-            
-            if (result.compareTo(OPT_CREATE_COPY)==0)
-            {
-                optNewName.value="Copy Of "+target.getBasename(); 
-                
-                optNewName.value= JOptionPane.showInputDialog("Specify new name", optNewName.value);
-                
-                if (optNewName.value==null)
-                    return InteractiveAction.CANCEL; 
-                else
-                    return InteractiveAction.RENAME; 
-            }
-            else if (result.compareTo(OPT_OVERWRITE)==0)
-            {
-                // overWrite.value = true;
-                return InteractiveAction.CONTINUE; 
-            }
-            else if (result.compareTo(OPT_SKIP)==0)
-            {
-                // overWrite.value = true;
-                return InteractiveAction.SKIP; 
-            }
-            
-            return  InteractiveAction.CONTINUE; 
-        }
-    }
-    
-    
-    private String attrs(VAttribute[] sourceAttrs, VAttribute[] targetAttrs)
-	{
-    	String str="";
-
-    	if ((targetAttrs==null) || (sourceAttrs==null))
-    		return ""; 
-    	
-    	str+="---\n";
-    	
-    	if (sourceAttrs!=null)
-    	{
-    		str+="Source:\n"; 
-    		for (VAttribute attr:sourceAttrs)
-    		{
-    			str+=" - "+attr.getName()+"="+attr.getValue()+";\n"; 
-    		}
-    	}
-    	
-    	if (targetAttrs!=null)
-    	{
-    		str+="Target:\n"; 
-    		for (VAttribute attr:targetAttrs)
-    		{
-    			str+=" - "+attr.getName()+"="+attr.getValue()+";\n"; 
-    		}
-    	}
-    	str+="---\n";
-    	return str; 
-	}
+    }   
     
     // === //
     
@@ -485,13 +325,9 @@ public class BrowserInteractiveActions
             asyncRenameTo(node,name, false);
     }
 
-    //
-    //
     // ==========================================================================
     // Asynchronous methods.  
     // ==========================================================================
-    //
-    //
 
     /**
      * Perform rename on underlaying resource
@@ -671,7 +507,12 @@ public class BrowserInteractiveActions
         // ask user during gui thread.
         final String message="Authentication needed for :"+location; 
 
-//        if (info.usePasswordAuth()==true)
+        if (info.usePasswordAuth()==true)
+        {
+            // currently SSH asks interactive ! 
+            // other implementations should do also using 
+            //UIGlobal.getVRSContext().getUI().askAuthentication(message, secret); 
+            
 //        {
 //            ServerInfo newinfo = AuthenticationDialog.askAuthentication(message, info);
 //
@@ -690,8 +531,8 @@ public class BrowserInteractiveActions
 //                return false;
 //            }
 //
-//        }
-//        else if (info.useGSIAuth()==true)
+        }
+        else if (info.useGSIAuth()==true)
         {
             // blocking wait: 
             if (GridProxyDialog.askInitProxy(message)==false) 
@@ -1080,7 +921,6 @@ public class BrowserInteractiveActions
             // overwrite all! 
             if ((overWriteAll!=null) && (overWriteAll.value==true))
             {
-                //System.err.println("overWriteAll is already true");
                 // update for this copy action 
                 overWriteExisting.value = true;
                 return true;
