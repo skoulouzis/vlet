@@ -18,7 +18,7 @@
  * ---
  * $Id: ViewerPlugin.java,v 1.12 2011-06-21 10:35:41 ptdeboer Exp $  
  * $Date: 2011-06-21 10:35:41 $
- */ 
+ */
 // source: 
 
 package nl.uva.vlet.gui.viewers;
@@ -41,6 +41,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.actions.ActionContext;
 import nl.uva.vlet.actions.ActionMenuMapping;
@@ -71,8 +72,9 @@ import nl.uva.vlet.vrs.io.VStreamWritable;
  * In the latter case the Swing hierarchy is:<br>
  * 
  * <pre>
- * -JFrame - JScrollPane // (haveOwnScrollPane()==false)  
+ * -JFrame - JScrollPane // (haveOwnScrollPane()==false)
  *         - ViewerPlugin // (Subclass of JPanel)
+ * 
  * </pre>
  * 
  * Override method haveOwnScrollPane() to control whether this viewer should be
@@ -88,12 +90,12 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     // Private Fields
     // ========================================================================
 
-    private Vector<HyperLinkListener> linkListeners = new Vector<HyperLinkListener>(); 
+    private Vector<HyperLinkListener> linkListeners = new Vector<HyperLinkListener>();
 
     private ViewerInfo viewerInfo;
 
     private ViewContext viewContext;
-    
+
     // ========================================================================
     // Protected Fields
     // ========================================================================
@@ -107,7 +109,6 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
 
     private ResourceLoader resourceLoader;
 
-  
     // ========================================================================
     // Instance
     // ========================================================================
@@ -123,9 +124,8 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     public ViewerPlugin()
     {
         // Default constructor.
-        // Needed to instanciate a dummy object so
+        // Needed to instantiate a dummy object so
         // ViewerRegistry can invoke getMimeTypes().
-        //
     }
 
     /**
@@ -178,22 +178,22 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         this.location = location;
     }
 
-    /** @deprecated use isStandAlone */ 
+    /** @deprecated use isStandAlone */
     final public boolean getViewStandalone()
     {
-        return isStandalone(); 
+        return isStandalone();
     }
 
     /**
-     * Whether the viewer is a stand alone frame and not embedded in the MasterBrowser. 
-     * if isStandAlone()==true the methdo getJFrame() will return the Viewer Frame.
-     * Method can be called during or after initViewer().  
+     * Whether the viewer is a stand alone frame and not embedded in the
+     * MasterBrowser. if isStandAlone()==true the method getJFrame() will return
+     * the Viewer Frame. Method can be called during or after initViewer().
      */
     final public boolean isStandalone()
     {
-        if (this.getViewContext()==null)
-            return true; // no view context -> start alone  
-        
+        if (this.getViewContext() == null)
+            return true; // no view context -> start alone
+
         return this.getViewContext().getStartInStandaloneWindow();
     }
 
@@ -207,32 +207,38 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     }
 
     /**
-     * Returns parent JFrame if contained in one. 
-     * Might return NULL if parent is not a JFrame!
-     * use getTopLevelAncestor() to get the (AWT) toplevel
+     * Returns parent JFrame if contained in one. Might return NULL if parent is
+     * not a JFrame! use getTopLevelAncestor() to get the (AWT) toplevel
      * component.
+     * 
      * @see javax.swing.JComponent#getTopLevelAncestor()
-     * @return the containing JFrame or null.   
+     * @return the containing JFrame or null.
      */
     final public JFrame getJFrame()
     {
-        // do NOT return frame is embedded in VBrowser !!!  
-        if (this.getViewContext().getStartInStandaloneWindow()==false)
+        if (this.getViewContext() == null)
+        {
+            ClassLogger.getLogger(ViewerPlugin.class).errorPrintf("fixme:NULL ViewContext\n");
             return null;
-        
-        Container topcomp = this.getTopLevelAncestor(); 
+        }
+
+        // Do not return frame when embedded in VBrowser !!!
+        if (this.getViewContext().getStartInStandaloneWindow() == false)
+            return null;
+
+        Container topcomp = this.getTopLevelAncestor();
         if (topcomp instanceof Frame)
-            return ((JFrame)topcomp);
-        
-        return null; 
+            return ((JFrame) topcomp);
+
+        return null;
     }
-    
+
     final protected boolean hasJFrame()
     {
         return (this.getJFrame() != null);
     }
-    
-    /** Call this method to dispose the standalon JFrame if is has one */ 
+
+    /** Call this method to dispose the standalone JFrame if is has one */
     final protected boolean disposeJFrame()
     {
         if (hasJFrame())
@@ -240,8 +246,8 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
             this.getJFrame().dispose();
             return true;
         }
-        
-        return false; 
+
+        return false;
     }
 
     /**
@@ -249,7 +255,6 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
      * This object does not contain the startup context. Use setViewerContext()
      * for that.
      */
-
     final public void setViewerInfo(ViewerInfo info)
     {
         this.viewerInfo = info;
@@ -263,53 +268,51 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     final public ViewerInfo getViewerInfo()
     {
         return viewerInfo;
-    }    
-    
+    }
+
     final public void addHyperLinkListener(HyperLinkListener listener)
     {
-        synchronized(this.linkListeners)
+        synchronized (this.linkListeners)
         {
-            // don't duplicate listeners: 
-            if (this.linkListeners.contains(listener)==false)    
+            // don't duplicate listeners:
+            if (this.linkListeners.contains(listener) == false)
                 this.linkListeners.add(listener);
             else
-                Global.warnPrintf(this,"Warning: HyperlinkListener already added:%s\n",listener); 
+                Global.warnPrintf(this, "Warning: HyperlinkListener already added:%s\n", listener);
         }
     }
-    
+
     final public void removeHyperLinkListener(HyperLinkListener listener)
     {
-        synchronized(this.linkListeners)
+        synchronized (this.linkListeners)
         {
             this.linkListeners.remove(listener);
         }
     }
 
     /**
-     *Returns array of hyperlink listeners. 
+     * Returns array of hyperlink listeners.
      */
     final protected HyperLinkListener[] getHyperLinkListeners()
     {
-        synchronized(this.linkListeners)
+        synchronized (this.linkListeners)
         {
-            HyperLinkListener listeners[]=new HyperLinkListener[linkListeners.size()];
-            listeners=linkListeners.toArray(listeners);
-            return listeners; 
+            HyperLinkListener listeners[] = new HyperLinkListener[linkListeners.size()];
+            listeners = linkListeners.toArray(listeners);
+            return listeners;
         }
     }
-    
+
     // ========================================================================
     // Other methods
     // ========================================================================
-    
+
     /** Perform Dynamic Action Method */
-    public void doMethod(String methodName, ActionContext actionContext)
-            throws VlException
+    public void doMethod(String methodName, ActionContext actionContext) throws VlException
     {
-        throw new nl.uva.vlet.exception.NotImplementedException(
-                "Action method not implemented by Viewer:" + methodName);
+        throw new nl.uva.vlet.exception.NotImplementedException("Action method not implemented by Viewer:" + methodName);
     }
-    
+
     /**
      * If this Viewer can be used as standalone tool, thus without an (default)
      * URL and/or associated mimetype, let this method return 'true'. <br>
@@ -317,8 +320,8 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
      * start this viewer manually.
      * <p>
      * In that case, startViewer() is called with the VRL which the VBrowser
-     * currently is viewing. No mimetype checking is done. 
-     * New: the getClassification() will be used to place the tool in a menu.
+     * currently is viewing. No mimetype checking is done. New: the
+     * getClassification() will be used to place the tool in a menu.
      * 
      * @see #getClassification()
      * @return
@@ -371,15 +374,14 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         return UIGlobal.getVRSContext().openLocation(vrl);
     }
 
-
     public JPanel getViewComponent()
     {
         return this;
     }
-    
+
     /**
      * Preferably use this method to add childs to the Viewer Panel. Future
-     * implements of IViewer might have a different Component layout.
+     * implements of ViewerPlugin might have a different Component layout.
      */
     public Component addToRootPane(Component comp)
     {
@@ -469,8 +471,7 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         if (node instanceof VStreamReadable)
             return ((VStreamReadable) node).getInputStream();
         else
-            throw new ResourceTypeMismatchException(
-                    "VRL is not streamreadable:" + location);
+            throw new ResourceTypeMismatchException("VRL is not streamreadable:" + location);
     }
 
     /** returns outputstream to viewed resource */
@@ -481,21 +482,20 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         if (node instanceof VStreamWritable)
             return ((VStreamWritable) node).getOutputStream();
         else
-            throw new ResourceTypeMismatchException(
-                    "VRL is not stream writable:" + location);
+            throw new ResourceTypeMismatchException("VRL is not stream writable:" + location);
     }
 
     /**
      * Returns true if this viewer has it's own scrollpane. When false, the
-     * ViewrePanel  might embed this viewer in a scrollpanel. Override this method
-     * and return true if you have your own scrollpanel. or do not want to be
-     * embedded in a scrollPane.
+     * ViewrePanel might embed this viewer in a scrollpanel. Override this
+     * method and return true if you have your own scrollpanel. or do not want
+     * to be embedded in a scrollPane.
      */
     public boolean haveOwnScrollPane()
     {
         return false;
     }
-    
+
     /**
      * Default Exception handler, notifies the task source, which spawn this
      * viewer. (VBrowser).
@@ -512,8 +512,8 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         {
             Global.errorPrintf(getName(), "Exception:%s\n", e);
             Global.errorPrintStacktrace(e);
-            
-            if  ( (ctx==null) || (ctx.getShowErrors()) )    
+
+            if ((ctx == null) || (ctx.getShowErrors()))
                 ExceptionForm.show(e);
         }
     }
@@ -527,9 +527,9 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
      */
     public void fireHyperLinkEvent(ViewerEvent event)
     {
-        for (HyperLinkListener linkl: this.getHyperLinkListeners()) 
+        for (HyperLinkListener linkl : this.getHyperLinkListeners())
         {
-            if (event.isConsumed()==false)
+            if (event.isConsumed() == false)
             {
                 linkl.notifyHyperLinkEvent(event);
             }
@@ -537,15 +537,14 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     }
 
     /**
-     * Simple uncached(!)  method to get the binary contents of the 
-     * current resource. 
-     * Uses getResourceLoader() to read contents. 
+     * Simple uncached(!) method to get the binary contents of the current
+     * resource. Uses getResourceLoader() to read contents.
      * 
      * @throws VlException
      */
     protected byte[] getContents() throws VlException
     {
-        return this.getResourceLoader().getBytes(this.getVRL()); 
+        return this.getResourceLoader().getBytes(this.getVRL());
     }
 
     /**
@@ -558,31 +557,30 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         if (cont instanceof javax.swing.JViewport)
         {
             Dimension size = ((javax.swing.JViewport) cont).getSize();
-            // System.err.println("ScrollPaneViewSize="+size);
             return size;
 
         }
         else
         {
-            // System.err.println("Parent not a JScrollPAne, but:"+cont.getClass());
             return null;
         }
     }
-   
+
     /** Set title of master frame or Viewer tab */
     public void setViewerTitle(final String name)
     {
-        JFrame frame=getJFrame(); 
-        if (frame!=null)
+        JFrame frame = getJFrame();
+        if (frame != null)
             getJFrame().setTitle(name);
-        
-        this.setName(name); 
+
+        this.setName(name);
     }
 
     /**
-     * Call updateLocation(VRL)  
+     * Call updateLocation(VRL)
+     * 
      * @see #updateLocation(VRL)
-     */ 
+     */
     public void updateLocation(String loc) throws VlException
     {
         updateLocation(new VRL(loc));
@@ -594,41 +592,46 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     }
 
     /**
-     * Default "startViewer" without dynamic action method and context. 
-     * Invokes {@link #startViewer(VRL, String, ActionContext)}. 
-     * Override note: override this method for non dynamic action viewers. 
+     * Default "startViewer" without dynamic action method and context. Invokes
+     * {@link #startViewer(VRL, String, ActionContext)}. Override note: override
+     * this method for non dynamic action viewers.
+     * 
      * @see #startViewer(VRL, String, ActionContext)
      */
     public void startViewer(VRL location) throws VlException
     {
-        startViewer(location,null,null); 
+        startViewer(location, null, null);
     }
 
     /**
-     * Start Viewer when a <strong>Dynamic Action</strong> is performed. 
-     * The methods starts the viewer in separate thread. This is NOT the main GUI Event thread,
-     * so be careful when manipulating Swing/AWT objects. This method is called
-     * after a initViewer().
+     * Start Viewer when a <strong>Dynamic Action</strong> is performed. The
+     * methods starts the viewer in separate thread. This is NOT the main GUI
+     * Event thread, so be careful when manipulating Swing/AWT objects. This
+     * method is called after a initViewer().
      * <p>
      * After a stopViewer() this method <i>may</i> be called again.<br>
      * Current order of methods called is: <br>
      * <ul>
-     * <li> initViewer() - Initialize Viewer and GUI elements called <i>during</i> Swings Event Thread. 
-     * <li> startViewer() - Actual start of the viewer in seperate thread. 
-     * <li> multiple updateLocation() invocations if applicable. 
-     * <li> stopViewer() - Stop viewing, after which another startViewer <i>may</i> occur. 
-     * <li> disposeViewer() - Viewer won't be used anymore. Dispose (GUI) resources. 
-     * </lu>  
+     * <li>initViewer() - Initialize Viewer and GUI elements called
+     * <i>during</i> Swings Event Thread.
+     * <li>startViewer() - Actual start of the viewer in seperate thread.
+     * <li>multiple updateLocation() invocations if applicable.
+     * <li>stopViewer() - Stop viewing, after which another startViewer
+     * <i>may</i> occur.
+     * <li>disposeViewer() - Viewer won't be used anymore. Dispose (GUI)
+     * resources. </lu>
      * <p>
-     * Override note: override this method for dynamic action method viewers.
-     * If this viewer was started through a dynamic action optMethodName will contains 
-     * the actual method name. 
-     * The ActionContext provides additional information about
-     * the selected dynamic action.
-     *  
-     * @param location - The actual location to display
-     * @param optMethodName - action name if this viewer was started by a dynamic action. 
-     * @param actionContext - optional Dynamic Action Context if applicable.  
+     * Override note: override this method for dynamic action method viewers. If
+     * this viewer was started through a dynamic action optMethodName will
+     * contains the actual method name. The ActionContext provides additional
+     * information about the selected dynamic action.
+     * 
+     * @param location
+     *            - The actual location to display
+     * @param optMethodName
+     *            - action name if this viewer was started by a dynamic action.
+     * @param actionContext
+     *            - optional Dynamic Action Context if applicable.
      * 
      * @throws VlException
      */
@@ -639,13 +642,12 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         // update location
         if (location != null)
             updateLocation(location);
-        
-        // perform action method: 
+
+        // perform action method:
         if (StringUtil.isNonWhiteSpace(optMethodName))
-            this.doMethod(optMethodName,actionContext); 
+            this.doMethod(optMethodName, actionContext);
     }
 
-    
     /** Get contents of Viewer in an Image */
     public Image getScreenShot()
     {
@@ -662,8 +664,7 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         return capturer.captureContents(size);
     }
 
-    public static void saveProperties(VRL loc, Properties props)
-            throws VlException
+    public static void saveProperties(VRL loc, Properties props) throws VlException
     {
         UIGlobal.saveProperties(loc, props);
     }
@@ -672,8 +673,9 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
      * Custom menu action(s) which will appear in the action menu when right
      * clicking (or alt-mouse clicking) on a resource.
      * <p>
-     * If Dynamic Actions are supported override methods {@link #startViewer(VRL, String, ActionContext)} 
-     * and {@link #doMethod(String, ActionContext)} for full control.
+     * If Dynamic Actions are supported override methods
+     * {@link #startViewer(VRL, String, ActionContext)} and
+     * {@link #doMethod(String, ActionContext)} for full control.
      */
     public Vector<ActionMenuMapping> getActionMappings()
     {
@@ -688,9 +690,7 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
     {
         if (getViewContext() == null)
         {
-            Global.infoPrintf(this,
-                    "Warning: Viewer context not set: creating default for: %s\n",
-                    this);
+            Global.infoPrintf(this, "Warning: Viewer context not set: creating default for: %s\n", this);
             setViewContext(new ViewContext(null));
         }
 
@@ -704,150 +704,149 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
         JFrame frame = new JFrame();
         frame.add(this);
         frame.setSize(800, 600);
-        //this.setFrame(frame); 
+        // this.setFrame(frame);
         initViewer();
         frame.pack();
         frame.setVisible(true);
         startViewer(location);
-        
+
         frame.addWindowListener(new WindowAdapter()
-             {
-                 public void windowClosing(WindowEvent e) 
-                 {
-                     Global.infoPrintf(this,"Closing and exitting:%s\n",ViewerPlugin.this);
-                     System.exit(0); 
-                 }
-              }
-            );
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                Global.infoPrintf(this, "Closing and exitting:%s\n", ViewerPlugin.this);
+                System.exit(0);
+            }
+        });
     }
-    
+
     /**
      * Fires (VRS) ResourceEvent.
      */
     public void fireEvent(ResourceEvent event)
     {
-        UIGlobal.getVRSContext().fireEvent(event); 
+        UIGlobal.getVRSContext().fireEvent(event);
     }
-    
+
     /**
-     * Returns information about this plugins. 
-     * Specify Version, Author and other information here.  
+     * Returns information about this plugins. Specify Version, Author and other
+     * information here.
      */
     public String getInfoText()
     {
-        return "No information for:"+this.getName()+" version:"+getVersion()+" (Plugin must implement getInfoText()).";
+        return "No information for:" + this.getName() + " version:" + getVersion()
+                + " (Plugin must implement getInfoText()).";
     }
-    
+
     /**
-     * Should return "&lt;Major&gt;.&lt;minor&gt;[.&lt;tiny&gt;]" Version String. 
-     * Extra version information can be appended after the dotted decimals. 
-     * For example "1.2.0 Beta Build (C) MyCorp" as long as the Version String starts with dotted 
-     * separated decimals and the complete string is only one line. 
-     */ 
+     * Should return "&lt;Major&gt;.&lt;minor&gt;[.&lt;tiny&gt;]" Version
+     * String. Extra version information can be appended after the dotted
+     * decimals. For example "1.2.0 Beta Build (C) MyCorp" as long as the
+     * Version String starts with dotted separated decimals and the complete
+     * string is only one line.
+     */
     public String getVersion()
     {
-        return "0"; 
+        return "0";
     }
-    
+
     /**
-     * Return HTML formatted information about this plugin. 
-     */ 
+     * Return HTML formatted information about this plugin.
+     */
     public String getAbout()
     {
-        return "<html>"
-            +"<table>"
-            +"  <tr bgcolor=#c0c0c0><td><h3>Viewer Plugin Information for:"+getName()+"</h3></td><td></td></tr>"
-            +"  <tr bgcolor=#f0f0f0><td>ViewerPlugin Version:</td><td>" + this.getVersion()         + "</td><tr><br>"
-            +"  <tr bgcolor=#f0f0f0><td>ViewerPlugin class:  </td><td>" + this.getClass().getName() + "</td><tr><br>"
-            +"  <tr bgcolor=#f0f0f0><td>ViewerPlugin mimeTypes:</td><td>"+new StringList(this.getMimeTypes()).toString("<br>") + "<br>"
-            +"</table><br>"
-            +" To change this information override the getAbout() method. <br>"
-            +"</html>";
+        return "<html>" + "<table>" + "  <tr bgcolor=#c0c0c0><td><h3>Viewer Plugin Information for:" + getName()
+                + "</h3></td><td></td></tr>" + "  <tr bgcolor=#f0f0f0><td>ViewerPlugin Version:</td><td>"
+                + this.getVersion() + "</td><tr><br>" + "  <tr bgcolor=#f0f0f0><td>ViewerPlugin class:  </td><td>"
+                + this.getClass().getName() + "</td><tr><br>"
+                + "  <tr bgcolor=#f0f0f0><td>ViewerPlugin mimeTypes:</td><td>"
+                + new StringList(this.getMimeTypes()).toString("<br>") + "<br>" + "</table><br>"
+                + " To change this information override the getAbout() method. <br>" + "</html>";
     }
-    
-    /** 
-     * Compares mime type with "this" mimetypes. 
-     * Uses list from  getMimeTypes() to compare with.  
-     */ 
+
+    /**
+     * Compares mime type with "this" mimetypes. Uses list from getMimeTypes()
+     * to compare with.
+     */
     public boolean isMyMimeType(String mimeType)
     {
         if (StringUtil.isEmpty(mimeType))
             return false;
-        
-        for (String type:this.getMimeTypes())
-            if (StringUtil.compare(type,mimeType)==0) 
-                    return true;
-        
+
+        for (String type : this.getMimeTypes())
+            if (StringUtil.compare(type, mimeType) == 0)
+                return true;
+
         return false;
     }
-    
-    /** 
-     * Simple link method to negotiate link handling. 
-     *  
-     * Returns 'true' if the link will be handled outside this plugin, 
-     * returns false is the plugin should handle it self.
-     * For example by calling updateLocation() 
-     *  
+
+    /**
+     * Simple link method to negotiate link handling.
+     * 
+     * Returns 'true' if the link will be handled outside this plugin, returns
+     * false is the plugin should handle it self. For example by calling
+     * updateLocation()
+     * 
      * @param loc
-     * @throws VlException 
+     * @throws VlException
      */
-    public boolean handleLink(VRL loc,boolean openNew) throws VlException
+    public boolean handleLink(VRL loc, boolean openNew) throws VlException
     {
-        VNode node=getVNode(loc);
-        // check for me: 
-        if (isMyMimeType(node.getMimeType())==false) 
+        VNode node = getVNode(loc);
+        // check for me:
+        if (isMyMimeType(node.getMimeType()) == false)
         {
             if (isStandalone() || openNew)
-                fireViewEvent(loc,true);
+                fireViewEvent(loc, true);
             else
-                fireViewEvent(loc,false);
-            
+                fireViewEvent(loc, false);
+
             return true;
         }
         else
         {
-            return false; 
-        } 
+            return false;
+        }
     }
 
-    public void fireViewEvent(VRL vrl,boolean openNew)
+    public void fireViewEvent(VRL vrl, boolean openNew)
     {
         if (openNew)
         {
-            fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(this,vrl,ViewerEvent.ViewOpenType.OPEN_NEW));  
+            fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(this, vrl, ViewerEvent.ViewOpenType.OPEN_NEW));
         }
         else
         {
-            fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(this,vrl));
+            fireHyperLinkEvent(ViewerEvent.createHyperLinkEvent(this, vrl));
         }
     }
-    
+
     public void fireLinkFollowedEvent(VRL vrl)
     {
-        fireHyperLinkEvent(ViewerEvent.createLinkFollowedEvent(this,vrl));
+        fireHyperLinkEvent(ViewerEvent.createLinkFollowedEvent(this, vrl));
     }
-    
+
     public void fireFrameLinkFollowedEvent(VRL docVrl, VRL link)
     {
-        fireHyperLinkEvent(ViewerEvent.createFrameLinkFollowedEvent(this,docVrl,link));
+        fireHyperLinkEvent(ViewerEvent.createFrameLinkFollowedEvent(this, docVrl, link));
     }
-    
+
     /**
-     * Call this one to exit viewer. 
-     * If this viewer is a stand alone viewer, the (J)FRame will be closed. 
+     * Call this one to exit viewer. If this viewer is a stand alone viewer, the
+     * (J)FRame will be closed.
      */
     public void exitViewer()
     {
-       this.disposeJFrame();  
+        this.disposeJFrame();
     }
 
-    /** Returns ResourceLoader for this ViewPlugins classloader context */  
+    /** Returns ResourceLoader for this ViewPlugins classloader context */
     public ResourceLoader getResourceLoader()
     {
-        if (this.resourceLoader==null) 
-            this.resourceLoader=new ResourceLoader(UIGlobal.getVRSContext(),this.getClass().getClassLoader(),null);
-        
-        return resourceLoader; 
+        if (this.resourceLoader == null)
+            this.resourceLoader = new ResourceLoader(UIGlobal.getVRSContext(), this.getClass().getClassLoader(), null);
+
+        return resourceLoader;
     }
 
     // ========================================================================
@@ -907,9 +906,5 @@ public abstract class ViewerPlugin extends JPanel implements IMimeViewer
      * garbage collection.
      */
     public abstract void disposeViewer();
-
-
-
-
 
 }
