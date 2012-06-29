@@ -132,6 +132,8 @@ public class ServerInfo
 
     public static ServerInfo createFor(VRSContext context, VRL vrl)
     {
+        if (vrl==null)
+            throw new NullPointerException("ServerInfo.createFor(): NULL pointer Exception (VRL=null)");
         return new ServerInfo(context,vrl); 
     }
     
@@ -435,11 +437,33 @@ public class ServerInfo
     	return null;  
     }
     
+    public String getPassword(String identifier)
+    {
+        // use secretstore 
+        Secret sec=getSecret(identifier); 
+        if (sec!=null)
+            return sec.getPassword(); 
+        return null;  
+    }
+
+    public String getPassphrase(String identifier)
+    {
+        // use secretstore
+        Secret sec=getSecret(identifier); 
+        if (sec!=null)
+            return sec.getPassphrase(); 
+        return null;  
+    }
+    
     protected Secret getSecret()
     {
     	return getSecretStore().getSecret(getScheme(),getUserinfo(),getHostname(),getPort()); 
     }
-
+    
+    protected Secret getSecret(String identifier)
+    {
+        return getSecretStore().getSecret(getScheme(),identifier+"-"+getUserinfo(),getHostname(),getPort()); 
+    }
     protected SecretStore getSecretStore()
     {
         return this.vrsContext.getServerInfoRegistry().getSecretStore();
@@ -454,7 +478,17 @@ public class ServerInfo
     {
     	getSecretStore().storePassphrase(getScheme(),getUserinfo(),getHostname(),getPort(),passphrase); 
     }
+
+    public void setPassword(String identifier,String passwd)
+    {
+        getSecretStore().storePassword(getScheme(),identifier+"-"+getUserinfo(),getHostname(),getPort(),passwd); 
+    }
     
+    public void setPassphrase(String identifier,String passphrase)
+    {
+        getSecretStore().storePassphrase(getScheme(),identifier+"-"+getUserinfo(),getHostname(),getPort(),passphrase); 
+    }
+
     // =======================================================================
     // Derived getters,setters and attributes. Use above setters/getters ! 
     // =======================================================================
