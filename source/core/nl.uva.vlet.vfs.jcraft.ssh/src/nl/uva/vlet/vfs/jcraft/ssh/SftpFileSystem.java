@@ -129,17 +129,17 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         public String getPassphrase()
         {
             if (isProxy)
-                return null; // no proxy support yet
-    
-            return getServerInfo().getPassphrase();
+                return getServerInfo().getPassphrase("PROXY");
+            else
+                return getServerInfo().getPassphrase();
         }
 
         public String getPassword()
         {
             if (isProxy)
-                return null;  // no proxy support yet
-            
-            return getServerInfo().getPassword();
+                return getServerInfo().getPassword("PROXY");
+            else        
+                return getServerInfo().getPassword();
         }
 
         public String getUserHostIDString()
@@ -157,7 +157,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             return str; 
         }
              
-        // this object has no acces to the gui...
         public boolean promptPassword(String message)
         {
             if (getAllowUserInterAction() == false)
@@ -170,15 +169,18 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
             logger.debugPrintf("promptPassword(old):%s\n",message); 
             // jSch doesn't provide username in message !
-            message = "Password needed for:"+this.getUserHostIDString()+"\n" + message;
+            message = "Password needed for:"+this.getUserHostIDString()+"\n"; //+ message;
             logger.debugPrintf("promptPassword(new):%s\n",message); 
             // getVRSContext().getConfigManager().getHasUI();
             String field = uiPromptPassfield(message);
             
-            
             if (field != null)
             {
-                getServerInfo().setPassword(field);
+                if (isProxy==false)
+                    getServerInfo().setPassword(field);
+                else
+                    getServerInfo().setPassword("PROXY",field); 
+                
                 field = null;
                 return true;
             }
@@ -1107,10 +1109,15 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
             message = optMessage + "\n";
 
         String emsg = e.getMessage();
-        // Translate japanese enklish to Dutch Enklish
+        // Make messages more descriptive. 
         if (emsg.startsWith("Auth fail"))
         {
-            message += "Authentication failure\n" + "---\n--- sftp message --- \n" + emsg;
+            message += "Authentication failure\n" + "\n("+emsg+")\n";
+            return new nl.uva.vlet.exception.VlAuthenticationException(message, e);
+        }
+        else if (emsg.startsWith("Auth cancel"))
+        {
+            message += "Authentication cancelled\n" + "\n("+emsg+")\n";
             return new nl.uva.vlet.exception.VlAuthenticationException(message, e);
         }
         else if (e instanceof SftpException)
@@ -1544,7 +1551,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         logger.debugPrintf("sshIdentities=%s\n",idStr); 
         
         // split optional comma separated list
-        if (idStr != null)
+        if (StringUtil.isNonWhiteSpace(idStr))
         {
             String strs[]=idStr.split(","); 
             if ((strs!=null) && (strs.length>0)) 

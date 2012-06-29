@@ -238,7 +238,7 @@ public class JCraftClient
     public void setSSHIdentities(String sshConfigDir,String idNames[],boolean mergeIDs) throws JSchException
     {
         Set<String> existingIDs=new HashSet<String>(); 
-        
+                
         if (mergeIDs==false)
         {
             jschInstance.removeAllIdentity(); 
