@@ -561,6 +561,10 @@ image/nifti                         nii NII
 image/nifti-gnuzipped               ni.gz nii.gz NI.GZ NII.GZ nigz niigz NIGZ NIIGZ
 
 ##
+#dicom
+application/dicom                   dcm DCM dicom DICOM
+
+##
 # Computis (imzML files) 
 image/imzml                         imzML imzml IMZML
 image/imzml-ibd                     ibd
