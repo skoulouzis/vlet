@@ -64,7 +64,7 @@ public interface IMasterUI
 	 * Simple formatted Input Dialog. Method is wrapper for JOptionPane ! 
 	 * See	JOptionPane.showConfirmDialog() for options.
 	 * @return JOptionPane.OK_OPTION if successful. 
-	 *         Parameter inputFields contain modified (Swing) objects.  
+	 *         Parameter inputFields can contain modified (Swing) objects.  
 	 */ 
 	int askInput(String title, Object[] inputFields, int jOpentionPaneOption);
 	
