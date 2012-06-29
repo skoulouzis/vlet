@@ -128,7 +128,6 @@ public abstract class ResourceSystemNode extends VCompositeNode implements VReso
 	public ServerInfo getServerInfo()
 	{
 		// Current bug in ServerInfo: update to get new info object. 
-	     
 		ServerInfo newInfo=getContext().getServerInfoRegistry().getServerInfo(serverInfo.getID());
 	    if (newInfo!=null)
 	    	 this.serverInfo=newInfo; 
