@@ -382,7 +382,7 @@ public class StringUtil
     /** Whether string contains non white space characters */  
     public static boolean isNonWhiteSpace(String str)
     {
-        if (str==null)
+        if ((str==null) || (str.equals("")))
             return false;
         
         // strip all whitespace; 
