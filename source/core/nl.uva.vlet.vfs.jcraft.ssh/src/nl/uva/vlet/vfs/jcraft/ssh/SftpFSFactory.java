@@ -39,7 +39,6 @@ import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
-import nl.uva.vlet.vrs.VResourceSystem;
 
 public class SftpFSFactory extends VFSFactory
 {
@@ -85,9 +84,6 @@ public class SftpFSFactory extends VFSFactory
         return schemeNames;  
     }
 
-   
-     
-
     private void debugPrintf(String format,Object... args)
     {
         ClassLogger.getLogger(SftpFSFactory.class).debugPrintf(format,args); 
@@ -103,8 +99,8 @@ public class SftpFSFactory extends VFSFactory
     {
     	if (info==null)
     		info=ServerInfo.createFor(context,location); 
-    	
-        String user=info.getUsername(); 
+
+    	String user=info.getUsername(); 
         
         String defaultUser=Global.getUsername();
       	// sftp MUST have username: set current to default ! 
@@ -112,7 +108,7 @@ public class SftpFSFactory extends VFSFactory
         {
             info.setUsername(defaultUser);
         }
-        
+        info.setNeedUserinfo(true);
         info.setIfNotSet(VAttributeConstants.ATTR_HOSTNAME,"hostname"); 
         info.setIfNotSet(ServerInfo.ATTR_SSH_IDENTITY,"id_rsa"); 
         info.setIfNotSet(ServerInfo.ATTR_SSH_USE_PROXY,false); 
