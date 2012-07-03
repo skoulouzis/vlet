@@ -578,13 +578,15 @@ public class SRMClientV2 extends SRMClient
                     
                     debugPrintf("srmLs: status=%s (waitTime=%d)\n",stat.getStatusCode().getValue(),waitTime);   
                     waitTime+=waitTimeIncrement; 
-                    
-                    if (totalWaitTime > getSRMRequestTimeout())
+                    int maxTime=getSRMRequestTimeout();
+                    if (totalWaitTime > maxTime)
                     {
-                        debug("TIMEOOUT. SleepTime=" + totalWaitTime + " getSRMRequestTimeout: " + getSRMRequestTimeout()
+                        debug("TIMEOUT: SleepTime=" + totalWaitTime + " getSRMRequestTimeout: " + maxTime
                                 + "\n Must abort files. Status: " + stat.getStatusCode().getValue() + " " + stat.getExplanation());
                         
-                        throw createSRMExceptionFromStatusCode("Timeout Error while getting " + response.getClass().getName() + ". Request aborted",
+                        errorPrintf("Timeout: totalWaitTime > srmRequestTimeOut: %d>%d\n",totalWaitTime,maxTime);
+                        
+                        throw createSRMExceptionFromStatusCode("Timeout Error ("+totalWaitTime+"ms) while getting " + response.getClass().getName() + ". Request aborted",
                                 response.getReturnStatus());
                     }
                     
@@ -781,7 +783,13 @@ public class SRMClientV2 extends SRMClient
         //System.err.printf(format,args); 
         logger.log(Level.INFO,format,args);   
     }
-
+    
+    private void errorPrintf(String format, Object... args)
+    {
+        //System.out.printf(">>>ERR:"+format,args); 
+        //System.err.printf(format,args); 
+        logger.log(Level.SEVERE,format,args);   
+    }
     /**
      * Removes a set of files or links.
      * 
@@ -1635,15 +1643,18 @@ public class SRMClientV2 extends SRMClient
                 
                 debug("Sleeping: " + sleepTime +" (total="+totalWaitTime+")");
                     Thread.sleep(sleepTime);
- 
-
-                    // timeout or error...
-                if (totalWaitTime > getSRMRequestTimeout())
+                    
+                    
+                int maxTime=getSRMRequestTimeout();
+                // timeout or error...
+                if (totalWaitTime > maxTime)
                 {
-                    debug("TIMEOOUT. SleepTime=" + sleepTime + " getSRMRequestTimeout: " + getSRMRequestTimeout()
+                    debug("TIMEOUT: SleepTime=" + sleepTime + " getSRMRequestTimeout: " + maxTime
                             + "\n Must abort files. Status: " + status.getStatusCode().getValue() + " " + status.getExplanation());
                     
-                    throw createSRMExceptionFromStatusCode("Timeout Error while getting " + requestResponse.getClass().getName() + ". Request aborted",
+                    errorPrintf("Timeout: totalWaitTime > srmRequestTimeOut: %d>%d\n",totalWaitTime,maxTime);
+
+                    throw createSRMExceptionFromStatusCode("Timeout Error ("+totalWaitTime+"ms) while getting " + requestResponse.getClass().getName() + ". Request aborted",
                             response.getReturnStatus());
                 }
                         
