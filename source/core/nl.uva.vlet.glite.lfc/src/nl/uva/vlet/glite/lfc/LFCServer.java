@@ -221,6 +221,12 @@ public class LFCServer
     {
         try
         {
+            // 
+            // OpenJDK doesn't like it if to many socket/file descriptors are open!
+            // cleanup/dispose previous socket!
+            if (socket!=null)
+                disconnect();
+            
             staticLogMessage(String.format(Messages.lfc_log_connect, this.uri
                     .getHost(), new Integer(this.uri.getPort())));
             
@@ -371,39 +377,33 @@ public class LFCServer
     
     /**
      * Disconnects from the LFC server. Clears socket, context and all data
-     * streams
+     * streams.
+     * No exception is thrown. 
+     * Always disconnects, closes sockets and ignores possible exceptions. 
      * 
-     * @throws LFCException
-     *             If an I/O-problem occurs.
      */
-    public void disconnect() throws LFCException
+    public void disconnect() 
     {
+        // try to close and cleanup everything. 
         try
         {
             staticLogMessage(String.format(Messages.lfc_log_disconnect,
                     this.uri.getHost(), new Integer(this.uri.getPort())));
-
+    
             if (this.context != null)
             {
                 try{this.context.dispose();}catch (Throwable t) {}; 
             }
-            if (this.socket != null)
-            {
+                
+            if (input!=null)
                 try{this.input.close();}catch (Throwable t) {}; 
+                
+            if (output!=null)
                 try{this.output.close();}catch (Throwable t) {}; 
-                try{this.socket.close();}catch (Throwable t) {}; 
-            }
+                
+            if (this.socket != null)
+                try{socket.close();}catch (Throwable t) {}; 
         }
-//        catch (IOException ioExc)
-//        {
-//            throw new LFCException("eu.geclipse.core.problem.io.unspecified",
-//                    ioExc);
-//        }
-//        catch (GSSException gssExc)
-//        {
-//            throw new LFCException("eu.geclipse.core.problem.auth.loginFailed", //$NON-NLS-1$
-//                    gssExc);
-//        }
         finally
         {
             this.context = null;
@@ -1506,24 +1506,14 @@ public class LFCServer
     
     public void dispose()
     {
-        _cleanup(); 
+        disconnect();
     }
     
     public void finalize()
     {
-        _cleanup();
+        disconnect();
     }
-    
-    private void _cleanup()
-    {
-        try
-        {
-            if (this.isConnected())
-                this.disconnect(); 
-        }
-        catch (Throwable t) {}
-        
-    }
+      
 
 //    public DataOutputStream _getOutput()
 //    {
