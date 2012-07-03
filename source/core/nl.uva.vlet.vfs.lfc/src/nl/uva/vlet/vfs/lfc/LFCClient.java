@@ -55,11 +55,11 @@ import nl.uva.vlet.exception.ResourceNotFoundException;
 import nl.uva.vlet.exception.ResourceTypeMismatchException;
 import nl.uva.vlet.exception.ResourceTypeNotSupportedException;
 import nl.uva.vlet.exception.ResourceWriteAccessDeniedException;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
 import nl.uva.vlet.exception.VlInternalError;
 import nl.uva.vlet.exception.VlInterruptedException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.glite.lfc.LFCConfig;
 import nl.uva.vlet.glite.lfc.LFCException;
 import nl.uva.vlet.glite.lfc.LFCServer;
@@ -277,11 +277,12 @@ public class LFCClient
 
     public void disconnect() throws VlException
     {
+        // nothing to disconnect. For each connection a new LFCServer is created. 
         if (isConnected())
         {
             // try
             // {
-            // server.disconnect();
+            // dispose(server);
             // }
             // catch (LFCException e)
             // {
@@ -327,13 +328,17 @@ public class LFCClient
     public VFSNode getPath(String path) throws VlException
     {
         LFCServer server = createServer();
-        return getPath(path, server);
+        VFSNode node=getPath(path, server);
+        dispose(server);
+        return node; 
     }
 
     public VFSNode getFileByGUID(String guid) throws VlException
     {
         LFCServer server = createServer();
-        return getFileByGuid(guid, server);
+        VFSNode node=getFileByGuid(guid, server);
+        dispose(server);
+        return node; 
     }
 
     protected VFSNode getPath(String path, LFCServer server) throws VlException
@@ -533,17 +538,54 @@ public class LFCClient
 
         return LFCExceptionWapper.getVlException(e.getErrorCode(), e);
     }
-
+    
+    // do not cache: 
+    // private LFCServer _server=null; 
+    
     private LFCServer createServer() throws VlException
     {
-        // Update Credential, it might have changed
-        this.lfcConfig.globusCredential = GlobusUtil.getGlobusCredential(getVRSContext().getGridProxy());
-
-        if (this.sshTunnelUri != null)
-            return new LFCServer(lfcConfig, this.sshTunnelUri);
-        else
-            return new LFCServer(lfcConfig, this.serverUri);
-
+        // 
+        // Just create new Server.
+        // For most methods the connections have to be setup again, 
+        // so reusing the same LFCServer can only create threading problems. 
+        // 
+        
+        //if (_server==null)
+        {
+            // Update Credential, it might have changed
+            this.lfcConfig.globusCredential = GlobusUtil.getGlobusCredential(getVRSContext().getGridProxy());
+    
+            if (this.sshTunnelUri != null)
+                return new LFCServer(lfcConfig, this.sshTunnelUri);
+            else
+                return new LFCServer(lfcConfig, this.serverUri);
+        }
+        
+//        if (_server.isConnected()==false)
+//        {
+//            try
+//            {
+//                _server.connect();
+//            }
+//            catch (LFCException e)
+//            {
+//               throw new VlException("Could not (re)connect to LFC server!",e);
+//            } 
+//        }
+//        
+//        return _server; 
+    }
+    
+    protected void dispose(LFCServer server)
+    {
+//        if (server==this._server)
+//        {
+//            // do NOT dispose!
+//        }
+//        else
+        {
+            server.dispose(); 
+        }
     }
 
     private ILFCLocation[] list(ILFCLocation lfcLoc, LFCServer server) throws VlException
@@ -616,22 +658,29 @@ public class LFCClient
     public ILFCLocation[] list(ILFCLocation path) throws VlException
     {
         LFCServer server = createServer();
-        return list(path, server);
+        ILFCLocation[] result=list(path, server);
+        dispose(server);
+        return result; 
     }
 
     public VFSNode[] listNodes(ILFCLocation path) throws VlException
     {
         LFCServer server = createServer();
         ILFCLocation locs[] = list(path, server);
-
+        VFSNode arr[];
+                
         if (locs == null)
-            return null;
-
-        VFSNode arr[] = new VFSNode[locs.length];
-
-        for (int i = 0; i < locs.length; i++)
-            arr[i] = (VFSNode) locs[i];
-
+        {
+            arr=null; 
+        }
+        else
+        {
+            arr= new VFSNode[locs.length];
+            for (int i = 0; i < locs.length; i++)
+                arr[i] = (VFSNode) locs[i];
+        }
+        
+        dispose(server);
         return arr;
     }
 
@@ -695,7 +744,9 @@ public class LFCClient
     public boolean exists(String path, BooleanHolder isDir) throws VlException
     {
         LFCServer server = createServer();
-        return exists(server,path,isDir); 
+        boolean val=exists(server,path,isDir); 
+        dispose(server);
+        return val; 
     }
     
     public boolean exists(LFCServer server,String path, BooleanHolder isDir) throws VlException
@@ -783,7 +834,9 @@ public class LFCClient
     public ReplicaDesc[] listReplicasByGuid(String guid) throws VlException
     {
         LFCServer server = createServer();
-        return listReplicasByGuid(guid, server);
+        ReplicaDesc reps[]= listReplicasByGuid(guid, server);
+        dispose(server);
+        return reps; 
     }
 
     // public VRL[] getReplicaVRLS(ReplicaDesc[] replicaDesc) throws
@@ -1271,16 +1324,7 @@ public class LFCClient
 
         logger.debugPrintf("No errors or replicas. Will unregister: %s\n", path);
 
-        try
-        {
-            // force update of LFC Server!
-            server.disconnect();
-        }
-        catch (LFCException e)
-        {
-            // throw new LFCExceptionWapper("Error while disconnecting",e);
-            throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
-        }
+        dispose(server); 
         
         // delete this entry if forceDelete==true or there have been no errors!
         if (error==true) 
@@ -1766,15 +1810,7 @@ public class LFCClient
     {
         LFCServer server = createServer();
         addReplica(monitor, lfcFile, replicaVRL, server);
-
-        try
-        {
-            server.disconnect();
-        }
-        catch (LFCException e)
-        {
-            throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
-        }
+        dispose(server); 
     }
 
     /**
@@ -2324,7 +2360,9 @@ public class LFCClient
     public boolean unregister(ITaskMonitor monitor, ILFCLocation path, boolean recursive) throws VlException
     {
         LFCServer server = createServer();
-        return unregister(monitor, path, recursive, server);
+        boolean val=unregister(monitor, path, recursive, server);
+        dispose(server);
+        return val;
     }
 
     /**
@@ -2336,7 +2374,10 @@ public class LFCClient
     {
         try
         {
-            return createServer().readLink(path);
+            LFCServer server=createServer(); 
+            String linkPath=server.readLink(path);
+            dispose(server);
+            return linkPath; 
         }
         catch (LFCException e)
         {
@@ -2354,14 +2395,7 @@ public class LFCClient
         LFCServer server = createServer();
         setFileSize(desc, size, server);
         file.getWrapperDesc().clearMetaData();
-        try
-        {
-            server.disconnect();
-        }
-        catch (LFCException e)
-        {
-            throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
-        }
+        dispose(server); 
     }
 
     private void setFileSize(FileDesc desc, long size, LFCServer server) throws VlException
@@ -2412,12 +2446,7 @@ public class LFCClient
     //
     // return size;
     // }
-
-    public static void main(String args[])
-    {
-        System.out.println("Testing sanitize path:" + sanitizeSEName("Space Path/This is a Test !@#$%_"));
-    }
-
+   
     public LFCFile createSymLink(ILFCLocation orgPath, VRL newPath) throws VlException
     {
         LFCServer server = this.createServer();
@@ -2428,11 +2457,17 @@ public class LFCClient
             FileDescWrapper fwrap = new FileDescWrapper();
             fwrap.setFileDesc(linkDesc);
             fwrap.setNameAndPath(newPath.getPath());
+            dispose(server); 
+            
             return new LFCFile(this.lfcServerNode, fwrap);
         }
         catch (LFCException e)
         {
             throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
+        }
+        finally
+        {
+            dispose(server); 
         }
     }
 
@@ -3157,10 +3192,15 @@ public class LFCClient
         try
         {
             server.setMode(path, mode);
+            server.dispose();
         }
         catch (LFCException e)
         {
             throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
+        }
+        finally
+        {
+            dispose(server); 
         }
 
     }
