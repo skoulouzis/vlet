@@ -61,7 +61,10 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
     private VFSTransfer vfsTransferInfo;
     private JScrollPane logScrollPane;
     private long delay;
-
+    
+    private boolean suspended=false;
+    ActionTask updateTask = null; 
+    
     // Not yet: 
     // private ITaskSubTaskMonitor vfsTransferInfo; 
     private BrowserController browserController;
@@ -92,70 +95,81 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
         UIPlatform.getPlatform().getWindowRegistry().register(this);
     	this.setLocationRelativeTo(null); 
     	initGUI();
+    	// initial update: 
         update(); 
+        //
+        initUpdateTask();
     }
     
-    private boolean suspended=false;
+  
     
-    ActionTask updateTask = new ActionTask(VRSTaskWatcher.getDefault(),"TransferMonitorDialog.updateTask") 
+    protected void initUpdateTask()
     {
-        public void doTask() 
+        updateTask=new ActionTask(VRSTaskWatcher.getDefault(),"TransferMonitorDialog.updateTask") 
         {
-            while (vfsTransferInfo.isDone()==false)
+            public void doTask() 
             {
-                if (suspended==true)
-                    return; 
-                    
-                // if (isBackground()==false)
+                while (vfsTransferInfo.isDone()==false)
                 {
-                   update();
-                
-                   // delayed dialog: 
-                   if ((vfsTransferInfo.getTime()>delay) && (isVisible()==false)) 
-                   {
-                       setVisible(true);
-                   }
-                
-                   if (vfsTransferInfo.isDone())
-                   {
-                      
-                       if (vfsTransferInfo.hasError())
+                    if (suspended==true)
+                        return; 
+                        
+                    // if (isBackground()==false)
+                    {
+                       update();
+                    
+                       // delayed dialog: 
+                       if ((vfsTransferInfo.getTime()>delay) && (isVisible()==false)) 
                        {
-                           browserController.handle(vfsTransferInfo.getException());
+                           setVisible(true);
                        }
                     
-                       okButton.setEnabled(true);
-                       cancelButton.setEnabled(false); 
+                       if (vfsTransferInfo.isDone())
+                       {
+                          
+                           if (vfsTransferInfo.hasError())
+                           {
+                               browserController.handle(vfsTransferInfo.getException());
+                           }
+                        
+                           okButton.setEnabled(true);
+                           cancelButton.setEnabled(false); 
+                       }
+                    }
+                    
+                       
+                   try
+                   {
+                       Thread.sleep(100);// 10fps 
                    }
+                   catch (InterruptedException e)
+                   {
+                       System.out.println("***Error: Exception:"+e); 
+                       e.printStackTrace();
+                    } 
                 }
-                
-                   
-               try
-               {
-                   Thread.sleep(100);// 10fps 
-               }
-               catch (InterruptedException e)
-               {
-                   System.out.println("***Error: Exception:"+e); 
-                   e.printStackTrace();
-                } 
+                // task done: final update
+                update();
             }
-            // task done: final update
-            update();
-        }
-
-        @Override
-        public void stopTask()
-        {
-            // stop THIS task! (must use start() again to continue!) 
-            suspended=true; 
-        }
-    };
     
+            @Override
+            public void stopTask()
+            {
+                // stop THIS task! (must use start() again to continue!) 
+                suspended=true; 
+            }
+        };
+        
+    }    
   
     /** Restart the update task */ 
     public synchronized void start()
     {
+        String title="Transfering:"+vfsTransferInfo.getSourceText()+" to "+vfsTransferInfo.getDestination().getHostname()
+                ;//+":"+vfsTransferInfo.getStatus(); 
+            
+        this.setTitle(title);
+            
         suspended=false; 
         updateTask.startTask(); 
     }
@@ -173,11 +187,6 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
             //this.logText.revalidate(); 
             //this.logScrollPane.revalidate(); // trigger update of scrollbars!
         }
-        
-        String title="Transfering:"+vfsTransferInfo.getSourceText()+" to "+vfsTransferInfo.getDestination().getHostname()
-        	;//+":"+vfsTransferInfo.getStatus(); 
-        
-        this.setTitle(title);
         
         if (this.vfsTransferInfo.isDone())
         {
@@ -208,8 +217,7 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
                     logText.setText("Logger");
                     //logText.setPreferredSize(new java.awt.Dimension(343, 58));
                     logText.setEditable(false);
-                    logText.setBorder(BorderFactory
-                            .createBevelBorder(BevelBorder.LOWERED));
+                    logText.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
                     //NOT logText.setPreferredSize(new java.awt.Dimension(306, 19));
                 }
             }
@@ -333,7 +341,6 @@ public class TransferMonitorDialog extends javax.swing.JDialog implements Action
     public static TransferMonitorDialog showTransferDialog(BrowserController bc,VFSTransfer transfer,long delay)
     {
         // for very short transfers do not show the dialog: 
-       
         
         TransferMonitorDialog dialog = new TransferMonitorDialog(bc,transfer);
         dialog.setDelay(delay); 
