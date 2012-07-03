@@ -96,6 +96,12 @@ public class BrowserInteractiveActions
 				VAttribute targetAttrs[],
 				StringHolder optNewName) 
 		{
+            // already checked "Skip All"  or "Overwrite All"! 
+            InteractiveAction action = checkSkipOrOverWriteAll();
+            
+            if (action!=null)
+                return action; 
+            
             suspendTransfer(); 
             
             InteractiveAction result=doAsk(message,
@@ -137,15 +143,10 @@ public class BrowserInteractiveActions
             this.transferDialog=dialog; 
         }
         
-        
-        private InteractiveAction doAsk(String message, 
-                VRL source, 
-                VAttribute[] sourceAttrs, 
-                VRL target,
-                VAttribute[] targetAttrs, 
-                StringHolder optNewName)
+        // already asked ? 
+        protected InteractiveAction checkSkipOrOverWriteAll()
         {
-        	  // overwrite all! 
+            // overwrite all! 
             if ((overWriteAll!=null) && (overWriteAll.value==true))
             {
                 // update for this copy action 
@@ -158,6 +159,21 @@ public class BrowserInteractiveActions
                 // update for this copy action 
                 return InteractiveAction.SKIP; 
             }
+            
+            return null;
+        }
+        
+        private InteractiveAction doAsk(String message, 
+                VRL source, 
+                VAttribute[] sourceAttrs, 
+                VRL target,
+                VAttribute[] targetAttrs, 
+                StringHolder optNewName)
+        {
+        	
+            InteractiveAction action=checkSkipOrOverWriteAll();
+            if (action!=null)
+                return action; 
             
         	// link to VBrowser frame!
         	JFrame frame = BrowserInteractiveActions.this.browserController.getFrame(); 
