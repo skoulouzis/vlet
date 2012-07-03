@@ -22,7 +22,7 @@
 * Version : @VLET_VERSION@
 * Date    : @DATE@
 
-=== Release notes for 1.5.0-beta-0(!) ===
+=== Release notes for 1.5.0-beta-1(!) ===
 
 Note: The VLET Project has now been registered at sourceforge.net and some 
 changes were made to the build environment. 
