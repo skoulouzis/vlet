@@ -246,9 +246,14 @@ public class SRMFileSystem extends FileSystemNode
             // check SRM V2 Client:
             srmClient = new SRMClientV2(host,port, false);
             
-            // Update Connection time out. 
+            // Update Socket Connection time out. 
             srmClient.setConnectionTimeout(this.vrsContext.getConfigManager().getSocketTimeOut());
-            srmClient.setSRMRequestTimeout(this.vrsContext.getConfigManager().getServerRequestTimeOut());
+            
+            // Update Reqeust timeout (post socket setup) 
+            int defVal=vrsContext.getConfigManager().getServerRequestTimeOut(); 
+            // optional server info value: 
+            int srmReqTimeOut=this.getServerInfo().getIntProperty(SRMFSFactory.ATTR_SRM_REQUEST_TIMEOUT,defVal);
+            srmClient.setSRMRequestTimeout(srmReqTimeOut);
  
             // Must Update used Globus Credential ! 
             srmClient.setGlobusCredential(GlobusUtil.getGlobusCredential(prox));
