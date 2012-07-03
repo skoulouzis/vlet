@@ -35,7 +35,7 @@ import nl.vlet.uva.grid.globus.GlobusUtil;
 
 public class SRMFSFactory extends VFSFactory
 {
-    public static final String ATTR_SRM_REQUEST_TIMEOUT="srmTimeOut"; 
+    public static final String ATTR_SRM_REQUEST_TIMEOUT="srmRequestTimeOut"; 
     
 	public static final String SRM_SCHEME = "srm";
 
@@ -101,7 +101,7 @@ public class SRMFSFactory extends VFSFactory
 		tmpSet.set(VAttributeConstants.ATTR_PORT,8443); 
 		tmpSet.set(VAttributeConstants.ATTR_HOSTNAME,"SRMHOST"); 
 		// inheret from config manager 
-		tmpSet.set(ATTR_SRM_REQUEST_TIMEOUT,-1); // context.getConfigManager().getServerRequestTimeOut()); 
+		tmpSet.set(ATTR_SRM_REQUEST_TIMEOUT,context.getConfigManager().getServerRequestTimeOut()); 
 		
 		info.matchTemplate(tmpSet,true); 
 		

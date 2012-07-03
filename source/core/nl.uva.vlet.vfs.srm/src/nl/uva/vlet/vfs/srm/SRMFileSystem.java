@@ -253,6 +253,9 @@ public class SRMFileSystem extends FileSystemNode
             int defVal=vrsContext.getConfigManager().getServerRequestTimeOut(); 
             // optional server info value: 
             int srmReqTimeOut=this.getServerInfo().getIntProperty(SRMFSFactory.ATTR_SRM_REQUEST_TIMEOUT,defVal);
+            if (srmReqTimeOut<=0)
+                srmReqTimeOut=defVal; 
+            
             srmClient.setSRMRequestTimeout(srmReqTimeOut);
  
             // Must Update used Globus Credential ! 
