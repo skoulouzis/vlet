@@ -575,7 +575,9 @@ public class LFCClient
 //        
 //        return _server; 
     }
-    
+ 
+    // Although eventually the garbage collector will call finalize() which closes
+    // connections, better call it after use of a LFCServer. 
     protected void dispose(LFCServer server)
     {
 //        if (server==this._server)
@@ -2372,9 +2374,10 @@ public class LFCClient
      */
     public String getLinkTarget(String path) throws VlException
     {
+        LFCServer server=createServer(); 
+
         try
         {
-            LFCServer server=createServer(); 
             String linkPath=server.readLink(path);
             dispose(server);
             return linkPath; 
@@ -2383,7 +2386,10 @@ public class LFCClient
         {
             info("Exception while resolving link:" + e);
         }
-
+        finally
+        {   
+            dispose(server);
+        }
         // no error handling here return null to indicate no link target
         return null;
     }
@@ -2786,11 +2792,16 @@ public class LFCClient
         try
         {
             ArrayList<String> links = server.listLinks(guid);
+            dispose(server); 
             return links;
         }
         catch (LFCException e)
         {
             throw LFCExceptionWapper.getVlException(e.getErrorCode(), e);
+        }
+        finally
+        {
+            dispose(server); 
         }
     }
 
@@ -3192,7 +3203,7 @@ public class LFCClient
         try
         {
             server.setMode(path, mode);
-            server.dispose();
+            dispose(server); 
         }
         catch (LFCException e)
         {
