@@ -57,7 +57,7 @@
 
 
 		<tstamp>
-			<format property="vlet.tstamp" pattern="yyyy-MM-d HH:mm:ss" locale="en"/>
+			<format property="vlet.tstamp" pattern="yyyy-MM-dd HH:mm:ss" locale="en"/>
 		</tstamp>
 
 	</target>
