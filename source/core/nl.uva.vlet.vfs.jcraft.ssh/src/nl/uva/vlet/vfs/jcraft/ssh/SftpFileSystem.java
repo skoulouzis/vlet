@@ -33,8 +33,6 @@ import static nl.uva.vlet.data.VAttributeConstants.ATTR_UNIX_FILE_MODE;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
-import java.util.Map;
 
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.data.StringHolder;
@@ -50,6 +48,7 @@ import nl.uva.vlet.io.StreamUtil;
 import nl.uva.vlet.vfs.FileSystemNode;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFS;
+import nl.uva.vlet.vfs.VFSClient;
 import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFSTransfer;
 import nl.uva.vlet.vfs.VFile;
@@ -79,8 +78,8 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     // === class stuff
     private static ClassLogger logger;
     
-    /** VRSContext mapped JCraftClients */ 
-    private static Map<String,JCraftClient> jcraftClients=new Hashtable<String,JCraftClient>();
+//    /** VRSContext mapped JCraftClients */ 
+//    private static Map<String,JCraftClient> jcraftClients=new Hashtable<String,JCraftClient>();
 
     static
     {
@@ -252,25 +251,25 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         }
     }
 
-    public static JCraftClient getJCraftClient(VRSContext vrsContext) throws JSchException
-    {
-        synchronized(jcraftClients)
-        {
-            String id=""+vrsContext.getID();
-            JCraftClient jcrft=jcraftClients.get(id);
-            if (jcrft==null)
-            {
-                logger.infoPrintf(">>> New JCraftClient() for VRSContext:#%s\n",id);
-                jcrft=new JCraftClient();
-                jcraftClients.put(id, jcrft); 
-            }
-            else
-            {
-                logger.infoPrintf(">>> Returning cached JCraftClient for VRSContext:#%s\n",id);
-            }
-            return jcrft; 
-        }
-    }
+//    public static JCraftClient getJCraftClient(VRSContext vrsContext) throws JSchException
+//    {
+//        synchronized(jcraftClients)
+//        {
+//            String id=""+vrsContext.getID();
+//            JCraftClient jcrft=jcraftClients.get(id);
+//            if (jcrft==null)
+//            {
+//                logger.infoPrintf(">>> New JCraftClient() for VRSContext:#%s\n",id);
+//                jcrft=new JCraftClient();
+//                jcraftClients.put(id, jcrft); 
+//            }
+//            else
+//            {
+//                logger.infoPrintf(">>> Returning cached JCraftClient for VRSContext:#%s\n",id);
+//            }
+//            return jcrft; 
+//        }
+//    }
     
     // =======================================================================
     // Instance
@@ -306,9 +305,9 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
         try
         {
-            jcraftClient = getJCraftClient(vrsContext);
-            jcraftClient.setSSHConfigDir(this.getSSHConfigDir());
-            jcraftClient.setKnownHostsFile(this.getKnownHostsFile());
+            JCraftClient.SSHConfig sshConf=new JCraftClient.SSHConfig(); 
+            sshConf.sshKnownHostsFile=this.getKnownHostsFile(); 
+            jcraftClient = new JCraftClient(sshConf); // vrsContext);
 
         }
         catch (JSchException e)
@@ -318,8 +317,19 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         
         try
         {
+            // now set ids: 
             String ids[] = getSSHIdentities();
-            jcraftClient.mergeSSHIdentities(ids);
+            VFSClient vfs = new VFSClient(vrsContext);  
+            VDir home=vfs.getUserHome(); 
+            String idPaths[]=new String[ids.length]; 
+            
+            for (int i=0;i<ids.length;i++)
+            {
+                String idFile=home.resolvePath(getSSHConfigDir()+"/"+ids[i]);
+                idPaths[i]=idFile;
+            }
+            jcraftClient.setSSHIdentityFiles(idPaths);  
+            
         }
         catch (JSchException e)
         {
@@ -341,6 +351,11 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
         return getServerInfo().getUsername();
     }
 
+    
+    public JCraftClient getJCraftClient()
+    {
+        return this.jcraftClient; 
+    }
 //    public String getHostname()
 //    {
 //        return getServerInfo().getHostname();
@@ -1742,7 +1757,6 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
     public SSHChannel createShellChannel(VRL optLocation) throws VlException
     {
         SSHChannelOptions options = new SSHChannelOptions();
-
         SSHChannel sshChannel = new SSHChannel(vrsContext, getUsername(), getHostname(), getPort(), options);
 
         String path = optLocation.getPath();
@@ -1762,7 +1776,7 @@ public class SftpFileSystem extends FileSystemNode implements VOutgoingTunnelCre
 
     public static void clearServers()
     {   
-        jcraftClients.clear(); 
+        //jcraftClients.clear(); 
     }
 
 }

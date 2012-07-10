@@ -7,15 +7,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import nl.uva.vlet.ClassLogger;
-import nl.uva.vlet.Global;
 import nl.uva.vlet.data.StringHolder;
 import nl.uva.vlet.data.StringUtil;
-import nl.uva.vlet.vfs.VFSClient;
+import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.vrs.VRSContext;
 import nl.uva.vlet.vrs.io.VShellChannel;
 
 import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
@@ -46,7 +44,7 @@ public class SSHChannel implements VShellChannel
         logger.setLevelToDebug(); 
     }
     
-    public static SSHChannel createSSHChannel(VRSContext context,String user,String host,int port, SSHChannelOptions options)
+    public static SSHChannel createSSHChannel(VRSContext context,String user,String host,int port, SSHChannelOptions options) throws VlException
     {
         return new SSHChannel(context,user,host,port,options); 
     }
@@ -130,9 +128,11 @@ public class SSHChannel implements VShellChannel
 
     private InputStream stdout=null;
 
-    private VRSContext vrsContext; 
+    private VRSContext vrsContext;
+
+    private JCraftClient jcraftClient; 
     
-    public SSHChannel(VRSContext context, String user, String host,int port,SSHChannelOptions options)
+    public SSHChannel(VRSContext context, String user, String host,int port,SSHChannelOptions options) throws VlException
     {
         this.vrsContext=context; 
         this.user=user; 
@@ -142,6 +142,15 @@ public class SSHChannel implements VShellChannel
         
         if (sshOptions==null) 
             sshOptions=new SSHChannelOptions(); //defaults 
+        
+        try
+        {
+            this.jcraftClient=new JCraftClient();
+        }
+        catch (JSchException e1)
+        {
+            throw new VlException("Could get/create JCraftClient",e1); 
+        } 
         
         try
         {
@@ -163,7 +172,7 @@ public class SSHChannel implements VShellChannel
         try
         {
          
-            jschSession=createSession(vrsContext,user,host,port,sshOptions,new MyUserInfo()); 
+            jschSession=createSession(user,host,port,sshOptions,new MyUserInfo()); 
         }
         catch (JSchException e)
         {
@@ -209,15 +218,8 @@ public class SSHChannel implements VShellChannel
         }
     }
 
-    protected static Session createSession(VRSContext vrsContext, String sesUser, String sesHost,int sesPort,SSHChannelOptions sshOptions, MyUserInfo ui) throws JSchException
+    protected Session createSession(String sesUser, String sesHost,int sesPort,SSHChannelOptions sshOptions, MyUserInfo ui) throws JSchException
     {
-      // ==================================
-      // Jsch Instance/Session intilization 
-      // ==================================
-      
-        // reuse VRSContext JCraftClient or create one.
-      JCraftClient jcraftClient=SftpFileSystem.getJCraftClient(vrsContext); 
-        
       // use VRSContext settings: 
       //String sshdir=Global.getUserHome()+"/.ssh";
       //String id1=sshdir+"/id_rsa";
