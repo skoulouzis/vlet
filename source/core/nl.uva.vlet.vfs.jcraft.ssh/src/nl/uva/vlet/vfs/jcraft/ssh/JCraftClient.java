@@ -1,5 +1,6 @@
 package nl.uva.vlet.vfs.jcraft.ssh;
 
+import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -34,9 +35,9 @@ public class JCraftClient
     
     public static class SSHConfig
     {
-        public String sshConfigDir = null;    // default to $HOME/.ssh 
         public String sshKnownHostsFile = null;  // default to $HOME/.ssh/known_hosts
-        public String sshIds[]=null;          // defaul to {"id_rsa"}
+        public String sshConfigDir = null; 
+        public String sshIdFiles[]=null;         // default to {"$HOME/.ssh/id_rsa"}
     }
     
     /*
@@ -202,43 +203,47 @@ public class JCraftClient
         }
         else
         {
+            // init defaults: 
             this.sshConfig=new SSHConfig();
             // auto init
-            this.sshConfig.sshConfigDir=this.getSSHConfigDir();
+            this.sshConfig.sshConfigDir=getUserHomePath()+"/"+SSH_CONFIG_SIBDUR;
             // auto init
-            this.sshConfig.sshKnownHostsFile=this.getKnownHostsFile();
+            this.sshConfig.sshKnownHostsFile=sshConfig.sshConfigDir+"/"+SSH_KNOWN_HOSTS;
             // auto init
-            this.sshConfig.sshIds=new String[]{SSH_DEFAULT_ID_RSA};
+            this.sshConfig.sshIdFiles=new String[]{sshConfig.sshConfigDir+"/"+SSH_DEFAULT_ID_RSA};
         }
         
-        logger.infoPrintf(" - sshConfigDir = %s\n",this.sshConfig.sshConfigDir); 
         logger.infoPrintf(" - known_hosts  = %s\n",this.sshConfig.sshKnownHostsFile); 
         
-        this.jschInstance.setKnownHosts(sshConfig.sshKnownHostsFile);
-        this.setSSHIdentities(sshConfig.sshConfigDir,sshConfig.sshIds,false);    
+        if (sshConfig.sshKnownHostsFile!=null)
+            this.setKnownHostsFile(sshConfig.sshKnownHostsFile);
+        if (sshConfig.sshIdFiles!=null)
+            this.setSSHIdentityFiles(sshConfig.sshIdFiles,false);    
     }
     
-    /** Resolve identities and merge with identiry registry */ 
-    public void mergeSSHIdentities(String[] idNames) throws JSchException
+    /** 
+     * Resolve identities and merge with identity registry 
+     */ 
+    public boolean mergeSSHIdentities(String[] idFiles) throws JSchException
     {
-        String sshDir=getSSHConfigDir(); 
-        setSSHIdentities(sshDir,idNames,true);
+        return setSSHIdentityFiles(idFiles,true);
     }
 
     /** 
      * Specify SSH Identities. Use names only. 
      * The Actual SSH Key files must exists in the SSH Config Dir 
+     * @throws FileNotFoundException 
      */
-    public void setSSHIdentities(String idNames[]) throws JSchException
+    public boolean setSSHIdentityFiles(String idFiles[]) throws JSchException
     {
-        String sshDir=getSSHConfigDir(); 
-        setSSHIdentities(sshDir,idNames,false);
+        return setSSHIdentityFiles(idFiles,false);
     }
     
-    public void setSSHIdentities(String sshConfigDir,String idNames[],boolean mergeIDs) throws JSchException
+    public boolean setSSHIdentityFiles(String idFiles[],boolean mergeIDs) throws JSchException
     {
         Set<String> existingIDs=new HashSet<String>(); 
-                
+        boolean allSet=true; 
+        
         if (mergeIDs==false)
         {
             jschInstance.removeAllIdentity(); 
@@ -258,25 +263,24 @@ public class JCraftClient
             }
         }
         
-        for (String id:idNames)
+        String sshConfigDir=getUserHomePath()+"/"+SSH_CONFIG_SIBDUR; 
+        
+        for (String id:idFiles)
         {
             String idFilePath=id;
             // relative path: 
             if (id.startsWith("/")==false)
                 idFilePath=sshConfigDir+"/"+id;
             
-            java.io.File file=new java.io.File(idFilePath);
-            
-            if (file.exists()==false)
+            idFilePath=resolvePath(idFilePath); 
+            if (existsFile(idFilePath)==false)
             {
-                logger.errorPrintf("SSH: Identity doesn't exists:%s\n",idFilePath); 
-                file=null;    
+                logger.warnPrintf("SSH: Ignoring non existing identity file:%s\n",idFilePath); 
+                //throw new FileNotFoundException("Can not add non existing (identity) file:"+idFilePath);
+                allSet=false; 
             }
-            
-            if (file!=null) 
+            else
             {
-                // resolve path:
-                idFilePath=file.getAbsolutePath(); 
                 if (existingIDs.contains(idFilePath))
                 {
                     logger.infoPrintf("SSH: skipping already registered identity:%s\n",idFilePath); 
@@ -288,8 +292,18 @@ public class JCraftClient
                 }
             }
         }
+        
+        return allSet; 
     }
 
+    public String getSSHConfigDir()
+    {
+        if (sshConfig.sshConfigDir!=null)
+            return this.sshConfig.sshConfigDir; 
+        
+        return getUserHomePath()+"/"+SSH_CONFIG_SIBDUR; 
+    }
+    
     public String[] getSSHIndentities() throws JSchException
     {  
         Vector<?> names = this.jschInstance.getIdentityNames(); 
@@ -310,20 +324,7 @@ public class JCraftClient
         if (this.sshConfig.sshKnownHostsFile!=null)
             return this.sshConfig.sshKnownHostsFile; 
         
-        return getSSHConfigDir()+"/known_hosts"; 
-    }
-    
-    public void setSSHConfigDir(String sshDir)
-    {
-        this.sshConfig.sshConfigDir=sshDir;
-    }
-    
-    public String getSSHConfigDir()
-    {
-        if (sshConfig.sshConfigDir!=null)
-            return this.sshConfig.sshConfigDir; 
-        
-        return getUserHomePath()+"/.ssh"; 
+        return getSSHConfigDir()+"/"+SSH_KNOWN_HOSTS;
     }
     
     public String getUserHomePath()
@@ -331,10 +332,18 @@ public class JCraftClient
         return Global.getUserHomeLocation().getPath();
     }
 
-    public void setKnownHostsFile(String knownHostsFile) throws JSchException
+    public boolean setKnownHostsFile(String knownHostsFile) throws JSchException
     {
+        // jcraft needs existing files: 
+        if (existsFile(resolvePath(knownHostsFile))==false)
+        {
+            //throw new FileNotFoundException("File doesn't exists:"+knownHostsFile);
+            return false; 
+        }
+        
         this.sshConfig.sshKnownHostsFile=knownHostsFile;
         jschInstance.setKnownHosts(knownHostsFile);
+        return true; 
     }
 
     public Session getSession(String username, String hostname, int port) throws JSchException
@@ -390,5 +399,19 @@ public class JCraftClient
         session.setPortForwardingR(remotePort, localHost, localPort);
     }
 
+
+    public String resolvePath(String relativePath)
+    {
+        // use VFS ?
+        java.io.File file=new java.io.File(relativePath); 
+        return file.getAbsolutePath(); 
+    }
+    
+    public boolean existsFile(String filePath)
+    {
+        // use VFS ? 
+        java.io.File file=new java.io.File(filePath);
+        return file.exists(); 
+    }
 
 }
