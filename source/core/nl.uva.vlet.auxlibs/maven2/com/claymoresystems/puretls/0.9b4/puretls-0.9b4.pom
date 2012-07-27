@@ -1,0 +1,25 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.claymoresystems</groupId>
+  <artifactId>puretls</artifactId>
+  <version>0.9b4</version>
+  <description>From http://wiki.cogkit.org/index.php/V:4.1.5/Java_CoG_Kit_Release_Page#Downloads</description>
+  <licenses>
+    <license>
+      <name>PureTLS</name>
+      <url>http://www.globus.org/toolkit/legal/4.0/licenses4.html#puretls</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>cryptix</groupId>
+      <artifactId>cryptix32</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+    <!-- <dependency>
+      <groupId>cryptix</groupId>
+      <artifactId>cryptix-asn1</artifactId>
+      <version>3.2.0</version>
+    </dependency> --> 
+  </dependencies>
+</project>
