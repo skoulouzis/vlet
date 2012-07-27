@@ -112,7 +112,9 @@
                  <fileset dir="lib/org.jpedal" />
               -->  
             <fileset dir="lib/icoreader" />
-            <fileset dir="lib/jconfig" /> 
+            <!-- 
+                not needed anymore: <fileset dir="lib/jconfig" />  
+              --> 
 
 	    </copy>
 
