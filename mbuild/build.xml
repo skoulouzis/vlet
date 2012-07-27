@@ -49,11 +49,14 @@
         <tstamp>
             <format property="project.tstamp" pattern="hh:mm:ss_d-MMMM-yyyy" locale="en,UK"/>
         </tstamp>
-            <!-- if version is NOT specified, use date-time -->
+    	
+        <!-- if version is NOT specified, use date-time -->
         <tstamp>
             <format property="project.version" pattern="yyyy-MM-d_hh-mm-ss" locale="en,UK"/>
         </tstamp>
-            
+        
+    	<exec executable="svnversion" outputproperty="scm.svn.version" /> 
+    	
         <!-- operating system dependencies ! -->
 
         <condition property="isWindows">
@@ -99,6 +102,7 @@
             ${line.separator} scm.host       = ${scm.host}
             ${line.separator} scm.root       = ${scm.root}
         	${line.separator} scm.checkout   = ${scm.checkout}
+        	${line.separator} scm.svn.version= ${scm.svn.version}
             ${line.separator}
             ${line.separator} --- external tools/external software ---          
             ${line.separator} globus.location   = ${globus.location}"/>           
