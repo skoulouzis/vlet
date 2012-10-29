@@ -19,10 +19,17 @@ import nl.uva.vlet.vrl.VRL;
  */
 public class WebdavOutputStream extends OutputStream
 {
-
     private static ClassLogger logger;
 
-    private WebdavFileSystem webdavFileSystem;
+    static
+    {
+        logger = ClassLogger.getLogger(WebdavOutputStream.class);
+        logger.setLevelToDebug();
+    }
+    
+    // === Instance === 
+    
+    private WebdavFileSystem webdavfs;
 
     private VRL tmpDir;
 
@@ -31,12 +38,6 @@ public class WebdavOutputStream extends OutputStream
     private VFile localFile;
 
     private WebdavFile remoteFile;
-
-    static
-    {
-        logger = ClassLogger.getLogger(WebdavOutputStream.class);
-        logger.setLevelToDebug();
-    }
 
     /**
      * Creates an instance of an OutputStream. On creation a temporary local
@@ -49,7 +50,7 @@ public class WebdavOutputStream extends OutputStream
      */
     public WebdavOutputStream(WebdavFileSystem webdavFileSystem, WebdavFile remoteFile) throws VlException
     {
-        this.webdavFileSystem = webdavFileSystem;
+        this.webdavfs = webdavFileSystem;
 
         tmpDir = GlobalConfig.getDefaultTempDir();
         // SP: Maybe lock the file and on close unlock it
@@ -102,7 +103,7 @@ public class WebdavOutputStream extends OutputStream
 
         try
         {
-            webdavFileSystem.upload(localFile.getVRL(), remoteFile.getVRL());
+            webdavfs.upload(localFile.getVRL(), remoteFile.getVRL());
 
             localFile.delete();
         }

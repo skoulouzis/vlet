@@ -18,16 +18,11 @@ import org.apache.webdav.lib.properties.AclProperty;
 /**
  * WebdavFile
  * 
- * @author S. Koulouzis
+ * @author S. Koulouzis, Piter T. de Boer
  */
 public class WebdavFile extends VFile
 {
-
     private static ClassLogger logger;
-
-    private WebdavResource webdavResource;
-
-    private WebdavFileSystem webdavFileSystem;
 
     static
     {
@@ -35,6 +30,12 @@ public class WebdavFile extends VFile
         logger.setLevelToDebug();
     }
 
+    // === Instance === 
+    
+    private WebdavResource webdavResource;
+
+    private WebdavFileSystem webdavFileSystem;
+    
     public WebdavFile(WebdavFileSystem webdavFileSystem, VRL vrl, WebdavResource webdavResource)
     {
         super(webdavFileSystem, vrl);

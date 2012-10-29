@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -14,12 +13,14 @@ import java.util.TimeZone;
 import nl.uva.vlet.ClassLogger;
 import nl.uva.vlet.Global;
 import nl.uva.vlet.GlobalConfig;
+import nl.uva.vlet.data.StringHolder;
 import nl.uva.vlet.data.VAttribute;
 import nl.uva.vlet.data.VAttributeConstants;
 import nl.uva.vlet.exception.ResourceAlreadyExistsException;
+import nl.uva.vlet.exception.ResourceNotFoundException;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.presentation.Presentation;
 import nl.uva.vlet.vfs.FileSystemNode;
 import nl.uva.vlet.vfs.VDir;
@@ -28,18 +29,20 @@ import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRSContext;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
@@ -61,16 +64,25 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.xerces.dom.DeferredElementNSImpl;
 
+import sun.misc.BASE64Encoder;
+
 /**
  * WebdavFileSystem
  * 
- * @author S. Koulouzis
+ * @author S. Koulouzis, Piter T. de Boer
  */
 public class WebdavFileSystem extends FileSystemNode
 {
-
+    private static final int MAX_HOST_CONNECTIONS = 30;
     private static ClassLogger logger;
+    static
+    {
+        logger = ClassLogger.getLogger(WebdavFileSystem.class);
+        logger.setLevelToDebug();
+    }
 
+    // ==== instance === 
+    
     private boolean connected;
 
     private HostConfiguration hostConfig;
@@ -80,16 +92,6 @@ public class WebdavFileSystem extends FileSystemNode
     private HttpConnectionManagerParams httpConnectionParams;
 
     private HttpClient client;
-
-    private static final int MAX_HOST_CONNECTIONS = 30;
-
-    private static final String COLLECTION = "collection";
-
-    static
-    {
-        logger = ClassLogger.getLogger(WebdavFileSystem.class);
-        logger.setLevelToDebug();
-    }
 
     /**
      * Creates a WebdavFileSystem. Most of the interaction with a server happens
@@ -117,6 +119,9 @@ public class WebdavFileSystem extends FileSystemNode
 
         ArrayList<VFSNode> nodes = propFind(newVRL, DavConstants.PROPFIND_ALL_PROP_INCLUDE, DavConstants.DEPTH_0);
 
+        if ((nodes==null) || (nodes.size()<=0)) 
+            throw new ResourceNotFoundException("Query returned not result for location:"+vrl); 
+        
         VFSNode[] nodesArray = new VFSNode[nodes.size()];
         nodesArray = nodes.toArray(nodesArray);
 
@@ -207,8 +212,8 @@ public class WebdavFileSystem extends FileSystemNode
         int code;
         try
         {
-            code = client.executeMethod(method);
-
+            code = executeMethod(method);
+            
             if (code == HttpStatus.SC_NOT_FOUND)
             {
                 return null;
@@ -237,7 +242,24 @@ public class WebdavFileSystem extends FileSystemNode
         }
         catch (DavException e)
         {
-            throw new VlException(e);
+            String msg=""+e.getMessage(); 
+            msg=msg.toLowerCase(); 
+ 
+            boolean forbidden=msg.contains("forbidden"); 
+            boolean unauth=msg.contains("unauthorized");
+            
+            // Permision denied/wrong authentication: 
+            if ( forbidden || unauth) 
+            {
+                ServerInfo info = this.getServerInfo();
+                info.setHasValidAuthentication(false);
+                info.store(); 
+                throw new nl.uva.vlet.exception.ResourceAccessDeniedException("Access denied or wrong authentication (user="+getUsername()+").\nMessage="+msg,e);
+            }
+            else
+            {
+                throw new VlException(e);
+            }
         }
         finally
         {
@@ -245,6 +267,30 @@ public class WebdavFileSystem extends FileSystemNode
         }
         return node;
 
+    }
+    
+    protected int executeMethod(HttpMethod method) throws HttpException, IOException
+    {
+        // todo: redirects!
+        // PTdB: here ? 
+        // method.setFollowRedirects(true); 
+
+        boolean useBasicAuth=getUseBasicAuth();  
+        
+        if (useBasicAuth)
+        {
+                    
+            ServerInfo info = this.getServerInfo();
+            String user=info.getUsername(); 
+            String passwd=info.getPassword(); 
+            
+            method.addRequestHeader("Authorization",
+                    "Basic " + (new BASE64Encoder()).encode((user + ":" + passwd).getBytes()));
+        }
+        
+        int val=client.executeMethod(method);
+        
+        return val; 
     }
 
     /**
@@ -265,7 +311,7 @@ public class WebdavFileSystem extends FileSystemNode
         {
             method = new PropFindMethod(uri.toString(), DavConstants.PROPFIND_ALL_PROP_INCLUDE, DavConstants.DEPTH_0);
 
-            int code = client.executeMethod(method);
+            int code = executeMethod(method);
 
             if (code == HttpStatus.SC_NOT_FOUND)
             {
@@ -323,23 +369,35 @@ public class WebdavFileSystem extends FileSystemNode
     private VFSNode createVFSNode(MultiStatusResponse statusResponse) throws VRLSyntaxException,
             MalformedURLException
     {
-
         DavPropertySet allProp = getProperties(statusResponse);
-
         DavPropertyIterator iter = allProp.iterator();
-
+        boolean isDir=false; 
+        
         while (iter.hasNext())
         {
             // DavProperty<?> porp = iter.nextProperty();
             DavProperty<?> prop = iter.next();
-            // logger.debugPrintf("%s : %s\n", prop.getName().getName(),
-            // prop.getValue());
+            logger.debugPrintf("%s : %s\n", prop.getName().getName(),
+            prop.getValue());
         }
+        
         // logger.debugPrintf("------------------------\n");
-
-        DavProperty<?> resourceType = allProp.get(DavProperty.PROPERTY_RESOURCETYPE);
-
+        
         Object value = null;
+        String valueStr=null; 
+        
+        DavProperty<?> prop = allProp.get(WebdavConst.XPROP_ISCOLLECTION); 
+        
+        value=prop.getValue();
+        if (value!=null)
+        {
+            valueStr=""+value;
+            if (valueStr.toLowerCase().equals("true")) 
+                isDir=true; 
+        }
+        
+        DavProperty<?> resourceType = allProp.get(DavProperty.PROPERTY_RESOURCETYPE);
+        
         if (resourceType != null)
         {
             value = resourceType.getValue();
@@ -351,9 +409,14 @@ public class WebdavFileSystem extends FileSystemNode
             DeferredElementNSImpl element = (DeferredElementNSImpl) value;
             name = element.getLocalName();
         }
-
-        VFSNode node;
-        if (name != null && name.equals(COLLECTION))
+                
+        if (name != null && name.equals(DavProperty.XML_COLLECTION))
+        {
+            isDir=true; 
+        }
+        
+        VFSNode node;        
+        if (isDir)
         {
             node = new WebdavDir(this, urlToVrl(statusResponse.getHref()), allProp);
         }
@@ -361,7 +424,9 @@ public class WebdavFileSystem extends FileSystemNode
         {
             node = new WebdavFile(this, urlToVrl(statusResponse.getHref()), allProp);
         }
+        
         return node;
+        
     }
 
     private VRL urlToVrl(String href) throws VRLSyntaxException
@@ -439,43 +504,50 @@ public class WebdavFileSystem extends FileSystemNode
 
             // Credentials creds = new
             // UsernamePasswordCredentials(getUsername(), secret.value);
-
-            Credentials creds = new UsernamePasswordCredentials("", "");
+            
+            ServerInfo info = this.getServerInfo();
+            String user=info.getUsername(); 
+            String passwd=info.getPassword(); 
+            
+            if ((info.hasValidAuthentication()==false) ||  (passwd==null)) 
+            {
+                passwd=this.uiPromptPassfield("Webdav: Password for user:"+user+"@"+getHostname()+":"+getPort()); 
+                info.setPassword(passwd);  
+            }
+            
+            Credentials creds = new UsernamePasswordCredentials(user, passwd);
 
             client.getState().setCredentials(AuthScope.ANY, creds);
             client.setHostConfiguration(hostConfig);
-
+            
             creds = null;
 
             connected = true;
         }
     }
 
+    public String uiPromptPassfield(String message)
+    {
+        if (this.getVRSContext().getConfigManager().getAllowUserInteraction()==false)
+            return null; 
+        
+        StringHolder secretHolder = new StringHolder(null);
+      
+        boolean result = getVRSContext().getUI().askAuthentication(message, secretHolder);
+
+        if (result == true)
+            return secretHolder.value;
+        else
+            return null;
+    }
+
+    
     @Override
     public void disconnect() throws VlException
     {
         connected = false;
 
     }
-
-//    public static WebdavFileSystem getClientFor(VRSContext context, VRL location) throws VlException
-//    {
-//        String serverID = ServerNode.createServerID(location);
-//
-//        WebdavFileSystem webdavClient = (WebdavFileSystem) context.getServerInstance(serverID, WebdavFileSystem.class);
-//
-//        if (webdavClient == null)
-//        {
-//            // store new client
-//            ServerInfo srmInfo = context.getServerInfoFor(location, true);
-//            webdavClient = new WebdavFileSystem(context, srmInfo);
-//            webdavClient.setID(serverID);
-//            context.putServerInstance(webdavClient);
-//        }
-//
-//        return webdavClient;
-//
-//    }
 
     public static void clearClass()
     {
@@ -527,19 +599,54 @@ public class WebdavFileSystem extends FileSystemNode
 
     protected InputStream getInputStream(VRL vrl) throws VlException
     {
-
-        URLConnection conn;
-        try
+        logger.infoPrintf(" - >>> getInputStream:%s\n",vrl);
+        
+        //if (false)
         {
-            URL url = vrlToUrl(vrl);
-            conn = url.openConnection();
-
-            return conn.getInputStream();
+            GetMethod get = new GetMethod(vrlToUrl(vrl).toString());
+            //get.setFollowRedirects(true);
+            
+            try
+            {
+                int result=executeMethod(get);
+                
+                if (result == HttpStatus.SC_NOT_FOUND)
+                {
+                    throw new nl.uva.vlet.exception.ResourceNotFoundException("Not found:"+vrl); 
+                }
+                    
+                Header[] headers = get.getResponseHeaders();
+                for (int i=0;i<headers.length;i++)
+                    logger.debugPrintf(" - %s=%s\n",headers[i].getName(),headers[i].getValue());
+                
+                return new WebdavInputStream(get,get.getResponseBodyAsStream());  
+            }
+            catch (HttpException e)
+            {
+                throw new VlException(e);
+            }
+            catch (IOException e)
+            {
+                throw new VlIOException(e);
+            }
+            finally
+            {
+                // do not release connection, intputstream must be kept 
+                // get.releaseConnection();
+            }
         }
-        catch (IOException e)
-        {
-            throw new VlIOException(e);
-        }
+            //        URLConnection conn;
+//        try
+//        {
+//            URL url = vrlToUrl(vrl);
+//            conn = url.openConnection();
+//
+//            return conn.getInputStream();
+//        }
+//        catch (IOException e)
+//        {
+//            throw new VlIOException(e);
+//        }
     }
 
     /**
@@ -575,7 +682,7 @@ public class WebdavFileSystem extends FileSystemNode
         MkColMethod mkCol = new MkColMethod(vrlToUrl(vrl).toString());
         try
         {
-            int code = client.executeMethod(mkCol);
+            int code = executeMethod(mkCol);
 
             if (code != HttpStatus.SC_CREATED && !ignoreExisting)
             {
@@ -601,6 +708,7 @@ public class WebdavFileSystem extends FileSystemNode
         return dir;
     }
 
+  
     @Override
     public boolean existsFile(VRL fileVrl) throws VlException
     {
@@ -619,13 +727,13 @@ public class WebdavFileSystem extends FileSystemNode
                 throw new ResourceAlreadyExistsException("File " + vrl + " already exists.");
             }
         }
+        
         WebdavFile file;
-
         org.apache.jackrabbit.webdav.client.methods.PutMethod put = new org.apache.jackrabbit.webdav.client.methods.PutMethod(
                 vrlToUrl(vrl).toString());
         try
         {
-            int code = client.executeMethod(put);
+            int code = executeMethod(put);
 
             ArrayList<VFSNode> nodes = propFind(vrl, DavConstants.PROPFIND_ALL_PROP_INCLUDE, DavConstants.DEPTH_0);
             file = (WebdavFile) nodes.get(0);
@@ -652,8 +760,7 @@ public class WebdavFileSystem extends FileSystemNode
         DeleteMethod del = new DeleteMethod(vrlToUrl(vrl).toString());
         try
         {
-            client.executeMethod(del);
-
+            executeMethod(del);
         }
         catch (HttpException e)
         {
@@ -683,7 +790,7 @@ public class WebdavFileSystem extends FileSystemNode
         MoveMethod move = new MoveMethod(sourceUri.toString(), destinationUri.toString(), overwrite);
         try
         {
-            int code = client.executeMethod(move);
+            int code = executeMethod(move);
 
             if (code != HttpStatus.SC_OK || code != HttpStatus.SC_CREATED)
             {
@@ -740,7 +847,7 @@ public class WebdavFileSystem extends FileSystemNode
 
         try
         {
-            int code = client.executeMethod(copy);
+            int code = executeMethod(copy);
             if (code != HttpStatus.SC_OK || code != HttpStatus.SC_CREATED)
             {
                 String message = "Copying " + source + " to: " + destination + " failed. " + copy.getStatusText();
@@ -787,7 +894,7 @@ public class WebdavFileSystem extends FileSystemNode
 
             put.setRequestEntity(requestEntity);
 
-            client.executeMethod(put);
+            executeMethod(put);
         }
         catch (HttpException e)
         {
@@ -825,7 +932,7 @@ public class WebdavFileSystem extends FileSystemNode
         // {
         // acl = new AclMethod(uri.toString(), aclProp);
         //
-        // int code = client.executeMethod(acl);
+        // int code = executeMethod(acl);
         //
         // logger.debugPrintf("Code : %s sttus: %s\n", code,
         // acl.getStatusText());
@@ -847,4 +954,61 @@ public class WebdavFileSystem extends FileSystemNode
         // }
     }
 
+    boolean getUseBasicAuth()
+    {
+        return this.getServerInfo().getBoolProperty(WebdavConst.ATTR_ENABLE_HTTPAUTH_BASIC, false); 
+    }
+
+    /** Modification time is stored as string */ 
+    public String getModificationTimeString(DavPropertySet davProperties)
+    {
+        if (davProperties==null)
+            return null; 
+        
+        String modstr = null; 
+        DavProperty<?> prop = davProperties.get(DavConstants.PROPERTY_GETLASTMODIFIED);
+        
+        if (prop!=null)
+            modstr= ""+prop.getValue();
+        
+        return modstr; 
+    }
+
+    public long getLength(DavPropertySet davProperties)
+    {
+        if (davProperties==null)
+            return 0;  
+        
+        String StyLen=null;
+        DavProperty<?> prop = davProperties.get(DavConstants.PROPERTY_GETCONTENTLENGTH);
+
+        if ((prop == null) || (prop.getValue()==null)) 
+        {
+            StyLen = "0";
+        }
+        else
+        {
+            StyLen = "" + prop.getValue();
+        }
+
+        return new Long(StyLen);
+    }
+
+    public boolean isReadable(DavPropertySet davProperties, boolean defaultValue)
+    {
+        // tobedone
+        return defaultValue; 
+    }
+    
+    public boolean isWritable(DavPropertySet davProperties, boolean defaultValue)
+    {
+        // tobedone
+        return defaultValue; 
+    }
+    
+    protected HttpClient getHttpClient()
+    {
+        return this.client; 
+    }
+    
 }

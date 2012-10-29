@@ -4,18 +4,18 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import nl.uva.vlet.ClassLogger;
+import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.exception.VlException;
 import nl.uva.vlet.exception.VlIOException;
-import nl.uva.vlet.exception.VRLSyntaxException;
 import nl.uva.vlet.vfs.FileSystemNode;
 import nl.uva.vlet.vfs.VDir;
 import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vfs.VFile;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.ServerInfo;
-import nl.uva.vlet.vrs.ResourceSystemNode;
 import nl.uva.vlet.vrs.VRSContext;
 
+import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.URIException;
@@ -48,16 +48,19 @@ public class WebdavFileSystem extends FileSystemNode
     @Override
     public VFSNode openLocation(VRL vrl) throws VlException
     {
-
         HttpURL httpURL = vrlToHttpURL(vrl);
+        
         WebdavResource webdavResource = null;
+        
         try
         {
             webdavResource = new WebdavResource(httpURL);
+            //webdavResource = new WebdavResource(httpURL,credentials);
 
             webdavResource.propfindMethod(DepthSupport.DEPTH_1);
 
             Enumeration enume = webdavResource.getActiveLockOwners();
+            
             if (enume != null)
             {
                 while (enume.hasMoreElements())
@@ -109,7 +112,8 @@ public class WebdavFileSystem extends FileSystemNode
         {
             try
             {
-                webdavResource.closeSession();
+                if (webdavResource!=null)
+                    webdavResource.closeSession();
             }
             catch (IOException e)
             {

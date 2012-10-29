@@ -61,7 +61,13 @@ public class WebdavFSFactory extends VFSFactory
             attr = new VAttribute(VAttributeConstants.ATTR_USERNAME, Global.getUsername());
             info.setAttribute(attr);
         }
-
+        
+        info.setIfNotSet(WebdavConst.ATTR_ENABLE_HTTPAUTH_BASIC, true); 
+        
+        info.setUsePasswordAuth(); 
+        // Still Needed ? 
+        info.store(); 
+        
         return info;
     }
 
