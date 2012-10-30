@@ -29,10 +29,10 @@ public class WebdavInputStream extends InputStream
     @Override
     public int read() throws IOException
     {
-        int num=this.inputStream.read();
-        if (num>0) 
-            this.numRead+=numRead;
-        return num;
+        int value=this.inputStream.read();
+        if (value>=0) 
+            this.numRead++; // one byte read;
+        return value;
     }
     
     @Override
