@@ -109,6 +109,9 @@ public class WebdavDir extends VDir
                 DavConstants.DEPTH_1);
 
         // get rid of this node
+        if (nodes==null)
+            return null;
+        
         nodes.remove(0);
 
         VFSNode[] nodesArray = new VFSNode[nodes.size()];
