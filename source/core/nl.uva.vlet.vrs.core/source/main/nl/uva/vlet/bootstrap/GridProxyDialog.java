@@ -25,15 +25,9 @@ package nl.uva.vlet.bootstrap;
 
 
 /** 
- * Wrapper class to bootstrap the VBrowser. 
- * The main method calls the BootStrap class 
- * with the configuration needed to start the VBrowser. 
- * Use this class as the main class in the manifest to create a 
- * self executing jar to start the VBrowser. 
- * Only the Bootstrapper class has to be present in the jar file. 
- * The rest is added automagically. 
- * 
- * @author Piter T. de Boer/Piter.NL
+ * Wrapper class to bootstrap the GridproxyDailog . 
+ * @see nl.uva.vlet.bootstrap.Bootstrapper
+ * @author Piter T. de Boer
  */
 public class GridProxyDialog 
 {
