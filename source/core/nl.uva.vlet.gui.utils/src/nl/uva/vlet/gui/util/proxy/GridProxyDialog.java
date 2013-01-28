@@ -42,6 +42,7 @@ import javax.swing.border.BevelBorder;
 import nl.uva.vlet.GlobalConfig;
 import nl.uva.vlet.gui.GuiSettings;
 import nl.uva.vlet.gui.UIGlobal;
+import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
 
 import com.jgoodies.forms.layout.CellConstraints;
@@ -120,7 +121,7 @@ public class GridProxyDialog extends javax.swing.JDialog
                 {
                     topLabelTextField = new JTextField();
                     topPanel.add(topLabelTextField, BorderLayout.NORTH);
-                    topLabelTextField.setText("Grid Proxy Dialog");
+                    topLabelTextField.setText(message);
                     topLabelTextField.setEditable(false);
                     topLabelTextField.setFocusable(false);
                     topLabelTextField.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
@@ -603,7 +604,13 @@ public class GridProxyDialog extends javax.swing.JDialog
      */
     public static void main(String[] args)
     {
-       askInitProxy("Testing GridProxyDialog");
+       boolean ok=askInitProxy("Intialize GridProxy");
+       // graceful shutdown: 
+       VRS.exit();
+       // mini sleep: allow threads to finish. 
+       try{ Thread.sleep(100); } catch (Throwable t) {;}
+       // force exit: 
+       System.exit(ok?0:1); 
     }
 
     /** blocking ask for input */ 
