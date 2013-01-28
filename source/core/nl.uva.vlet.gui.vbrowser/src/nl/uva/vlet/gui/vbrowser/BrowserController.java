@@ -1708,6 +1708,8 @@ public class BrowserController implements WindowListener, GridProxyListener,
 	/** Disposes all running vbrowsers and exits JVM */ 
 	public static void performExitAll()
 	{
+	    logger.debugPrintf("Running threads stage I:%d\n",Thread.activeCount());
+
 		synchronized (controllers)
 		{
 			BrowserController list[] = new BrowserController[controllers.size()];
@@ -1719,28 +1721,22 @@ public class BrowserController implements WindowListener, GridProxyListener,
 			}
 		}
 
-		logger.debugPrintf("Running threads stage I:%d\n",Thread.activeCount());
+		logger.debugPrintf("Running threads stage II:%d\n",Thread.activeCount());
 
 		// release all resources hold by class ProxyNode
 		ActionTask.disposeClass();
 		ProxyNode.disposeClass();
-		UIGlobal.shutdown(); 
+		UIGlobal.disposeAll(); 
 
+		// micro sleep to allow threads to cleanup: 
+		try { Thread.sleep(100); } catch (Throwable t) {;}
+		
+		logger.debugPrintf("Running threads stage IIIa:%d\n",Thread.activeCount());
 
-		logger.debugPrintf("Running threads stage II:%d\n",Thread.activeCount());
+	      // sleep to allow threads to cleanup: 
+        try { Thread.sleep(1000); } catch (Throwable t) {;}
 
-		// 3 seconds till countdown for threads to cleanup:
-		try
-		{
-			Thread.sleep(3000);
-		}
-		catch (InterruptedException e)
-		{
-			System.out.println("***Error: Exception:"+e); 
-			e.printStackTrace();
-		}
-
-        logger.debugPrintf("Running threads stage III:%d\n",Thread.activeCount());
+        logger.debugPrintf("Running threads stage IIIb:%d\n",Thread.activeCount());
 
 		System.exit(0);
 
