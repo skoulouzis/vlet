@@ -137,7 +137,7 @@ public class UIGlobal
 	public static JFrame getGlobalFrame() {return globalFrame;}
 		
 	/** Call this to dispose and flush all global resources */ 
-	public static void shutdown()
+	public static void disposeAll()
 	{
 	    if (vfs!=null) 
 	        vfs.close();
