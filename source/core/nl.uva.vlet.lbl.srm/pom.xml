@@ -9,7 +9,7 @@
       <groupId>nl.uva.vlet</groupId>
       <artifactId>mvnbuild</artifactId>
       <version>dev-1</version>
-      <relativePath>../mvnbuild/pom.xml</relativePath>
+       <relativePath>../../../mvnbuild/pom.xml</relativePath>
   </parent>
   
    <build>
