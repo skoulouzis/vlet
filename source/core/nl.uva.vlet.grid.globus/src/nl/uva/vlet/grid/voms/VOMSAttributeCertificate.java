@@ -31,8 +31,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import org.bouncycastle.asn1.ASN1EncodableVector;
@@ -79,8 +79,8 @@ import org.globus.gsi.bc.BouncyCastleOpenSSLKey;
  * Adjustments: Piter T. de Boer University of Amsterdam 2007 - 2010
  */
 public class VOMSAttributeCertificate {
-    
-    static final Logger myLogger = Logger.getLogger(VOMSAttributeCertificate.class.getName());
+
+    private static final Logger myLogger = LoggerFactory.getLogger(VOMSAttributeCertificate.class);
     private AttributeCertificate ac = null;
     //------------------------------------------------------------------------------
     // first level contains three parts
@@ -129,7 +129,7 @@ public class VOMSAttributeCertificate {
     public VOMSAttributeCertificate(String holderString, int holderSerialNumber, String issuerString, int productionSerial, long fromEpoch, long toEpoch, String[] fqans) throws Exception {
         try {
             DEREncodableVector infoVector = new ASN1EncodableVector();
-            
+
             this.setVersion();
             this.setHolder(holderString, holderSerialNumber);
             this.setIssuer(issuerString);
@@ -138,7 +138,7 @@ public class VOMSAttributeCertificate {
             this.setTimes(new Date(fromEpoch), new Date(toEpoch));
             this.setVOMSFQANs(fqans);
             this.setExtensions();
-            
+
             infoVector.add(version);
             infoVector.add(holder);
             infoVector.add(issuer);
@@ -147,24 +147,24 @@ public class VOMSAttributeCertificate {
             infoVector.add(attrCertValidityPeriod);
             infoVector.add(attributes);
             infoVector.add(extensions);
-            
+
             ASN1Sequence infoSequence = ASN1Sequence.getInstance(new DERSequence(infoVector));
-            
+
             this.acinfo = new AttributeCertificateInfo(infoSequence);
 
             // Do it this way to match Vincenzo as much as possible
             // - rather than this way... this.signatureAlgorithm = new AlgorithmIdentifier( "1.2.840.113549.1.1.4" ) ;
             this.signatureAlgorithm = new AlgorithmIdentifier(new DERObjectIdentifier("1.2.840.113549.1.1.4"), (DEREncodable) null);
-            
+
             this.signatureValue = new DERBitString(this.sign());
-            
+
             this.ac = new AttributeCertificate(acinfo, signatureAlgorithm, signatureValue);
-            
+
         } catch (Exception e) {
             // inspect?: 
             throw e;
         }
-        
+
     }
 
     //------------------------------------------------------------------------------
@@ -220,32 +220,32 @@ public class VOMSAttributeCertificate {
          return checked ;
          */
     }
-    
+
     public byte[] sign() throws Exception {
         try {
-            
+
             ByteArrayOutputStream b = new ByteArrayOutputStream();
             new DEROutputStream(b).writeObject(acinfo);
-            
+
             Signature sig = Signature.getInstance(signatureAlgorithm.getObjectId().getId());
-            
+
             String hostPrivateKeyLocation = new String(System.getProperty("user.home") + "/gridsecurity/hostkey.pem");
-            
+
             OpenSSLKey key = new BouncyCastleOpenSSLKey(hostPrivateKeyLocation);
-            
+
             PrivateKey pk = key.getPrivateKey();
-            
+
             if (pk != null) {
                 sig.initSign(pk);
                 sig.update(b.toByteArray());
                 byte[] sigBytes = sig.sign();
                 return sigBytes;
             }
-            
+
         } catch (Exception e) {
             throw e;
         }
-        
+
         return new byte[0];
     }
 
@@ -266,39 +266,39 @@ public class VOMSAttributeCertificate {
         // return the holder's DN as a String
 
         String holderDN = "";
-        
+
         try {
-            
+
             IssuerSerial baseCertificateID = this.holder.getBaseCertificateID();
-            
+
             if (baseCertificateID != null) {
-                
+
                 GeneralName[] holder_name_array = baseCertificateID.getIssuer().getNames();
                 DERSequence holder_name_sequence = (DERSequence) holder_name_array[0].getName();
-                
+
                 holderDN = this.DERSequencetoDN(holder_name_sequence);
-                
+
             }
-            
+
         } catch (Exception e) {
             throw e;
         }
-        
+
         return holderDN;
-        
+
     }
-    
+
     public void setHolder(String holderDN, int holderSerialNumber) throws Exception {
         try {
             DERSequence holder_name_sequence = DNtoDERSequence(holderDN);
-            
+
             IssuerSerial baseCertificateID = new IssuerSerial(new GeneralNames(new GeneralName(4, holder_name_sequence)), new DERInteger(holderSerialNumber));
-            
+
             this.holder = new Holder(baseCertificateID);
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     //------------------------------------------------------------------------------
@@ -307,30 +307,30 @@ public class VOMSAttributeCertificate {
         // return the issuer's DN as a String
 
         String issuerDN = "";
-        
+
         try {
-            
+
             V2Form v2form = (V2Form) this.issuer.getIssuer();
-            
+
             if (v2form != null) {
                 GeneralName[] issuer_name_array = v2form.getIssuerName().getNames();
                 DERSequence issuer_name_sequence = (DERSequence) issuer_name_array[0].getName();
-                
+
                 issuerDN = this.DERSequencetoDN(issuer_name_sequence);
             }
         } catch (Exception e) {
             throw e;
         }
-        
+
         return issuerDN;
     }
-    
+
     public void setIssuer(String issuerDN) throws Exception {
         try {
             DERSequence issuer_name_sequence = DNtoDERSequence(issuerDN);
-            
+
             V2Form v2form = new V2Form(new GeneralNames(new GeneralName(4, issuer_name_sequence)));
-            
+
             this.issuer = new AttCertIssuer(v2form);
         } catch (Exception e) {
             throw e;
@@ -353,12 +353,12 @@ public class VOMSAttributeCertificate {
     public DERInteger getSerialNumber() {
         return this.serialNumber;
     }
-    
+
     public int getSerialNumberIntValue() {
         // the getValue() function of DERInteger returns a BigInteger - for which we use intValue to get the int
         return this.serialNumber.getValue().intValue();
     }
-    
+
     public void setSerialNumber(int serial) {
         serialNumber = new DERInteger(serial);
     }
@@ -387,7 +387,7 @@ public class VOMSAttributeCertificate {
             throw e;
         }
     }
-    
+
     public void setTimes(Date from, Date to) throws Exception {
         try {
             this.attrCertValidityPeriod = new AttCertValidityPeriod(new DERGeneralizedTime(from), new DERGeneralizedTime(to));
@@ -402,7 +402,7 @@ public class VOMSAttributeCertificate {
         try {
             // could have more than one AC in here...
             for (Enumeration a = this.attributes.getObjects(); a.hasMoreElements();) {
-                
+
                 ASN1Sequence sequence = (ASN1Sequence) a.nextElement();
                 // sequence contains the OID [voms 4] (as a DERObjectIdentifier) at address 0 , and an SET at address 1
 
@@ -419,7 +419,7 @@ public class VOMSAttributeCertificate {
                 // this tagged object has TagNumber value of 6 (?)
                 ASN1OctetString originOctetString = (ASN1OctetString) taggedObject2.getObject();
                 String origin = (new DERGeneralString(originOctetString.getOctets())).getString();
-                
+
                 ASN1Sequence fqanSequence = (ASN1Sequence) sequence2.getObjectAt(1);
                 // this is the actual sequence of FQANs
 
@@ -432,30 +432,30 @@ public class VOMSAttributeCertificate {
         } catch (Exception e) {
             throw e;
         }
-        
+
         return theseFQANs;
     }
-    
+
     public void setVOMSFQANs(String[] fqans) throws Exception {
         try {
             //--------------------------------------------------------------------------
             // put the FQANs into the SEQUENCE
 
             DEREncodableVector fqanVector = new ASN1EncodableVector();
-            
+
             for (int f = 0; f < fqans.length; f++) {
                 DERGeneralString fqan = new DERGeneralString(fqans[f]);
                 ASN1OctetString fqanOctetString = ASN1OctetString.getInstance(new DEROctetString(fqan.getOctets()));
                 fqanVector.add(fqanOctetString);
             }
-            
+
             ASN1Sequence fqanSequence = ASN1Sequence.getInstance(new DERSequence(fqanVector));
 
             //--------------------------------------------------------------------------
             // put something into the undocumented TaggedObject
 
             DERGeneralString origin = new DERGeneralString("gridportal://newvoms:15000");
-            
+
             ASN1OctetString originOctetString = ASN1OctetString.getInstance(new DEROctetString(origin.getOctets()));
 
             /*
@@ -465,9 +465,9 @@ public class VOMSAttributeCertificate {
 
              DEROctetString originOctetString = new DEROctetString( origin.getOctets() ) ;
              */
-            
+
             DERTaggedObject taggedObject2 = new DERTaggedObject(6, originOctetString);
-            
+
             DERTaggedObject taggedObject = new DERTaggedObject(0, taggedObject2);
 
             //--------------------------------------------------------------------------
@@ -487,7 +487,7 @@ public class VOMSAttributeCertificate {
             // SEQUENCE sequence has an OID and the set
 
             DERObjectIdentifier voms4oid = new DERObjectIdentifier("1.3.6.1.4.1.8005.100.100.4");
-            
+
             DEREncodableVector sequenceVector = new ASN1EncodableVector();
             sequenceVector.add(voms4oid);
             sequenceVector.add(set);
@@ -496,11 +496,11 @@ public class VOMSAttributeCertificate {
             //--------------------------------------------------------------------------
 
             this.attributes = ASN1Sequence.getInstance(new DERSequence(sequence));
-            
+
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     //------------------------------------------------------------------------------
@@ -536,16 +536,16 @@ public class VOMSAttributeCertificate {
             ByteArrayOutputStream a = new ByteArrayOutputStream();
             new DEROutputStream(a).writeObject((new DERNull()).toASN1Object());
             ASN1OctetString nraOctetString = ASN1OctetString.getInstance(new DEROctetString(a.toByteArray()));
-            
+
             X509Extension nraExtension = new X509Extension(new DERBoolean(false), nraOctetString);
             DERObjectIdentifier nraOID = new DERObjectIdentifier("2.5.29.56");
-            
+
             myOIDs.add(nraOID);
             myExtensions.put(nraOID, nraExtension);
 
             //--------------------------------------------------------------------------
             // AuthorityKeyIdentifier
-            myLogger.log(Level.WARNING, "VOMSAttributeCertificate verification not implemented yet.");
+            myLogger.warn("VOMSAttributeCertificate verification not implemented yet.");
 
             //      String issuerDN = this.getIssuer() ;
             //
@@ -581,20 +581,20 @@ public class VOMSAttributeCertificate {
             //
             //      }
 
-            
+
         } catch (Exception e) {
-            myLogger.log(Level.SEVERE, null, e);
+            myLogger.error(null, e);
             //e.printStackTrace() ; 
         }
-        
+
     }
 
     //------------------------------------------------------------------------------
     private String DERSequencetoDN(DERSequence this_sequence) throws Exception {
         String thisDN = "";
-        
+
         try {
-            
+
             for (Enumeration n = this_sequence.getObjects(); n.hasMoreElements();) {
                 DERSet this_set = (DERSet) n.nextElement();
                 DERSequence this_seq = (DERSequence) this_set.getObjectAt(0);
@@ -607,39 +607,39 @@ public class VOMSAttributeCertificate {
                     thisDN = thisDN.concat("/" + Translate_OID.getStringFromOID("" + this_seq.getObjectAt(0)) + "=" + this_string.getString());
                 }
             }
-            
+
         } catch (Exception e) {
             throw e;
         }
-        
+
         return thisDN;
     }
 
     //------------------------------------------------------------------------------
     private DERSequence DNtoDERSequence(String thisDN) throws Exception {
         DERSequence this_sequence = null;
-        
+
         try {
             DEREncodableVector this_overall_vector = new ASN1EncodableVector();
-            
+
             String[] parts = thisDN.split("/");
-            
+
             for (int p = 1; p < parts.length; p++) {
-                
+
                 int equals_position = parts[p].indexOf("=");
-                
+
                 String oid_string = parts[p].substring(0, equals_position);
                 String value_string = parts[p].substring(equals_position + 1);
                 String oid = Translate_OID.getOIDFromString(oid_string);
                 if (oid.equals(oid_string)) {
                     throw new Exception("unrecognised OID string :: " + oid);
                 }
-                
+
                 DEREncodableVector this_vector = new ASN1EncodableVector();
                 DERObjectIdentifier this_oid = new DERObjectIdentifier(oid);
-                
+
                 this_vector.add(this_oid);
-                
+
                 if (oid_string.equals("E")) {
                     DERIA5String this_string = new DERIA5String(value_string);
                     this_vector.add(this_string);
@@ -647,21 +647,21 @@ public class VOMSAttributeCertificate {
                     DERPrintableString this_string = new DERPrintableString(value_string);
                     this_vector.add(this_string);
                 }
-                
+
                 DERSet this_single_object_set = new DERSet(new DERSequence(this_vector));
-                
+
                 this_overall_vector.add(this_single_object_set);
-                
+
             }
-            
+
             this_sequence = new DERSequence(this_overall_vector);
-            
+
         } catch (Exception e) {
             throw e;
         }
-        
+
         return this_sequence;
-        
+
     }
     //------------------------------------------------------------------------------
 }
