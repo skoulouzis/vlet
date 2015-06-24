@@ -23,8 +23,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -49,6 +49,55 @@
             <artifactId>cog-jglobus</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>nl.uva.vlet</groupId>
+            <artifactId>vlet-vfs.jcraft.ssh</artifactId>
+            <version>1.5.0-dev-1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>nl.uva.vlet</groupId>
+            <artifactId>vlet-vfs.srm</artifactId>
+            <version>1.5.0-dev-1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>nl.uva.vlet</groupId>
+            <artifactId>vlet-vfs.lfc</artifactId>
+            <version>1.5.0-dev-1</version>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.claymoresystems</groupId>
+            <artifactId>puretls</artifactId>
+            <version>0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>cryptix</groupId>
+            <artifactId>cryptix-asn1</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+                
+        <dependency>
+            <groupId>cryptix</groupId>
+            <artifactId>cryptix32</artifactId>
+            <version>3.2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+                
+                
+        <dependency>
+            <groupId>cryptix</groupId>
+            <artifactId>cryptix</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>       
+        
     </dependencies>            
 
 </project>
