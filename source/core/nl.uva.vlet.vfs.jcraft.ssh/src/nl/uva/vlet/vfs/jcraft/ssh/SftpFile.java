@@ -74,6 +74,22 @@ public class SftpFile extends VFile implements VUnixFileAttributes,
         return (file != null);
     }
 
+    public void uploadFrom(VFile source) throws VlException {
+        // Paranoia:
+        if (source.isLocal() == false) {
+            throw new VlException(
+                    "Internal error cmoveFromLocal didn't receive a local file:"
+                    + source);
+        }
+
+        String sftpFilepath = this.getPath();
+        String localfilepath = source.getPath();
+
+        // perform upload 
+
+        server.uploadFile(localfilepath, sftpFilepath);
+    }
+
     @Override
     public void uploadFrom(VFSTransfer transfer, VFile source) throws VlException {
         // Paranoia:
