@@ -43,7 +43,7 @@ import nl.uva.vlet.vrs.io.VZeroSizable;
 import com.jcraft.jsch.SftpATTRS;
 
 public class SftpFile extends VFile implements VUnixFileAttributes,
-        VRandomReadable, VZeroSizable, VStreamAppendable {
+        VZeroSizable, VStreamAppendable {
 
     /**
      * Currently SFTP can NOT handle stream read/write > 3200 per read/write
@@ -184,12 +184,11 @@ public class SftpFile extends VFile implements VUnixFileAttributes,
         //throw new NotImplementedException("Not implemented yet");
     }
 
-    @Override
-    public int readBytes(long fileOffset, byte[] buffer, int bufferOffset, int nrBytes) throws VlException {
-        // redirect to server to synchronise file access: 
-        return server.readBytes(getPath(), fileOffset, buffer, bufferOffset, nrBytes);
-    }
-
+//    @Override
+//    public int readBytes(long fileOffset, byte[] buffer, int bufferOffset, int nrBytes) throws VlException {
+//        // redirect to server to synchronise file access: 
+//        return server.readBytes(getPath(), fileOffset, buffer, bufferOffset, nrBytes);
+//    }
     /**
      * Wrning: For some reason the outputstream of Jsch can only handle 32000
      * bytes per write.
