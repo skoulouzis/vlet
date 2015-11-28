@@ -31,8 +31,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 import org.bouncycastle.asn1.ASN1EncodableVector;
@@ -80,7 +78,6 @@ import org.globus.gsi.bc.BouncyCastleOpenSSLKey;
  */
 public class VOMSAttributeCertificate {
 
-    private static final Logger myLogger = LoggerFactory.getLogger(VOMSAttributeCertificate.class);
     private AttributeCertificate ac = null;
     //------------------------------------------------------------------------------
     // first level contains three parts
@@ -545,7 +542,7 @@ public class VOMSAttributeCertificate {
 
             //--------------------------------------------------------------------------
             // AuthorityKeyIdentifier
-            myLogger.warn("VOMSAttributeCertificate verification not implemented yet.");
+//            myLogger.warn("VOMSAttributeCertificate verification not implemented yet.");
 
             //      String issuerDN = this.getIssuer() ;
             //
@@ -583,7 +580,7 @@ public class VOMSAttributeCertificate {
 
 
         } catch (Exception e) {
-            myLogger.error(null, e);
+//            myLogger.error(null, e);
             //e.printStackTrace() ; 
         }
 
