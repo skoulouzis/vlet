@@ -213,8 +213,8 @@ final public class Registry
             addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vdriver.vrs.infors.InfoRSFactory");
             addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vdriver.vfs.localfs.LocalFSFactory");
             // Core Implementations: might not work from applet/grid service context !
-            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.gftp.GftpFSFactory");
-            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.jcraft.ssh.SftpFSFactory");
+//            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.gftp.GftpFSFactory");
+//            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.jcraft.ssh.SftpFSFactory");
             // Internal VFS classes: 
             addVRSDriverClassNoError(currentLoader,HTTPFactory.class.getCanonicalName()); 
             addVRSDriverClassNoError(currentLoader,HTTPSFactory.class.getCanonicalName());
@@ -224,8 +224,8 @@ final public class Registry
             // addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vrs.globusrs.GlobusRSFactory");
            
             // Other VFS/VRS implementations from lib/vdrivers:
-            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.srm.SRMFSFactory");
-            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.lfc.LFCFSFactory");
+//            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.srm.SRMFSFactory");
+//            addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.lfc.LFCFSFactory");
             
             // Disabled:
             //addVRSDriverClassNoError(currentLoader,"nl.uva.vlet.vfs.srbfs.SrbFSFactory");
