@@ -72,7 +72,7 @@ public class GftpFSFactory extends VFSFactory
  
     /** current supported type "gftp://" */
     private static final String supportedTypes[] =
-         { VFS.GFTP_SCHEME,"gftp","gridftp" };
+         { VFS.GFTP_SCHEME,"gftp","gridftp","gsiftp" };
 
     // =================================================================
     // Instance Methods
