@@ -16,7 +16,7 @@
         <vlet.source.subdir>../source/core/</vlet.source.subdir>  
         <vlet.modules.core>${vlet.source.subdir}</vlet.modules.core>
         <!-- should read nl.uva.vlet.vrs.core/etc/vlet_version.prop --> 
-        <vlet.version>1.5.0-dev-1</vlet.version>
+        <vlet.version>1.5.0-dev-2</vlet.version>
     </properties>
 
     <!-- Toplevel artefact settings --> 
@@ -24,7 +24,7 @@
     <groupId>nl.uva.vlet</groupId>
     <artifactId>mvnbuild</artifactId>
     <packaging>pom</packaging>
-    <version>dev-1</version>
+    <version>1.5.0-dev-2</version>
     <name>mvnbuild (${project.version})</name>
 
     <repositories>
@@ -43,26 +43,7 @@
             <id>releases</id>
             <url>https://raw.github.com/skoulouzis/mvn-repo/master/releases</url>
         </repository>
-        <!-- 
-        <repository>
         
-           <id>piter.nl</id>
-           <name>piter.nl</name>
-           <layout>default</layout>
-           <releases>
-              <enabled>true</enabled>
-              <updatePolicy>always</updatePolicy>
-              <checksumPolicy>warn</checksumPolicy>
-           </releases>
-           <snapshots>
-              <enabled>true</enabled>
-              <updatePolicy>always</updatePolicy>
-              <checksumPolicy>warn</checksumPolicy>
-           </snapshots>
-	       <url>http://www.piter.nl/maven2</url> 
-         
-        </repository>
-        --> 
 
     </repositories>
     
@@ -79,7 +60,7 @@
         <module>${vlet.modules.core}/nl.uva.vlet.vfs.irods</module>
         <!--  gui  -->
         <module>${vlet.modules.core}/nl.uva.vlet.gui.utils</module>
-        <module>${vlet.modules.core}/nl.uva.vlet.gui.vbrowser</module>
+        <!--<module>${vlet.modules.core}/nl.uva.vlet.gui.vbrowser</module>-->
         <!-- Viewers --> 
         <!-- <module>${vlet.modules.core}/nl.uva.vlet.gui.lobo.viewer</module> -->
         <!-- Distribution  -->
