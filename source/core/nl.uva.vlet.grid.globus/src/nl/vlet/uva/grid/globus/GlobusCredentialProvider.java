@@ -320,19 +320,18 @@ public class GlobusCredentialProvider implements VGridCredentialProvider {
 
         this.trustedCertificates = new TrustedCertificates(newXCerts);
 
-        TrustedCertificates.setDefaultTrustedCertificates(trustedCertificates);
+//        TrustedCertificates.setDefaultTrustedCertificates(trustedCertificates);
 
         // Printout used certificates 
         // check: debug
         //
-        TrustedCertificates certs = TrustedCertificates.getDefault(); // getDefaultTrustedCertificates();
-        if (certs != null) {
-            X509Certificate[] xcerts = certs.getCertificates();
-
-            for (X509Certificate xcert : xcerts) {
-                logger.debugPrintf(" - using certificate: %s\n", xcert.getSubjectX500Principal());
-            }
-        }
+//        TrustedCertificates certs = TrustedCertificates.getDefault(); // getDefaultTrustedCertificates();
+//        if (certs != null) {
+//            X509Certificate[] xcerts = certs.getCertificates();
+//            for (X509Certificate xcert : xcerts) {
+//                logger.debugPrintf(" - using certificate: %s\n", xcert.getSubjectX500Principal());
+//            }
+//        }
         //
         // end debug
         // 
