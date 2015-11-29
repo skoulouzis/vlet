@@ -24,6 +24,7 @@ import nl.uva.vlet.vfs.VFSNode;
 import nl.uva.vlet.vrl.VRL;
 import nl.uva.vlet.vrs.VRS;
 import nl.uva.vlet.vrs.VRSContext;
+import nl.vlet.uva.grid.globus.GlobusUtil;
 
 /**
  *
@@ -45,10 +46,10 @@ public class TestDriver {
         VFSClient vfsClient = new VFSClient();
         VRSContext context = vfsClient.getVRSContext();
         context.setProperty(GlobalConfig.TCP_CONNECTION_TIMEOUT, "20000");
-        VRL vrl = new VRL("gridftp://host");
+        VRL vrl = new VRL("gsiftp://172.17.0.2/root/");
         //Bug in sftp: We have to put the username in the url
 
-        initGridProxy("vo", "key", context, true);
+        initGridProxy("vo", "pass", context, true);
         VFSNode[] nodes = vfsClient.list(vrl);
         for (VFSNode n : nodes) {
             System.err.println("Node: " + n.getVRL());
@@ -56,7 +57,11 @@ public class TestDriver {
     }
 
     public static void InitGlobalVFS() throws Exception {
-        if (!GlobalConfig.isGlobalInitialized()) {
+//        if (!GlobalConfig.isGlobalInitialized()) {
+             if (VRS.getRegistry().getVRSFactoryClass(nl.uva.vlet.vfs.gftp.GftpFSFactory.class.getName()) == null) {
+                VRS.getRegistry().addVRSDriverClass(nl.uva.vlet.vfs.gftp.GftpFSFactory.class);
+            }
+             
             copyVomsAndCerts();
             try {
                 GlobalConfig.setBaseLocation(new URL("http://dummy/url"));
@@ -77,7 +82,7 @@ public class TestDriver {
 //        GlobalConfig.setUsePersistantUserConfiguration(false);
             GlobalConfig.setCACertificateLocations(System.getProperty("user.home") + "/.globus/certificates/");
             Global.init();
-        }
+//        }
     }
 
     private static void copyVomsAndCerts() throws FileNotFoundException, VlException, URISyntaxException {
@@ -113,6 +118,8 @@ public class TestDriver {
             context = new VFSClient().getVRSContext();
 //            context = VRS.getDefaultVRSContext();
         }
+
+        GlobusUtil.init();
 
         GridProxy gridProxy = context.getGridProxy();
         if (destroyCert) {
