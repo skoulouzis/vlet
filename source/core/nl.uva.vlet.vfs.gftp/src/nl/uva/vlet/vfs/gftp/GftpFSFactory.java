@@ -89,6 +89,7 @@ public class GftpFSFactory extends VFSFactory
      * Returns list 
      * @see nl.uva.vlet.vfs.VFS#getSchemeNames()
      */
+    @Override
     public String[] getSchemeNames()
     {
         return supportedTypes;
@@ -97,6 +98,7 @@ public class GftpFSFactory extends VFSFactory
     /* (non-Javadoc)
      * @see nl.uva.vlet.vrs.i.VRS#getName()
      */
+    @Override
     public String getName()
     {
         return "GFTP";
